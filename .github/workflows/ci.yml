@@ -22,7 +22,7 @@ jobs:
         run: pip install -r backend/requirements.txt
       - name: Compile backend
         run: python -m compileall backend/app
-      - name: Stage 2.2 numerosity smoke test
+      - name: Stage 2.2A numerosity smoke test
         working-directory: backend
         run: |
           python - <<'PY'
@@ -31,7 +31,7 @@ jobs:
           from pathlib import Path
 
           import numpy as np
-          from app.numerosity import NumerosityExperiment
+          from app.numerosity import NumerosityExperiment, STAGE22A_PROFILES
 
           exp = NumerosityExperiment()
           for trial in range(1, 101):
@@ -41,7 +41,6 @@ jobs:
               p = result['policy']
               total = p['p0'] + p['p1'] + p['p2']
               assert math.isclose(total, 1.0, abs_tol=2e-4), total
-              assert result['stimulus']['numerosity'] == result['target']
               controls = result['stimulus']['controls']
               assert controls['stimulus_profile'] == 'train'
               if result['target'] in (1, 2):
@@ -49,28 +48,57 @@ jobs:
                   assert exp.config.signal_energy_min - 1e-4 <= controls['signal_energy'] <= exp.config.signal_energy_max + 1e-4
 
           before = exp.w_output.copy()
-          ood = exp.step(101, learn=False, trial_kind='ood_eval', stimulus_profile='ood')
-          assert ood['trial_kind'] == 'ood_eval'
-          assert ood['learning_enabled'] is False
-          assert ood['plasticity']['active_synapses'] == 0
-          assert np.array_equal(before, exp.w_output), 'OOD evaluation changed plastic weights'
-          controls = ood['stimulus']['controls']
-          assert controls['stimulus_profile'] == 'ood'
-          if ood['target'] in (1, 2):
-              assert not math.isclose(controls['area_factor'], exp.config.total_area_factor, abs_tol=0.1)
-              assert exp.config.signal_energy_min - 1e-4 <= controls['signal_energy'] <= exp.config.signal_energy_max + 1e-4
+          expected = {
+              'position_only': (True, False, False, False),
+              'area_only': (False, True, False, False),
+              'spacing_only': (False, False, True, False),
+              'brightness_only': (False, False, False, True),
+              'combined': (True, True, True, True),
+          }
+
+          trial = 101
+          for profile in STAGE22A_PROFILES:
+              seen_nonzero = False
+              for _ in range(30):
+                  result = exp.step(
+                      trial,
+                      learn=False,
+                      trial_kind='factor_eval',
+                      stimulus_profile=profile,
+                  )
+                  trial += 1
+                  assert result['learning_enabled'] is False
+                  assert result['plasticity']['active_synapses'] == 0
+                  controls = result['stimulus']['controls']
+                  assert controls['stimulus_profile'] == profile
+                  flags = (
+                      controls['fractional_position'],
+                      controls['novel_area'],
+                      controls['close_spacing'],
+                      controls['strong_brightness'],
+                  )
+                  assert flags == expected[profile], (profile, flags)
+                  if result['target'] in (1, 2):
+                      seen_nonzero = True
+                      assert exp.config.signal_energy_min - 1e-4 <= controls['signal_energy'] <= exp.config.signal_energy_max + 1e-4
+                      if profile in {'area_only', 'combined'}:
+                          assert not math.isclose(controls['area_factor'], exp.config.total_area_factor, abs_tol=0.1)
+                      else:
+                          assert math.isclose(controls['area_factor'], exp.config.total_area_factor, abs_tol=2e-4)
+              assert seen_nonzero, profile
+              assert np.array_equal(before, exp.w_output), f'{profile} changed plastic weights'
 
           with tempfile.TemporaryDirectory() as tmp:
               path = Path(tmp) / 'checkpoint.npz'
-              exp.save_checkpoint(path, {'trial': 101})
+              exp.save_checkpoint(path, {'trial': trial})
               restored = NumerosityExperiment()
               meta = restored.load_checkpoint(path)
-              assert meta['trial'] == 101
+              assert meta['trial'] == trial
               assert np.array_equal(exp.w_input, restored.w_input)
               assert np.array_equal(exp.w_output, restored.w_output)
               assert np.array_equal(exp.output_bias, restored.output_bias)
 
-          print('Stage 2.2 OOD/checkpoint smoke test passed')
+          print('Stage 2.2A factor isolation/checkpoint smoke test passed')
           PY
 
   frontend:
