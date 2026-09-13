@@ -185,7 +185,24 @@ class RunLogger:
         if self._rows == 1 or self._rows % 25 == 0:
             self._write_summary(status="running")
 
-    def finalize(self, status: str = "completed") -> None:
+    def finalize(
+        self,
+        status: str = "completed",
+        *,
+        frame: dict[str, Any] | None = None,
+        metrics: dict[str, Any] | None = None,
+    ) -> None:
+        """Finalize without adding a duplicate CSV row.
+
+        Stage 2.2A used to finalize before attaching the final profile table, so
+        summary.json could say ``experiment_complete: false`` even though all
+        blocks were done. Optional frame/metrics overrides let the caller persist
+        the true final snapshot atomically.
+        """
+        if frame is not None:
+            self._last_frame = frame
+        if metrics is not None:
+            self._last_metrics = metrics
         self._write_summary(status=status, ended_at=_now())
 
     def _write_summary(self, status: str, ended_at: datetime | None = None) -> None:
@@ -230,6 +247,9 @@ class RunLogger:
             "stage21_replay_trials": self.config.get("stage21_replay_trials"),
             "stage21_state_source": self.config.get("stage21_state_source"),
             "stage21_pretraining_snapshot": self.config.get("stage21_pretraining_snapshot"),
+            "stage22b_replay_trials": self.config.get("stage22b_replay_trials"),
+            "stage22b_state_source": self.config.get("stage22b_state_source"),
+            "stage22b_pretraining_snapshot": self.config.get("stage22b_pretraining_snapshot"),
             "evaluation_profile": self.config.get("evaluation_profile"),
             "evaluation_profiles": self.config.get("evaluation_profiles"),
             "profile_trials": self.config.get("profile_trials"),
