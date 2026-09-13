@@ -12,13 +12,13 @@
       <section class="hud" aria-label="DrosoMath telemetry">
         <div class="experiment-header">
           <span class="label">Experiment</span>
-          <strong>Numerosity Stage 2.1 · dots 0–2</strong>
-          <small>area/energy controlled · translation-tolerant visual pooling</small>
+          <strong>Numerosity Stage 2.2 · frozen OOD · dots 0–2</strong>
+          <small>10k Stage-2.1 replay → weights frozen → unseen position/size/contrast/spacing</small>
         </div>
 
         <div class="stimulus-panel">
-          <span class="label">Current visual stimulus</span>
-          <svg id="stimulus-view" viewBox="0 0 100 100" role="img" aria-label="randomized dot stimulus"></svg>
+          <span class="label">Current held-out visual stimulus</span>
+          <svg id="stimulus-view" viewBox="0 0 100 100" role="img" aria-label="held-out dot stimulus"></svg>
         </div>
 
         <div>
@@ -30,7 +30,7 @@
           <strong id="target">—</strong>
         </div>
         <div>
-          <span class="label">Trial</span>
+          <span class="label">OOD eval trial</span>
           <strong id="trial">—</strong>
           <small id="trial-kind">—</small>
         </div>
@@ -40,7 +40,7 @@
         </div>
 
         <div class="policy-panel">
-          <span class="label">Current choice policy</span>
+          <span class="label">Frozen choice policy</span>
           <div class="policy-row">
             <span>0</span><div class="policy-track"><i id="policy-bar-0"></i></div><strong id="policy-0">—</strong>
           </div>
@@ -53,7 +53,7 @@
         </div>
 
         <div class="success-panel">
-          <span class="label">All trials · chance = 33.3%</span>
+          <span class="label">Frozen OOD evaluation · chance = 33.3%</span>
           <div class="success-grid">
             <div class="success-stat">
               <span>Overall</span>
@@ -75,52 +75,41 @@
           </div>
         </div>
 
-        <div class="success-panel probe-panel">
-          <span class="label">Held-out probe · every 10th trial · plasticity OFF</span>
+        <!-- Kept in the DOM for telemetry compatibility; Stage 2.2 marks every trial as frozen evaluation. -->
+        <div class="success-panel probe-panel" style="display:none">
+          <span class="label">Frozen evaluation mirror</span>
           <div class="success-grid">
-            <div class="success-stat">
-              <span>Probe overall</span>
-              <strong id="probe-overall">—</strong>
-            </div>
-            <div class="success-stat">
-              <span>Probe last 20</span>
-              <strong id="probe-20">—</strong>
-            </div>
-            <div class="success-stat">
-              <span>Probe last 100</span>
-              <strong id="probe-100">—</strong>
-            </div>
-            <div class="success-stat">
-              <span>Probe trials</span>
-              <strong id="probe-count">0</strong>
-            </div>
+            <div class="success-stat"><span>Eval overall</span><strong id="probe-overall">—</strong></div>
+            <div class="success-stat"><span>Eval last 20</span><strong id="probe-20">—</strong></div>
+            <div class="success-stat"><span>Eval last 100</span><strong id="probe-100">—</strong></div>
+            <div class="success-stat"><span>Eval trials</span><strong id="probe-count">0</strong></div>
           </div>
         </div>
 
         <div class="success-panel diagnostic-panel">
-          <span class="label">Collapse-resistant diagnostics</span>
+          <span class="label">Generalization diagnostics</span>
           <div class="success-grid">
             <div class="success-stat">
-              <span>Balanced</span>
+              <span>OOD balanced</span>
               <strong id="balanced-accuracy">—</strong>
             </div>
             <div class="success-stat">
-              <span>1↔2 accuracy</span>
+              <span>OOD 1↔2</span>
               <strong id="one-two-accuracy">—</strong>
             </div>
-            <div class="success-stat">
-              <span>Probe balanced</span>
+            <div class="success-stat" style="display:none">
+              <span>Mirror balanced</span>
               <strong id="probe-balanced">—</strong>
             </div>
-            <div class="success-stat">
-              <span>Probe 1↔2</span>
+            <div class="success-stat" style="display:none">
+              <span>Mirror 1↔2</span>
               <strong id="probe-one-two">—</strong>
             </div>
           </div>
         </div>
 
         <div class="class-panel">
-          <span class="label">Accuracy by target · use this to catch class collapse</span>
+          <span class="label">Frozen OOD accuracy by target</span>
           <div class="class-grid">
             <div><span>0 dots</span><strong id="class-0">—</strong></div>
             <div><span>1 dot</span><strong id="class-1">—</strong></div>
