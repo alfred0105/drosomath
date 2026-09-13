@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#090b10" />
+    <title>DrosoMath</title>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="brain"></canvas>
+      <section class="hud" aria-label="DrosoMath telemetry">
+        <div>
+          <span class="label">Problem</span>
+          <strong id="problem">connecting…</strong>
+        </div>
+        <div>
+          <span class="label">Answer</span>
+          <strong id="answer">—</strong>
+        </div>
+        <div>
+          <span class="label">Accuracy</span>
+          <strong id="accuracy">—</strong>
+        </div>
+        <div>
+          <span class="label">Trial</span>
+          <strong id="trial">—</strong>
+        </div>
+        <div>
+          <span class="label">Plastic synapses</span>
+          <strong id="plasticity">—</strong>
+        </div>
+      </section>
+      <div class="status" id="status">loading layout…</div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
