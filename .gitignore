@@ -17,6 +17,9 @@ dist/
 .DS_Store
 Thumbs.db
 
+# Local launcher/runtime state
+.runtime/
+
 # Local data / model artifacts
 data/
 artifacts/
