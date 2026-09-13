@@ -2,9 +2,9 @@
   "run_id": "20260913_231821_947324+0900",
   "status": "running",
   "started_at": "2026-09-13T23:18:21+09:00",
-  "updated_at": "2026-09-13T23:19:22+09:00",
+  "updated_at": "2026-09-13T23:20:24+09:00",
   "ended_at": null,
-  "duration_seconds": 60.111,
+  "duration_seconds": 122.589,
   "experiment": "numerosity_0_2_stage2_2c",
   "telemetry_source": "numerosity_prototype",
   "activity_source": "display_proxy_not_connectome_spikes",
@@ -27,8 +27,8 @@
   "profile_trials": 2000,
   "total_evaluation_trials": 6000,
   "evaluation_learning_enabled": false,
-  "current_profile": "brightness_only",
-  "current_profile_trial": 725,
+  "current_profile": "combined",
+  "current_profile_trial": 1550,
   "profile_results": {
     "position_only": {
       "overall": 0.886,
@@ -95,156 +95,219 @@
       }
     },
     "brightness_only": {
-      "overall": 0.7889655172413793,
-      "balanced_accuracy": 0.7966708102250272,
-      "one_vs_two_accuracy": 0.7025948103792415,
-      "recent_20": 0.9,
-      "recent_100": 0.77,
-      "recent_500": 0.808,
-      "successes": 572,
-      "attempts": 725,
+      "overall": 0.7885,
+      "balanced_accuracy": 0.7929183741352906,
+      "one_vs_two_accuracy": 0.7011152416356877,
+      "recent_20": 0.85,
+      "recent_100": 0.82,
+      "recent_500": 0.804,
+      "successes": 1577,
+      "attempts": 2000,
       "by_target_accuracy": {
-        "0": 0.9821428571428571,
-        "1": 0.927710843373494,
-        "2": 0.4801587301587302
+        "0": 0.9679389312977099,
+        "1": 0.9363636363636364,
+        "2": 0.4744525547445255
       },
       "confusion_matrix": [
         [
-          220,
-          0,
-          4
+          634,
+          2,
+          19
         ],
         [
           1,
-          231,
-          17
+          618,
+          41
         ],
         [
-          5,
-          126,
-          121
+          11,
+          349,
+          325
         ]
       ],
       "probe": {
-        "overall": 0.7889655172413793,
-        "balanced_accuracy": 0.7966708102250272,
-        "one_vs_two_accuracy": 0.7025948103792415,
-        "recent_20": 0.9,
-        "recent_100": 0.77,
-        "recent_500": 0.808,
-        "successes": 572,
-        "attempts": 725,
+        "overall": 0.7885,
+        "balanced_accuracy": 0.7929183741352906,
+        "one_vs_two_accuracy": 0.7011152416356877,
+        "recent_20": 0.85,
+        "recent_100": 0.82,
+        "recent_500": 0.804,
+        "successes": 1577,
+        "attempts": 2000,
         "by_target_accuracy": {
-          "0": 0.9821428571428571,
-          "1": 0.927710843373494,
-          "2": 0.4801587301587302
+          "0": 0.9679389312977099,
+          "1": 0.9363636363636364,
+          "2": 0.4744525547445255
         },
         "confusion_matrix": [
           [
-            220,
-            0,
-            4
+            634,
+            2,
+            19
           ],
           [
             1,
-            231,
-            17
+            618,
+            41
           ],
           [
-            5,
-            126,
-            121
+            11,
+            349,
+            325
           ]
         ]
       }
     },
-    "combined": null
+    "combined": {
+      "overall": 0.6903225806451613,
+      "balanced_accuracy": 0.6989515505966684,
+      "one_vs_two_accuracy": 0.5552407932011332,
+      "recent_20": 0.75,
+      "recent_100": 0.73,
+      "recent_500": 0.71,
+      "successes": 1070,
+      "attempts": 1550,
+      "by_target_accuracy": {
+        "0": 0.9816700610997964,
+        "1": 0.8342857142857143,
+        "2": 0.2808988764044944
+      },
+      "confusion_matrix": [
+        [
+          482,
+          3,
+          6
+        ],
+        [
+          3,
+          438,
+          84
+        ],
+        [
+          3,
+          381,
+          150
+        ]
+      ],
+      "probe": {
+        "overall": 0.6903225806451613,
+        "balanced_accuracy": 0.6989515505966684,
+        "one_vs_two_accuracy": 0.5552407932011332,
+        "recent_20": 0.75,
+        "recent_100": 0.73,
+        "recent_500": 0.71,
+        "successes": 1070,
+        "attempts": 1550,
+        "by_target_accuracy": {
+          "0": 0.9816700610997964,
+          "1": 0.8342857142857143,
+          "2": 0.2808988764044944
+        },
+        "confusion_matrix": [
+          [
+            482,
+            3,
+            6
+          ],
+          [
+            3,
+            438,
+            84
+          ],
+          [
+            3,
+            381,
+            150
+          ]
+        ]
+      }
+    }
   },
   "experiment_complete": false,
-  "successes": 572,
-  "attempts": 725,
-  "overall_accuracy": 0.7889655172413793,
-  "balanced_accuracy": 0.7966708102250272,
-  "one_vs_two_accuracy": 0.7025948103792415,
-  "recent_20": 0.9,
-  "recent_100": 0.77,
-  "recent_500": 0.808,
+  "successes": 1070,
+  "attempts": 1550,
+  "overall_accuracy": 0.6903225806451613,
+  "balanced_accuracy": 0.6989515505966684,
+  "one_vs_two_accuracy": 0.5552407932011332,
+  "recent_20": 0.75,
+  "recent_100": 0.73,
+  "recent_500": 0.71,
   "by_target_accuracy": {
-    "0": 0.9821428571428571,
-    "1": 0.927710843373494,
-    "2": 0.4801587301587302
+    "0": 0.9816700610997964,
+    "1": 0.8342857142857143,
+    "2": 0.2808988764044944
   },
   "confusion_matrix_rows_target_cols_choice": [
     [
-      220,
-      0,
-      4
+      482,
+      3,
+      6
     ],
     [
-      1,
-      231,
-      17
+      3,
+      438,
+      84
     ],
     [
-      5,
-      126,
-      121
+      3,
+      381,
+      150
     ]
   ],
   "probe": {
-    "overall": 0.7889655172413793,
-    "balanced_accuracy": 0.7966708102250272,
-    "one_vs_two_accuracy": 0.7025948103792415,
-    "recent_20": 0.9,
-    "recent_100": 0.77,
-    "recent_500": 0.808,
-    "successes": 572,
-    "attempts": 725,
+    "overall": 0.6903225806451613,
+    "balanced_accuracy": 0.6989515505966684,
+    "one_vs_two_accuracy": 0.5552407932011332,
+    "recent_20": 0.75,
+    "recent_100": 0.73,
+    "recent_500": 0.71,
+    "successes": 1070,
+    "attempts": 1550,
     "by_target_accuracy": {
-      "0": 0.9821428571428571,
-      "1": 0.927710843373494,
-      "2": 0.4801587301587302
+      "0": 0.9816700610997964,
+      "1": 0.8342857142857143,
+      "2": 0.2808988764044944
     },
     "confusion_matrix": [
       [
-        220,
-        0,
-        4
+        482,
+        3,
+        6
       ],
       [
-        1,
-        231,
-        17
+        3,
+        438,
+        84
       ],
       [
-        5,
-        126,
-        121
+        3,
+        381,
+        150
       ]
     ]
   },
   "last_trial_kind": "stage22c_ood_eval",
-  "last_target": 0,
-  "last_answer": 0,
+  "last_target": 2,
+  "last_answer": 2,
   "last_correct": true,
   "last_reward": 1.0,
   "last_policy": {
-    "p0": 0.96031,
-    "p1": 0.00621,
-    "p2": 0.03348,
-    "entropy": 0.18415
+    "p0": 0.00465,
+    "p1": 0.18022,
+    "p2": 0.81513,
+    "entropy": 0.50042
   },
   "last_stimulus_controls": {
-    "stimulus_profile": "brightness_only",
-    "signal_energy": 0.0,
-    "area_factor": 0.0,
-    "requested_area_factor": 0.0,
-    "post_noise_energy": 0.72596,
-    "min_pair_distance": null,
-    "gain_ratio": null,
-    "fractional_position": false,
-    "novel_area": false,
-    "close_spacing": false,
+    "stimulus_profile": "combined",
+    "signal_energy": 2.09169,
+    "area_factor": 0.89816,
+    "requested_area_factor": 0.89816,
+    "post_noise_energy": 2.63815,
+    "min_pair_distance": 2.0,
+    "gain_ratio": 3.24987,
+    "fractional_position": true,
+    "novel_area": true,
+    "close_spacing": true,
     "strong_brightness": true,
     "rasterizer": "continuous_gaussian_all_positions",
     "visual_preprocess": "antialias_divisive_contrast_phase_pool_v1",
@@ -257,7 +320,7 @@
     "training_close_spacing_probability": 0.25,
     "moderate_brightness_training": false,
     "extreme_brightness_ood": true,
-    "close_spacing_sampled": false
+    "close_spacing_sampled": true
   },
   "learner": {
     "stage": 2.2,
