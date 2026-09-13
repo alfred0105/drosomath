@@ -2,11 +2,8 @@ name: DrosoMath CI
 
 on:
   push:
-    branches:
-      - main
-      - bootstrap/realtime-3d
-    paths-ignore:
-      - 'runs/**'
+    branches: [main, bootstrap/realtime-3d]
+    paths-ignore: ['runs/**']
 
 jobs:
   launcher:
@@ -18,15 +15,8 @@ jobs:
         run: |
           $tokens = $null
           $errors = $null
-          [System.Management.Automation.Language.Parser]::ParseFile(
-            (Resolve-Path .\run.ps1),
-            [ref]$tokens,
-            [ref]$errors
-          ) | Out-Null
-          if ($errors.Count -gt 0) {
-            $errors | ForEach-Object { Write-Error $_.Message }
-            exit 1
-          }
+          [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path .\run.ps1), [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count -gt 0) { $errors | ForEach-Object { Write-Error $_.Message }; exit 1 }
           Write-Host "run.ps1 syntax OK"
       - name: Run launcher self-test
         shell: powershell
@@ -48,132 +38,66 @@ jobs:
       - name: Import active FastAPI app
         working-directory: backend
         run: python -c "from app.main import app; print(app.title)"
-      - name: Stage 3S.2 multistage symbolic arithmetic smoke test
+      - name: Stage 3S.3 operator-transition smoke test
         working-directory: backend
         run: |
           python - <<'PY'
           import tempfile
           from pathlib import Path
-
           import numpy as np
-          from app.symbolic_stage3s2 import (
-              ADDITION_HELDOUT_PAIRS,
-              ADDITION_REVERSE_TEST_PAIRS,
-              ADDITION_TRAIN_PAIRS,
-              MICRO_ADDITION_PAIRS,
-              SMALL_ADDITION_PAIRS,
-              SUCCESSOR2_HELDOUT_STARTS,
-              SUCCESSOR2_TRAIN_STARTS,
-              SUCCESSOR3_HELDOUT_STARTS,
-              SUCCESSOR3_TRAIN_STARTS,
-              N_OUTPUTS,
-              SymbolicStage3S2Experiment,
+          from app.symbolic_stage3s3 import (
+              ADDITION_HELDOUT_PAIRS, ADDITION_REVERSE_TEST_PAIRS, ADDITION_TRAIN_PAIRS,
+              NEXT2_HELDOUT_STARTS, NEXT2_TRAIN_STARTS, PREV2_HELDOUT_STARTS, PREV2_TRAIN_STARTS,
+              SymbolicStage3S3Experiment,
           )
+          from app.stage3s3_curriculum import TRAIN_TRIALS, TRAINING_MILESTONES
 
-          exp = SymbolicStage3S2Experiment()
+          exp = SymbolicStage3S3Experiment()
           cfg = exp.config_dict()
           enc = cfg['token_encoding']
-          assert cfg['stage'] == '3S.2'
+          assert cfg['stage'] == '3S.3'
+          assert TRAIN_TRIALS == 600_000
+          assert TRAINING_MILESTONES[-1] == 600_000
           assert enc['scalar_number_value_injected'] is False
           assert enc['ordinal_embedding_injected'] is False
           assert enc['sum_feature_injected'] is False
-          assert enc['commutativity_feature_injected'] is False
-          assert enc['distance_to_answer_injected'] is False
-          assert cfg['reward']['incorrect'] > -1.0
+          assert cfg['operator_architecture']['numeric_transition_hardcoded'] is False
+          assert set(NEXT2_TRAIN_STARTS).isdisjoint(NEXT2_HELDOUT_STARTS)
+          assert set(PREV2_TRAIN_STARTS).isdisjoint(PREV2_HELDOUT_STARTS)
 
-          assert set(SUCCESSOR2_TRAIN_STARTS).isdisjoint(SUCCESSOR2_HELDOUT_STARTS)
-          assert set(SUCCESSOR3_TRAIN_STARTS).isdisjoint(SUCCESSOR3_HELDOUT_STARTS)
-          assert max(max(pair) for pair in MICRO_ADDITION_PAIRS) <= 2
-          assert max(max(pair) for pair in SMALL_ADDITION_PAIRS) <= 4
-          assert {a + b for a, b in ADDITION_TRAIN_PAIRS} == set(range(N_OUTPUTS))
+          tokens, target, _ = exp.task_example('guided_next3', a=2)
+          assert tokens == ['2', 'NEXT', '3', 'NEXT', '4', 'NEXT'] and target == 5
+          tokens, target, _ = exp.task_example('prev2', a=7)
+          assert tokens == ['7', 'PREV', 'PREV'] and target == 5
 
-          train_unordered = {tuple(sorted(pair)) for pair in ADDITION_TRAIN_PAIRS}
-          held_unordered = {tuple(sorted(pair)) for pair in ADDITION_HELDOUT_PAIRS}
-          assert train_unordered.isdisjoint(held_unordered)
-          for a, b in ADDITION_REVERSE_TEST_PAIRS:
-              assert (a, b) not in ADDITION_TRAIN_PAIRS
-              assert (b, a) in ADDITION_TRAIN_PAIRS
-
-          tokens, target, _ = exp.task_example('successor2', a=1)
-          assert tokens == ['1', 'NEXT', 'NEXT']
-          assert target == 3
-          tokens, target, _ = exp.task_example('successor3', a=2)
-          assert tokens == ['2', 'NEXT', 'NEXT', 'NEXT']
-          assert target == 5
-
-          trial = 1
-          before_token = exp.w_token.copy()
-          before_rec = exp.w_rec.copy()
-          for _ in range(80):
-              result = exp.step(
-                  trial,
-                  task='successor2',
-                  token_plasticity_scale=0.25,
-                  recurrent_plasticity_scale=0.70,
-              )
-              trial += 1
+          before_next = exp.w_next.copy(); before_prev = exp.w_prev.copy()
+          for trial in range(1, 101):
+              task = 'next' if trial % 2 else 'prev'
+              result = exp.step(trial, task=task, token_plasticity_scale=.2, recurrent_plasticity_scale=.2, operator_plasticity_scale=1.0)
               assert result['active_output_count'] == 10
-              assert result['choice'] < 10
-              assert result['plasticity']['internal_active_synapses'] > 0
-          assert not np.array_equal(before_token, exp.w_token)
-          assert not np.array_equal(before_rec, exp.w_rec)
+          assert not np.array_equal(before_next, exp.w_next)
+          assert not np.array_equal(before_prev, exp.w_prev)
 
-          before_hi = exp.w_output[10:].copy()
-          for _ in range(120):
-              result = exp.step(
-                  trial,
-                  task='addition',
-                  pair_pool=ADDITION_TRAIN_PAIRS,
-                  token_plasticity_scale=0.015,
-                  recurrent_plasticity_scale=0.15,
-              )
-              trial += 1
-              assert result['active_output_count'] == 19
-              assert len(result['policy']['top']) == 5
-          assert not np.array_equal(before_hi, exp.w_output[10:])
+          train_u = {tuple(sorted(p)) for p in ADDITION_TRAIN_PAIRS}
+          held_u = {tuple(sorted(p)) for p in ADDITION_HELDOUT_PAIRS}
+          assert train_u.isdisjoint(held_u)
+          for a, b in ADDITION_REVERSE_TEST_PAIRS:
+              assert (a, b) not in ADDITION_TRAIN_PAIRS and (b, a) in ADDITION_TRAIN_PAIRS
 
-          before = (
-              exp.w_token.copy(), exp.w_rec.copy(), exp.w_output.copy(), exp.output_bias.copy()
-          )
-          frozen_cases = [
-              ('successor2', SUCCESSOR2_HELDOUT_STARTS[0], None),
-              ('successor3', SUCCESSOR3_HELDOUT_STARTS[0], None),
-              ('addition', ADDITION_REVERSE_TEST_PAIRS[0][0], ADDITION_REVERSE_TEST_PAIRS[0][1]),
-              ('addition', ADDITION_HELDOUT_PAIRS[0][0], ADDITION_HELDOUT_PAIRS[0][1]),
-          ]
-          for task, a, b in frozen_cases:
-              result = exp.step(
-                  trial,
-                  task=task,
-                  a=a,
-                  b=b,
-                  learn=False,
-                  token_plasticity_scale=0.0,
-                  recurrent_plasticity_scale=0.0,
-                  output_plasticity_scale=0.0,
-                  trial_kind='frozen',
-              )
-              trial += 1
-              assert result['learning_enabled'] is False
-              assert result['plasticity']['active_synapses'] == 0
-          assert np.array_equal(before[0], exp.w_token)
-          assert np.array_equal(before[1], exp.w_rec)
-          assert np.array_equal(before[2], exp.w_output)
-          assert np.array_equal(before[3], exp.output_bias)
+          before = tuple(x.copy() for x in (exp.w_token, exp.w_rec, exp.w_next, exp.w_prev, exp.w_output, exp.output_bias))
+          exp.step(101, task='next2', a=NEXT2_HELDOUT_STARTS[0], learn=False)
+          exp.step(102, task='addition', a=ADDITION_HELDOUT_PAIRS[0][0], b=ADDITION_HELDOUT_PAIRS[0][1], learn=False)
+          after = (exp.w_token, exp.w_rec, exp.w_next, exp.w_prev, exp.w_output, exp.output_bias)
+          assert all(np.array_equal(a, b) for a, b in zip(before, after))
 
           with tempfile.TemporaryDirectory() as tmp:
-              path = Path(tmp) / 'stage3s2.npz'
-              exp.save_checkpoint(path, {'trial': trial, 'stage': '3S.2'})
-              restored = SymbolicStage3S2Experiment()
-              meta = restored.load_checkpoint(path)
-              assert meta['trial'] == trial
-              assert meta['stage'] == '3S.2'
-              assert np.array_equal(exp.w_token, restored.w_token)
-              assert np.array_equal(exp.w_rec, restored.w_rec)
-              assert np.array_equal(exp.w_output, restored.w_output)
-              assert np.array_equal(exp.output_bias, restored.output_bias)
-
-          print('Stage 3S.2 multistage symbolic arithmetic smoke test passed')
+              path = Path(tmp) / 's3s3.npz'
+              exp.save_checkpoint(path, {'stage':'3S.3'})
+              restored = SymbolicStage3S3Experiment(); meta = restored.load_checkpoint(path)
+              assert meta['stage'] == '3S.3'
+              assert np.array_equal(exp.w_next, restored.w_next)
+              assert np.array_equal(exp.w_prev, restored.w_prev)
+          print('Stage 3S.3 smoke test passed')
           PY
 
   frontend:
