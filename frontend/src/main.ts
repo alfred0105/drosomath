@@ -21,6 +21,15 @@ type LayoutResponse = {
   coordinate_kind?: string;
 };
 
+type SuccessMetrics = {
+  overall: number | null;
+  recent_20: number | null;
+  recent_100: number | null;
+  recent_500: number | null;
+  successes: number;
+  attempts: number;
+};
+
 type Telemetry = {
   type: 'telemetry';
   telemetry_source?: string;
@@ -29,7 +38,8 @@ type Telemetry = {
   answer: number;
   correct: boolean;
   reward: number;
-  accuracy: number;
+  accuracy?: number | null;
+  metrics?: SuccessMetrics;
   activity: [number, number][];
   plasticity: {
     mean_delta_w: number;
@@ -73,9 +83,15 @@ const regionBase: Record<string, THREE.Color> = {
 
 const fallbackColor = new THREE.Color('#8590a0');
 const hotColor = new THREE.Color('#ffffff');
+const glowWarm = new THREE.Color('#fff4d6');
+const MAX_GLOW_POINTS = 1600;
 
 let pointCloud: THREE.Points | null = null;
+let glowCloud: THREE.Points | null = null;
 let colors: Float32Array | null = null;
+let basePositions: Float32Array | null = null;
+let glowPositions: Float32Array | null = null;
+let glowColors: Float32Array | null = null;
 let neurons: Neuron[] = [];
 let previousActiveIndices: number[] = [];
 let layoutSummary = 'loading layout';
@@ -83,16 +99,25 @@ let layoutSummary = 'loading layout';
 const byId = new Map<number, number>();
 const problemEl = document.querySelector<HTMLElement>('#problem')!;
 const answerEl = document.querySelector<HTMLElement>('#answer')!;
-const accuracyEl = document.querySelector<HTMLElement>('#accuracy')!;
 const trialEl = document.querySelector<HTMLElement>('#trial')!;
 const plasticityEl = document.querySelector<HTMLElement>('#plasticity')!;
+const accuracyOverallEl = document.querySelector<HTMLElement>('#accuracy-overall')!;
+const accuracy20El = document.querySelector<HTMLElement>('#accuracy-20')!;
+const accuracy100El = document.querySelector<HTMLElement>('#accuracy-100')!;
+const accuracy500El = document.querySelector<HTMLElement>('#accuracy-500')!;
+const accuracyCountEl = document.querySelector<HTMLElement>('#accuracy-count')!;
 const statusEl = document.querySelector<HTMLElement>('#status')!;
 
 function setNeuronColor(index: number, activity: number) {
   if (!colors) return;
   const neuron = neurons[index];
-  const base = regionBase[neuron.region] ?? fallbackColor;
-  const mixed = base.clone().lerp(hotColor, Math.min(1, activity));
+  const source = regionBase[neuron.region] ?? fallbackColor;
+
+  // Keep resting anatomy intentionally dim and make strong activity pop toward white.
+  const resting = source.clone().multiplyScalar(0.24);
+  const contrast = Math.pow(Math.max(0, Math.min(1, activity)), 1.45);
+  const mixed = resting.clone().lerp(hotColor, contrast);
+
   const offset = index * 3;
   colors[offset] = mixed.r;
   colors[offset + 1] = mixed.g;
@@ -108,40 +133,109 @@ function clearPreviousActivity() {
   previousActiveIndices = [];
 }
 
+function updateGlow(activityPairs: [number, number][]) {
+  if (!glowCloud || !glowPositions || !glowColors || !basePositions) return;
+
+  let count = 0;
+  for (const [id, activity] of activityPairs) {
+    if (activity < 0.5 || count >= MAX_GLOW_POINTS) continue;
+    const index = byId.get(id);
+    if (index === undefined) continue;
+
+    const src = index * 3;
+    const dst = count * 3;
+    glowPositions[dst] = basePositions[src];
+    glowPositions[dst + 1] = basePositions[src + 1];
+    glowPositions[dst + 2] = basePositions[src + 2];
+
+    const intensity = Math.pow(activity, 1.2);
+    const color = (regionBase[neurons[index].region] ?? fallbackColor)
+      .clone()
+      .lerp(glowWarm, intensity);
+    glowColors[dst] = color.r;
+    glowColors[dst + 1] = color.g;
+    glowColors[dst + 2] = color.b;
+    count += 1;
+  }
+
+  const positionAttr = glowCloud.geometry.getAttribute('position') as THREE.BufferAttribute;
+  const colorAttr = glowCloud.geometry.getAttribute('color') as THREE.BufferAttribute;
+  positionAttr.needsUpdate = true;
+  colorAttr.needsUpdate = true;
+  glowCloud.geometry.setDrawRange(0, count);
+}
+
+function formatRate(value: number | null | undefined): string {
+  return value == null ? '—' : `${(value * 100).toFixed(1)}%`;
+}
+
+function updateMetrics(metrics: SuccessMetrics | undefined, fallbackAccuracy: number | null | undefined) {
+  if (!metrics) {
+    accuracyOverallEl.textContent = formatRate(fallbackAccuracy);
+    return;
+  }
+
+  accuracyOverallEl.textContent = formatRate(metrics.overall);
+  accuracy20El.textContent = formatRate(metrics.recent_20);
+  accuracy100El.textContent = formatRate(metrics.recent_100);
+  accuracy500El.textContent = formatRate(metrics.recent_500);
+  accuracyCountEl.textContent = `${metrics.successes.toLocaleString()} / ${metrics.attempts.toLocaleString()}`;
+}
+
 async function loadLayout() {
   const response = await fetch('http://localhost:8000/api/layout');
   if (!response.ok) throw new Error(`Layout request failed: ${response.status}`);
   const data = (await response.json()) as LayoutResponse;
   neurons = data.neurons;
 
-  const positions = new Float32Array(neurons.length * 3);
+  basePositions = new Float32Array(neurons.length * 3);
   colors = new Float32Array(neurons.length * 3);
 
   neurons.forEach((neuron, index) => {
     byId.set(neuron.id, index);
     const p = index * 3;
-    positions[p] = neuron.x;
-    positions[p + 1] = neuron.y;
-    positions[p + 2] = neuron.z;
+    basePositions![p] = neuron.x;
+    basePositions![p + 1] = neuron.y;
+    basePositions![p + 2] = neuron.z;
   });
 
   initializeColors();
 
   const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute('position', new THREE.BufferAttribute(basePositions, 3));
   geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
   geometry.computeBoundingSphere();
 
   const material = new THREE.PointsMaterial({
-    size: neurons.length > 5000 ? 0.065 : 0.09,
+    size: neurons.length > 5000 ? 0.06 : 0.09,
     vertexColors: true,
     transparent: true,
-    opacity: 0.9,
+    opacity: 0.78,
     sizeAttenuation: true,
   });
 
   pointCloud = new THREE.Points(geometry, material);
   scene.add(pointCloud);
+
+  glowPositions = new Float32Array(MAX_GLOW_POINTS * 3);
+  glowColors = new Float32Array(MAX_GLOW_POINTS * 3);
+  const glowGeometry = new THREE.BufferGeometry();
+  glowGeometry.setAttribute('position', new THREE.BufferAttribute(glowPositions, 3));
+  glowGeometry.setAttribute('color', new THREE.BufferAttribute(glowColors, 3));
+  glowGeometry.setDrawRange(0, 0);
+
+  const glowMaterial = new THREE.PointsMaterial({
+    size: neurons.length > 5000 ? 0.135 : 0.16,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.92,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    sizeAttenuation: true,
+  });
+
+  glowCloud = new THREE.Points(glowGeometry, glowMaterial);
+  scene.add(glowCloud);
 
   const total = data.total_connectome_neurons;
   const subsetLabel = data.coordinate_kind === 'soma' && total
@@ -170,15 +264,16 @@ function connectTelemetry() {
         previousActiveIndices.push(index);
       }
     }
+    updateGlow(frame.activity);
 
     const colorAttr = pointCloud.geometry.getAttribute('color') as THREE.BufferAttribute;
     colorAttr.needsUpdate = true;
 
     problemEl.textContent = frame.problem;
     answerEl.textContent = `${frame.answer} ${frame.correct ? '✓' : '✕'}`;
-    accuracyEl.textContent = `${(frame.accuracy * 100).toFixed(1)}%`;
-    trialEl.textContent = frame.trial.toString();
+    trialEl.textContent = frame.trial.toLocaleString();
     plasticityEl.textContent = `${frame.plasticity.active_synapses} · Δw ${frame.plasticity.mean_delta_w >= 0 ? '+' : ''}${frame.plasticity.mean_delta_w}`;
+    updateMetrics(frame.metrics, frame.accuracy);
 
     if (frame.telemetry_source === 'mock') {
       statusEl.textContent = `${layoutSummary} · mock activity at 10 Hz`;
@@ -206,6 +301,7 @@ window.addEventListener('resize', resize);
 function animate() {
   controls.update();
   if (pointCloud) pointCloud.rotation.y += 0.00035;
+  if (glowCloud && pointCloud) glowCloud.rotation.copy(pointCloud.rotation);
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
