@@ -23,6 +23,8 @@ The 3D viewer can now use **real FlyWire FAFB v783 soma coordinates** while neur
 
 FAFB v783 contains 139,255 neurons, but `coordinates.csv.gz` contains soma positions for only the subset with available soma coordinates (roughly 23k). DrosoMath labels this honestly in the UI rather than inventing positions for the remaining neurons. A later milestone will add representative coordinates for non-soma cells from skeleton/synapse geometry.
 
+The current mock outcome generator marks exactly 4 of every 5 trials correct, so its overall and sufficiently long rolling success rates converge to **80% by construction**. This is only a UI/metrics pipeline test and must not be interpreted as learning.
+
 ### Get the real FAFB v783 soma layout
 
 From the repository root:
@@ -78,6 +80,25 @@ npm run dev
 
 Then open the Vite URL (normally `http://localhost:5173`). Drag to rotate the brain and scroll to zoom. With FAFB data installed the status line reports the real soma count and data source; neural flashes are still clearly marked as mock activity until the simulator adapter lands.
 
+## Result logging
+
+Each browser telemetry session creates a local result bundle under `runs/<run_id>/`:
+
+```text
+config.json
+summary.json
+metrics.csv
+```
+
+`summary.json` contains overall accuracy plus rolling 20/100/500-trial success rates. `metrics.csv` keeps the per-trial outcome history without storing high-volume per-neuron activity.
+
+To publish only the newest run to the current Git branch so it can be reviewed from GitHub:
+
+```powershell
+cd C:\Projects\drosomath
+.\scripts\publish_latest_run.ps1
+```
+
 ## Scientific principle
 
 The external experiment code may present stimuli, read choices, and deliver reward/punishment signals, but it should not directly compute the answer for the simulated brain. Claims of learning must be tested against frozen-plasticity, random-reward, and shuffled-connectome controls.
@@ -94,4 +115,4 @@ The external experiment code may present stimuli, read choices, and deliver rewa
 
 ## Status
 
-Real FAFB soma geometry integrated; connectome dynamics are the next step.
+Real FAFB soma geometry and persistent run logging integrated; connectome dynamics are the next step.
