@@ -1,5 +1,4 @@
 import asyncio
-import math
 import random
 import time
 from collections import deque
@@ -9,9 +8,10 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
 from .flywire import FAFB_V783_TOTAL_NEURONS, load_fafb_soma_layout
+from .numerosity import NumerosityExperiment
 from .run_logging import RunLogger
 
-app = FastAPI(title="DrosoMath telemetry API", version="0.4.0")
+app = FastAPI(title="DrosoMath telemetry API", version="0.5.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -20,6 +20,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+TRIALS_PER_UI_FRAME = 5
+UI_INTERVAL_SECONDS = 0.1
 
 
 def make_mock_layout() -> dict[str, Any]:
@@ -40,7 +43,7 @@ def make_mock_layout() -> dict[str, Any]:
     ]
     return {
         "neurons": neurons,
-        "source": "mock geometry — run scripts/download_fafb783.py for real soma coordinates",
+        "source": "mock geometry — run scripts/download_fafb783.py for real FlyWire coordinates",
         "count": len(neurons),
         "total_connectome_neurons": FAFB_V783_TOTAL_NEURONS,
         "coordinate_kind": "mock",
@@ -51,6 +54,30 @@ LAYOUT = load_fafb_soma_layout() or make_mock_layout()
 NEURONS = LAYOUT["neurons"]
 NEURON_COUNT = len(NEURONS)
 
+VISUAL_POOL = [
+    i
+    for i, neuron in enumerate(NEURONS)
+    if neuron.get("region") in {"optic", "sensory", "visual_projection", "visual_centrifugal", "visual"}
+]
+CENTRAL_POOL = [
+    i
+    for i, neuron in enumerate(NEURONS)
+    if neuron.get("region") in {"central", "mushroom_body"}
+]
+OUTPUT_POOL = [
+    i
+    for i, neuron in enumerate(NEURONS)
+    if neuron.get("region") in {"descending", "motor", "ascending"}
+]
+
+# Robust fallback for datasets whose region labels differ from FAFB classification.
+if not VISUAL_POOL:
+    VISUAL_POOL = list(range(0, NEURON_COUNT, 3))
+if not CENTRAL_POOL:
+    CENTRAL_POOL = list(range(1, NEURON_COUNT, 3))
+if not OUTPUT_POOL:
+    OUTPUT_POOL = list(range(2, NEURON_COUNT, 3))
+
 
 @app.get("/health")
 def health() -> dict[str, Any]:
@@ -58,7 +85,8 @@ def health() -> dict[str, Any]:
         "status": "ok",
         "layout_source": LAYOUT["source"],
         "layout_count": NEURON_COUNT,
-        "telemetry_source": "mock",
+        "telemetry_source": "numerosity_prototype",
+        "experiment": "numerosity_0_2_stage1",
     }
 
 
@@ -68,23 +96,22 @@ def layout() -> dict[str, Any]:
 
 
 class SuccessMetrics:
-    """Session-level success metrics for the current training stream.
-
-    The real simulator will eventually own these counters. Keeping the metric
-    contract here now lets the UI use the same overall/rolling definitions when
-    mock telemetry is replaced with real experiment trials.
-    """
-
     def __init__(self) -> None:
         self.total_attempts = 0
         self.total_successes = 0
         self.outcomes: deque[int] = deque(maxlen=500)
+        self.target_attempts = [0, 0, 0]
+        self.target_successes = [0, 0, 0]
+        self.confusion = [[0, 0, 0] for _ in range(3)]
 
-    def record(self, correct: bool) -> None:
+    def record(self, correct: bool, target: int, choice: int) -> None:
         outcome = 1 if correct else 0
         self.total_attempts += 1
         self.total_successes += outcome
         self.outcomes.append(outcome)
+        self.target_attempts[target] += 1
+        self.target_successes[target] += outcome
+        self.confusion[target][choice] += 1
 
     def _recent_rate(self, window: int) -> float | None:
         if not self.outcomes:
@@ -93,11 +120,15 @@ class SuccessMetrics:
         return sum(values) / len(values)
 
     def snapshot(self) -> dict[str, Any]:
-        overall = (
-            self.total_successes / self.total_attempts
-            if self.total_attempts
-            else None
-        )
+        overall = self.total_successes / self.total_attempts if self.total_attempts else None
+        by_target = {
+            str(target): (
+                self.target_successes[target] / self.target_attempts[target]
+                if self.target_attempts[target]
+                else None
+            )
+            for target in range(3)
+        }
         return {
             "overall": overall,
             "recent_20": self._recent_rate(20),
@@ -105,86 +136,128 @@ class SuccessMetrics:
             "recent_500": self._recent_rate(500),
             "successes": self.total_successes,
             "attempts": self.total_attempts,
+            "by_target_accuracy": by_target,
+            "confusion_matrix": [row[:] for row in self.confusion],
         }
 
 
-def make_frame(t: float, trial: int) -> dict[str, Any]:
-    # Geometry can now be real FlyWire data, but neural activity remains mock until
-    # the connectome simulator adapter is integrated. Stream only a sparse active
-    # subset so the browser path scales to tens of thousands of displayed somas.
-    activity: list[list[float | int]] = []
-    active_count = min(700, NEURON_COUNT)
-    if NEURON_COUNT:
-        start = (trial * 997) % NEURON_COUNT
-        step = 37
-        for k in range(active_count):
-            index = (start + k * step) % NEURON_COUNT
-            neuron = NEURONS[index]
-            phase = index * 0.031
-            base = 0.30 + 0.32 * math.sin(t * 2.4 + phase)
-            region = neuron.get("region", "")
-            burst = 0.0
-            if region in ("central", "mushroom_body") and trial % 8 in (5, 6):
-                burst = 0.48
-            if region in ("sensory", "dopamine") and trial % 8 == 7:
-                burst = 0.66
-            value = max(0.08, min(1.0, base + burst + ((index * 17 + trial) % 13) / 100.0))
-            activity.append([index, round(value, 3)])
+def _add_pool_activity(
+    activity: dict[int, float],
+    pool: list[int],
+    start: int,
+    count: int,
+    value: float,
+    step: int,
+) -> None:
+    if not pool:
+        return
+    for n in range(min(count, len(pool))):
+        index = pool[(start + n * step) % len(pool)]
+        activity[index] = max(activity.get(index, 0.0), min(1.0, value))
 
-    # Deterministic mock outcome: exactly 4 of every 5 trials are marked correct.
-    # This exists only to test the UI/metric pipeline and is NOT learned behavior.
-    answer = 2 if trial % 5 == 0 else 3
-    correct = answer == 3
+
+def make_display_activity(result: dict[str, Any]) -> list[list[float | int]]:
+    """Map prototype state onto real anatomy for visualization only.
+
+    This is deliberately labeled as a proxy. These points are NOT claimed to be
+    measured/predicted FlyWire spikes. Actual connectome activity comes later.
+    """
+    activity: dict[int, float] = {}
+    trial = int(result["trial"])
+
+    for dot_index, dot in enumerate(result["stimulus"]["dots"]):
+        key = int(dot["x"] * 10007 + dot["y"] * 20011 + trial * 17 + dot_index * 97)
+        _add_pool_activity(activity, VISUAL_POOL, key, 55, 0.88, 173)
+
+    for kc_index, kc_value in result["kc_activity"]:
+        if not CENTRAL_POOL:
+            break
+        mapped = CENTRAL_POOL[(int(kc_index) * 7919 + trial * 13) % len(CENTRAL_POOL)]
+        activity[mapped] = max(activity.get(mapped, 0.0), 0.35 + 0.65 * float(kc_value))
+
+    policy = result["policy"]
+    probabilities = [float(policy["p0"]), float(policy["p1"]), float(policy["p2"])]
+    for action, probability in enumerate(probabilities):
+        start = action * 997 + trial * 31
+        intensity = 0.30 + 0.62 * probability
+        if action == result["choice"]:
+            intensity += 0.08
+        _add_pool_activity(activity, OUTPUT_POOL, start, 35, intensity, 149)
+
+    return [[index, round(value, 3)] for index, value in activity.items()]
+
+
+def make_frame(result: dict[str, Any]) -> dict[str, Any]:
+    target = int(result["target"])
     return {
         "type": "telemetry",
-        "telemetry_source": "mock",
+        "telemetry_source": "numerosity_prototype",
+        "activity_source": "display_proxy_not_connectome_spikes",
+        "learning_model": "reward_modulated_sparse_associator",
+        "phase": "dots_0_2",
         "timestamp": time.time(),
-        "trial": trial,
-        "problem": "2 + 1",
-        "answer": answer,
-        "correct": correct,
-        "reward": 1.0 if correct else -1.0,
-        "activity": activity,
-        "plasticity": {
-            "mean_delta_w": round(0.03 * math.sin(t * 0.8), 4),
-            "active_synapses": 120 + (trial % 31),
-        },
+        "trial": result["trial"],
+        "problem": "How many dots?",
+        "target": target,
+        "answer": result["choice"],
+        "correct": result["correct"],
+        "reward": result["reward"],
+        "stimulus": result["stimulus"],
+        "policy": result["policy"],
+        "activity": make_display_activity(result),
+        "plasticity": result["plasticity"],
     }
 
 
 @app.websocket("/ws/telemetry")
 async def telemetry(websocket: WebSocket) -> None:
     await websocket.accept()
-    started = time.monotonic()
-    trial = 1
+    experiment = NumerosityExperiment()
     metrics = SuccessMetrics()
+    trial = 1
+
     logger = RunLogger(
         {
-            "experiment": "mock_2_plus_1",
-            "telemetry_source": "mock",
+            "experiment": "numerosity_0_2_stage1",
+            "telemetry_source": "numerosity_prototype",
+            "activity_source": "display_proxy_not_connectome_spikes",
+            "learning_model": "reward_modulated_sparse_associator",
+            "chance_accuracy": 1.0 / 3.0,
+            "classes": [0, 1, 2],
             "layout_source": LAYOUT["source"],
             "layout_count": NEURON_COUNT,
             "total_connectome_neurons": FAFB_V783_TOTAL_NEURONS,
             "rolling_windows": [20, 100, 500],
-            "mock_rule": "trial divisible by 5 -> wrong answer; all other trials -> correct",
+            "trials_per_ui_frame": TRIALS_PER_UI_FRAME,
+            "learner": experiment.config_dict(),
+            "scientific_scope": (
+                "Stage-1 reinforcement-learning protocol validation. Anatomical coordinates are FlyWire, "
+                "but neural dynamics are not yet the whole-connectome LIF simulation."
+            ),
         }
     )
 
     status = "completed"
     try:
         while True:
-            t = time.monotonic() - started
-            frame = make_frame(t, trial)
-            metrics.record(bool(frame["correct"]))
-            snapshot = metrics.snapshot()
-            frame["metrics"] = snapshot
-            # Compatibility alias for clients that still expect `accuracy`.
-            frame["accuracy"] = snapshot["overall"]
+            latest_frame: dict[str, Any] | None = None
+            latest_snapshot: dict[str, Any] | None = None
 
-            logger.record(frame, snapshot)
-            await websocket.send_json(frame)
-            trial += 1
-            await asyncio.sleep(0.1)  # 10 Hz UI telemetry
+            for _ in range(TRIALS_PER_UI_FRAME):
+                result = experiment.step(trial)
+                frame = make_frame(result)
+                metrics.record(bool(frame["correct"]), int(frame["target"]), int(frame["answer"]))
+                snapshot = metrics.snapshot()
+                frame["metrics"] = snapshot
+                frame["accuracy"] = snapshot["overall"]
+                logger.record(frame, snapshot)
+                latest_frame = frame
+                latest_snapshot = snapshot
+                trial += 1
+
+            if latest_frame is not None and latest_snapshot is not None:
+                await websocket.send_json(latest_frame)
+            await asyncio.sleep(UI_INTERVAL_SECONDS)
     except WebSocketDisconnect:
         status = "completed"
     except Exception:
