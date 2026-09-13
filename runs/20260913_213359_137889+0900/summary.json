@@ -1,10 +1,10 @@
 {
   "run_id": "20260913_213359_137889+0900",
-  "status": "running",
+  "status": "completed",
   "started_at": "2026-09-13T21:33:59+09:00",
-  "updated_at": "2026-09-13T21:53:51+09:00",
-  "ended_at": null,
-  "duration_seconds": 1191.987,
+  "updated_at": "2026-09-13T21:54:37+09:00",
+  "ended_at": "2026-09-13T21:54:37+09:00",
+  "duration_seconds": 1238.487,
   "experiment": "numerosity_0_2_stage2_1",
   "telemetry_source": "numerosity_prototype",
   "activity_source": "display_proxy_not_connectome_spikes",
@@ -12,83 +12,83 @@
   "chance_accuracy": 0.3333333333333333,
   "layout_source": "FlyWire Codex FAFB v783 coordinates",
   "layout_count": 139255,
-  "successes": 51226,
-  "attempts": 54725,
-  "overall_accuracy": 0.936062128825948,
-  "balanced_accuracy": 0.9360496959837686,
-  "one_vs_two_accuracy": 0.9324843561312988,
+  "successes": 53317,
+  "attempts": 56868,
+  "overall_accuracy": 0.9375571498909756,
+  "balanced_accuracy": 0.9375462337970145,
+  "one_vs_two_accuracy": 0.9339530461879737,
   "recent_20": 1.0,
-  "recent_100": 0.96,
-  "recent_500": 0.97,
+  "recent_100": 0.97,
+  "recent_500": 0.976,
   "by_target_accuracy": {
-    "0": 0.9431898955656406,
-    "1": 0.9313233754064929,
-    "2": 0.9336358169791723
+    "0": 0.9447397505394453,
+    "1": 0.9329905105232466,
+    "2": 0.934908440328352
   },
   "confusion_matrix_rows_target_cols_choice": [
     [
-      17250,
-      536,
-      503
+      17951,
+      539,
+      511
     ],
     [
-      157,
-      16897,
-      1089
+      160,
+      17599,
+      1104
     ],
     [
-      88,
-      1126,
-      17079
+      89,
+      1148,
+      17767
     ]
   ],
   "probe": {
-    "overall": 0.9415204678362573,
-    "balanced_accuracy": 0.9415531512716265,
-    "one_vs_two_accuracy": 0.9404663923182441,
-    "recent_20": 1.0,
-    "recent_100": 0.99,
+    "overall": 0.9430179387970454,
+    "balanced_accuracy": 0.9430523638112023,
+    "one_vs_two_accuracy": 0.9415807560137457,
+    "recent_20": 0.95,
+    "recent_100": 0.98,
     "recent_500": 0.988,
-    "successes": 5152,
-    "attempts": 5472,
+    "successes": 5362,
+    "attempts": 5686,
     "by_target_accuracy": {
-      "0": 0.9436234263820471,
-      "1": 0.9426321709786277,
-      "2": 0.9384038564542047
+      "0": 0.9458749343142406,
+      "1": 0.9442640692640693,
+      "2": 0.9390180878552972
     },
     "confusion_matrix": [
       [
-        1724,
+        1800,
         53,
         50
       ],
       [
         13,
-        1676,
-        89
+        1745,
+        90
       ],
       [
         3,
-        112,
-        1752
+        115,
+        1817
       ]
     ]
   },
   "last_trial_kind": "train",
-  "last_target": 0,
-  "last_answer": 0,
+  "last_target": 1,
+  "last_answer": 1,
   "last_correct": true,
   "last_reward": 1.0,
   "last_policy": {
-    "p0": 0.99122,
-    "p1": 0.005,
-    "p2": 0.00378,
-    "entropy": 0.0563
+    "p0": 0.00081,
+    "p1": 0.98763,
+    "p2": 0.01156,
+    "entropy": 0.06962
   },
   "last_stimulus_controls": {
-    "signal_energy": 0.0,
-    "area_factor": 0.0,
-    "post_noise_energy": 0.66016
+    "signal_energy": 1.86506,
+    "area_factor": 1.44,
+    "post_noise_energy": 2.49834
   },
   "learner": {
     "stage": 2.1,
