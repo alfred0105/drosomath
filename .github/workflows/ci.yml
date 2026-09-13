@@ -22,7 +22,7 @@ jobs:
         run: pip install -r backend/requirements.txt
       - name: Compile backend
         run: python -m compileall backend/app
-      - name: Stage 2.2A numerosity smoke test
+      - name: Stage 2.2B robust numerosity smoke test
         working-directory: backend
         run: |
           python - <<'PY'
@@ -31,9 +31,22 @@ jobs:
           from pathlib import Path
 
           import numpy as np
-          from app.numerosity import NumerosityExperiment, STAGE22A_PROFILES
+          from app.numerosity import NumerosityExperiment, STAGE22B_PROFILES
 
           exp = NumerosityExperiment()
+
+          # The robust visual front end must preserve global L1 energy rather
+          # than quietly introducing a new 1-vs-2 brightness shortcut.
+          retina = np.zeros((exp.config.grid_size, exp.config.grid_size), dtype=np.float32)
+          retina[5, 5] = 0.7
+          retina[7, 8] = 0.3
+          processed = exp._preprocess_retina(retina)
+          assert processed.shape == retina.shape
+          assert np.all(np.isfinite(processed))
+          assert np.all(processed >= 0)
+          assert math.isclose(float(processed.sum()), float(retina.sum()), rel_tol=1e-5, abs_tol=1e-5)
+
+          # Small acquisition smoke test with the new rasterizer/encoder.
           for trial in range(1, 101):
               result = exp.step(trial, stimulus_profile='train')
               assert result['target'] in (0, 1, 2)
@@ -43,27 +56,28 @@ jobs:
               assert math.isclose(total, 1.0, abs_tol=2e-4), total
               controls = result['stimulus']['controls']
               assert controls['stimulus_profile'] == 'train'
+              assert controls['rasterizer'] == 'continuous_gaussian_all_positions'
+              assert controls['visual_preprocess'] == 'antialias_divisive_contrast_phase_pool_v1'
               if result['target'] in (1, 2):
                   assert math.isclose(controls['area_factor'], exp.config.total_area_factor, abs_tol=2e-4)
                   assert exp.config.signal_energy_min - 1e-4 <= controls['signal_energy'] <= exp.config.signal_energy_max + 1e-4
 
-          before = exp.w_output.copy()
+          before_w = exp.w_output.copy()
+          before_b = exp.output_bias.copy()
           expected = {
               'position_only': (True, False, False, False),
-              'area_only': (False, True, False, False),
-              'spacing_only': (False, False, True, False),
               'brightness_only': (False, False, False, True),
               'combined': (True, True, True, True),
           }
 
           trial = 101
-          for profile in STAGE22A_PROFILES:
+          for profile in STAGE22B_PROFILES:
               seen_nonzero = False
-              for _ in range(30):
+              for _ in range(40):
                   result = exp.step(
                       trial,
                       learn=False,
-                      trial_kind='factor_eval',
+                      trial_kind='robust_ood_eval',
                       stimulus_profile=profile,
                   )
                   trial += 1
@@ -71,6 +85,7 @@ jobs:
                   assert result['plasticity']['active_synapses'] == 0
                   controls = result['stimulus']['controls']
                   assert controls['stimulus_profile'] == profile
+                  assert controls['rasterizer'] == 'continuous_gaussian_all_positions'
                   flags = (
                       controls['fractional_position'],
                       controls['novel_area'],
@@ -81,24 +96,26 @@ jobs:
                   if result['target'] in (1, 2):
                       seen_nonzero = True
                       assert exp.config.signal_energy_min - 1e-4 <= controls['signal_energy'] <= exp.config.signal_energy_max + 1e-4
-                      if profile in {'area_only', 'combined'}:
-                          assert not math.isclose(controls['area_factor'], exp.config.total_area_factor, abs_tol=0.1)
-                      else:
-                          assert math.isclose(controls['area_factor'], exp.config.total_area_factor, abs_tol=2e-4)
               assert seen_nonzero, profile
-              assert np.array_equal(before, exp.w_output), f'{profile} changed plastic weights'
+              assert np.array_equal(before_w, exp.w_output), f'{profile} changed output weights'
+              assert np.array_equal(before_b, exp.output_bias), f'{profile} changed output bias'
 
           with tempfile.TemporaryDirectory() as tmp:
               path = Path(tmp) / 'checkpoint.npz'
-              exp.save_checkpoint(path, {'trial': trial})
+              exp.save_checkpoint(path, {'trial': trial, 'encoder': 'stage2.2b'})
               restored = NumerosityExperiment()
               meta = restored.load_checkpoint(path)
               assert meta['trial'] == trial
+              assert meta['encoder'] == 'stage2.2b'
               assert np.array_equal(exp.w_input, restored.w_input)
               assert np.array_equal(exp.w_output, restored.w_output)
               assert np.array_equal(exp.output_bias, restored.output_bias)
 
-          print('Stage 2.2A factor isolation/checkpoint smoke test passed')
+          config = exp.config_dict()
+          assert config['visual_encoder']['explicit_object_counter'] is False
+          assert config['visual_encoder']['explicit_peak_counter'] is False
+          assert config['visual_encoder']['explicit_numerosity_feature'] is False
+          print('Stage 2.2B robust encoder/frozen OOD smoke test passed')
           PY
 
   frontend:
