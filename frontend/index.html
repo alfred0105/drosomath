@@ -12,8 +12,8 @@
       <section class="hud" aria-label="DrosoMath telemetry">
         <div class="experiment-header">
           <span class="label">Experiment</span>
-          <strong>Numerosity Stage 2.2A · factor isolation</strong>
-          <small>frozen Stage-2.1 checkpoint · 5 independent OOD blocks</small>
+          <strong>Numerosity Stage 2.2B · robust visual encoder</strong>
+          <small>new 10k replay · then frozen Position / Brightness / Combined OOD</small>
         </div>
 
         <div class="stimulus-panel">
@@ -53,7 +53,7 @@
         </div>
 
         <div class="success-panel">
-          <span class="label">Current profile · chance = 33.3%</span>
+          <span class="label">Current frozen OOD profile · chance = 33.3%</span>
           <div class="success-grid">
             <div class="success-stat">
               <span>Overall</span>
@@ -76,7 +76,7 @@
         </div>
 
         <div class="success-panel diagnostic-panel">
-          <span class="label">Current profile diagnostics</span>
+          <span class="label">Collapse-resistant diagnostics</span>
           <div class="success-grid">
             <div class="success-stat">
               <span>Balanced</span>
@@ -87,7 +87,7 @@
               <strong id="one-two-accuracy">—</strong>
             </div>
             <div class="success-stat">
-              <span>Frozen eval</span>
+              <span>Frozen balanced</span>
               <strong id="probe-balanced">—</strong>
             </div>
             <div class="success-stat">
@@ -107,12 +107,10 @@
         </div>
 
         <div class="profile-panel">
-          <span class="label">Stage 2.2A profile results · Balanced / 1↔2 / 2-dot</span>
+          <span class="label">Stage 2.2B frozen results · Balanced / 1↔2 / 2-dot</span>
           <div class="profile-table">
             <div class="profile-row profile-head"><span>Profile</span><span>Bal.</span><span>1↔2</span><span>2-dot</span></div>
             <div class="profile-row"><span>Position</span><strong id="profile-position-balanced">—</strong><strong id="profile-position-one-two">—</strong><strong id="profile-position-two">—</strong></div>
-            <div class="profile-row"><span>Area</span><strong id="profile-area-balanced">—</strong><strong id="profile-area-one-two">—</strong><strong id="profile-area-two">—</strong></div>
-            <div class="profile-row"><span>Spacing</span><strong id="profile-spacing-balanced">—</strong><strong id="profile-spacing-one-two">—</strong><strong id="profile-spacing-two">—</strong></div>
             <div class="profile-row"><span>Brightness</span><strong id="profile-brightness-balanced">—</strong><strong id="profile-brightness-one-two">—</strong><strong id="profile-brightness-two">—</strong></div>
             <div class="profile-row"><span>Combined</span><strong id="profile-combined-balanced">—</strong><strong id="profile-combined-one-two">—</strong><strong id="profile-combined-two">—</strong></div>
           </div>
