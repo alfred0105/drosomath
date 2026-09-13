@@ -22,17 +22,20 @@ jobs:
         run: pip install -r backend/requirements.txt
       - name: Compile backend
         run: python -m compileall backend/app
-      - name: Stage 2 numerosity smoke test
+      - name: Stage 2.2 numerosity smoke test
         working-directory: backend
         run: |
           python - <<'PY'
           import math
+          import tempfile
+          from pathlib import Path
+
           import numpy as np
           from app.numerosity import NumerosityExperiment
 
           exp = NumerosityExperiment()
           for trial in range(1, 101):
-              result = exp.step(trial)
+              result = exp.step(trial, stimulus_profile='train')
               assert result['target'] in (0, 1, 2)
               assert result['choice'] in (0, 1, 2)
               p = result['policy']
@@ -40,17 +43,34 @@ jobs:
               assert math.isclose(total, 1.0, abs_tol=2e-4), total
               assert result['stimulus']['numerosity'] == result['target']
               controls = result['stimulus']['controls']
+              assert controls['stimulus_profile'] == 'train'
               if result['target'] in (1, 2):
                   assert math.isclose(controls['area_factor'], exp.config.total_area_factor, abs_tol=2e-4)
                   assert exp.config.signal_energy_min - 1e-4 <= controls['signal_energy'] <= exp.config.signal_energy_max + 1e-4
 
           before = exp.w_output.copy()
-          probe = exp.step(101, learn=False, trial_kind='probe')
-          assert probe['trial_kind'] == 'probe'
-          assert probe['learning_enabled'] is False
-          assert probe['plasticity']['active_synapses'] == 0
-          assert np.array_equal(before, exp.w_output), 'probe trial changed plastic weights'
-          print('Stage 2 numerosity smoke test passed')
+          ood = exp.step(101, learn=False, trial_kind='ood_eval', stimulus_profile='ood')
+          assert ood['trial_kind'] == 'ood_eval'
+          assert ood['learning_enabled'] is False
+          assert ood['plasticity']['active_synapses'] == 0
+          assert np.array_equal(before, exp.w_output), 'OOD evaluation changed plastic weights'
+          controls = ood['stimulus']['controls']
+          assert controls['stimulus_profile'] == 'ood'
+          if ood['target'] in (1, 2):
+              assert not math.isclose(controls['area_factor'], exp.config.total_area_factor, abs_tol=0.1)
+              assert exp.config.signal_energy_min - 1e-4 <= controls['signal_energy'] <= exp.config.signal_energy_max + 1e-4
+
+          with tempfile.TemporaryDirectory() as tmp:
+              path = Path(tmp) / 'checkpoint.npz'
+              exp.save_checkpoint(path, {'trial': 101})
+              restored = NumerosityExperiment()
+              meta = restored.load_checkpoint(path)
+              assert meta['trial'] == 101
+              assert np.array_equal(exp.w_input, restored.w_input)
+              assert np.array_equal(exp.w_output, restored.w_output)
+              assert np.array_equal(exp.output_bias, restored.output_bias)
+
+          print('Stage 2.2 OOD/checkpoint smoke test passed')
           PY
 
   frontend:
