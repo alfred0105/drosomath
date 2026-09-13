@@ -20,11 +20,7 @@ def _iso(dt: datetime) -> str:
 
 
 class RunLogger:
-    """Persist lightweight experiment results for later Git/GitHub review.
-
-    We intentionally do not log per-neuron activity here. The committed run
-    artifacts stay small and focus on experiment outcomes and learning metrics.
-    """
+    """Persist compact experiment outcomes for later Git/GitHub review."""
 
     def __init__(self, config: dict[str, Any], runs_dir: Path | None = None) -> None:
         self.started_at = _now()
@@ -50,16 +46,24 @@ class RunLogger:
                 [
                     "trial",
                     "timestamp",
-                    "problem",
+                    "phase",
+                    "target",
                     "answer",
                     "correct",
                     "reward",
+                    "p0",
+                    "p1",
+                    "p2",
+                    "policy_entropy",
                     "overall",
                     "recent_20",
                     "recent_100",
                     "recent_500",
                     "successes",
                     "attempts",
+                    "target_0_accuracy",
+                    "target_1_accuracy",
+                    "target_2_accuracy",
                     "active_synapses",
                     "mean_delta_w",
                 ]
@@ -69,22 +73,33 @@ class RunLogger:
 
     def record(self, frame: dict[str, Any], metrics: dict[str, Any]) -> None:
         plasticity = frame.get("plasticity", {})
+        policy = frame.get("policy", {})
+        by_target = metrics.get("by_target_accuracy", {})
+
         with self._metrics_path.open("a", newline="", encoding="utf-8") as handle:
             writer = csv.writer(handle)
             writer.writerow(
                 [
                     frame.get("trial"),
                     frame.get("timestamp"),
-                    frame.get("problem"),
+                    frame.get("phase"),
+                    frame.get("target"),
                     frame.get("answer"),
                     int(bool(frame.get("correct"))),
                     frame.get("reward"),
+                    policy.get("p0"),
+                    policy.get("p1"),
+                    policy.get("p2"),
+                    policy.get("entropy"),
                     metrics.get("overall"),
                     metrics.get("recent_20"),
                     metrics.get("recent_100"),
                     metrics.get("recent_500"),
                     metrics.get("successes"),
                     metrics.get("attempts"),
+                    by_target.get("0"),
+                    by_target.get("1"),
+                    by_target.get("2"),
                     plasticity.get("active_synapses"),
                     plasticity.get("mean_delta_w"),
                 ]
@@ -94,8 +109,7 @@ class RunLogger:
         self._last_metrics = metrics
         self._rows += 1
 
-        # Keep summary reasonably fresh without rewriting it at 10 Hz forever.
-        if self._rows == 1 or self._rows % 10 == 0:
+        if self._rows == 1 or self._rows % 25 == 0:
             self._write_summary(status="running")
 
     def finalize(self, status: str = "completed") -> None:
@@ -110,6 +124,8 @@ class RunLogger:
             "recent_500": None,
             "successes": 0,
             "attempts": 0,
+            "by_target_accuracy": {"0": None, "1": None, "2": None},
+            "confusion_matrix": [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
         }
         now = ended_at or _now()
         summary = {
@@ -121,6 +137,9 @@ class RunLogger:
             "duration_seconds": round((now - self.started_at).total_seconds(), 3),
             "experiment": self.config.get("experiment"),
             "telemetry_source": self.config.get("telemetry_source"),
+            "activity_source": self.config.get("activity_source"),
+            "learning_model": self.config.get("learning_model"),
+            "chance_accuracy": self.config.get("chance_accuracy"),
             "layout_source": self.config.get("layout_source"),
             "layout_count": self.config.get("layout_count"),
             "successes": metrics.get("successes", 0),
@@ -129,13 +148,19 @@ class RunLogger:
             "recent_20": metrics.get("recent_20"),
             "recent_100": metrics.get("recent_100"),
             "recent_500": metrics.get("recent_500"),
-            "last_problem": last.get("problem"),
+            "by_target_accuracy": metrics.get("by_target_accuracy"),
+            "confusion_matrix_rows_target_cols_choice": metrics.get("confusion_matrix"),
+            "last_target": last.get("target"),
             "last_answer": last.get("answer"),
             "last_correct": last.get("correct"),
             "last_reward": last.get("reward"),
-            "note": "Mock telemetry is UI/pipeline validation only; do not interpret it as learned behavior."
-            if self.config.get("telemetry_source") == "mock"
-            else None,
+            "last_policy": last.get("policy"),
+            "scientific_scope": self.config.get("scientific_scope"),
+            "note": (
+                "This run validates the reward-learning protocol. It is not yet evidence that the full FlyWire connectome learned numerosity."
+                if self.config.get("telemetry_source") == "numerosity_prototype"
+                else None
+            ),
         }
         self._write_json(self._summary_path, summary)
 
