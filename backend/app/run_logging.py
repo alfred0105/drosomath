@@ -28,7 +28,7 @@ class RunLogger:
 
     def __init__(self, config: dict[str, Any], runs_dir: Path | None = None) -> None:
         self.started_at = _now()
-        self.run_id = self.started_at.strftime("%Y%m%d_%H%M%S%z")
+        self.run_id = self.started_at.strftime("%Y%m%d_%H%M%S_%f%z")
         self.run_dir = (runs_dir or DEFAULT_RUNS_DIR) / self.run_id
         self.run_dir.mkdir(parents=True, exist_ok=False)
 
