@@ -33,11 +33,12 @@ def _parse_position(raw: str) -> tuple[float, float, float] | None:
 
 
 def load_fafb_soma_layout() -> dict[str, Any] | None:
-    """Load real FAFB v783 soma positions when the Codex dumps are present.
+    """Load FAFB v783 per-neuron coordinates from the Codex static export.
 
-    coordinates.csv.gz contains soma coordinates only, so this layout is a real
-    anatomical subset of the 139,255-neuron connectome rather than fabricated
-    fallback positions for cells without soma coordinates.
+    The current public coordinates file in the user's dataset resolves all
+    139,255 FAFB v783 root IDs used by DrosoMath. We therefore describe these
+    conservatively as Codex coordinates rather than assuming every position is a
+    biological soma location.
     """
     root = data_dir()
     coordinates_path = root / "coordinates.csv.gz"
@@ -87,8 +88,6 @@ def load_fafb_soma_layout() -> dict[str, Any] | None:
         super_class, side = classification[root_id]
         neurons.append(
             {
-                # Browser-safe dense index. FlyWire root IDs exceed JS safe integer range,
-                # so the true ID is kept as a string in root_id.
                 "id": local_id,
                 "root_id": root_id,
                 "x": round((x_nm - cx) * scale, 4),
@@ -102,9 +101,9 @@ def load_fafb_soma_layout() -> dict[str, Any] | None:
 
     return {
         "neurons": neurons,
-        "source": "FlyWire Codex FAFB v783 soma coordinates",
+        "source": "FlyWire Codex FAFB v783 coordinates",
         "count": len(neurons),
         "total_connectome_neurons": FAFB_V783_TOTAL_NEURONS,
-        "coordinate_kind": "soma",
+        "coordinate_kind": "codex_coordinate",
         "data_dir": str(root),
     }
