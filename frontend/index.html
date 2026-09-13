@@ -12,8 +12,8 @@
       <section class="hud" aria-label="DrosoMath telemetry">
         <div class="experiment-header">
           <span class="label">Experiment</span>
-          <strong>Numerosity Stage 2 · dots 0–2</strong>
-          <small>1↔2 total area + signal energy controlled</small>
+          <strong>Numerosity Stage 2.1 · dots 0–2</strong>
+          <small>area/energy controlled · translation-tolerant visual pooling</small>
         </div>
 
         <div class="stimulus-panel">
@@ -97,8 +97,30 @@
           </div>
         </div>
 
+        <div class="success-panel diagnostic-panel">
+          <span class="label">Collapse-resistant diagnostics</span>
+          <div class="success-grid">
+            <div class="success-stat">
+              <span>Balanced</span>
+              <strong id="balanced-accuracy">—</strong>
+            </div>
+            <div class="success-stat">
+              <span>1↔2 accuracy</span>
+              <strong id="one-two-accuracy">—</strong>
+            </div>
+            <div class="success-stat">
+              <span>Probe balanced</span>
+              <strong id="probe-balanced">—</strong>
+            </div>
+            <div class="success-stat">
+              <span>Probe 1↔2</span>
+              <strong id="probe-one-two">—</strong>
+            </div>
+          </div>
+        </div>
+
         <div class="class-panel">
-          <span class="label">Accuracy by target</span>
+          <span class="label">Accuracy by target · use this to catch class collapse</span>
           <div class="class-grid">
             <div><span>0 dots</span><strong id="class-0">—</strong></div>
             <div><span>1 dot</span><strong id="class-1">—</strong></div>

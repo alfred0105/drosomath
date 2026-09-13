@@ -23,6 +23,8 @@ type LayoutResponse = {
 
 type ProbeMetrics = {
   overall: number | null;
+  balanced_accuracy?: number | null;
+  one_vs_two_accuracy?: number | null;
   recent_20: number | null;
   recent_100: number | null;
   recent_500: number | null;
@@ -34,6 +36,8 @@ type ProbeMetrics = {
 
 type SuccessMetrics = {
   overall: number | null;
+  balanced_accuracy?: number | null;
+  one_vs_two_accuracy?: number | null;
   recent_20: number | null;
   recent_100: number | null;
   recent_500: number | null;
@@ -148,6 +152,10 @@ const probeOverallEl = document.querySelector<HTMLElement>('#probe-overall')!;
 const probe20El = document.querySelector<HTMLElement>('#probe-20')!;
 const probe100El = document.querySelector<HTMLElement>('#probe-100')!;
 const probeCountEl = document.querySelector<HTMLElement>('#probe-count')!;
+const balancedAccuracyEl = document.querySelector<HTMLElement>('#balanced-accuracy')!;
+const oneTwoAccuracyEl = document.querySelector<HTMLElement>('#one-two-accuracy')!;
+const probeBalancedEl = document.querySelector<HTMLElement>('#probe-balanced')!;
+const probeOneTwoEl = document.querySelector<HTMLElement>('#probe-one-two')!;
 const class0El = document.querySelector<HTMLElement>('#class-0')!;
 const class1El = document.querySelector<HTMLElement>('#class-1')!;
 const class2El = document.querySelector<HTMLElement>('#class-2')!;
@@ -226,6 +234,8 @@ function updateMetrics(metrics: SuccessMetrics | undefined, fallbackAccuracy: nu
   accuracy100El.textContent = formatRate(metrics.recent_100);
   accuracy500El.textContent = formatRate(metrics.recent_500);
   accuracyCountEl.textContent = `${metrics.successes.toLocaleString()} / ${metrics.attempts.toLocaleString()}`;
+  balancedAccuracyEl.textContent = formatRate(metrics.balanced_accuracy);
+  oneTwoAccuracyEl.textContent = formatRate(metrics.one_vs_two_accuracy);
 
   const byTarget = metrics.by_target_accuracy ?? {};
   class0El.textContent = formatRate(byTarget['0']);
@@ -237,6 +247,8 @@ function updateMetrics(metrics: SuccessMetrics | undefined, fallbackAccuracy: nu
   probe20El.textContent = formatRate(probe?.recent_20);
   probe100El.textContent = formatRate(probe?.recent_100);
   probeCountEl.textContent = (probe?.attempts ?? 0).toLocaleString();
+  probeBalancedEl.textContent = formatRate(probe?.balanced_accuracy);
+  probeOneTwoEl.textContent = formatRate(probe?.one_vs_two_accuracy);
 }
 
 function renderStimulus(stimulus: DotStimulus | undefined) {
@@ -340,7 +352,7 @@ function connectTelemetry() {
   const socket = new WebSocket('ws://localhost:8000/ws/telemetry');
 
   socket.addEventListener('open', () => {
-    statusEl.textContent = `${layoutSummary} · starting Stage 2 learner`;
+    statusEl.textContent = `${layoutSummary} · starting Stage 2.1 learner`;
   });
 
   socket.addEventListener('message', (event) => {
@@ -373,7 +385,7 @@ function connectTelemetry() {
 
     if (frame.telemetry_source === 'numerosity_prototype') {
       const mode = frame.trial_kind === 'probe' ? 'PROBE · plasticity off' : 'TRAIN';
-      statusEl.textContent = `${layoutSummary} · Stage 2 cue-controlled · ${mode} · activity overlay is a proxy`;
+      statusEl.textContent = `${layoutSummary} · Stage 2.1 translation-tolerant · ${mode} · activity overlay is a proxy`;
     }
   });
 
