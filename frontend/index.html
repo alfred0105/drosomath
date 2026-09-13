@@ -12,8 +12,8 @@
       <section class="hud" aria-label="DrosoMath telemetry">
         <div class="experiment-header">
           <span class="label">Experiment</span>
-          <strong>Numerosity Stage 2.2C · learned invariance</strong>
-          <small>30k augmented training · snapshots at 10k/20k/30k · then frozen OOD</small>
+          <strong>Numerosity Stage 2.2D · progressive brightness curriculum</strong>
+          <small>60k training · weak 0–20k → medium 20–40k → strong 40–60k · then frozen OOD</small>
         </div>
 
         <div class="stimulus-panel">
@@ -41,59 +41,28 @@
 
         <div class="policy-panel">
           <span class="label">Current choice policy</span>
-          <div class="policy-row">
-            <span>0</span><div class="policy-track"><i id="policy-bar-0"></i></div><strong id="policy-0">—</strong>
-          </div>
-          <div class="policy-row">
-            <span>1</span><div class="policy-track"><i id="policy-bar-1"></i></div><strong id="policy-1">—</strong>
-          </div>
-          <div class="policy-row">
-            <span>2</span><div class="policy-track"><i id="policy-bar-2"></i></div><strong id="policy-2">—</strong>
-          </div>
+          <div class="policy-row"><span>0</span><div class="policy-track"><i id="policy-bar-0"></i></div><strong id="policy-0">—</strong></div>
+          <div class="policy-row"><span>1</span><div class="policy-track"><i id="policy-bar-1"></i></div><strong id="policy-1">—</strong></div>
+          <div class="policy-row"><span>2</span><div class="policy-track"><i id="policy-bar-2"></i></div><strong id="policy-2">—</strong></div>
         </div>
 
         <div class="success-panel">
           <span class="label">Current frozen OOD profile · chance = 33.3%</span>
           <div class="success-grid">
-            <div class="success-stat">
-              <span>Overall</span>
-              <strong id="accuracy-overall">—</strong>
-              <small id="accuracy-count">0 / 0</small>
-            </div>
-            <div class="success-stat">
-              <span>Last 20</span>
-              <strong id="accuracy-20">—</strong>
-            </div>
-            <div class="success-stat">
-              <span>Last 100</span>
-              <strong id="accuracy-100">—</strong>
-            </div>
-            <div class="success-stat">
-              <span>Last 500</span>
-              <strong id="accuracy-500">—</strong>
-            </div>
+            <div class="success-stat"><span>Overall</span><strong id="accuracy-overall">—</strong><small id="accuracy-count">0 / 0</small></div>
+            <div class="success-stat"><span>Last 20</span><strong id="accuracy-20">—</strong></div>
+            <div class="success-stat"><span>Last 100</span><strong id="accuracy-100">—</strong></div>
+            <div class="success-stat"><span>Last 500</span><strong id="accuracy-500">—</strong></div>
           </div>
         </div>
 
         <div class="success-panel diagnostic-panel">
           <span class="label">Collapse-resistant diagnostics</span>
           <div class="success-grid">
-            <div class="success-stat">
-              <span>Balanced</span>
-              <strong id="balanced-accuracy">—</strong>
-            </div>
-            <div class="success-stat">
-              <span>1↔2 accuracy</span>
-              <strong id="one-two-accuracy">—</strong>
-            </div>
-            <div class="success-stat">
-              <span>Frozen balanced</span>
-              <strong id="probe-balanced">—</strong>
-            </div>
-            <div class="success-stat">
-              <span>Frozen 1↔2</span>
-              <strong id="probe-one-two">—</strong>
-            </div>
+            <div class="success-stat"><span>Balanced</span><strong id="balanced-accuracy">—</strong></div>
+            <div class="success-stat"><span>1↔2 accuracy</span><strong id="one-two-accuracy">—</strong></div>
+            <div class="success-stat"><span>Frozen balanced</span><strong id="probe-balanced">—</strong></div>
+            <div class="success-stat"><span>Frozen 1↔2</span><strong id="probe-one-two">—</strong></div>
           </div>
         </div>
 
@@ -107,7 +76,7 @@
         </div>
 
         <div class="profile-panel">
-          <span class="label">Stage 2.2C frozen results · Balanced / 1↔2 / 2-dot</span>
+          <span class="label">Stage 2.2D frozen results · Balanced / 1↔2 / 2-dot</span>
           <div class="profile-table">
             <div class="profile-row profile-head"><span>Profile</span><span>Bal.</span><span>1↔2</span><span>2-dot</span></div>
             <div class="profile-row"><span>Position</span><strong id="profile-position-balanced">—</strong><strong id="profile-position-one-two">—</strong><strong id="profile-position-two">—</strong></div>
