@@ -2,6 +2,7 @@ import asyncio
 import random
 import time
 from collections import deque
+from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -11,7 +12,7 @@ from .flywire import FAFB_V783_TOTAL_NEURONS, load_fafb_soma_layout
 from .numerosity import NumerosityExperiment
 from .run_logging import RunLogger
 
-app = FastAPI(title="DrosoMath telemetry API", version="0.7.0")
+app = FastAPI(title="DrosoMath telemetry API", version="0.8.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,12 +22,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Keep learning throughput near 50 trials/s while making the HUD much easier to read.
-# 12 is intentionally not a multiple of PROBE_EVERY so the visible frame does not
-# always land on a probe trial.
 TRIALS_PER_UI_FRAME = 12
 UI_INTERVAL_SECONDS = 0.24
 PROBE_EVERY = 10
+STAGE21_REPLAY_TRIALS = 10_000
+REPO_ROOT = Path(__file__).resolve().parents[2]
+STAGE21_CHECKPOINT = REPO_ROOT / "checkpoints" / "stage2_1_seed7_t10000_v1.npz"
 
 
 def make_mock_layout() -> dict[str, Any]:
@@ -89,8 +90,9 @@ def health() -> dict[str, Any]:
         "layout_source": LAYOUT["source"],
         "layout_count": NEURON_COUNT,
         "telemetry_source": "numerosity_prototype",
-        "experiment": "numerosity_0_2_stage2_1",
-        "probe_every": PROBE_EVERY,
+        "experiment": "numerosity_0_2_stage2_2",
+        "mode": "frozen_ood_evaluation",
+        "stage21_replay_trials": STAGE21_REPLAY_TRIALS,
     }
 
 
@@ -167,10 +169,7 @@ class SuccessMetrics:
         probe_overall = self.probe_successes / self.probe_attempts if self.probe_attempts else None
         return {
             "overall": overall,
-            "balanced_accuracy": self._balanced_accuracy(
-                self.target_successes,
-                self.target_attempts,
-            ),
+            "balanced_accuracy": self._balanced_accuracy(self.target_successes, self.target_attempts),
             "one_vs_two_accuracy": self._one_vs_two_accuracy(self.confusion),
             "recent_20": self._rate(self.outcomes, 20),
             "recent_100": self._rate(self.outcomes, 100),
@@ -198,6 +197,45 @@ class SuccessMetrics:
                 "confusion_matrix": [row[:] for row in self.probe_confusion],
             },
         }
+
+
+def prepare_stage22_experiment() -> tuple[NumerosityExperiment, dict[str, Any], str]:
+    """Reproduce Stage 2.1 at trial 10k, caching the exact state locally."""
+    experiment = NumerosityExperiment()
+
+    if STAGE21_CHECKPOINT.exists():
+        metadata = experiment.load_checkpoint(STAGE21_CHECKPOINT)
+        snapshot = dict(metadata.get("pretraining_snapshot") or {})
+        return experiment, snapshot, "checkpoint"
+
+    metrics = SuccessMetrics()
+    for trial in range(1, STAGE21_REPLAY_TRIALS + 1):
+        is_probe = trial % PROBE_EVERY == 0
+        result = experiment.step(
+            trial,
+            learn=not is_probe,
+            trial_kind="probe" if is_probe else "train",
+            stimulus_profile="train",
+        )
+        metrics.record(
+            bool(result["correct"]),
+            int(result["target"]),
+            int(result["choice"]),
+            is_probe=is_probe,
+        )
+
+    snapshot = metrics.snapshot()
+    experiment.save_checkpoint(
+        STAGE21_CHECKPOINT,
+        {
+            "stage": 2.1,
+            "pretraining_trials": STAGE21_REPLAY_TRIALS,
+            "probe_every": PROBE_EVERY,
+            "pretraining_snapshot": snapshot,
+            "purpose": "deterministic Stage-2.1 replay state for frozen Stage-2.2 OOD evaluation",
+        },
+    )
+    return experiment, snapshot, "deterministic_replay"
 
 
 def _add_pool_activity(
@@ -248,7 +286,7 @@ def make_frame(result: dict[str, Any]) -> dict[str, Any]:
         "telemetry_source": "numerosity_prototype",
         "activity_source": "display_proxy_not_connectome_spikes",
         "learning_model": "reward_modulated_sparse_associator",
-        "phase": "dots_0_2_stage2_1",
+        "phase": "dots_0_2_stage2_2_ood",
         "trial_kind": result["trial_kind"],
         "learning_enabled": result["learning_enabled"],
         "timestamp": time.time(),
@@ -268,13 +306,14 @@ def make_frame(result: dict[str, Any]) -> dict[str, Any]:
 @app.websocket("/ws/telemetry")
 async def telemetry(websocket: WebSocket) -> None:
     await websocket.accept()
-    experiment = NumerosityExperiment()
+
+    experiment, pretraining_snapshot, state_source = prepare_stage22_experiment()
     metrics = SuccessMetrics()
-    trial = 1
+    eval_trial = 1
 
     logger = RunLogger(
         {
-            "experiment": "numerosity_0_2_stage2_1",
+            "experiment": "numerosity_0_2_stage2_2",
             "telemetry_source": "numerosity_prototype",
             "activity_source": "display_proxy_not_connectome_spikes",
             "learning_model": "reward_modulated_sparse_associator",
@@ -286,15 +325,19 @@ async def telemetry(websocket: WebSocket) -> None:
             "rolling_windows": [20, 100, 500],
             "trials_per_ui_frame": TRIALS_PER_UI_FRAME,
             "ui_interval_seconds": UI_INTERVAL_SECONDS,
-            "probe_every": PROBE_EVERY,
-            "probe_learning_enabled": False,
+            "stage21_replay_trials": STAGE21_REPLAY_TRIALS,
+            "stage21_state_source": state_source,
+            "stage21_pretraining_snapshot": pretraining_snapshot,
+            "evaluation_profile": "ood",
+            "evaluation_learning_enabled": False,
             "learner": experiment.config_dict(),
             "scientific_scope": (
-                "Stage-2.1 protocol validation: Stage-2 area/energy controls remain active, while a fixed sparse "
-                "visual receptor bank is max-pooled over nearby translated views before KC sparsification to reduce "
-                "absolute-position dependence. Every tenth trial is an evaluation probe with plasticity disabled. "
-                "This encoder does not explicitly count objects or peaks. Anatomical coordinates are FlyWire, but "
-                "neural dynamics are not yet the whole-connectome LIF simulation."
+                "Stage-2.2 frozen OOD generalization test. A deterministic replay reproduces the Stage-2.1 learner at "
+                "10,000 trials (including every-tenth frozen probes), then all plasticity is disabled. Evaluation uses "
+                "held-out half-grid positions, unseen total-area bands, stronger relative brightness asymmetry, and a "
+                "close two-dot spacing band while preserving an identical total-signal-energy distribution for 1 and 2. "
+                "The encoder does not explicitly count objects or peaks. Anatomical coordinates are FlyWire, but neural "
+                "dynamics are not yet the whole-connectome LIF simulation."
             ),
         }
     )
@@ -305,25 +348,26 @@ async def telemetry(websocket: WebSocket) -> None:
             latest_frame: dict[str, Any] | None = None
 
             for _ in range(TRIALS_PER_UI_FRAME):
-                is_probe = trial % PROBE_EVERY == 0
                 result = experiment.step(
-                    trial,
-                    learn=not is_probe,
-                    trial_kind="probe" if is_probe else "train",
+                    eval_trial,
+                    learn=False,
+                    trial_kind="ood_eval",
+                    stimulus_profile="ood",
                 )
                 frame = make_frame(result)
+                # Every Stage-2.2 trial is a held-out frozen evaluation trial.
                 metrics.record(
                     bool(frame["correct"]),
                     int(frame["target"]),
                     int(frame["answer"]),
-                    is_probe=is_probe,
+                    is_probe=True,
                 )
                 snapshot = metrics.snapshot()
                 frame["metrics"] = snapshot
                 frame["accuracy"] = snapshot["overall"]
                 logger.record(frame, snapshot)
                 latest_frame = frame
-                trial += 1
+                eval_trial += 1
 
             if latest_frame is not None:
                 await websocket.send_json(latest_frame)
