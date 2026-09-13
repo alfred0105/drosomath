@@ -44,6 +44,25 @@ function Invoke-GitChecked([string[]]$Args) {
     }
 }
 
+function Invoke-GitPushBestEffort {
+    # Windows PowerShell 5.1 can turn redirected native stderr into a
+    # NativeCommandError even for Git's harmless "Everything up-to-date" text.
+    # Do not redirect stderr here; use only git's process exit code.
+    $previousErrorActionPreference = $ErrorActionPreference
+    try {
+        $ErrorActionPreference = "Continue"
+        & git push
+        $pushCode = $LASTEXITCODE
+    }
+    finally {
+        $ErrorActionPreference = $previousErrorActionPreference
+    }
+
+    if ($pushCode -ne 0) {
+        Write-Warning "git push returned exit code $pushCode. The launcher will still continue after syncing from GitHub."
+    }
+}
+
 function Get-FileSha256([string]$Path) {
     if (-not (Test-Path $Path)) {
         return $null
@@ -102,14 +121,13 @@ Stop-PreviousDrosoMathProcesses
 if (-not $NoPull) {
     Write-Host "[1/4] Syncing GitHub..."
 
-    # A live publisher can leave a local commit that has not reached GitHub yet.
-    # Try to push it first, but do not fail the launcher if the remote moved.
-    & git push 2>$null
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "Local push was not needed or remote moved; continuing with pull/rebase."
-    }
-
+    # Pull/rebase first. This safely keeps local run commits while moving them
+    # on top of any code changes pushed from ChatGPT/GitHub.
     Invoke-GitChecked @("pull", "--rebase", "--autostash")
+
+    # If the live publisher left local commits ahead of origin, publish them now.
+    # A failed push is non-fatal for launching the local experiment.
+    Invoke-GitPushBestEffort
 }
 else {
     Write-Host "[1/4] Git pull skipped (-NoPull)."
