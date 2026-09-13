@@ -21,7 +21,7 @@ type LayoutResponse = {
   coordinate_kind?: string;
 };
 
-type ProbeMetrics = {
+type CoreMetrics = {
   overall: number | null;
   balanced_accuracy?: number | null;
   one_vs_two_accuracy?: number | null;
@@ -34,18 +34,13 @@ type ProbeMetrics = {
   confusion_matrix?: number[][];
 };
 
-type SuccessMetrics = {
-  overall: number | null;
-  balanced_accuracy?: number | null;
-  one_vs_two_accuracy?: number | null;
-  recent_20: number | null;
-  recent_100: number | null;
-  recent_500: number | null;
-  successes: number;
-  attempts: number;
-  by_target_accuracy?: Record<string, number | null>;
-  confusion_matrix?: number[][];
-  probe?: ProbeMetrics;
+type SuccessMetrics = CoreMetrics & {
+  probe?: CoreMetrics;
+  profiles?: Record<string, CoreMetrics | null>;
+  current_profile?: string;
+  profile_trial?: number;
+  profile_trials_target?: number;
+  experiment_complete?: boolean;
 };
 
 type DotStimulus = {
@@ -60,6 +55,10 @@ type DotStimulus = {
     post_noise_energy: number;
     min_pair_distance?: number | null;
     gain_ratio?: number | null;
+    fractional_position?: boolean;
+    novel_area?: boolean;
+    close_spacing?: boolean;
+    strong_brightness?: boolean;
   };
 };
 
@@ -69,13 +68,19 @@ type Telemetry = {
   activity_source?: string;
   learning_model?: string;
   phase?: string;
-  trial_kind?: 'train' | 'probe' | 'ood_eval';
+  trial_kind?: string;
   learning_enabled?: boolean;
   trial: number;
   target: number;
   answer: number;
   correct: boolean;
   reward: number;
+  evaluation_profile?: string;
+  profile_trial?: number;
+  profile_trials_target?: number;
+  profile_index?: number;
+  profile_count?: number;
+  experiment_complete?: boolean;
   accuracy?: number | null;
   metrics?: SuccessMetrics;
   stimulus?: DotStimulus;
@@ -90,6 +95,42 @@ type Telemetry = {
     mean_delta_w: number;
     active_synapses: number;
   };
+};
+
+const PROFILE_LABELS: Record<string, string> = {
+  position_only: 'Position',
+  area_only: 'Area',
+  spacing_only: 'Spacing',
+  brightness_only: 'Brightness',
+  combined: 'Combined',
+};
+
+const PROFILE_DOM: Record<string, { balanced: HTMLElement; oneTwo: HTMLElement; two: HTMLElement }> = {
+  position_only: {
+    balanced: document.querySelector<HTMLElement>('#profile-position-balanced')!,
+    oneTwo: document.querySelector<HTMLElement>('#profile-position-one-two')!,
+    two: document.querySelector<HTMLElement>('#profile-position-two')!,
+  },
+  area_only: {
+    balanced: document.querySelector<HTMLElement>('#profile-area-balanced')!,
+    oneTwo: document.querySelector<HTMLElement>('#profile-area-one-two')!,
+    two: document.querySelector<HTMLElement>('#profile-area-two')!,
+  },
+  spacing_only: {
+    balanced: document.querySelector<HTMLElement>('#profile-spacing-balanced')!,
+    oneTwo: document.querySelector<HTMLElement>('#profile-spacing-one-two')!,
+    two: document.querySelector<HTMLElement>('#profile-spacing-two')!,
+  },
+  brightness_only: {
+    balanced: document.querySelector<HTMLElement>('#profile-brightness-balanced')!,
+    oneTwo: document.querySelector<HTMLElement>('#profile-brightness-one-two')!,
+    two: document.querySelector<HTMLElement>('#profile-brightness-two')!,
+  },
+  combined: {
+    balanced: document.querySelector<HTMLElement>('#profile-combined-balanced')!,
+    oneTwo: document.querySelector<HTMLElement>('#profile-combined-one-two')!,
+    two: document.querySelector<HTMLElement>('#profile-combined-two')!,
+  },
 };
 
 const canvas = document.querySelector<HTMLCanvasElement>('#brain');
@@ -152,10 +193,6 @@ const accuracy20El = document.querySelector<HTMLElement>('#accuracy-20')!;
 const accuracy100El = document.querySelector<HTMLElement>('#accuracy-100')!;
 const accuracy500El = document.querySelector<HTMLElement>('#accuracy-500')!;
 const accuracyCountEl = document.querySelector<HTMLElement>('#accuracy-count')!;
-const probeOverallEl = document.querySelector<HTMLElement>('#probe-overall')!;
-const probe20El = document.querySelector<HTMLElement>('#probe-20')!;
-const probe100El = document.querySelector<HTMLElement>('#probe-100')!;
-const probeCountEl = document.querySelector<HTMLElement>('#probe-count')!;
 const balancedAccuracyEl = document.querySelector<HTMLElement>('#balanced-accuracy')!;
 const oneTwoAccuracyEl = document.querySelector<HTMLElement>('#one-two-accuracy')!;
 const probeBalancedEl = document.querySelector<HTMLElement>('#probe-balanced')!;
@@ -227,6 +264,16 @@ function formatRate(value: number | null | undefined): string {
   return value == null ? '—' : `${(value * 100).toFixed(1)}%`;
 }
 
+function updateProfileResults(metrics: SuccessMetrics) {
+  const profiles = metrics.profiles ?? {};
+  Object.entries(PROFILE_DOM).forEach(([profile, elements]) => {
+    const result = profiles[profile];
+    elements.balanced.textContent = formatRate(result?.balanced_accuracy);
+    elements.oneTwo.textContent = formatRate(result?.one_vs_two_accuracy);
+    elements.two.textContent = formatRate(result?.by_target_accuracy?.['2']);
+  });
+}
+
 function updateMetrics(metrics: SuccessMetrics | undefined, fallbackAccuracy: number | null | undefined) {
   if (!metrics) {
     accuracyOverallEl.textContent = formatRate(fallbackAccuracy);
@@ -247,12 +294,9 @@ function updateMetrics(metrics: SuccessMetrics | undefined, fallbackAccuracy: nu
   class2El.textContent = formatRate(byTarget['2']);
 
   const probe = metrics.probe;
-  probeOverallEl.textContent = formatRate(probe?.overall);
-  probe20El.textContent = formatRate(probe?.recent_20);
-  probe100El.textContent = formatRate(probe?.recent_100);
-  probeCountEl.textContent = (probe?.attempts ?? 0).toLocaleString();
   probeBalancedEl.textContent = formatRate(probe?.balanced_accuracy);
   probeOneTwoEl.textContent = formatRate(probe?.one_vs_two_accuracy);
+  updateProfileResults(metrics);
 }
 
 function renderStimulus(stimulus: DotStimulus | undefined) {
@@ -356,7 +400,7 @@ function connectTelemetry() {
   const socket = new WebSocket('ws://localhost:8000/ws/telemetry');
 
   socket.addEventListener('open', () => {
-    statusEl.textContent = `${layoutSummary} · preparing Stage 2.2 replay/checkpoint…`;
+    statusEl.textContent = `${layoutSummary} · preparing Stage 2.2A frozen factor isolation…`;
   });
 
   socket.addEventListener('message', (event) => {
@@ -380,28 +424,25 @@ function connectTelemetry() {
     updatePolicy(frame.policy);
     answerEl.textContent = `${frame.answer} ${frame.correct ? '✓' : '✕'}`;
     targetEl.textContent = `${frame.target}`;
-    trialEl.textContent = frame.trial.toLocaleString();
 
-    if (frame.trial_kind === 'ood_eval') {
-      trialKindEl.textContent = 'OOD EVAL · weights frozen';
-    } else if (frame.trial_kind === 'probe') {
-      trialKindEl.textContent = 'PROBE · weights frozen';
-    } else {
-      trialKindEl.textContent = 'TRAIN';
-    }
+    const profile = frame.evaluation_profile ?? frame.metrics?.current_profile ?? 'unknown';
+    const profileLabel = PROFILE_LABELS[profile] ?? profile;
+    const profileTrial = frame.profile_trial ?? frame.metrics?.profile_trial ?? 0;
+    const profileTarget = frame.profile_trials_target ?? frame.metrics?.profile_trials_target ?? 0;
+    trialEl.textContent = profileTarget
+      ? `${profileTrial.toLocaleString()} / ${profileTarget.toLocaleString()}`
+      : frame.trial.toLocaleString();
+    trialKindEl.textContent = `${profileLabel} · FROZEN`;
 
     plasticityEl.textContent = frame.learning_enabled === false
       ? 'frozen · no update'
       : `${frame.plasticity.active_synapses} · Δw ${frame.plasticity.mean_delta_w >= 0 ? '+' : ''}${frame.plasticity.mean_delta_w}`;
     updateMetrics(frame.metrics, frame.accuracy);
 
-    if (frame.telemetry_source === 'numerosity_prototype') {
-      const mode = frame.trial_kind === 'ood_eval'
-        ? 'OOD EVAL · plasticity off'
-        : frame.trial_kind === 'probe'
-          ? 'PROBE · plasticity off'
-          : 'TRAIN';
-      statusEl.textContent = `${layoutSummary} · Stage 2.2 frozen generalization · ${mode} · activity overlay is a proxy`;
+    if (frame.experiment_complete || frame.metrics?.experiment_complete) {
+      statusEl.textContent = `${layoutSummary} · Stage 2.2A COMPLETE · all 5 frozen OOD profiles saved`;
+    } else {
+      statusEl.textContent = `${layoutSummary} · Stage 2.2A ${profileLabel} (${frame.profile_index ?? '—'}/${frame.profile_count ?? 5}) · plasticity off · activity overlay is a proxy`;
     }
   });
 
