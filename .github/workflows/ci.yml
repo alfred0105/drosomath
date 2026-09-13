@@ -21,11 +21,12 @@ jobs:
         run: pip install -r backend/requirements.txt
       - name: Compile backend
         run: python -m compileall backend/app
-      - name: Numerosity smoke test
+      - name: Stage 2 numerosity smoke test
         working-directory: backend
         run: |
           python - <<'PY'
           import math
+          import numpy as np
           from app.numerosity import NumerosityExperiment
 
           exp = NumerosityExperiment()
@@ -37,7 +38,18 @@ jobs:
               total = p['p0'] + p['p1'] + p['p2']
               assert math.isclose(total, 1.0, abs_tol=2e-4), total
               assert result['stimulus']['numerosity'] == result['target']
-          print('numerosity smoke test passed')
+              controls = result['stimulus']['controls']
+              if result['target'] in (1, 2):
+                  assert math.isclose(controls['area_factor'], exp.config.total_area_factor, abs_tol=2e-4)
+                  assert exp.config.signal_energy_min - 1e-4 <= controls['signal_energy'] <= exp.config.signal_energy_max + 1e-4
+
+          before = exp.w_output.copy()
+          probe = exp.step(101, learn=False, trial_kind='probe')
+          assert probe['trial_kind'] == 'probe'
+          assert probe['learning_enabled'] is False
+          assert probe['plasticity']['active_synapses'] == 0
+          assert np.array_equal(before, exp.w_output), 'probe trial changed plastic weights'
+          print('Stage 2 numerosity smoke test passed')
           PY
 
   frontend:
