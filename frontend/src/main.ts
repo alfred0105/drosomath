@@ -28,18 +28,36 @@ type SuccessMetrics = {
   recent_500: number | null;
   successes: number;
   attempts: number;
+  by_target_accuracy?: Record<string, number | null>;
+  confusion_matrix?: number[][];
+};
+
+type DotStimulus = {
+  kind: 'dots';
+  numerosity: number;
+  dots: Array<{ x: number; y: number; r: number; gain: number }>;
 };
 
 type Telemetry = {
   type: 'telemetry';
   telemetry_source?: string;
+  activity_source?: string;
+  learning_model?: string;
+  phase?: string;
   trial: number;
-  problem: string;
+  target: number;
   answer: number;
   correct: boolean;
   reward: number;
   accuracy?: number | null;
   metrics?: SuccessMetrics;
+  stimulus?: DotStimulus;
+  policy?: {
+    p0: number;
+    p1: number;
+    p2: number;
+    entropy: number;
+  };
   activity: [number, number][];
   plasticity: {
     mean_delta_w: number;
@@ -97,8 +115,8 @@ let previousActiveIndices: number[] = [];
 let layoutSummary = 'loading layout';
 
 const byId = new Map<number, number>();
-const problemEl = document.querySelector<HTMLElement>('#problem')!;
 const answerEl = document.querySelector<HTMLElement>('#answer')!;
+const targetEl = document.querySelector<HTMLElement>('#target')!;
 const trialEl = document.querySelector<HTMLElement>('#trial')!;
 const plasticityEl = document.querySelector<HTMLElement>('#plasticity')!;
 const accuracyOverallEl = document.querySelector<HTMLElement>('#accuracy-overall')!;
@@ -106,14 +124,18 @@ const accuracy20El = document.querySelector<HTMLElement>('#accuracy-20')!;
 const accuracy100El = document.querySelector<HTMLElement>('#accuracy-100')!;
 const accuracy500El = document.querySelector<HTMLElement>('#accuracy-500')!;
 const accuracyCountEl = document.querySelector<HTMLElement>('#accuracy-count')!;
+const class0El = document.querySelector<HTMLElement>('#class-0')!;
+const class1El = document.querySelector<HTMLElement>('#class-1')!;
+const class2El = document.querySelector<HTMLElement>('#class-2')!;
+const stimulusEl = document.querySelector<SVGSVGElement>('#stimulus-view')!;
+const policyEls = [0, 1, 2].map((i) => document.querySelector<HTMLElement>(`#policy-${i}`)!);
+const policyBarEls = [0, 1, 2].map((i) => document.querySelector<HTMLElement>(`#policy-bar-${i}`)!);
 const statusEl = document.querySelector<HTMLElement>('#status')!;
 
 function setNeuronColor(index: number, activity: number) {
   if (!colors) return;
   const neuron = neurons[index];
   const source = regionBase[neuron.region] ?? fallbackColor;
-
-  // Keep resting anatomy intentionally dim and make strong activity pop toward white.
   const resting = source.clone().multiplyScalar(0.24);
   const contrast = Math.pow(Math.max(0, Math.min(1, activity)), 1.45);
   const mixed = resting.clone().lerp(hotColor, contrast);
@@ -180,6 +202,45 @@ function updateMetrics(metrics: SuccessMetrics | undefined, fallbackAccuracy: nu
   accuracy100El.textContent = formatRate(metrics.recent_100);
   accuracy500El.textContent = formatRate(metrics.recent_500);
   accuracyCountEl.textContent = `${metrics.successes.toLocaleString()} / ${metrics.attempts.toLocaleString()}`;
+
+  const byTarget = metrics.by_target_accuracy ?? {};
+  class0El.textContent = formatRate(byTarget['0']);
+  class1El.textContent = formatRate(byTarget['1']);
+  class2El.textContent = formatRate(byTarget['2']);
+}
+
+function renderStimulus(stimulus: DotStimulus | undefined) {
+  while (stimulusEl.firstChild) stimulusEl.removeChild(stimulusEl.firstChild);
+  if (!stimulus) return;
+
+  const ns = 'http://www.w3.org/2000/svg';
+  const background = document.createElementNS(ns, 'rect');
+  background.setAttribute('x', '1');
+  background.setAttribute('y', '1');
+  background.setAttribute('width', '98');
+  background.setAttribute('height', '98');
+  background.setAttribute('rx', '8');
+  background.setAttribute('class', 'stimulus-bg');
+  stimulusEl.appendChild(background);
+
+  for (const dot of stimulus.dots) {
+    const circle = document.createElementNS(ns, 'circle');
+    circle.setAttribute('cx', (dot.x * 100).toFixed(2));
+    circle.setAttribute('cy', (dot.y * 100).toFixed(2));
+    circle.setAttribute('r', (dot.r * 100).toFixed(2));
+    circle.setAttribute('class', 'stimulus-dot');
+    circle.setAttribute('opacity', Math.min(1, 0.60 + dot.gain * 0.28).toFixed(2));
+    stimulusEl.appendChild(circle);
+  }
+}
+
+function updatePolicy(policy: Telemetry['policy']) {
+  if (!policy) return;
+  const values = [policy.p0, policy.p1, policy.p2];
+  values.forEach((value, index) => {
+    policyEls[index].textContent = `${(value * 100).toFixed(1)}%`;
+    policyBarEls[index].style.width = `${Math.max(1, value * 100)}%`;
+  });
 }
 
 async function loadLayout() {
@@ -238,10 +299,10 @@ async function loadLayout() {
   scene.add(glowCloud);
 
   const total = data.total_connectome_neurons;
-  const subsetLabel = data.coordinate_kind === 'soma' && total
-    ? `${data.count.toLocaleString()} real soma positions / ${total.toLocaleString()} total neurons`
+  const coordinateLabel = total
+    ? `${data.count.toLocaleString()} FlyWire coordinates / ${total.toLocaleString()} neurons`
     : `${data.count.toLocaleString()} neurons`;
-  layoutSummary = `${subsetLabel} · ${data.source}`;
+  layoutSummary = `${coordinateLabel} · ${data.source}`;
   statusEl.textContent = layoutSummary;
 }
 
@@ -249,7 +310,7 @@ function connectTelemetry() {
   const socket = new WebSocket('ws://localhost:8000/ws/telemetry');
 
   socket.addEventListener('open', () => {
-    statusEl.textContent = `${layoutSummary} · live 10 Hz`;
+    statusEl.textContent = `${layoutSummary} · starting numerosity learner`;
   });
 
   socket.addEventListener('message', (event) => {
@@ -269,14 +330,16 @@ function connectTelemetry() {
     const colorAttr = pointCloud.geometry.getAttribute('color') as THREE.BufferAttribute;
     colorAttr.needsUpdate = true;
 
-    problemEl.textContent = frame.problem;
+    renderStimulus(frame.stimulus);
+    updatePolicy(frame.policy);
     answerEl.textContent = `${frame.answer} ${frame.correct ? '✓' : '✕'}`;
+    targetEl.textContent = `${frame.target}`;
     trialEl.textContent = frame.trial.toLocaleString();
     plasticityEl.textContent = `${frame.plasticity.active_synapses} · Δw ${frame.plasticity.mean_delta_w >= 0 ? '+' : ''}${frame.plasticity.mean_delta_w}`;
     updateMetrics(frame.metrics, frame.accuracy);
 
-    if (frame.telemetry_source === 'mock') {
-      statusEl.textContent = `${layoutSummary} · mock activity at 10 Hz`;
+    if (frame.telemetry_source === 'numerosity_prototype') {
+      statusEl.textContent = `${layoutSummary} · prototype learning · 5 trials / UI frame · activity overlay is a proxy`;
     }
   });
 
