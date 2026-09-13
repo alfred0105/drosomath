@@ -53,9 +53,13 @@ type DotStimulus = {
   numerosity: number;
   dots: Array<{ x: number; y: number; r: number; gain: number }>;
   controls?: {
+    stimulus_profile?: string;
     signal_energy: number;
     area_factor: number;
+    requested_area_factor?: number;
     post_noise_energy: number;
+    min_pair_distance?: number | null;
+    gain_ratio?: number | null;
   };
 };
 
@@ -65,7 +69,7 @@ type Telemetry = {
   activity_source?: string;
   learning_model?: string;
   phase?: string;
-  trial_kind?: 'train' | 'probe';
+  trial_kind?: 'train' | 'probe' | 'ood_eval';
   learning_enabled?: boolean;
   trial: number;
   target: number;
@@ -352,7 +356,7 @@ function connectTelemetry() {
   const socket = new WebSocket('ws://localhost:8000/ws/telemetry');
 
   socket.addEventListener('open', () => {
-    statusEl.textContent = `${layoutSummary} · starting Stage 2.1 learner`;
+    statusEl.textContent = `${layoutSummary} · preparing Stage 2.2 replay/checkpoint…`;
   });
 
   socket.addEventListener('message', (event) => {
@@ -377,15 +381,27 @@ function connectTelemetry() {
     answerEl.textContent = `${frame.answer} ${frame.correct ? '✓' : '✕'}`;
     targetEl.textContent = `${frame.target}`;
     trialEl.textContent = frame.trial.toLocaleString();
-    trialKindEl.textContent = frame.trial_kind === 'probe' ? 'PROBE · weights frozen' : 'TRAIN';
+
+    if (frame.trial_kind === 'ood_eval') {
+      trialKindEl.textContent = 'OOD EVAL · weights frozen';
+    } else if (frame.trial_kind === 'probe') {
+      trialKindEl.textContent = 'PROBE · weights frozen';
+    } else {
+      trialKindEl.textContent = 'TRAIN';
+    }
+
     plasticityEl.textContent = frame.learning_enabled === false
-      ? 'probe · no update'
+      ? 'frozen · no update'
       : `${frame.plasticity.active_synapses} · Δw ${frame.plasticity.mean_delta_w >= 0 ? '+' : ''}${frame.plasticity.mean_delta_w}`;
     updateMetrics(frame.metrics, frame.accuracy);
 
     if (frame.telemetry_source === 'numerosity_prototype') {
-      const mode = frame.trial_kind === 'probe' ? 'PROBE · plasticity off' : 'TRAIN';
-      statusEl.textContent = `${layoutSummary} · Stage 2.1 translation-tolerant · ${mode} · activity overlay is a proxy`;
+      const mode = frame.trial_kind === 'ood_eval'
+        ? 'OOD EVAL · plasticity off'
+        : frame.trial_kind === 'probe'
+          ? 'PROBE · plasticity off'
+          : 'TRAIN';
+      statusEl.textContent = `${layoutSummary} · Stage 2.2 frozen generalization · ${mode} · activity overlay is a proxy`;
     }
   });
 
