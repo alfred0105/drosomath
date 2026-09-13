@@ -14,7 +14,7 @@ class NumerosityConfig:
     n_kc: int = 512
     kc_active: int = 64
     input_fan_in_probability: float = 0.08
-    learning_rate: float = 0.14
+    learning_rate: float = 0.08
     output_decay: float = 0.99999
     policy_temperature: float = 1.0
     radius_jitter_min: float = 0.90
@@ -23,23 +23,29 @@ class NumerosityConfig:
     signal_energy_min: float = 1.85
     signal_energy_max: float = 2.15
     pixel_noise_sd: float = 0.01
+    translation_offsets: tuple[int, ...] = (-3, 0, 3)
 
 
 class NumerosityExperiment:
-    """Stage-2 reward learner with continuous visual cues controlled.
+    """Stage-2.1 reward learner with translation-tolerant visual pooling.
+
+    Stage 2 showed that the raw absolute-position sparse projection could learn
+    zero vs non-zero but collapsed 1-dot stimuli into the 2-dot action. Stage
+    2.1 changes only the visual representation: the same fixed sparse receptor
+    bank is evaluated over a small set of translated views and each receptor
+    keeps its maximum response across those views before the KC winner-take-most
+    step. This gives a receptor tolerance to location without computing the
+    numerosity label or explicitly counting connected components/peaks.
+
+    The Stage-2 continuous-cue controls are retained: for non-zero stimuli,
+    1-dot and 2-dot displays have matched total area and independently sampled
+    matched integrated signal energy. Probe trials can call step(...,
+    learn=False), which evaluates the current policy without changing weights.
 
     This is still a protocol-validation prototype, not the full FlyWire neural
-    simulation. For non-zero stimuli, 1-dot and 2-dot displays are constructed
-    so total dot area and integrated signal energy are matched up to small
-    trial-to-trial jitter that is sampled independently of numerosity.
-
-    Dot locations remain randomized. A one-dot display therefore tends to use a
-    larger/brighter dot while a two-dot display uses two smaller/dimmer dots.
-    The learner cannot solve 1 versus 2 simply by total brightness or total area.
-
-    Learning remains reinforcement-only: the target class is used only to turn
-    the sampled choice into +1/-1 reward. Probe trials can call step(...,
-    learn=False), which evaluates the current policy without changing weights.
+    simulation and not a claim that this pooling operation is an exact model of
+    Drosophila early vision. Stronger held-out cue controls are required before
+    claiming abstract numerosity.
     """
 
     def __init__(self, config: NumerosityConfig | None = None) -> None:
@@ -79,17 +85,27 @@ class NumerosityExperiment:
         scale = math.sqrt(c.total_area_factor / float(np.sum(raw * raw)))
         return (raw * scale).astype(np.float32)
 
-    def _make_stimulus(self, numerosity: int) -> tuple[np.ndarray, list[dict[str, float]], dict[str, float]]:
+    def _make_stimulus(
+        self,
+        numerosity: int,
+    ) -> tuple[np.ndarray, list[dict[str, float]], dict[str, float]]:
         c = self.config
         grid = np.zeros((c.grid_size, c.grid_size), dtype=np.float32)
         positions = self._sample_positions(numerosity)
         radii = self._controlled_radii(numerosity)
         dot_payload: list[dict[str, float]] = []
 
-        # Independent per-trial target energy: its distribution is identical for
-        # 1-dot and 2-dot stimuli, so energy itself carries no count information.
-        target_energy = float(self.rng.uniform(c.signal_energy_min, c.signal_energy_max)) if numerosity else 0.0
-        raw_gains = self.rng.uniform(0.90, 1.10, size=numerosity) if numerosity else np.zeros(0)
+        # Independent target-energy distribution is identical for 1 and 2 dots.
+        target_energy = (
+            float(self.rng.uniform(c.signal_energy_min, c.signal_energy_max))
+            if numerosity
+            else 0.0
+        )
+        raw_gains = (
+            self.rng.uniform(0.90, 1.10, size=numerosity)
+            if numerosity
+            else np.zeros(0)
+        )
 
         for dot_index, ((x, y), radius) in enumerate(zip(positions, radii, strict=True)):
             gain = float(raw_gains[dot_index])
@@ -118,7 +134,11 @@ class NumerosityExperiment:
         area_factor = float(np.sum(radii * radii)) if radii.size else 0.0
 
         if c.pixel_noise_sd > 0:
-            grid += self.rng.normal(0.0, c.pixel_noise_sd, size=grid.shape).astype(np.float32)
+            grid += self.rng.normal(
+                0.0,
+                c.pixel_noise_sd,
+                size=grid.shape,
+            ).astype(np.float32)
         np.clip(grid, 0.0, 1.0, out=grid)
 
         controls = {
@@ -128,20 +148,50 @@ class NumerosityExperiment:
         }
         return grid.reshape(-1), dot_payload, controls
 
+    @staticmethod
+    def _zero_fill_shift(grid: np.ndarray, dx: int, dy: int) -> np.ndarray:
+        """Translate a retinal image without wraparound."""
+        height, width = grid.shape
+        shifted = np.zeros_like(grid)
+
+        dst_y0 = max(0, dy)
+        dst_y1 = min(height, height + dy)
+        dst_x0 = max(0, dx)
+        dst_x1 = min(width, width + dx)
+
+        src_y0 = max(0, -dy)
+        src_y1 = min(height, height - dy)
+        src_x0 = max(0, -dx)
+        src_x1 = min(width, width - dx)
+
+        if dst_y0 < dst_y1 and dst_x0 < dst_x1:
+            shifted[dst_y0:dst_y1, dst_x0:dst_x1] = grid[
+                src_y0:src_y1,
+                src_x0:src_x1,
+            ]
+        return shifted
+
     def _encode(self, stimulus: np.ndarray) -> np.ndarray:
+        """Fixed sparse visual receptors + translation tolerance + sparse KC code."""
         c = self.config
-        raw = np.maximum(0.0, self.w_input @ stimulus)
+        grid = stimulus.reshape(c.grid_size, c.grid_size)
+
+        receptor_views: list[np.ndarray] = []
+        for dy in c.translation_offsets:
+            for dx in c.translation_offsets:
+                shifted = self._zero_fill_shift(grid, dx=dx, dy=dy)
+                response = np.maximum(0.0, self.w_input @ shifted.reshape(-1))
+                receptor_views.append(response)
+
+        # A receptor can respond to the same local pattern across nearby retinal
+        # positions. No answer label, connected-component count, or peak count is
+        # inserted here; this is transformation pooling over the same receptors.
+        raw = np.max(np.stack(receptor_views, axis=0), axis=0)
+
         k = min(c.kc_active, c.n_kc)
         active_idx = np.argpartition(raw, -k)[-k:]
         activity = np.zeros(c.n_kc, dtype=np.float32)
         activity[active_idx] = raw[active_idx]
-
-        # Broad-field channels are retained as realistic nuisance sensors, but
-        # Stage 2 equalizes their signal for 1 vs 2. They mainly separate zero
-        # (absence) from non-zero stimuli and cannot directly encode 1 versus 2.
-        energy = float(np.sum(stimulus)) / max(c.signal_energy_max, 1e-6)
-        activity[0] = max(float(activity[0]), energy)
-        activity[1] = max(float(activity[1]), math.sqrt(max(0.0, energy)))
         return activity
 
     def _policy(self, kc_activity: np.ndarray) -> np.ndarray:
@@ -151,7 +201,13 @@ class NumerosityExperiment:
         exp = np.exp(logits)
         return exp / float(np.sum(exp))
 
-    def step(self, trial: int, *, learn: bool = True, trial_kind: str = "train") -> dict[str, Any]:
+    def step(
+        self,
+        trial: int,
+        *,
+        learn: bool = True,
+        trial_kind: str = "train",
+    ) -> dict[str, Any]:
         c = self.config
         target = int(self.rng.integers(0, 3))
         stimulus, dots, controls = self._make_stimulus(target)
@@ -167,7 +223,7 @@ class NumerosityExperiment:
 
         if learn:
             self.w_output += delta
-            self.output_bias += c.learning_rate * 0.10 * reward * eligibility
+            self.output_bias += c.learning_rate * 0.05 * reward * eligibility
             self.w_output *= c.output_decay
         else:
             delta = np.zeros_like(delta)
@@ -182,7 +238,9 @@ class NumerosityExperiment:
         changed = np.abs(delta) > 1e-8
         changed_values = np.abs(delta[changed])
         mean_delta = float(changed_values.mean()) if changed_values.size else 0.0
-        entropy = -float(np.sum(probabilities * np.log(np.maximum(probabilities, 1e-12))))
+        entropy = -float(
+            np.sum(probabilities * np.log(np.maximum(probabilities, 1e-12)))
+        )
 
         return {
             "trial": trial,
@@ -213,8 +271,9 @@ class NumerosityExperiment:
 
     def config_dict(self) -> dict[str, Any]:
         c = self.config
+        offsets = list(c.translation_offsets)
         return {
-            "stage": 2,
+            "stage": 2.1,
             "seed": c.seed,
             "grid_size": c.grid_size,
             "n_kc": c.n_kc,
@@ -227,6 +286,14 @@ class NumerosityExperiment:
             "total_area_factor_nonzero": c.total_area_factor,
             "signal_energy_range_nonzero": [c.signal_energy_min, c.signal_energy_max],
             "pixel_noise_sd": c.pixel_noise_sd,
+            "visual_encoder": {
+                "kind": "fixed_sparse_receptors_with_translation_max_pooling",
+                "translation_offsets_x": offsets,
+                "translation_offsets_y": offsets,
+                "view_count": len(offsets) * len(offsets),
+                "explicit_object_counter": False,
+                "explicit_peak_counter": False,
+            },
             "continuous_cue_controls": {
                 "equalize_total_area_for_1_vs_2": True,
                 "equalize_signal_energy_distribution_for_1_vs_2": True,
