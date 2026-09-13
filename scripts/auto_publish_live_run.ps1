@@ -26,11 +26,11 @@ function Get-LatestRunDirectory {
         Select-Object -First 1
 }
 
-function Invoke-Git([string[]]$Args, [switch]$AllowFailure) {
-    & git @Args
+function Invoke-Git([string[]]$GitArgs, [switch]$AllowFailure) {
+    & git @GitArgs
     $code = $LASTEXITCODE
     if ($code -ne 0 -and -not $AllowFailure) {
-        throw "git $($Args -join ' ') failed with exit code $code"
+        throw "git $($GitArgs -join ' ') failed with exit code $code"
     }
     return $code
 }
@@ -66,7 +66,7 @@ function Publish-LiveSnapshot([int]$Cycle) {
             return
         }
 
-        Invoke-Git -Args (@("add", "--") + $existing) | Out-Null
+        Invoke-Git -GitArgs (@("add", "--") + $existing) | Out-Null
         $staged = & git diff --cached --name-only -- $existing
         if (-not $staged) {
             Write-Host "[$(Get-Date -Format 'HH:mm:ss')] No new live snapshot changes."
@@ -75,9 +75,9 @@ function Publish-LiveSnapshot([int]$Cycle) {
 
         $kind = if ($includeMetrics) { "summary + metrics checkpoint" } else { "summary" }
         $stamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-        Invoke-Git -Args @("commit", "-m", "Live run snapshot $($latest.Name) [$kind] $stamp") | Out-Null
+        Invoke-Git -GitArgs @("commit", "-m", "Live run snapshot $($latest.Name) [$kind] $stamp") | Out-Null
 
-        $pushCode = Invoke-Git -Args @("push") -AllowFailure
+        $pushCode = Invoke-Git -GitArgs @("push") -AllowFailure
         if ($pushCode -eq 0) {
             Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Published $kind for $($latest.Name)."
         }
@@ -91,7 +91,7 @@ function Publish-LiveSnapshot([int]$Cycle) {
 }
 
 Write-Host "DrosoMath live GitHub publisher"
-Write-Host "  summary interval : $IntervalSeconds sec"
+Write-Host "  summary interval  : $IntervalSeconds sec"
 Write-Host "  metrics checkpoint: every $MetricsEvery cycles (~$([math]::Round($IntervalSeconds * $MetricsEvery / 60, 1)) min)"
 Write-Host "  Ctrl+C to stop"
 Write-Host ""
