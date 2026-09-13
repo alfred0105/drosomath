@@ -1,10 +1,10 @@
 {
   "run_id": "20260913_231821_947324+0900",
-  "status": "running",
+  "status": "completed",
   "started_at": "2026-09-13T23:18:21+09:00",
-  "updated_at": "2026-09-13T23:20:24+09:00",
-  "ended_at": null,
-  "duration_seconds": 122.589,
+  "updated_at": "2026-09-13T23:20:34+09:00",
+  "ended_at": "2026-09-13T23:20:34+09:00",
+  "duration_seconds": 132.683,
   "experiment": "numerosity_0_2_stage2_2c",
   "telemetry_source": "numerosity_prototype",
   "activity_source": "display_proxy_not_connectome_spikes",
@@ -28,7 +28,7 @@
   "total_evaluation_trials": 6000,
   "evaluation_learning_enabled": false,
   "current_profile": "combined",
-  "current_profile_trial": 1550,
+  "current_profile_trial": 2000,
   "profile_results": {
     "position_only": {
       "overall": 0.886,
@@ -159,130 +159,130 @@
       }
     },
     "combined": {
-      "overall": 0.6903225806451613,
-      "balanced_accuracy": 0.6989515505966684,
-      "one_vs_two_accuracy": 0.5552407932011332,
-      "recent_20": 0.75,
-      "recent_100": 0.73,
-      "recent_500": 0.71,
-      "successes": 1070,
-      "attempts": 1550,
+      "overall": 0.6935,
+      "balanced_accuracy": 0.6988217640305509,
+      "one_vs_two_accuracy": 0.5571216617210683,
+      "recent_20": 0.65,
+      "recent_100": 0.64,
+      "recent_500": 0.708,
+      "successes": 1387,
+      "attempts": 2000,
       "by_target_accuracy": {
-        "0": 0.9816700610997964,
-        "1": 0.8342857142857143,
-        "2": 0.2808988764044944
+        "0": 0.9754601226993865,
+        "1": 0.8453453453453453,
+        "2": 0.2756598240469208
       },
       "confusion_matrix": [
         [
-          482,
-          3,
-          6
+          636,
+          5,
+          11
+        ],
+        [
+          4,
+          563,
+          99
         ],
         [
           3,
-          438,
-          84
-        ],
-        [
-          3,
-          381,
-          150
+          491,
+          188
         ]
       ],
       "probe": {
-        "overall": 0.6903225806451613,
-        "balanced_accuracy": 0.6989515505966684,
-        "one_vs_two_accuracy": 0.5552407932011332,
-        "recent_20": 0.75,
-        "recent_100": 0.73,
-        "recent_500": 0.71,
-        "successes": 1070,
-        "attempts": 1550,
+        "overall": 0.6935,
+        "balanced_accuracy": 0.6988217640305509,
+        "one_vs_two_accuracy": 0.5571216617210683,
+        "recent_20": 0.65,
+        "recent_100": 0.64,
+        "recent_500": 0.708,
+        "successes": 1387,
+        "attempts": 2000,
         "by_target_accuracy": {
-          "0": 0.9816700610997964,
-          "1": 0.8342857142857143,
-          "2": 0.2808988764044944
+          "0": 0.9754601226993865,
+          "1": 0.8453453453453453,
+          "2": 0.2756598240469208
         },
         "confusion_matrix": [
           [
-            482,
-            3,
-            6
+            636,
+            5,
+            11
+          ],
+          [
+            4,
+            563,
+            99
           ],
           [
             3,
-            438,
-            84
-          ],
-          [
-            3,
-            381,
-            150
+            491,
+            188
           ]
         ]
       }
     }
   },
-  "experiment_complete": false,
-  "successes": 1070,
-  "attempts": 1550,
-  "overall_accuracy": 0.6903225806451613,
-  "balanced_accuracy": 0.6989515505966684,
-  "one_vs_two_accuracy": 0.5552407932011332,
-  "recent_20": 0.75,
-  "recent_100": 0.73,
-  "recent_500": 0.71,
+  "experiment_complete": true,
+  "successes": 1387,
+  "attempts": 2000,
+  "overall_accuracy": 0.6935,
+  "balanced_accuracy": 0.6988217640305509,
+  "one_vs_two_accuracy": 0.5571216617210683,
+  "recent_20": 0.65,
+  "recent_100": 0.64,
+  "recent_500": 0.708,
   "by_target_accuracy": {
-    "0": 0.9816700610997964,
-    "1": 0.8342857142857143,
-    "2": 0.2808988764044944
+    "0": 0.9754601226993865,
+    "1": 0.8453453453453453,
+    "2": 0.2756598240469208
   },
   "confusion_matrix_rows_target_cols_choice": [
     [
-      482,
-      3,
-      6
+      636,
+      5,
+      11
+    ],
+    [
+      4,
+      563,
+      99
     ],
     [
       3,
-      438,
-      84
-    ],
-    [
-      3,
-      381,
-      150
+      491,
+      188
     ]
   ],
   "probe": {
-    "overall": 0.6903225806451613,
-    "balanced_accuracy": 0.6989515505966684,
-    "one_vs_two_accuracy": 0.5552407932011332,
-    "recent_20": 0.75,
-    "recent_100": 0.73,
-    "recent_500": 0.71,
-    "successes": 1070,
-    "attempts": 1550,
+    "overall": 0.6935,
+    "balanced_accuracy": 0.6988217640305509,
+    "one_vs_two_accuracy": 0.5571216617210683,
+    "recent_20": 0.65,
+    "recent_100": 0.64,
+    "recent_500": 0.708,
+    "successes": 1387,
+    "attempts": 2000,
     "by_target_accuracy": {
-      "0": 0.9816700610997964,
-      "1": 0.8342857142857143,
-      "2": 0.2808988764044944
+      "0": 0.9754601226993865,
+      "1": 0.8453453453453453,
+      "2": 0.2756598240469208
     },
     "confusion_matrix": [
       [
-        482,
-        3,
-        6
+        636,
+        5,
+        11
+      ],
+      [
+        4,
+        563,
+        99
       ],
       [
         3,
-        438,
-        84
-      ],
-      [
-        3,
-        381,
-        150
+        491,
+        188
       ]
     ]
   },
@@ -292,19 +292,19 @@
   "last_correct": true,
   "last_reward": 1.0,
   "last_policy": {
-    "p0": 0.00465,
-    "p1": 0.18022,
-    "p2": 0.81513,
-    "entropy": 0.50042
+    "p0": 0.00747,
+    "p1": 0.63591,
+    "p2": 0.35662,
+    "entropy": 0.69218
   },
   "last_stimulus_controls": {
     "stimulus_profile": "combined",
-    "signal_energy": 2.09169,
-    "area_factor": 0.89816,
-    "requested_area_factor": 0.89816,
-    "post_noise_energy": 2.63815,
-    "min_pair_distance": 2.0,
-    "gain_ratio": 3.24987,
+    "signal_energy": 1.95048,
+    "area_factor": 0.92351,
+    "requested_area_factor": 0.92351,
+    "post_noise_energy": 2.40791,
+    "min_pair_distance": 2.23607,
+    "gain_ratio": 3.22565,
     "fractional_position": true,
     "novel_area": true,
     "close_spacing": true,
