@@ -19,6 +19,24 @@ def _iso(dt: datetime) -> str:
     return dt.isoformat(timespec="seconds")
 
 
+def _balanced_accuracy(metrics: dict[str, Any]) -> float | None:
+    by_target = metrics.get("by_target_accuracy", {})
+    values = [by_target.get(str(i)) for i in range(3)]
+    valid = [float(v) for v in values if v is not None]
+    return sum(valid) / len(valid) if valid else None
+
+
+def _one_vs_two_accuracy(metrics: dict[str, Any]) -> float | None:
+    confusion = metrics.get("confusion_matrix") or []
+    if len(confusion) < 3 or len(confusion[1]) < 3 or len(confusion[2]) < 3:
+        return None
+    attempts = sum(confusion[1]) + sum(confusion[2])
+    if attempts <= 0:
+        return None
+    correct = confusion[1][1] + confusion[2][2]
+    return correct / attempts
+
+
 class RunLogger:
     """Persist compact experiment outcomes for later Git/GitHub review."""
 
@@ -61,6 +79,8 @@ class RunLogger:
                     "area_factor",
                     "post_noise_energy",
                     "overall",
+                    "balanced_accuracy",
+                    "one_vs_two_accuracy",
                     "recent_20",
                     "recent_100",
                     "recent_500",
@@ -70,6 +90,8 @@ class RunLogger:
                     "target_1_accuracy",
                     "target_2_accuracy",
                     "probe_overall",
+                    "probe_balanced_accuracy",
+                    "probe_one_vs_two_accuracy",
                     "probe_recent_20",
                     "probe_recent_100",
                     "probe_recent_500",
@@ -92,6 +114,10 @@ class RunLogger:
         probe = metrics.get("probe", {})
         probe_by_target = probe.get("by_target_accuracy", {})
         controls = (frame.get("stimulus") or {}).get("controls", {})
+        balanced = _balanced_accuracy(metrics)
+        one_vs_two = _one_vs_two_accuracy(metrics)
+        probe_balanced = _balanced_accuracy(probe)
+        probe_one_vs_two = _one_vs_two_accuracy(probe)
 
         with self._metrics_path.open("a", newline="", encoding="utf-8") as handle:
             writer = csv.writer(handle)
@@ -114,6 +140,8 @@ class RunLogger:
                     controls.get("area_factor"),
                     controls.get("post_noise_energy"),
                     metrics.get("overall"),
+                    balanced,
+                    one_vs_two,
                     metrics.get("recent_20"),
                     metrics.get("recent_100"),
                     metrics.get("recent_500"),
@@ -123,6 +151,8 @@ class RunLogger:
                     by_target.get("1"),
                     by_target.get("2"),
                     probe.get("overall"),
+                    probe_balanced,
+                    probe_one_vs_two,
                     probe.get("recent_20"),
                     probe.get("recent_100"),
                     probe.get("recent_500"),
@@ -188,12 +218,18 @@ class RunLogger:
             "successes": metrics.get("successes", 0),
             "attempts": metrics.get("attempts", 0),
             "overall_accuracy": metrics.get("overall"),
+            "balanced_accuracy": _balanced_accuracy(metrics),
+            "one_vs_two_accuracy": _one_vs_two_accuracy(metrics),
             "recent_20": metrics.get("recent_20"),
             "recent_100": metrics.get("recent_100"),
             "recent_500": metrics.get("recent_500"),
             "by_target_accuracy": metrics.get("by_target_accuracy"),
             "confusion_matrix_rows_target_cols_choice": metrics.get("confusion_matrix"),
-            "probe": probe,
+            "probe": {
+                **probe,
+                "balanced_accuracy": _balanced_accuracy(probe),
+                "one_vs_two_accuracy": _one_vs_two_accuracy(probe),
+            },
             "last_trial_kind": last.get("trial_kind"),
             "last_target": last.get("target"),
             "last_answer": last.get("answer"),
@@ -201,6 +237,7 @@ class RunLogger:
             "last_reward": last.get("reward"),
             "last_policy": last.get("policy"),
             "last_stimulus_controls": controls,
+            "learner": self.config.get("learner"),
             "scientific_scope": self.config.get("scientific_scope"),
             "note": (
                 "This run validates the reward-learning protocol. It is not yet evidence that the full FlyWire connectome learned numerosity."
