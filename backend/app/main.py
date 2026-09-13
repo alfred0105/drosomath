@@ -11,7 +11,7 @@ from .flywire import FAFB_V783_TOTAL_NEURONS, load_fafb_soma_layout
 from .numerosity import NumerosityExperiment
 from .run_logging import RunLogger
 
-app = FastAPI(title="DrosoMath telemetry API", version="0.6.0")
+app = FastAPI(title="DrosoMath telemetry API", version="0.6.1")
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,8 +21,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-TRIALS_PER_UI_FRAME = 5
-UI_INTERVAL_SECONDS = 0.1
+# Keep learning throughput near 50 trials/s while making the HUD much easier to read.
+# 12 is intentionally not a multiple of PROBE_EVERY so the visible frame does not
+# always land on a probe trial.
+TRIALS_PER_UI_FRAME = 12
+UI_INTERVAL_SECONDS = 0.24
 PROBE_EVERY = 10
 
 
@@ -256,6 +259,7 @@ async def telemetry(websocket: WebSocket) -> None:
             "total_connectome_neurons": FAFB_V783_TOTAL_NEURONS,
             "rolling_windows": [20, 100, 500],
             "trials_per_ui_frame": TRIALS_PER_UI_FRAME,
+            "ui_interval_seconds": UI_INTERVAL_SECONDS,
             "probe_every": PROBE_EVERY,
             "probe_learning_enabled": False,
             "learner": experiment.config_dict(),

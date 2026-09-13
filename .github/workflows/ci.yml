@@ -5,7 +5,8 @@ on:
     branches:
       - main
       - bootstrap/realtime-3d
-  pull_request:
+    paths-ignore:
+      - 'runs/**'
 
 jobs:
   backend:
