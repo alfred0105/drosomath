@@ -31,12 +31,12 @@ From the repository root:
 python scripts/download_fafb783.py
 ```
 
-This places these Codex-derived files under `data/flywire/fafb783/`:
+The helper downloads the two small FAFB v783 static exports used by the viewer from FlyWire/Codex public storage and places them under `data/flywire/fafb783/`:
 
 - `classification.csv.gz`
 - `coordinates.csv.gz`
 
-The `data/` directory is ignored by Git. If the helper download is unavailable, download the same FAFB v783 files manually from the Codex Download Data page and place them in that directory.
+The `data/` directory is ignored by Git. If the helper URL is unavailable, download the same FAFB v783 files manually from the Codex Download Data page and place them in that directory. Follow the FlyWire/Codex data terms for any redistribution or publication; DrosoMath does not commit these data files.
 
 You can use a different local dataset directory with:
 
