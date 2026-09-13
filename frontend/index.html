@@ -12,8 +12,8 @@
       <section class="hud" aria-label="DrosoMath telemetry">
         <div class="experiment-header">
           <span class="label">Experiment</span>
-          <strong>Numerosity · dots 0–2</strong>
-          <small>reward-modulated prototype</small>
+          <strong>Numerosity Stage 2 · dots 0–2</strong>
+          <small>1↔2 total area + signal energy controlled</small>
         </div>
 
         <div class="stimulus-panel">
@@ -32,6 +32,7 @@
         <div>
           <span class="label">Trial</span>
           <strong id="trial">—</strong>
+          <small id="trial-kind">—</small>
         </div>
         <div>
           <span class="label">Plastic synapses</span>
@@ -52,7 +53,7 @@
         </div>
 
         <div class="success-panel">
-          <span class="label">Success rates · chance = 33.3%</span>
+          <span class="label">All trials · chance = 33.3%</span>
           <div class="success-grid">
             <div class="success-stat">
               <span>Overall</span>
@@ -70,6 +71,28 @@
             <div class="success-stat">
               <span>Last 500</span>
               <strong id="accuracy-500">—</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="success-panel probe-panel">
+          <span class="label">Held-out probe · every 10th trial · plasticity OFF</span>
+          <div class="success-grid">
+            <div class="success-stat">
+              <span>Probe overall</span>
+              <strong id="probe-overall">—</strong>
+            </div>
+            <div class="success-stat">
+              <span>Probe last 20</span>
+              <strong id="probe-20">—</strong>
+            </div>
+            <div class="success-stat">
+              <span>Probe last 100</span>
+              <strong id="probe-100">—</strong>
+            </div>
+            <div class="success-stat">
+              <span>Probe trials</span>
+              <strong id="probe-count">0</strong>
             </div>
           </div>
         </div>
