@@ -11,7 +11,7 @@ from .flywire import FAFB_V783_TOTAL_NEURONS, load_fafb_soma_layout
 from .numerosity import NumerosityExperiment
 from .run_logging import RunLogger
 
-app = FastAPI(title="DrosoMath telemetry API", version="0.5.0")
+app = FastAPI(title="DrosoMath telemetry API", version="0.6.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -23,6 +23,7 @@ app.add_middleware(
 
 TRIALS_PER_UI_FRAME = 5
 UI_INTERVAL_SECONDS = 0.1
+PROBE_EVERY = 10
 
 
 def make_mock_layout() -> dict[str, Any]:
@@ -70,7 +71,6 @@ OUTPUT_POOL = [
     if neuron.get("region") in {"descending", "motor", "ascending"}
 ]
 
-# Robust fallback for datasets whose region labels differ from FAFB classification.
 if not VISUAL_POOL:
     VISUAL_POOL = list(range(0, NEURON_COUNT, 3))
 if not CENTRAL_POOL:
@@ -86,7 +86,8 @@ def health() -> dict[str, Any]:
         "layout_source": LAYOUT["source"],
         "layout_count": NEURON_COUNT,
         "telemetry_source": "numerosity_prototype",
-        "experiment": "numerosity_0_2_stage1",
+        "experiment": "numerosity_0_2_stage2",
+        "probe_every": PROBE_EVERY,
     }
 
 
@@ -104,7 +105,14 @@ class SuccessMetrics:
         self.target_successes = [0, 0, 0]
         self.confusion = [[0, 0, 0] for _ in range(3)]
 
-    def record(self, correct: bool, target: int, choice: int) -> None:
+        self.probe_attempts = 0
+        self.probe_successes = 0
+        self.probe_outcomes: deque[int] = deque(maxlen=500)
+        self.probe_target_attempts = [0, 0, 0]
+        self.probe_target_successes = [0, 0, 0]
+        self.probe_confusion = [[0, 0, 0] for _ in range(3)]
+
+    def record(self, correct: bool, target: int, choice: int, *, is_probe: bool) -> None:
         outcome = 1 if correct else 0
         self.total_attempts += 1
         self.total_successes += outcome
@@ -113,31 +121,53 @@ class SuccessMetrics:
         self.target_successes[target] += outcome
         self.confusion[target][choice] += 1
 
-    def _recent_rate(self, window: int) -> float | None:
-        if not self.outcomes:
+        if is_probe:
+            self.probe_attempts += 1
+            self.probe_successes += outcome
+            self.probe_outcomes.append(outcome)
+            self.probe_target_attempts[target] += 1
+            self.probe_target_successes[target] += outcome
+            self.probe_confusion[target][choice] += 1
+
+    @staticmethod
+    def _rate(values: deque[int], window: int) -> float | None:
+        if not values:
             return None
-        values = list(self.outcomes)[-window:]
-        return sum(values) / len(values)
+        recent = list(values)[-window:]
+        return sum(recent) / len(recent)
+
+    @staticmethod
+    def _class_rates(successes: list[int], attempts: list[int]) -> dict[str, float | None]:
+        return {
+            str(target): successes[target] / attempts[target] if attempts[target] else None
+            for target in range(3)
+        }
 
     def snapshot(self) -> dict[str, Any]:
         overall = self.total_successes / self.total_attempts if self.total_attempts else None
-        by_target = {
-            str(target): (
-                self.target_successes[target] / self.target_attempts[target]
-                if self.target_attempts[target]
-                else None
-            )
-            for target in range(3)
-        }
+        probe_overall = self.probe_successes / self.probe_attempts if self.probe_attempts else None
         return {
             "overall": overall,
-            "recent_20": self._recent_rate(20),
-            "recent_100": self._recent_rate(100),
-            "recent_500": self._recent_rate(500),
+            "recent_20": self._rate(self.outcomes, 20),
+            "recent_100": self._rate(self.outcomes, 100),
+            "recent_500": self._rate(self.outcomes, 500),
             "successes": self.total_successes,
             "attempts": self.total_attempts,
-            "by_target_accuracy": by_target,
+            "by_target_accuracy": self._class_rates(self.target_successes, self.target_attempts),
             "confusion_matrix": [row[:] for row in self.confusion],
+            "probe": {
+                "overall": probe_overall,
+                "recent_20": self._rate(self.probe_outcomes, 20),
+                "recent_100": self._rate(self.probe_outcomes, 100),
+                "recent_500": self._rate(self.probe_outcomes, 500),
+                "successes": self.probe_successes,
+                "attempts": self.probe_attempts,
+                "by_target_accuracy": self._class_rates(
+                    self.probe_target_successes,
+                    self.probe_target_attempts,
+                ),
+                "confusion_matrix": [row[:] for row in self.probe_confusion],
+            },
         }
 
 
@@ -157,11 +187,7 @@ def _add_pool_activity(
 
 
 def make_display_activity(result: dict[str, Any]) -> list[list[float | int]]:
-    """Map prototype state onto real anatomy for visualization only.
-
-    This is deliberately labeled as a proxy. These points are NOT claimed to be
-    measured/predicted FlyWire spikes. Actual connectome activity comes later.
-    """
+    """Visualization proxy; these are not claimed to be FlyWire spike predictions."""
     activity: dict[int, float] = {}
     trial = int(result["trial"])
 
@@ -188,20 +214,21 @@ def make_display_activity(result: dict[str, Any]) -> list[list[float | int]]:
 
 
 def make_frame(result: dict[str, Any]) -> dict[str, Any]:
-    target = int(result["target"])
     return {
         "type": "telemetry",
         "telemetry_source": "numerosity_prototype",
         "activity_source": "display_proxy_not_connectome_spikes",
         "learning_model": "reward_modulated_sparse_associator",
-        "phase": "dots_0_2",
+        "phase": "dots_0_2_stage2",
+        "trial_kind": result["trial_kind"],
+        "learning_enabled": result["learning_enabled"],
         "timestamp": time.time(),
         "trial": result["trial"],
         "problem": "How many dots?",
-        "target": target,
-        "answer": result["choice"],
-        "correct": result["correct"],
-        "reward": result["reward"],
+        "target": int(result["target"]),
+        "answer": int(result["choice"]),
+        "correct": bool(result["correct"]),
+        "reward": float(result["reward"]),
         "stimulus": result["stimulus"],
         "policy": result["policy"],
         "activity": make_display_activity(result),
@@ -218,7 +245,7 @@ async def telemetry(websocket: WebSocket) -> None:
 
     logger = RunLogger(
         {
-            "experiment": "numerosity_0_2_stage1",
+            "experiment": "numerosity_0_2_stage2",
             "telemetry_source": "numerosity_prototype",
             "activity_source": "display_proxy_not_connectome_spikes",
             "learning_model": "reward_modulated_sparse_associator",
@@ -229,9 +256,12 @@ async def telemetry(websocket: WebSocket) -> None:
             "total_connectome_neurons": FAFB_V783_TOTAL_NEURONS,
             "rolling_windows": [20, 100, 500],
             "trials_per_ui_frame": TRIALS_PER_UI_FRAME,
+            "probe_every": PROBE_EVERY,
+            "probe_learning_enabled": False,
             "learner": experiment.config_dict(),
             "scientific_scope": (
-                "Stage-1 reinforcement-learning protocol validation. Anatomical coordinates are FlyWire, "
+                "Stage-2 protocol validation: 1-vs-2 total dot area and integrated signal energy are controlled. "
+                "Every tenth trial is an evaluation probe with plasticity disabled. Anatomical coordinates are FlyWire, "
                 "but neural dynamics are not yet the whole-connectome LIF simulation."
             ),
         }
@@ -241,21 +271,29 @@ async def telemetry(websocket: WebSocket) -> None:
     try:
         while True:
             latest_frame: dict[str, Any] | None = None
-            latest_snapshot: dict[str, Any] | None = None
 
             for _ in range(TRIALS_PER_UI_FRAME):
-                result = experiment.step(trial)
+                is_probe = trial % PROBE_EVERY == 0
+                result = experiment.step(
+                    trial,
+                    learn=not is_probe,
+                    trial_kind="probe" if is_probe else "train",
+                )
                 frame = make_frame(result)
-                metrics.record(bool(frame["correct"]), int(frame["target"]), int(frame["answer"]))
+                metrics.record(
+                    bool(frame["correct"]),
+                    int(frame["target"]),
+                    int(frame["answer"]),
+                    is_probe=is_probe,
+                )
                 snapshot = metrics.snapshot()
                 frame["metrics"] = snapshot
                 frame["accuracy"] = snapshot["overall"]
                 logger.record(frame, snapshot)
                 latest_frame = frame
-                latest_snapshot = snapshot
                 trial += 1
 
-            if latest_frame is not None and latest_snapshot is not None:
+            if latest_frame is not None:
                 await websocket.send_json(latest_frame)
             await asyncio.sleep(UI_INTERVAL_SECONDS)
     except WebSocketDisconnect:
