@@ -1,7 +1,8 @@
 param(
     [switch]$NoPull,
     [switch]$NoBrowser,
-    [switch]$NoPublisher
+    [switch]$NoPublisher,
+    [switch]$SelfTest
 )
 
 $ErrorActionPreference = "Stop"
@@ -37,10 +38,16 @@ function Stop-PreviousDrosoMathProcesses {
     }
 }
 
-function Invoke-GitChecked([string[]]$Args) {
-    & git @Args
-    if ($LASTEXITCODE -ne 0) {
-        throw "git $($Args -join ' ') failed with exit code $LASTEXITCODE"
+function Invoke-GitChecked {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string[]]$GitArgs
+    )
+
+    & git @GitArgs
+    $gitCode = $LASTEXITCODE
+    if ($gitCode -ne 0) {
+        throw "git $($GitArgs -join ' ') failed with exit code $gitCode"
     }
 }
 
@@ -110,6 +117,13 @@ function Start-DrosoMathWindow {
     }
 }
 
+if ($SelfTest) {
+    Write-Host "Running DrosoMath launcher self-test..."
+    Invoke-GitChecked -GitArgs @("--version")
+    Write-Host "Launcher self-test passed."
+    exit 0
+}
+
 Write-Host ""
 Write-Host "=== DrosoMath one-command launcher ==="
 Write-Host "Repository: $repoRoot"
@@ -123,7 +137,7 @@ if (-not $NoPull) {
 
     # Pull/rebase first. This safely keeps local run commits while moving them
     # on top of any code changes pushed from ChatGPT/GitHub.
-    Invoke-GitChecked @("pull", "--rebase", "--autostash")
+    Invoke-GitChecked -GitArgs @("pull", "--rebase", "--autostash")
 
     # If the live publisher left local commits ahead of origin, publish them now.
     # A failed push is non-fatal for launching the local experiment.
