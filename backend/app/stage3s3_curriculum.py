@@ -23,7 +23,7 @@ TRAIN_TRIALS = 600_000
 TRAINING_MILESTONES = (40_000, 120_000, 220_000, 320_000, 400_000, 500_000, 600_000)
 PROFILE_TRIALS = 1_200
 PROFILE_ORDER = (
-    "identity", "next", "prev",
+    "identity", "successor", "prev",
     "next2_seen", "next2_heldout", "next3_seen", "next3_heldout",
     "prev2_seen", "prev2_heldout", "prev3_seen", "prev3_heldout",
     "addition_seen", "addition_commutativity", "addition_heldout_pairs",
@@ -126,7 +126,7 @@ def training_spec(exp: SymbolicStage3S3Experiment, trial: int) -> dict[str, Any]
 
 def profile_example(profile: str, index: int) -> tuple[str, int | None, int | None]:
     if profile == "identity": return "identity", index % 10, None
-    if profile == "next": return "next", index % 9, None
+    if profile == "successor": return "next", index % 9, None
     if profile == "prev": return "prev", 1 + index % 9, None
     starts = {
         "next2_seen": ("next2", NEXT2_TRAIN_STARTS), "next2_heldout": ("next2", NEXT2_HELDOUT_STARTS),
