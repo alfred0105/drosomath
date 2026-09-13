@@ -17,21 +17,26 @@ class NumerosityConfig:
     learning_rate: float = 0.18
     output_decay: float = 0.99999
     policy_temperature: float = 1.0
-    dot_gain_min: float = 0.75
-    dot_gain_max: float = 1.25
-    pixel_noise_sd: float = 0.02
+    dot_gain_min: float = 0.90
+    dot_gain_max: float = 1.10
+    dot_radius_min: float = 0.90
+    dot_radius_max: float = 1.10
+    pixel_noise_sd: float = 0.01
 
 
 class NumerosityExperiment:
-    """Reward-modulated numerosity learner for the first DrosoMath experiment.
+    """Reward-modulated 0/1/2-dot learner for DrosoMath Stage 1.
 
-    This is intentionally a *prototype learning stage*, not yet the full FlyWire
-    connectome simulation. A fixed sparse random projection acts as a KC-like
-    expansion layer. Only the sparse-code -> choice weights are plastic.
+    This is a protocol-validation learner, not yet the whole FlyWire connectome.
+    Random dot positions are projected through a fixed sparse expansion layer.
+    Two broad-field sensory channels intentionally preserve continuous visual
+    cues (total energy and a nonlinear transform) in Stage 1. Stage 2 will
+    equalize those cues to test whether performance generalizes to numerosity
+    itself rather than brightness/area.
 
-    Learning is reinforcement-only: the learner samples one of three actions and
-    receives +1 for a correct choice or -1 for an incorrect choice. The target
-    class is never used directly in the weight update.
+    Only the sparse-code -> choice weights are plastic. The update is
+    reinforcement-only: the target class is never inserted directly into the
+    learning rule; the learner receives only its chosen action and +/- reward.
     """
 
     def __init__(self, config: NumerosityConfig | None = None) -> None:
@@ -66,7 +71,7 @@ class NumerosityExperiment:
             placed.append((x, y))
 
             gain = float(self.rng.uniform(c.dot_gain_min, c.dot_gain_max))
-            radius = float(self.rng.uniform(0.75, 1.15))
+            radius = float(self.rng.uniform(c.dot_radius_min, c.dot_radius_max))
             dots.append(
                 {
                     "x": round((x + 0.5) / c.grid_size, 4),
@@ -94,6 +99,13 @@ class NumerosityExperiment:
         active_idx = np.argpartition(raw, -k)[-k:]
         activity = np.zeros(c.n_kc, dtype=np.float32)
         activity[active_idx] = raw[active_idx]
+
+        # Stage-1 broad-field visual channels. These do not contain the answer;
+        # they expose sensory energy that naturally covaries with dot number.
+        # Stage 2 will remove/equalize these continuous cues.
+        energy = float(np.sum(stimulus)) / 5.0
+        activity[0] = max(float(activity[0]), energy)
+        activity[1] = max(float(activity[1]), min(4.0, energy * energy))
         return activity
 
     def _policy(self, kc_activity: np.ndarray) -> np.ndarray:
@@ -113,9 +125,8 @@ class NumerosityExperiment:
         correct = choice == target
         reward = 1.0 if correct else -1.0
 
-        # REINFORCE-style reward-modulated eligibility update. Importantly, the
-        # target class is not inserted into this rule; only chosen action + reward
-        # are used to change the plastic output weights.
+        # Reward-modulated policy/eligibility update. Only the sampled action and
+        # reward enter the update; target is used solely to generate the reward.
         eligibility = -probabilities.astype(np.float32)
         eligibility[choice] += 1.0
         delta = c.learning_rate * reward * eligibility[:, None] * kc_activity[None, :]
@@ -171,5 +182,8 @@ class NumerosityExperiment:
             "output_decay": c.output_decay,
             "policy_temperature": c.policy_temperature,
             "dot_gain_range": [c.dot_gain_min, c.dot_gain_max],
+            "dot_radius_range": [c.dot_radius_min, c.dot_radius_max],
             "pixel_noise_sd": c.pixel_noise_sd,
+            "broad_field_sensory_channels": 2,
+            "stage1_continuous_cues_allowed": True,
         }
