@@ -28,6 +28,9 @@ jobs:
             exit 1
           }
           Write-Host "run.ps1 syntax OK"
+      - name: Run launcher self-test
+        shell: powershell
+        run: .\run.ps1 -SelfTest
 
   backend:
     runs-on: ubuntu-latest
