@@ -48,110 +48,81 @@ jobs:
       - name: Import active FastAPI app
         working-directory: backend
         run: python -c "from app.main import app; print(app.title)"
-      - name: Stage 2.2D brightness curriculum smoke test
+      - name: Stage 3S symbolic arithmetic smoke test
         working-directory: backend
         run: |
           python - <<'PY'
-          import math
           import tempfile
           from pathlib import Path
 
           import numpy as np
-          from app.numerosity_stage22d import (
-              STAGE22D_PROFILES,
-              STAGE22D_TRAIN_PROFILES,
-              Stage22DExperiment,
+          from app.symbolic_stage3s import (
+              ADDITION_COMMUTATIVITY_PAIRS,
+              ADDITION_HELD_OUT_PAIRS,
+              ADDITION_TRAIN_PAIRS,
+              ALL_TOKENS,
+              HELD_OUT_UNORDERED_PAIRS,
+              N_OUTPUTS,
+              SymbolicStage3SExperiment,
           )
 
-          exp = Stage22DExperiment()
+          exp = SymbolicStage3SExperiment()
+          cfg = exp.config_dict()
+          enc = cfg['token_encoding']
+          assert enc['scalar_number_value_injected'] is False
+          assert enc['ordinal_embedding_injected'] is False
+          assert enc['sum_feature_injected'] is False
+          assert enc['distance_to_answer_injected'] is False
+          assert len(exp.token_codes) == len(ALL_TOKENS)
+          assert all(int(np.count_nonzero(code)) == exp.config.token_active for code in exp.token_codes.values())
+          assert len({code.tobytes() for code in exp.token_codes.values()}) == len(ALL_TOKENS)
 
-          retina = np.zeros((exp.config.grid_size, exp.config.grid_size), dtype=np.float32)
-          retina[5, 5] = 0.7
-          retina[7, 8] = 0.3
-          processed = exp._preprocess_retina(retina)
-          assert processed.shape == retina.shape
-          assert np.all(np.isfinite(processed))
-          assert np.all(processed >= 0)
-          assert math.isclose(float(processed.sum()), float(retina.sum()), rel_tol=1e-5, abs_tol=1e-5)
+          train_unordered = {tuple(sorted(pair)) for pair in ADDITION_TRAIN_PAIRS}
+          comm_unordered = {tuple(sorted(pair)) for pair in ADDITION_COMMUTATIVITY_PAIRS}
+          held_unordered = {tuple(sorted(pair)) for pair in ADDITION_HELD_OUT_PAIRS}
+          assert train_unordered.isdisjoint(held_unordered)
+          assert held_unordered == HELD_OUT_UNORDERED_PAIRS
+          assert comm_unordered.issubset(train_unordered)
+          assert {a + b for a, b in ADDITION_TRAIN_PAIRS} == set(range(N_OUTPUTS))
 
-          phase_ratios = {}
           trial = 1
-          for profile in STAGE22D_TRAIN_PROFILES:
-              ratios = []
-              seen_close = False
-              for _ in range(180):
-                  result = exp.step(trial, stimulus_profile=profile)
-                  trial += 1
-                  controls = result['stimulus']['controls']
-                  assert controls['stimulus_profile'] == profile
-                  assert controls['curriculum'] == 'stage2_2d_progressive_brightness'
-                  assert controls['progressive_brightness_training'] is True
-                  if result['target'] in (1, 2):
-                      assert exp.config.training_total_area_range[0] - 1e-4 <= controls['area_factor'] <= exp.config.training_total_area_range[1] + 1e-4
-                      assert exp.config.signal_energy_min - 1e-4 <= controls['signal_energy'] <= exp.config.signal_energy_max + 1e-4
-                  if controls.get('close_spacing_sampled'):
-                      seen_close = True
-                  if result['target'] == 2 and controls.get('gain_ratio') is not None:
-                      ratios.append(float(controls['gain_ratio']))
-              assert ratios, profile
-              assert seen_close, profile
-              phase_ratios[profile] = float(np.median(ratios))
-
-          assert phase_ratios['train_brightness_weak'] < phase_ratios['train_brightness_medium']
-          assert phase_ratios['train_brightness_medium'] < phase_ratios['train_brightness_strong']
-
-          before_w = exp.w_output.copy()
-          before_b = exp.output_bias.copy()
-          expected = {
-              'position_only': (True, False, False, False),
-              'brightness_only': (False, False, False, True),
-              'combined': (True, True, True, True),
-          }
-          for profile in STAGE22D_PROFILES:
-              seen_nonzero = False
+          for task in ('identity', 'successor', 'addition'):
               for _ in range(60):
                   result = exp.step(
                       trial,
-                      learn=False,
-                      trial_kind='stage22d_ood_eval',
-                      stimulus_profile=profile,
+                      task=task,
+                      pair_pool=ADDITION_TRAIN_PAIRS if task == 'addition' else None,
                   )
                   trial += 1
+                  assert 0 <= result['target'] < N_OUTPUTS
+                  assert 0 <= result['choice'] < N_OUTPUTS
+                  assert len(result['policy']['top']) == 5
+                  assert result['plasticity']['active_synapses'] > 0
+
+          before_w = exp.w_output.copy()
+          before_b = exp.output_bias.copy()
+          for pool in (ADDITION_TRAIN_PAIRS, ADDITION_COMMUTATIVITY_PAIRS, ADDITION_HELD_OUT_PAIRS):
+              for a, b in pool[:8]:
+                  result = exp.step(trial, task='addition', a=a, b=b, learn=False, trial_kind='frozen')
+                  trial += 1
                   assert result['learning_enabled'] is False
+                  assert result['target'] == a + b
                   assert result['plasticity']['active_synapses'] == 0
-                  controls = result['stimulus']['controls']
-                  flags = (
-                      controls['fractional_position'],
-                      controls['novel_area'],
-                      controls['close_spacing'],
-                      controls['strong_brightness'],
-                  )
-                  assert flags == expected[profile], (profile, flags)
-                  if result['target'] in (1, 2):
-                      seen_nonzero = True
-                      assert exp.config.signal_energy_min - 1e-4 <= controls['signal_energy'] <= exp.config.signal_energy_max + 1e-4
-              assert seen_nonzero, profile
-              assert np.array_equal(before_w, exp.w_output), f'{profile} changed output weights'
-              assert np.array_equal(before_b, exp.output_bias), f'{profile} changed output bias'
+          assert np.array_equal(before_w, exp.w_output)
+          assert np.array_equal(before_b, exp.output_bias)
 
           with tempfile.TemporaryDirectory() as tmp:
-              path = Path(tmp) / 'checkpoint.npz'
-              exp.save_checkpoint(path, {'trial': trial, 'curriculum': 'stage2.2d'})
-              restored = Stage22DExperiment()
+              path = Path(tmp) / 'stage3s.npz'
+              exp.save_checkpoint(path, {'trial': trial, 'stage': '3S'})
+              restored = SymbolicStage3SExperiment()
               meta = restored.load_checkpoint(path)
               assert meta['trial'] == trial
-              assert meta['curriculum'] == 'stage2.2d'
+              assert meta['stage'] == '3S'
               assert np.array_equal(exp.w_input, restored.w_input)
               assert np.array_equal(exp.w_output, restored.w_output)
               assert np.array_equal(exp.output_bias, restored.output_bias)
 
-          config = exp.config_dict()
-          assert config['substage'] == '2.2D_progressive_brightness_curriculum'
-          assert config['stage_2_2d_training']['phase_boundaries'] == [20000, 40000, 60000]
-          assert config['visual_encoder']['explicit_object_counter'] is False
-          assert config['visual_encoder']['explicit_peak_counter'] is False
-          assert config['visual_encoder']['explicit_numerosity_feature'] is False
-          print('Stage 2.2D curriculum/frozen OOD smoke test passed', phase_ratios)
+          print('Stage 3S symbolic arithmetic smoke test passed')
           PY
 
   frontend:
