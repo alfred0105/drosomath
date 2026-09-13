@@ -2,6 +2,7 @@ import asyncio
 import math
 import random
 import time
+from collections import deque
 from typing import Any
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -9,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .flywire import FAFB_V783_TOTAL_NEURONS, load_fafb_soma_layout
 
-app = FastAPI(title="DrosoMath telemetry API", version="0.2.0")
+app = FastAPI(title="DrosoMath telemetry API", version="0.3.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -65,6 +66,47 @@ def layout() -> dict[str, Any]:
     return LAYOUT
 
 
+class SuccessMetrics:
+    """Session-level success metrics for the current training stream.
+
+    The real simulator will eventually own these counters. Keeping the metric
+    contract here now lets the UI use the same overall/rolling definitions when
+    mock telemetry is replaced with real experiment trials.
+    """
+
+    def __init__(self) -> None:
+        self.total_attempts = 0
+        self.total_successes = 0
+        self.outcomes: deque[int] = deque(maxlen=500)
+
+    def record(self, correct: bool) -> None:
+        outcome = 1 if correct else 0
+        self.total_attempts += 1
+        self.total_successes += outcome
+        self.outcomes.append(outcome)
+
+    def _recent_rate(self, window: int) -> float | None:
+        if not self.outcomes:
+            return None
+        values = list(self.outcomes)[-window:]
+        return sum(values) / len(values)
+
+    def snapshot(self) -> dict[str, Any]:
+        overall = (
+            self.total_successes / self.total_attempts
+            if self.total_attempts
+            else None
+        )
+        return {
+            "overall": overall,
+            "recent_20": self._recent_rate(20),
+            "recent_100": self._recent_rate(100),
+            "recent_500": self._recent_rate(500),
+            "successes": self.total_successes,
+            "attempts": self.total_attempts,
+        }
+
+
 def make_frame(t: float, trial: int) -> dict[str, Any]:
     # Geometry can now be real FlyWire data, but neural activity remains mock until
     # the connectome simulator adapter is integrated. Stream only a sparse active
@@ -78,17 +120,19 @@ def make_frame(t: float, trial: int) -> dict[str, Any]:
             index = (start + k * step) % NEURON_COUNT
             neuron = NEURONS[index]
             phase = index * 0.031
-            base = 0.35 + 0.35 * math.sin(t * 2.4 + phase)
+            base = 0.30 + 0.32 * math.sin(t * 2.4 + phase)
             region = neuron.get("region", "")
             burst = 0.0
             if region in ("central", "mushroom_body") and trial % 8 in (5, 6):
-                burst = 0.28
+                burst = 0.48
             if region in ("sensory", "dopamine") and trial % 8 == 7:
-                burst = 0.42
-            value = max(0.12, min(1.0, base + burst + ((index * 17 + trial) % 13) / 100.0))
+                burst = 0.66
+            value = max(0.08, min(1.0, base + burst + ((index * 17 + trial) % 13) / 100.0))
             activity.append([index, round(value, 3)])
 
-    answer = 3 if trial % 5 else 2
+    # Deterministic mock outcome: 80% success. Unlike the old demo accuracy
+    # curve, the displayed rates are now calculated from these actual outcomes.
+    answer = 2 if trial % 5 == 0 else 3
     correct = answer == 3
     return {
         "type": "telemetry",
@@ -99,7 +143,6 @@ def make_frame(t: float, trial: int) -> dict[str, Any]:
         "answer": answer,
         "correct": correct,
         "reward": 1.0 if correct else -1.0,
-        "accuracy": round(0.5 + 0.45 * (1.0 - math.exp(-trial / 80.0)), 3),
         "activity": activity,
         "plasticity": {
             "mean_delta_w": round(0.03 * math.sin(t * 0.8), 4),
@@ -112,11 +155,18 @@ def make_frame(t: float, trial: int) -> dict[str, Any]:
 async def telemetry(websocket: WebSocket) -> None:
     await websocket.accept()
     started = time.monotonic()
-    trial = 0
+    trial = 1
+    metrics = SuccessMetrics()
     try:
         while True:
             t = time.monotonic() - started
-            await websocket.send_json(make_frame(t, trial))
+            frame = make_frame(t, trial)
+            metrics.record(bool(frame["correct"]))
+            snapshot = metrics.snapshot()
+            frame["metrics"] = snapshot
+            # Compatibility alias for clients that still expect `accuracy`.
+            frame["accuracy"] = snapshot["overall"]
+            await websocket.send_json(frame)
             trial += 1
             await asyncio.sleep(0.1)  # 10 Hz UI telemetry
     except WebSocketDisconnect:
