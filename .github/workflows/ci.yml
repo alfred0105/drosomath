@@ -45,7 +45,10 @@ jobs:
         run: pip install -r backend/requirements.txt
       - name: Compile backend
         run: python -m compileall backend/app
-      - name: Stage 2.2C augmented curriculum smoke test
+      - name: Import active FastAPI app
+        working-directory: backend
+        run: python -c "from app.main import app; print(app.title)"
+      - name: Stage 2.2D brightness curriculum smoke test
         working-directory: backend
         run: |
           python - <<'PY'
@@ -54,15 +57,14 @@ jobs:
           from pathlib import Path
 
           import numpy as np
-          from app.numerosity_stage22c import (
-              STAGE22C_PROFILES,
-              STAGE22C_TRAIN_PROFILE,
-              Stage22CExperiment,
+          from app.numerosity_stage22d import (
+              STAGE22D_PROFILES,
+              STAGE22D_TRAIN_PROFILES,
+              Stage22DExperiment,
           )
 
-          exp = Stage22CExperiment()
+          exp = Stage22DExperiment()
 
-          # The inherited robust visual front end must still preserve global L1.
           retina = np.zeros((exp.config.grid_size, exp.config.grid_size), dtype=np.float32)
           retina[5, 5] = 0.7
           retina[7, 8] = 0.3
@@ -72,31 +74,31 @@ jobs:
           assert np.all(processed >= 0)
           assert math.isclose(float(processed.sum()), float(retina.sum()), rel_tol=1e-5, abs_tol=1e-5)
 
-          # Moderate nuisance variation is genuinely present during learning.
-          seen_fractional = False
-          seen_close = False
-          seen_two_dot_asymmetry = False
-          for trial in range(1, 201):
-              result = exp.step(trial, stimulus_profile=STAGE22C_TRAIN_PROFILE)
-              assert result['target'] in (0, 1, 2)
-              assert result['choice'] in (0, 1, 2)
-              p = result['policy']
-              assert math.isclose(p['p0'] + p['p1'] + p['p2'], 1.0, abs_tol=2e-4)
-              controls = result['stimulus']['controls']
-              assert controls['stimulus_profile'] == STAGE22C_TRAIN_PROFILE
-              assert controls['curriculum'] == 'stage2_2c_augmented_invariance'
-              assert controls['rasterizer'] == 'continuous_gaussian_all_positions'
-              if result['target'] in (1, 2):
-                  assert exp.config.training_total_area_range[0] - 1e-4 <= controls['area_factor'] <= exp.config.training_total_area_range[1] + 1e-4
-                  assert exp.config.signal_energy_min - 1e-4 <= controls['signal_energy'] <= exp.config.signal_energy_max + 1e-4
-                  seen_fractional = True
-              if controls.get('close_spacing_sampled'):
-                  seen_close = True
-              if result['target'] == 2 and controls.get('gain_ratio') is not None and controls['gain_ratio'] > 1.05:
-                  seen_two_dot_asymmetry = True
-          assert seen_fractional
-          assert seen_close
-          assert seen_two_dot_asymmetry
+          phase_ratios = {}
+          trial = 1
+          for profile in STAGE22D_TRAIN_PROFILES:
+              ratios = []
+              seen_close = False
+              for _ in range(180):
+                  result = exp.step(trial, stimulus_profile=profile)
+                  trial += 1
+                  controls = result['stimulus']['controls']
+                  assert controls['stimulus_profile'] == profile
+                  assert controls['curriculum'] == 'stage2_2d_progressive_brightness'
+                  assert controls['progressive_brightness_training'] is True
+                  if result['target'] in (1, 2):
+                      assert exp.config.training_total_area_range[0] - 1e-4 <= controls['area_factor'] <= exp.config.training_total_area_range[1] + 1e-4
+                      assert exp.config.signal_energy_min - 1e-4 <= controls['signal_energy'] <= exp.config.signal_energy_max + 1e-4
+                  if controls.get('close_spacing_sampled'):
+                      seen_close = True
+                  if result['target'] == 2 and controls.get('gain_ratio') is not None:
+                      ratios.append(float(controls['gain_ratio']))
+              assert ratios, profile
+              assert seen_close, profile
+              phase_ratios[profile] = float(np.median(ratios))
+
+          assert phase_ratios['train_brightness_weak'] < phase_ratios['train_brightness_medium']
+          assert phase_ratios['train_brightness_medium'] < phase_ratios['train_brightness_strong']
 
           before_w = exp.w_output.copy()
           before_b = exp.output_bias.copy()
@@ -105,15 +107,13 @@ jobs:
               'brightness_only': (False, False, False, True),
               'combined': (True, True, True, True),
           }
-
-          trial = 201
-          for profile in STAGE22C_PROFILES:
+          for profile in STAGE22D_PROFILES:
               seen_nonzero = False
-              for _ in range(50):
+              for _ in range(60):
                   result = exp.step(
                       trial,
                       learn=False,
-                      trial_kind='stage22c_ood_eval',
+                      trial_kind='stage22d_ood_eval',
                       stimulus_profile=profile,
                   )
                   trial += 1
@@ -136,21 +136,22 @@ jobs:
 
           with tempfile.TemporaryDirectory() as tmp:
               path = Path(tmp) / 'checkpoint.npz'
-              exp.save_checkpoint(path, {'trial': trial, 'curriculum': 'stage2.2c'})
-              restored = Stage22CExperiment()
+              exp.save_checkpoint(path, {'trial': trial, 'curriculum': 'stage2.2d'})
+              restored = Stage22DExperiment()
               meta = restored.load_checkpoint(path)
               assert meta['trial'] == trial
-              assert meta['curriculum'] == 'stage2.2c'
+              assert meta['curriculum'] == 'stage2.2d'
               assert np.array_equal(exp.w_input, restored.w_input)
               assert np.array_equal(exp.w_output, restored.w_output)
               assert np.array_equal(exp.output_bias, restored.output_bias)
 
           config = exp.config_dict()
-          assert config['substage'] == '2.2C_augmented_invariance_training'
+          assert config['substage'] == '2.2D_progressive_brightness_curriculum'
+          assert config['stage_2_2d_training']['phase_boundaries'] == [20000, 40000, 60000]
           assert config['visual_encoder']['explicit_object_counter'] is False
           assert config['visual_encoder']['explicit_peak_counter'] is False
           assert config['visual_encoder']['explicit_numerosity_feature'] is False
-          print('Stage 2.2C augmented training/frozen OOD smoke test passed')
+          print('Stage 2.2D curriculum/frozen OOD smoke test passed', phase_ratios)
           PY
 
   frontend:
