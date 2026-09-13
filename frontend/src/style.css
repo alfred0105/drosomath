@@ -29,22 +29,35 @@ body { overflow: hidden; }
   top: 18px;
   left: 18px;
   display: grid;
-  grid-template-columns: repeat(2, minmax(120px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-flow: row;
+  align-content: start;
   gap: 10px;
-  width: min(470px, calc(100vw - 36px));
+  width: 470px;
+  max-width: calc(100vw - 36px);
   max-height: calc(100vh - 36px);
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
   padding: 14px;
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 16px;
   background: rgba(12, 15, 22, 0.80);
   backdrop-filter: blur(12px);
+  contain: layout paint;
 }
 
 .hud > div {
+  min-width: 0;
   padding: 10px;
   border-radius: 12px;
   background: rgba(255,255,255,0.045);
+}
+
+/* Keep the four small realtime cards the same height when TRAIN/PROBE text changes. */
+.hud > div:not(.experiment-header):not(.stimulus-panel):not(.policy-panel):not(.success-panel):not(.class-panel) {
+  min-height: 84px;
 }
 
 .label {
@@ -54,8 +67,49 @@ body { overflow: hidden; }
   font-size: 12px;
 }
 
-strong { font-size: 18px; }
-small { color: #8f99aa; }
+strong,
+small,
+.label,
+.policy-row,
+.success-stat,
+.class-grid {
+  font-variant-numeric: tabular-nums;
+}
+
+strong {
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+small {
+  color: #8f99aa;
+  line-height: 1.25;
+}
+
+.hud > div > small {
+  display: block;
+  min-height: 16px;
+  margin-top: 4px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#trial,
+#answer,
+#target,
+#plasticity {
+  display: block;
+  min-height: 24px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#trial-kind {
+  min-height: 16px;
+  white-space: nowrap;
+}
 
 .experiment-header,
 .stimulus-panel,
@@ -65,8 +119,18 @@ small { color: #8f99aa; }
   grid-column: 1 / -1;
 }
 
+.experiment-header {
+  min-height: 78px;
+}
+
+.experiment-header strong,
 .experiment-header small {
-  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.experiment-header small {
   margin-top: 3px;
   font-size: 11px;
 }
@@ -74,6 +138,7 @@ small { color: #8f99aa; }
 .stimulus-panel {
   display: grid;
   place-items: center;
+  min-height: 248px;
 }
 
 .stimulus-panel .label {
@@ -82,8 +147,10 @@ small { color: #8f99aa; }
 }
 
 #stimulus-view {
+  display: block;
   width: 150px;
   height: 150px;
+  flex: 0 0 150px;
   margin: 4px 0;
   border-radius: 14px;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
@@ -100,11 +167,16 @@ small { color: #8f99aa; }
   filter: drop-shadow(0 0 4px rgba(255,255,255,0.48));
 }
 
+.policy-panel {
+  min-height: 138px;
+}
+
 .policy-row {
   display: grid;
-  grid-template-columns: 22px 1fr 54px;
+  grid-template-columns: 22px minmax(0, 1fr) 58px;
   align-items: center;
   gap: 8px;
+  min-height: 22px;
   margin-top: 7px;
 }
 
@@ -114,9 +186,9 @@ small { color: #8f99aa; }
 }
 
 .policy-row strong {
+  width: 58px;
   text-align: right;
   font-size: 13px;
-  font-variant-numeric: tabular-nums;
 }
 
 .policy-track {
@@ -135,6 +207,10 @@ small { color: #8f99aa; }
   transition: width 90ms linear;
 }
 
+.success-panel {
+  min-height: 118px;
+}
+
 .success-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -144,6 +220,7 @@ small { color: #8f99aa; }
 
 .success-stat {
   min-width: 0;
+  min-height: 68px;
   padding: 9px 8px;
   border-radius: 10px;
   background: rgba(255,255,255,0.045);
@@ -152,25 +229,35 @@ small { color: #8f99aa; }
 .success-stat span,
 .success-stat small {
   display: block;
+  overflow: hidden;
   color: #9fa9b9;
   font-size: 11px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .success-stat strong {
   display: block;
+  min-height: 20px;
   margin: 3px 0 2px;
   font-size: 16px;
-  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.class-panel {
+  min-height: 103px;
 }
 
 .class-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
   margin-top: 8px;
 }
 
 .class-grid div {
+  min-width: 0;
+  min-height: 56px;
   padding: 8px;
   border-radius: 10px;
   background: rgba(255,255,255,0.045);
@@ -178,15 +265,19 @@ small { color: #8f99aa; }
 
 .class-grid span {
   display: block;
+  overflow: hidden;
   color: #9fa9b9;
   font-size: 11px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .class-grid strong {
   display: block;
+  min-height: 18px;
   margin-top: 3px;
   font-size: 15px;
-  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .status {
@@ -194,19 +285,26 @@ small { color: #8f99aa; }
   right: 18px;
   bottom: 18px;
   max-width: min(900px, calc(100vw - 36px));
+  min-height: 32px;
   padding: 8px 11px;
+  overflow: hidden;
   border-radius: 999px;
   background: rgba(12, 15, 22, 0.78);
   border: 1px solid rgba(255,255,255,0.1);
   color: #aab3c2;
   font-size: 12px;
   text-align: right;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 @media (max-width: 620px) {
-  .hud { grid-template-columns: 1fr 1fr; }
+  .hud {
+    width: calc(100vw - 36px);
+    grid-template-columns: 1fr 1fr;
+  }
   .success-grid { grid-template-columns: 1fr 1fr; }
-  .class-grid { grid-template-columns: repeat(3, 1fr); }
+  .class-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   strong { font-size: 16px; }
   .status { border-radius: 12px; }
 }
