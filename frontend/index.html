@@ -12,13 +12,13 @@
       <section class="hud" aria-label="DrosoMath telemetry">
         <div class="experiment-header">
           <span class="label">Experiment</span>
-          <strong>Numerosity Stage 2.2 · frozen OOD · dots 0–2</strong>
-          <small>10k Stage-2.1 replay → weights frozen → unseen position/size/contrast/spacing</small>
+          <strong>Numerosity Stage 2.2A · factor isolation</strong>
+          <small>frozen Stage-2.1 checkpoint · 5 independent OOD blocks</small>
         </div>
 
         <div class="stimulus-panel">
-          <span class="label">Current held-out visual stimulus</span>
-          <svg id="stimulus-view" viewBox="0 0 100 100" role="img" aria-label="held-out dot stimulus"></svg>
+          <span class="label">Current visual stimulus</span>
+          <svg id="stimulus-view" viewBox="0 0 100 100" role="img" aria-label="randomized dot stimulus"></svg>
         </div>
 
         <div>
@@ -30,7 +30,7 @@
           <strong id="target">—</strong>
         </div>
         <div>
-          <span class="label">OOD eval trial</span>
+          <span class="label">Profile trial</span>
           <strong id="trial">—</strong>
           <small id="trial-kind">—</small>
         </div>
@@ -40,7 +40,7 @@
         </div>
 
         <div class="policy-panel">
-          <span class="label">Frozen choice policy</span>
+          <span class="label">Current choice policy</span>
           <div class="policy-row">
             <span>0</span><div class="policy-track"><i id="policy-bar-0"></i></div><strong id="policy-0">—</strong>
           </div>
@@ -53,7 +53,7 @@
         </div>
 
         <div class="success-panel">
-          <span class="label">Frozen OOD evaluation · chance = 33.3%</span>
+          <span class="label">Current profile · chance = 33.3%</span>
           <div class="success-grid">
             <div class="success-stat">
               <span>Overall</span>
@@ -75,45 +75,46 @@
           </div>
         </div>
 
-        <!-- Kept in the DOM for telemetry compatibility; Stage 2.2 marks every trial as frozen evaluation. -->
-        <div class="success-panel probe-panel" style="display:none">
-          <span class="label">Frozen evaluation mirror</span>
-          <div class="success-grid">
-            <div class="success-stat"><span>Eval overall</span><strong id="probe-overall">—</strong></div>
-            <div class="success-stat"><span>Eval last 20</span><strong id="probe-20">—</strong></div>
-            <div class="success-stat"><span>Eval last 100</span><strong id="probe-100">—</strong></div>
-            <div class="success-stat"><span>Eval trials</span><strong id="probe-count">0</strong></div>
-          </div>
-        </div>
-
         <div class="success-panel diagnostic-panel">
-          <span class="label">Generalization diagnostics</span>
+          <span class="label">Current profile diagnostics</span>
           <div class="success-grid">
             <div class="success-stat">
-              <span>OOD balanced</span>
+              <span>Balanced</span>
               <strong id="balanced-accuracy">—</strong>
             </div>
             <div class="success-stat">
-              <span>OOD 1↔2</span>
+              <span>1↔2 accuracy</span>
               <strong id="one-two-accuracy">—</strong>
             </div>
-            <div class="success-stat" style="display:none">
-              <span>Mirror balanced</span>
+            <div class="success-stat">
+              <span>Frozen eval</span>
               <strong id="probe-balanced">—</strong>
             </div>
-            <div class="success-stat" style="display:none">
-              <span>Mirror 1↔2</span>
+            <div class="success-stat">
+              <span>Frozen 1↔2</span>
               <strong id="probe-one-two">—</strong>
             </div>
           </div>
         </div>
 
         <div class="class-panel">
-          <span class="label">Frozen OOD accuracy by target</span>
+          <span class="label">Current profile accuracy by target</span>
           <div class="class-grid">
             <div><span>0 dots</span><strong id="class-0">—</strong></div>
             <div><span>1 dot</span><strong id="class-1">—</strong></div>
             <div><span>2 dots</span><strong id="class-2">—</strong></div>
+          </div>
+        </div>
+
+        <div class="profile-panel">
+          <span class="label">Stage 2.2A profile results · Balanced / 1↔2 / 2-dot</span>
+          <div class="profile-table">
+            <div class="profile-row profile-head"><span>Profile</span><span>Bal.</span><span>1↔2</span><span>2-dot</span></div>
+            <div class="profile-row"><span>Position</span><strong id="profile-position-balanced">—</strong><strong id="profile-position-one-two">—</strong><strong id="profile-position-two">—</strong></div>
+            <div class="profile-row"><span>Area</span><strong id="profile-area-balanced">—</strong><strong id="profile-area-one-two">—</strong><strong id="profile-area-two">—</strong></div>
+            <div class="profile-row"><span>Spacing</span><strong id="profile-spacing-balanced">—</strong><strong id="profile-spacing-one-two">—</strong><strong id="profile-spacing-two">—</strong></div>
+            <div class="profile-row"><span>Brightness</span><strong id="profile-brightness-balanced">—</strong><strong id="profile-brightness-one-two">—</strong><strong id="profile-brightness-two">—</strong></div>
+            <div class="profile-row"><span>Combined</span><strong id="profile-combined-balanced">—</strong><strong id="profile-combined-one-two">—</strong><strong id="profile-combined-two">—</strong></div>
           </div>
         </div>
       </section>
