@@ -1,0 +1,330 @@
+{
+  "run_id": "20260913_221646_924067+0900",
+  "status": "running",
+  "started_at": "2026-09-13T22:16:46+09:00",
+  "updated_at": "2026-09-13T22:16:51+09:00",
+  "ended_at": null,
+  "duration_seconds": 4.194,
+  "experiment": "numerosity_0_2_stage2_2a",
+  "telemetry_source": "numerosity_prototype",
+  "activity_source": "display_proxy_not_connectome_spikes",
+  "learning_model": "reward_modulated_sparse_associator",
+  "chance_accuracy": 0.3333333333333333,
+  "layout_source": "FlyWire Codex FAFB v783 coordinates",
+  "layout_count": 139255,
+  "stage21_replay_trials": 10000,
+  "stage21_state_source": "checkpoint",
+  "stage21_pretraining_snapshot": {
+    "overall": 0.8019,
+    "balanced_accuracy": 0.8015690955778192,
+    "one_vs_two_accuracy": 0.8167836344631925,
+    "recent_20": 0.85,
+    "recent_100": 0.9,
+    "recent_500": 0.938,
+    "successes": 8019,
+    "attempts": 10000,
+    "by_target_accuracy": {
+      "0": 0.7717226763548289,
+      "1": 0.789012979172955,
+      "2": 0.8439716312056738
+    },
+    "confusion_matrix": [
+      [
+        2549,
+        401,
+        353
+      ],
+      [
+        99,
+        2614,
+        600
+      ],
+      [
+        56,
+        472,
+        2856
+      ]
+    ],
+    "probe": {
+      "overall": 0.814,
+      "balanced_accuracy": 0.8119618963575457,
+      "one_vs_two_accuracy": 0.8395953757225434,
+      "recent_20": 0.95,
+      "recent_100": 0.95,
+      "recent_500": 0.912,
+      "successes": 814,
+      "attempts": 1000,
+      "by_target_accuracy": {
+        "0": 0.7564935064935064,
+        "1": 0.828080229226361,
+        "2": 0.8513119533527697
+      },
+      "confusion_matrix": [
+        [
+          233,
+          36,
+          39
+        ],
+        [
+          10,
+          289,
+          50
+        ],
+        [
+          2,
+          49,
+          292
+        ]
+      ]
+    }
+  },
+  "evaluation_profile": "factor_isolation",
+  "evaluation_profiles": [
+    "position_only",
+    "area_only",
+    "spacing_only",
+    "brightness_only",
+    "combined"
+  ],
+  "profile_trials": 1500,
+  "total_evaluation_trials": 7500,
+  "evaluation_learning_enabled": false,
+  "current_profile": "position_only",
+  "current_profile_trial": 200,
+  "profile_results": {
+    "position_only": {
+      "overall": 0.67,
+      "balanced_accuracy": 0.646597760551249,
+      "one_vs_two_accuracy": 0.5,
+      "recent_20": 0.6,
+      "recent_100": 0.7,
+      "recent_500": 0.67,
+      "successes": 134,
+      "attempts": 200,
+      "by_target_accuracy": {
+        "0": 0.8953488372093024,
+        "1": 0.9444444444444444,
+        "2": 0.1
+      },
+      "confusion_matrix": [
+        [
+          77,
+          5,
+          4
+        ],
+        [
+          3,
+          51,
+          0
+        ],
+        [
+          9,
+          45,
+          6
+        ]
+      ],
+      "probe": {
+        "overall": 0.67,
+        "balanced_accuracy": 0.646597760551249,
+        "one_vs_two_accuracy": 0.5,
+        "recent_20": 0.6,
+        "recent_100": 0.7,
+        "recent_500": 0.67,
+        "successes": 134,
+        "attempts": 200,
+        "by_target_accuracy": {
+          "0": 0.8953488372093024,
+          "1": 0.9444444444444444,
+          "2": 0.1
+        },
+        "confusion_matrix": [
+          [
+            77,
+            5,
+            4
+          ],
+          [
+            3,
+            51,
+            0
+          ],
+          [
+            9,
+            45,
+            6
+          ]
+        ]
+      }
+    },
+    "area_only": null,
+    "spacing_only": null,
+    "brightness_only": null,
+    "combined": null
+  },
+  "experiment_complete": false,
+  "successes": 134,
+  "attempts": 200,
+  "overall_accuracy": 0.67,
+  "balanced_accuracy": 0.646597760551249,
+  "one_vs_two_accuracy": 0.5,
+  "recent_20": 0.6,
+  "recent_100": 0.7,
+  "recent_500": 0.67,
+  "by_target_accuracy": {
+    "0": 0.8953488372093024,
+    "1": 0.9444444444444444,
+    "2": 0.1
+  },
+  "confusion_matrix_rows_target_cols_choice": [
+    [
+      77,
+      5,
+      4
+    ],
+    [
+      3,
+      51,
+      0
+    ],
+    [
+      9,
+      45,
+      6
+    ]
+  ],
+  "probe": {
+    "overall": 0.67,
+    "balanced_accuracy": 0.646597760551249,
+    "one_vs_two_accuracy": 0.5,
+    "recent_20": 0.6,
+    "recent_100": 0.7,
+    "recent_500": 0.67,
+    "successes": 134,
+    "attempts": 200,
+    "by_target_accuracy": {
+      "0": 0.8953488372093024,
+      "1": 0.9444444444444444,
+      "2": 0.1
+    },
+    "confusion_matrix": [
+      [
+        77,
+        5,
+        4
+      ],
+      [
+        3,
+        51,
+        0
+      ],
+      [
+        9,
+        45,
+        6
+      ]
+    ]
+  },
+  "last_trial_kind": "factor_eval",
+  "last_target": 2,
+  "last_answer": 1,
+  "last_correct": false,
+  "last_reward": -1.0,
+  "last_policy": {
+    "p0": 0.13996,
+    "p1": 0.76382,
+    "p2": 0.09622,
+    "entropy": 0.70627
+  },
+  "last_stimulus_controls": {
+    "stimulus_profile": "position_only",
+    "signal_energy": 1.8964,
+    "area_factor": 1.44,
+    "requested_area_factor": 1.44,
+    "post_noise_energy": 2.43026,
+    "min_pair_distance": 4.24264,
+    "gain_ratio": 1.15987,
+    "fractional_position": true,
+    "novel_area": false,
+    "close_spacing": false,
+    "strong_brightness": false
+  },
+  "learner": {
+    "stage": 2.2,
+    "substage": "2.2A_factor_isolation",
+    "seed": 7,
+    "grid_size": 12,
+    "n_kc": 512,
+    "kc_active": 64,
+    "input_fan_in_probability": 0.08,
+    "learning_rate": 0.08,
+    "output_decay": 0.99999,
+    "policy_temperature": 1.0,
+    "training_radius_jitter_range": [
+      0.9,
+      1.1
+    ],
+    "training_total_area_factor_nonzero": 1.44,
+    "signal_energy_range_nonzero": [
+      1.85,
+      2.15
+    ],
+    "pixel_noise_sd": 0.01,
+    "visual_encoder": {
+      "kind": "fixed_sparse_receptors_with_translation_max_pooling",
+      "translation_offsets_x": [
+        -3,
+        0,
+        3
+      ],
+      "translation_offsets_y": [
+        -3,
+        0,
+        3
+      ],
+      "view_count": 9,
+      "explicit_object_counter": false,
+      "explicit_peak_counter": false
+    },
+    "stage_2_2a_profiles": {
+      "position_only": {
+        "fractional_half_grid_positions": true
+      },
+      "area_only": {
+        "small_total_area_range": [
+          0.88,
+          1.02
+        ],
+        "large_total_area_range": [
+          1.9,
+          2.05
+        ]
+      },
+      "spacing_only": {
+        "two_dot_spacing_range": [
+          2.0,
+          3.0
+        ]
+      },
+      "brightness_only": {
+        "faint_gain_range": [
+          0.52,
+          0.72
+        ],
+        "bright_gain_range": [
+          1.28,
+          1.48
+        ]
+      },
+      "combined": {
+        "all_above_transforms": true
+      },
+      "learning_enabled": false
+    },
+    "continuous_cue_controls": {
+      "equalize_signal_energy_distribution_for_1_vs_2": true,
+      "area_distribution_is_identical_for_1_vs_2_within_each_profile": true
+    }
+  },
+  "scientific_scope": "Stage-2.2A frozen OOD factor-isolation test. The exact Stage-2.1 10,000-trial state is restored, then plasticity remains disabled while position-only, area-only, spacing-only, brightness-only, and combined OOD blocks are evaluated separately. The total-signal-energy distribution stays identical for 1 and 2 within every block. This identifies which nuisance transform causes the Stage-2.2 2-to-1 collapse. The encoder does not explicitly count objects or peaks; FlyWire coordinates remain visualization-only.",
+  "note": "This run validates the reward-learning protocol. It is not yet evidence that the full FlyWire connectome learned numerosity."
+}
