@@ -21,20 +21,29 @@ DrosoMath is an experimental platform for studying whether a Drosophila connecto
 
 The viewer loads the public **FlyWire Codex FAFB v783 coordinates for 139,255 neurons** and renders them as a realtime point cloud. DrosoMath conservatively calls these Codex coordinates rather than assuming every exported position is a biological soma coordinate.
 
-The old fixed-80% mock outcome generator has been removed. The live backend now runs the first real learning protocol:
+The old fixed-80% mock outcome generator has been removed. The backend now runs a reward-modulated 0/1/2-dot learning protocol.
 
-### Stage 1 — dots 0–2
+### Stage 1 — acquisition
 
-- Target classes: `0`, `1`, `2` dots (chance accuracy = 33.3%).
+Stage 1 established that the prototype learner can acquire the 0/1/2 classification task from reward. Dot positions were randomized, but continuous cues such as total visual energy were allowed to covary with dot count. Stage 1 therefore validated acquisition, not abstract numerosity.
+
+### Stage 2 — controlled continuous cues
+
+Stage 2 is now the active experiment.
+
+- Target classes remain `0`, `1`, and `2` dots (chance accuracy = 33.3%).
 - Dot positions are randomized every trial.
-- The learner chooses among actions `0`, `1`, and `2` probabilistically.
+- For **1-dot versus 2-dot stimuli**, total dot area is matched.
+- Integrated signal-energy distributions for **1 versus 2** are matched independently of numerosity.
+- Consequently, one-dot trials tend to use one larger/brighter dot while two-dot trials use two smaller/dimmer dots.
+- Every 10th trial is a **probe trial** with plasticity completely disabled.
+- Probe accuracy is reported separately from the combined training stream.
 - Correct choice gives `+1`; incorrect choice gives `-1`.
-- The target label is **not inserted directly into the weight update**. Learning uses chosen action + reward.
-- A fixed sparse expansion layer feeds plastic choice weights via a reward-modulated policy/eligibility update.
-- Stage 1 intentionally allows continuous visual cues such as total visual energy to covary with dot count. This validates acquisition first.
-- Stage 2 will equalize brightness/area cues and test whether the learned behavior generalizes to numerosity itself.
+- The target label is never inserted directly into the weight update. Learning uses sampled action + reward.
 
-The 3D activity overlay during Stage 1 is a **display proxy mapped onto real FlyWire anatomical coordinates**, not a claim that those FlyWire neurons actually emitted those spikes. Whole-connectome neural dynamics remain a separate upcoming milestone.
+Zero remains the visual absence condition, so Stage 2's strongest control is the **1-vs-2 distinction**. Later controls can make the background and temporal presentation more demanding.
+
+The 3D activity overlay is still a **display proxy mapped onto real FlyWire anatomical coordinates**, not a claim that those FlyWire neurons actually emitted those spikes. Whole-connectome neural dynamics remain a separate upcoming milestone.
 
 ## Get the FAFB v783 coordinates
 
@@ -77,17 +86,18 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:5173`. The HUD shows:
+Open `http://localhost:5173`. The Stage-2 HUD shows:
 
 - randomized current dot stimulus
 - model choice and correct target
+- train/probe trial type
 - `P(0)`, `P(1)`, `P(2)` choice probabilities
-- overall success rate
-- rolling 20/100/500-trial success rates
+- overall and rolling 20/100/500-trial accuracy
+- held-out probe overall / recent 20 / recent 100 accuracy
 - per-target accuracy for 0/1/2 dots
-- plastic-weight update telemetry
+- plastic-weight update telemetry (`probe` explicitly shows no update)
 
-Five training trials run for each 10 Hz UI frame, so the UI remains readable while the learner advances faster than the visualization refresh.
+Five trials run for each 10 Hz UI frame, so the learner advances faster than the visualization refresh.
 
 ## Result logging
 
@@ -99,7 +109,18 @@ summary.json
 metrics.csv
 ```
 
-`summary.json` contains overall and rolling accuracy, accuracy by target, and a 3×3 confusion matrix (rows = target, columns = chosen answer). `metrics.csv` stores each training trial, including target, choice, reward, policy probabilities, and plasticity statistics.
+Stage-2 `metrics.csv` stores each trial with:
+
+- train vs probe type
+- target / choice / reward
+- policy probabilities
+- total signal energy and area-control values
+- overall + rolling accuracy
+- separate probe accuracy
+- per-target accuracy
+- plasticity statistics
+
+`summary.json` includes the aggregate confusion matrices and probe metrics for GitHub-side analysis.
 
 To publish only the newest run to the current Git branch:
 
@@ -112,12 +133,12 @@ After that, the run can be inspected directly from GitHub.
 
 ## Scientific principle
 
-The external experiment code may present stimuli, read choices, and deliver reward/punishment signals, but it should not directly calculate the answer for the learner. Claims of abstract numerical learning require stronger controls than Stage 1, including equalized continuous cues, held-out stimulus distributions, frozen plasticity, random reward, and eventually shuffled-connectome controls.
+The external experiment code may present stimuli, read choices, and deliver reward/punishment signals, but it should not directly calculate the answer for the learner. Claims of abstract numerical learning require controlled continuous cues, probe trials without learning, held-out stimulus distributions, frozen-plasticity and random-reward controls, and eventually shuffled-connectome controls.
 
 ## Next milestones
 
-1. Run and analyze Stage-1 0/1/2-dot acquisition.
-2. Add Stage-2 controlled-cue numerosity generalization.
+1. Run and analyze Stage-2 controlled-cue acquisition and probe performance.
+2. Add stronger held-out spatial/appearance distributions if Stage 2 succeeds.
 3. Load FAFB v783 connectivity and cell-type data needed for real KC/MBON/DAN circuits.
 4. Attach the numerosity protocol to whole-connectome LIF dynamics.
 5. Replace the display-proxy activity overlay with actual simulated spike/membrane telemetry.
@@ -126,4 +147,4 @@ The external experiment code may present stimuli, read choices, and deliver rewa
 
 ## Status
 
-Live 0–2 dot reinforcement-learning protocol integrated with persistent run logging and realtime 3D visualization. Whole-connectome numerosity learning is the next scientific integration step.
+Stage-2 0/1/2-dot controlled-cue reinforcement learning with frozen probe trials is integrated. Whole-connectome numerosity learning remains the next major scientific integration step.

@@ -21,7 +21,7 @@ type LayoutResponse = {
   coordinate_kind?: string;
 };
 
-type SuccessMetrics = {
+type ProbeMetrics = {
   overall: number | null;
   recent_20: number | null;
   recent_100: number | null;
@@ -32,10 +32,27 @@ type SuccessMetrics = {
   confusion_matrix?: number[][];
 };
 
+type SuccessMetrics = {
+  overall: number | null;
+  recent_20: number | null;
+  recent_100: number | null;
+  recent_500: number | null;
+  successes: number;
+  attempts: number;
+  by_target_accuracy?: Record<string, number | null>;
+  confusion_matrix?: number[][];
+  probe?: ProbeMetrics;
+};
+
 type DotStimulus = {
   kind: 'dots';
   numerosity: number;
   dots: Array<{ x: number; y: number; r: number; gain: number }>;
+  controls?: {
+    signal_energy: number;
+    area_factor: number;
+    post_noise_energy: number;
+  };
 };
 
 type Telemetry = {
@@ -44,6 +61,8 @@ type Telemetry = {
   activity_source?: string;
   learning_model?: string;
   phase?: string;
+  trial_kind?: 'train' | 'probe';
+  learning_enabled?: boolean;
   trial: number;
   target: number;
   answer: number;
@@ -118,12 +137,17 @@ const byId = new Map<number, number>();
 const answerEl = document.querySelector<HTMLElement>('#answer')!;
 const targetEl = document.querySelector<HTMLElement>('#target')!;
 const trialEl = document.querySelector<HTMLElement>('#trial')!;
+const trialKindEl = document.querySelector<HTMLElement>('#trial-kind')!;
 const plasticityEl = document.querySelector<HTMLElement>('#plasticity')!;
 const accuracyOverallEl = document.querySelector<HTMLElement>('#accuracy-overall')!;
 const accuracy20El = document.querySelector<HTMLElement>('#accuracy-20')!;
 const accuracy100El = document.querySelector<HTMLElement>('#accuracy-100')!;
 const accuracy500El = document.querySelector<HTMLElement>('#accuracy-500')!;
 const accuracyCountEl = document.querySelector<HTMLElement>('#accuracy-count')!;
+const probeOverallEl = document.querySelector<HTMLElement>('#probe-overall')!;
+const probe20El = document.querySelector<HTMLElement>('#probe-20')!;
+const probe100El = document.querySelector<HTMLElement>('#probe-100')!;
+const probeCountEl = document.querySelector<HTMLElement>('#probe-count')!;
 const class0El = document.querySelector<HTMLElement>('#class-0')!;
 const class1El = document.querySelector<HTMLElement>('#class-1')!;
 const class2El = document.querySelector<HTMLElement>('#class-2')!;
@@ -207,6 +231,12 @@ function updateMetrics(metrics: SuccessMetrics | undefined, fallbackAccuracy: nu
   class0El.textContent = formatRate(byTarget['0']);
   class1El.textContent = formatRate(byTarget['1']);
   class2El.textContent = formatRate(byTarget['2']);
+
+  const probe = metrics.probe;
+  probeOverallEl.textContent = formatRate(probe?.overall);
+  probe20El.textContent = formatRate(probe?.recent_20);
+  probe100El.textContent = formatRate(probe?.recent_100);
+  probeCountEl.textContent = (probe?.attempts ?? 0).toLocaleString();
 }
 
 function renderStimulus(stimulus: DotStimulus | undefined) {
@@ -229,7 +259,7 @@ function renderStimulus(stimulus: DotStimulus | undefined) {
     circle.setAttribute('cy', (dot.y * 100).toFixed(2));
     circle.setAttribute('r', (dot.r * 100).toFixed(2));
     circle.setAttribute('class', 'stimulus-dot');
-    circle.setAttribute('opacity', Math.min(1, 0.60 + dot.gain * 0.28).toFixed(2));
+    circle.setAttribute('opacity', Math.min(1, 0.48 + dot.gain * 0.38).toFixed(2));
     stimulusEl.appendChild(circle);
   }
 }
@@ -310,7 +340,7 @@ function connectTelemetry() {
   const socket = new WebSocket('ws://localhost:8000/ws/telemetry');
 
   socket.addEventListener('open', () => {
-    statusEl.textContent = `${layoutSummary} · starting numerosity learner`;
+    statusEl.textContent = `${layoutSummary} · starting Stage 2 learner`;
   });
 
   socket.addEventListener('message', (event) => {
@@ -335,11 +365,15 @@ function connectTelemetry() {
     answerEl.textContent = `${frame.answer} ${frame.correct ? '✓' : '✕'}`;
     targetEl.textContent = `${frame.target}`;
     trialEl.textContent = frame.trial.toLocaleString();
-    plasticityEl.textContent = `${frame.plasticity.active_synapses} · Δw ${frame.plasticity.mean_delta_w >= 0 ? '+' : ''}${frame.plasticity.mean_delta_w}`;
+    trialKindEl.textContent = frame.trial_kind === 'probe' ? 'PROBE · weights frozen' : 'TRAIN';
+    plasticityEl.textContent = frame.learning_enabled === false
+      ? 'probe · no update'
+      : `${frame.plasticity.active_synapses} · Δw ${frame.plasticity.mean_delta_w >= 0 ? '+' : ''}${frame.plasticity.mean_delta_w}`;
     updateMetrics(frame.metrics, frame.accuracy);
 
     if (frame.telemetry_source === 'numerosity_prototype') {
-      statusEl.textContent = `${layoutSummary} · prototype learning · 5 trials / UI frame · activity overlay is a proxy`;
+      const mode = frame.trial_kind === 'probe' ? 'PROBE · plasticity off' : 'TRAIN';
+      statusEl.textContent = `${layoutSummary} · Stage 2 cue-controlled · ${mode} · activity overlay is a proxy`;
     }
   });
 
