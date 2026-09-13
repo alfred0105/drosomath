@@ -10,13 +10,24 @@
     <div id="app">
       <canvas id="brain"></canvas>
       <section class="hud" aria-label="DrosoMath telemetry">
+        <div class="experiment-header">
+          <span class="label">Experiment</span>
+          <strong>Numerosity · dots 0–2</strong>
+          <small>reward-modulated prototype</small>
+        </div>
+
+        <div class="stimulus-panel">
+          <span class="label">Current visual stimulus</span>
+          <svg id="stimulus-view" viewBox="0 0 100 100" role="img" aria-label="randomized dot stimulus"></svg>
+        </div>
+
         <div>
-          <span class="label">Problem</span>
-          <strong id="problem">connecting…</strong>
+          <span class="label">Choice</span>
+          <strong id="answer">—</strong>
         </div>
         <div>
-          <span class="label">Answer</span>
-          <strong id="answer">—</strong>
+          <span class="label">Target</span>
+          <strong id="target">—</strong>
         </div>
         <div>
           <span class="label">Trial</span>
@@ -27,8 +38,21 @@
           <strong id="plasticity">—</strong>
         </div>
 
+        <div class="policy-panel">
+          <span class="label">Current choice policy</span>
+          <div class="policy-row">
+            <span>0</span><div class="policy-track"><i id="policy-bar-0"></i></div><strong id="policy-0">—</strong>
+          </div>
+          <div class="policy-row">
+            <span>1</span><div class="policy-track"><i id="policy-bar-1"></i></div><strong id="policy-1">—</strong>
+          </div>
+          <div class="policy-row">
+            <span>2</span><div class="policy-track"><i id="policy-bar-2"></i></div><strong id="policy-2">—</strong>
+          </div>
+        </div>
+
         <div class="success-panel">
-          <span class="label">Success rates</span>
+          <span class="label">Success rates · chance = 33.3%</span>
           <div class="success-grid">
             <div class="success-stat">
               <span>Overall</span>
@@ -47,6 +71,15 @@
               <span>Last 500</span>
               <strong id="accuracy-500">—</strong>
             </div>
+          </div>
+        </div>
+
+        <div class="class-panel">
+          <span class="label">Accuracy by target</span>
+          <div class="class-grid">
+            <div><span>0 dots</span><strong id="class-0">—</strong></div>
+            <div><span>1 dot</span><strong id="class-1">—</strong></div>
+            <div><span>2 dots</span><strong id="class-2">—</strong></div>
           </div>
         </div>
       </section>
