@@ -9,10 +9,18 @@ from typing import Any
 import numpy as np
 
 
+# Kept for compatibility with already-saved Stage 2.2A runs/code while the
+# branch moves to the focused Stage 2.2B retest.
 STAGE22A_PROFILES = (
     "position_only",
     "area_only",
     "spacing_only",
+    "brightness_only",
+    "combined",
+)
+
+STAGE22B_PROFILES = (
+    "position_only",
     "brightness_only",
     "combined",
 )
@@ -41,23 +49,36 @@ class NumerosityConfig:
     strong_gain_faint_range: tuple[float, float] = (0.52, 0.72)
     strong_gain_bright_range: tuple[float, float] = (1.28, 1.48)
 
+    # Stage 2.2B early-vision robustness. These operations never receive a
+    # target label and never count components/peaks.
+    contrast_mix: float = 0.30
+    contrast_floor: float = 0.14
+    phase_offsets: tuple[float, ...] = (-0.5, 0.0, 0.5)
+
 
 class NumerosityExperiment:
-    """Reward learner used for Stage 2.1 acquisition and Stage 2.2A tests.
+    """Reward learner with a Stage-2.2B sub-pixel-stable visual front end.
 
-    Stage 2.2 showed that changing several nuisance factors at once causes a
-    catastrophic 2->1 collapse. Stage 2.2A therefore isolates those factors.
-    The same frozen Stage-2.1 learner can be evaluated on five profiles:
+    Stage 2.2A isolated the original OOD collapse and showed that half-grid
+    positions were the dominant failure mode, with strong relative brightness a
+    secondary problem. It also exposed a renderer confound: integer-center dots
+    and half-grid dots were rasterized with different support rules.
 
-    - ``position_only``: held-out half-grid centers, otherwise training-like.
-    - ``area_only``: held-out total-area bands, otherwise training-like.
-    - ``spacing_only``: held-out close two-dot spacing, otherwise training-like.
-    - ``brightness_only``: stronger relative two-dot brightness asymmetry.
-    - ``combined``: all four nuisance transforms together.
+    Stage 2.2B fixes that confound and strengthens early vision without giving
+    the learner a numerosity answer:
 
-    The integrated signal-energy distribution remains identical for 1- and
-    2-dot stimuli in every profile. The encoder never receives the answer label
-    and does not explicitly count connected components or peaks.
+    1. Every dot, integer or fractional, is sampled by the same continuous
+       Gaussian rasterizer.
+    2. A small binomial anti-alias filter reduces sampling-phase artifacts.
+    3. Mild local divisive contrast normalization makes faint local structure
+       less likely to disappear; global L1 energy is restored afterward.
+    4. A local half-pixel phase envelope pools small retinal phase changes and
+       again restores global L1 energy.
+    5. The existing translated sparse receptor bank -> KC representation and
+       reward-modulated choice learner remain unchanged in principle.
+
+    No connected-component count, peak count, target-derived feature, or answer
+    label is inserted into the encoder or the plasticity update.
     """
 
     CHECKPOINT_VERSION = 1
@@ -77,6 +98,21 @@ class NumerosityExperiment:
 
         self.w_output = self.rng.normal(0.0, 0.005, size=(3, c.n_kc)).astype(np.float32)
         self.output_bias = np.zeros(3, dtype=np.float32)
+
+        pixel_y, pixel_x = np.mgrid[0 : c.grid_size, 0 : c.grid_size]
+        self._pixel_x = pixel_x.astype(np.float32)
+        self._pixel_y = pixel_y.astype(np.float32)
+        self._blur_kernel = (
+            np.array(
+                [
+                    [1.0, 2.0, 1.0],
+                    [2.0, 4.0, 2.0],
+                    [1.0, 2.0, 1.0],
+                ],
+                dtype=np.float32,
+            )
+            / 16.0
+        )
 
     def save_checkpoint(self, path: Path, metadata: dict[str, Any] | None = None) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -251,24 +287,13 @@ class NumerosityExperiment:
             else 0.0
         )
 
+        # One continuous rasterizer is used for integer and fractional centers.
+        # This removes the Stage-2.2A 3x3-vs-4x4 renderer confound.
         for dot_index, ((x, y), radius) in enumerate(zip(positions, radii, strict=True)):
             gain = float(raw_gains[dot_index])
             sigma2 = max(0.25, 0.60 * float(radius) * float(radius))
-
-            if not flags["fractional_position"]:
-                cx, cy = int(x), int(y)
-                for dx in (-1, 0, 1):
-                    for dy in (-1, 0, 1):
-                        value = gain * math.exp(-((dx * dx + dy * dy) / sigma2))
-                        grid[cy + dy, cx + dx] += value
-            else:
-                x0, y0 = math.floor(x), math.floor(y)
-                for px in range(x0 - 1, x0 + 3):
-                    for py in range(y0 - 1, y0 + 3):
-                        if not (0 <= px < c.grid_size and 0 <= py < c.grid_size):
-                            continue
-                        d2 = (float(px) - x) ** 2 + (float(py) - y) ** 2
-                        grid[py, px] += gain * math.exp(-(d2 / sigma2))
+            d2 = (self._pixel_x - float(x)) ** 2 + (self._pixel_y - float(y)) ** 2
+            grid += (gain * np.exp(-(d2 / sigma2))).astype(np.float32)
 
         raw_energy = float(np.sum(grid))
         energy_scale = target_energy / raw_energy if raw_energy > 0 else 0.0
@@ -322,6 +347,8 @@ class NumerosityExperiment:
             "novel_area": flags["novel_area"],
             "close_spacing": flags["close_spacing"],
             "strong_brightness": flags["strong_brightness"],
+            "rasterizer": "continuous_gaussian_all_positions",
+            "visual_preprocess": "antialias_divisive_contrast_phase_pool_v1",
         }
         return grid.reshape(-1), dot_payload, controls
 
@@ -348,9 +375,76 @@ class NumerosityExperiment:
             ]
         return shifted
 
+    def _blur3(self, grid: np.ndarray) -> np.ndarray:
+        padded = np.pad(grid, 1, mode="constant")
+        result = np.zeros_like(grid)
+        for ky in range(3):
+            for kx in range(3):
+                result += self._blur_kernel[ky, kx] * padded[
+                    ky : ky + grid.shape[0],
+                    kx : kx + grid.shape[1],
+                ]
+        return result
+
+    @staticmethod
+    def _restore_l1(reference: np.ndarray, transformed: np.ndarray) -> np.ndarray:
+        reference_sum = float(np.sum(reference))
+        transformed_sum = float(np.sum(transformed))
+        if reference_sum <= 0.0 or transformed_sum <= 1e-12:
+            return transformed.astype(np.float32, copy=False)
+        return (transformed * (reference_sum / transformed_sum)).astype(np.float32)
+
+    def _half_phase_shift(self, grid: np.ndarray, dx: float, dy: float) -> np.ndarray:
+        """Cheap bilinear half-pixel shift used only for local phase pooling."""
+        shifted = grid
+        if dx != 0.0:
+            integer_dx = 1 if dx > 0 else -1
+            shifted = 0.5 * shifted + 0.5 * self._zero_fill_shift(
+                shifted,
+                dx=integer_dx,
+                dy=0,
+            )
+        if dy != 0.0:
+            integer_dy = 1 if dy > 0 else -1
+            shifted = 0.5 * shifted + 0.5 * self._zero_fill_shift(
+                shifted,
+                dx=0,
+                dy=integer_dy,
+            )
+        return shifted.astype(np.float32, copy=False)
+
+    def _preprocess_retina(self, grid: np.ndarray) -> np.ndarray:
+        """Stage-2.2B anti-alias/contrast/phase front end with L1 preservation."""
+        c = self.config
+
+        # Mild anti-aliasing: binomial 3x3 low-pass, then restore total energy.
+        antialiased = self._restore_l1(grid, self._blur3(grid))
+
+        # Local divisive normalization. A mild mix avoids turning this into an
+        # engineered object detector; L1 restoration prevents a new global-energy
+        # shortcut between 1 and 2.
+        local_rms = np.sqrt(self._blur3(antialiased * antialiased) + 1e-6)
+        normalized = antialiased / (c.contrast_floor + local_rms)
+        normalized = self._restore_l1(antialiased, normalized)
+        contrast_stable = (
+            (1.0 - c.contrast_mix) * antialiased + c.contrast_mix * normalized
+        ).astype(np.float32)
+        contrast_stable = self._restore_l1(antialiased, contrast_stable)
+
+        # Local phase envelope. This is not a count: it only makes a feature at
+        # x and x+0.5 produce a more similar retinal representation.
+        phase_views = [
+            self._half_phase_shift(contrast_stable, dx, dy)
+            for dy in c.phase_offsets
+            for dx in c.phase_offsets
+        ]
+        phase_pooled = np.max(np.stack(phase_views, axis=0), axis=0)
+        return self._restore_l1(contrast_stable, phase_pooled)
+
     def _encode(self, stimulus: np.ndarray) -> np.ndarray:
         c = self.config
         grid = stimulus.reshape(c.grid_size, c.grid_size)
+        grid = self._preprocess_retina(grid)
 
         receptor_views: list[np.ndarray] = []
         for dy in c.translation_offsets:
@@ -450,7 +544,7 @@ class NumerosityExperiment:
         offsets = list(c.translation_offsets)
         return {
             "stage": 2.2,
-            "substage": "2.2A_factor_isolation",
+            "substage": "2.2B_robust_visual_encoder",
             "seed": c.seed,
             "grid_size": c.grid_size,
             "n_kc": c.n_kc,
@@ -464,35 +558,40 @@ class NumerosityExperiment:
             "signal_energy_range_nonzero": [c.signal_energy_min, c.signal_energy_max],
             "pixel_noise_sd": c.pixel_noise_sd,
             "visual_encoder": {
-                "kind": "fixed_sparse_receptors_with_translation_max_pooling",
+                "kind": "continuous_gaussian_antialias_contrast_phasepool_sparse_receptors",
+                "rasterizer": "same_continuous_gaussian_for_integer_and_fractional_centers",
+                "antialias_kernel": "3x3_binomial",
+                "local_divisive_contrast_mix": c.contrast_mix,
+                "local_divisive_contrast_floor": c.contrast_floor,
+                "phase_offsets": list(c.phase_offsets),
+                "phase_pool": "local_max_then_global_L1_restore",
                 "translation_offsets_x": offsets,
                 "translation_offsets_y": offsets,
-                "view_count": len(offsets) * len(offsets),
+                "translated_receptor_view_count": len(offsets) * len(offsets),
                 "explicit_object_counter": False,
                 "explicit_peak_counter": False,
+                "explicit_numerosity_feature": False,
             },
-            "stage_2_2a_profiles": {
+            "stage_2_2b_profiles": {
                 "position_only": {
                     "fractional_half_grid_positions": True,
-                },
-                "area_only": {
-                    "small_total_area_range": list(c.ood_small_area_range),
-                    "large_total_area_range": list(c.ood_large_area_range),
-                },
-                "spacing_only": {
-                    "two_dot_spacing_range": list(c.close_spacing_range),
                 },
                 "brightness_only": {
                     "faint_gain_range": list(c.strong_gain_faint_range),
                     "bright_gain_range": list(c.strong_gain_bright_range),
                 },
                 "combined": {
-                    "all_above_transforms": True,
+                    "fractional_half_grid_positions": True,
+                    "small_total_area_range": list(c.ood_small_area_range),
+                    "large_total_area_range": list(c.ood_large_area_range),
+                    "two_dot_spacing_range": list(c.close_spacing_range),
+                    "strong_relative_brightness": True,
                 },
-                "learning_enabled": False,
+                "learning_enabled_during_ood": False,
             },
             "continuous_cue_controls": {
                 "equalize_signal_energy_distribution_for_1_vs_2": True,
                 "area_distribution_is_identical_for_1_vs_2_within_each_profile": True,
+                "preprocessing_restores_global_L1_after_contrast_and_phase_pool": True,
             },
         }

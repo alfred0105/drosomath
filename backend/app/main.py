@@ -9,10 +9,10 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
 from .flywire import FAFB_V783_TOTAL_NEURONS, load_fafb_soma_layout
-from .numerosity import NumerosityExperiment, STAGE22A_PROFILES
+from .numerosity import NumerosityExperiment, STAGE22B_PROFILES
 from .run_logging import RunLogger
 
-app = FastAPI(title="DrosoMath telemetry API", version="0.9.0")
+app = FastAPI(title="DrosoMath telemetry API", version="0.10.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -25,11 +25,11 @@ app.add_middleware(
 TRIALS_PER_UI_FRAME = 12
 UI_INTERVAL_SECONDS = 0.24
 PROBE_EVERY = 10
-STAGE21_REPLAY_TRIALS = 10_000
+STAGE22B_REPLAY_TRIALS = 10_000
 PROFILE_TRIALS = 1_500
-PROFILE_ORDER = list(STAGE22A_PROFILES)
+PROFILE_ORDER = list(STAGE22B_PROFILES)
 REPO_ROOT = Path(__file__).resolve().parents[2]
-STAGE21_CHECKPOINT = REPO_ROOT / "checkpoints" / "stage2_1_seed7_t10000_v1.npz"
+STAGE22B_CHECKPOINT = REPO_ROOT / "checkpoints" / "stage2_2b_seed7_t10000_v1.npz"
 
 
 def make_mock_layout() -> dict[str, Any]:
@@ -92,9 +92,9 @@ def health() -> dict[str, Any]:
         "layout_source": LAYOUT["source"],
         "layout_count": NEURON_COUNT,
         "telemetry_source": "numerosity_prototype",
-        "experiment": "numerosity_0_2_stage2_2a",
-        "mode": "frozen_ood_factor_isolation",
-        "stage21_replay_trials": STAGE21_REPLAY_TRIALS,
+        "experiment": "numerosity_0_2_stage2_2b",
+        "mode": "robust_encoder_replay_then_frozen_ood",
+        "stage22b_replay_trials": STAGE22B_REPLAY_TRIALS,
         "profile_trials": PROFILE_TRIALS,
         "profiles": PROFILE_ORDER,
     }
@@ -203,17 +203,17 @@ class SuccessMetrics:
         }
 
 
-def prepare_stage22a_experiment() -> tuple[NumerosityExperiment, dict[str, Any], str]:
-    """Reproduce Stage 2.1 at trial 10k, caching the exact state locally."""
+def prepare_stage22b_experiment() -> tuple[NumerosityExperiment, dict[str, Any], str]:
+    """Train/replay the robust encoder on Stage-2.1-like data, then freeze it."""
     experiment = NumerosityExperiment()
 
-    if STAGE21_CHECKPOINT.exists():
-        metadata = experiment.load_checkpoint(STAGE21_CHECKPOINT)
+    if STAGE22B_CHECKPOINT.exists():
+        metadata = experiment.load_checkpoint(STAGE22B_CHECKPOINT)
         snapshot = dict(metadata.get("pretraining_snapshot") or {})
         return experiment, snapshot, "checkpoint"
 
     metrics = SuccessMetrics()
-    for trial in range(1, STAGE21_REPLAY_TRIALS + 1):
+    for trial in range(1, STAGE22B_REPLAY_TRIALS + 1):
         is_probe = trial % PROBE_EVERY == 0
         result = experiment.step(
             trial,
@@ -230,13 +230,14 @@ def prepare_stage22a_experiment() -> tuple[NumerosityExperiment, dict[str, Any],
 
     snapshot = metrics.snapshot()
     experiment.save_checkpoint(
-        STAGE21_CHECKPOINT,
+        STAGE22B_CHECKPOINT,
         {
-            "stage": 2.1,
-            "pretraining_trials": STAGE21_REPLAY_TRIALS,
+            "stage": "2.2B_pretraining",
+            "pretraining_trials": STAGE22B_REPLAY_TRIALS,
             "probe_every": PROBE_EVERY,
             "pretraining_snapshot": snapshot,
-            "purpose": "deterministic Stage-2.1 replay state for frozen OOD evaluation",
+            "learner": experiment.config_dict(),
+            "purpose": "robust visual encoder state before frozen Stage-2.2B OOD evaluation",
         },
     )
     return experiment, snapshot, "deterministic_replay"
@@ -303,7 +304,7 @@ def make_frame(
         "telemetry_source": "numerosity_prototype",
         "activity_source": "display_proxy_not_connectome_spikes",
         "learning_model": "reward_modulated_sparse_associator",
-        "phase": "dots_0_2_stage2_2a_factor_isolation",
+        "phase": "dots_0_2_stage2_2b_robust_ood",
         "trial_kind": result["trial_kind"],
         "learning_enabled": result["learning_enabled"],
         "timestamp": time.time(),
@@ -329,13 +330,13 @@ def make_frame(
 async def telemetry(websocket: WebSocket) -> None:
     await websocket.accept()
 
-    experiment, pretraining_snapshot, state_source = prepare_stage22a_experiment()
+    experiment, pretraining_snapshot, state_source = prepare_stage22b_experiment()
     profile_metrics = {profile: SuccessMetrics() for profile in PROFILE_ORDER}
     eval_trial = 1
 
     logger = RunLogger(
         {
-            "experiment": "numerosity_0_2_stage2_2a",
+            "experiment": "numerosity_0_2_stage2_2b",
             "telemetry_source": "numerosity_prototype",
             "activity_source": "display_proxy_not_connectome_spikes",
             "learning_model": "reward_modulated_sparse_associator",
@@ -347,21 +348,22 @@ async def telemetry(websocket: WebSocket) -> None:
             "rolling_windows": [20, 100, 500],
             "trials_per_ui_frame": TRIALS_PER_UI_FRAME,
             "ui_interval_seconds": UI_INTERVAL_SECONDS,
-            "stage21_replay_trials": STAGE21_REPLAY_TRIALS,
-            "stage21_state_source": state_source,
-            "stage21_pretraining_snapshot": pretraining_snapshot,
-            "evaluation_profile": "factor_isolation",
+            "stage22b_replay_trials": STAGE22B_REPLAY_TRIALS,
+            "stage22b_state_source": state_source,
+            "stage22b_pretraining_snapshot": pretraining_snapshot,
+            "evaluation_profile": "robust_encoder_retest",
             "evaluation_profiles": PROFILE_ORDER,
             "profile_trials": PROFILE_TRIALS,
             "total_evaluation_trials": PROFILE_TRIALS * len(PROFILE_ORDER),
             "evaluation_learning_enabled": False,
             "learner": experiment.config_dict(),
             "scientific_scope": (
-                "Stage-2.2A frozen OOD factor-isolation test. The exact Stage-2.1 10,000-trial state is restored, then "
-                "plasticity remains disabled while position-only, area-only, spacing-only, brightness-only, and combined "
-                "OOD blocks are evaluated separately. The total-signal-energy distribution stays identical for 1 and 2 "
-                "within every block. This identifies which nuisance transform causes the Stage-2.2 2-to-1 collapse. "
-                "The encoder does not explicitly count objects or peaks; FlyWire coordinates remain visualization-only."
+                "Stage-2.2B robust-vision retest. The learner is trained for 10,000 Stage-2.1-like trials using the new "
+                "continuous Gaussian rasterizer and anti-alias/divisive-contrast/sub-pixel-phase visual front end. The "
+                "resulting state is then frozen. Position-only, brightness-only, and combined OOD blocks receive no "
+                "plastic updates. Total signal-energy remains identically distributed for 1 and 2, and preprocessing "
+                "restores global L1 energy after local contrast/phase pooling. No object count, peak count, or target "
+                "feature is injected. FlyWire coordinates remain visualization-only."
             ),
         }
     )
@@ -383,7 +385,7 @@ async def telemetry(websocket: WebSocket) -> None:
                     result = experiment.step(
                         eval_trial,
                         learn=False,
-                        trial_kind="factor_eval",
+                        trial_kind="robust_ood_eval",
                         stimulus_profile=profile,
                     )
                     frame = make_frame(
@@ -403,6 +405,7 @@ async def telemetry(websocket: WebSocket) -> None:
                     snapshot["profile_trial"] = profile_trial
                     snapshot["profile_trials_target"] = PROFILE_TRIALS
                     snapshot["profiles"] = _profile_results(profile_metrics)
+                    snapshot["experiment_complete"] = False
                     frame["metrics"] = snapshot
                     frame["accuracy"] = snapshot["overall"]
                     logger.record(frame, snapshot)
@@ -415,18 +418,23 @@ async def telemetry(websocket: WebSocket) -> None:
                     await websocket.send_json(latest_frame)
                 await asyncio.sleep(UI_INTERVAL_SECONDS)
 
-        logger.finalize(status="completed")
-        finalized = True
         if last_frame is not None:
             final_snapshot = dict(last_frame.get("metrics") or {})
             final_snapshot["profiles"] = _profile_results(profile_metrics)
             final_snapshot["experiment_complete"] = True
+            final_snapshot["current_profile"] = PROFILE_ORDER[-1]
+            final_snapshot["profile_trial"] = PROFILE_TRIALS
             last_frame["metrics"] = final_snapshot
             last_frame["experiment_complete"] = True
+            logger.finalize(status="completed", frame=last_frame, metrics=final_snapshot)
+            finalized = True
             await websocket.send_json(last_frame)
+        else:
+            logger.finalize(status="completed")
+            finalized = True
 
-        # Keep the socket open so the frontend does not auto-reconnect and start
-        # a duplicate completed experiment. Closing the browser/server exits here.
+        # Keep the socket open so the frontend does not reconnect and create a
+        # duplicate completed experiment. Closing the browser/server exits here.
         while True:
             await asyncio.sleep(3600)
     except WebSocketDisconnect:

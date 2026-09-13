@@ -59,6 +59,8 @@ type DotStimulus = {
     novel_area?: boolean;
     close_spacing?: boolean;
     strong_brightness?: boolean;
+    rasterizer?: string;
+    visual_preprocess?: string;
   };
 };
 
@@ -99,8 +101,6 @@ type Telemetry = {
 
 const PROFILE_LABELS: Record<string, string> = {
   position_only: 'Position',
-  area_only: 'Area',
-  spacing_only: 'Spacing',
   brightness_only: 'Brightness',
   combined: 'Combined',
 };
@@ -110,16 +110,6 @@ const PROFILE_DOM: Record<string, { balanced: HTMLElement; oneTwo: HTMLElement; 
     balanced: document.querySelector<HTMLElement>('#profile-position-balanced')!,
     oneTwo: document.querySelector<HTMLElement>('#profile-position-one-two')!,
     two: document.querySelector<HTMLElement>('#profile-position-two')!,
-  },
-  area_only: {
-    balanced: document.querySelector<HTMLElement>('#profile-area-balanced')!,
-    oneTwo: document.querySelector<HTMLElement>('#profile-area-one-two')!,
-    two: document.querySelector<HTMLElement>('#profile-area-two')!,
-  },
-  spacing_only: {
-    balanced: document.querySelector<HTMLElement>('#profile-spacing-balanced')!,
-    oneTwo: document.querySelector<HTMLElement>('#profile-spacing-one-two')!,
-    two: document.querySelector<HTMLElement>('#profile-spacing-two')!,
   },
   brightness_only: {
     balanced: document.querySelector<HTMLElement>('#profile-brightness-balanced')!,
@@ -400,7 +390,7 @@ function connectTelemetry() {
   const socket = new WebSocket('ws://localhost:8000/ws/telemetry');
 
   socket.addEventListener('open', () => {
-    statusEl.textContent = `${layoutSummary} · preparing Stage 2.2A frozen factor isolation…`;
+    statusEl.textContent = `${layoutSummary} · preparing Stage 2.2B robust 10k replay/checkpoint…`;
   });
 
   socket.addEventListener('message', (event) => {
@@ -432,7 +422,7 @@ function connectTelemetry() {
     trialEl.textContent = profileTarget
       ? `${profileTrial.toLocaleString()} / ${profileTarget.toLocaleString()}`
       : frame.trial.toLocaleString();
-    trialKindEl.textContent = `${profileLabel} · FROZEN`;
+    trialKindEl.textContent = `${profileLabel} · ROBUST FROZEN`;
 
     plasticityEl.textContent = frame.learning_enabled === false
       ? 'frozen · no update'
@@ -440,9 +430,9 @@ function connectTelemetry() {
     updateMetrics(frame.metrics, frame.accuracy);
 
     if (frame.experiment_complete || frame.metrics?.experiment_complete) {
-      statusEl.textContent = `${layoutSummary} · Stage 2.2A COMPLETE · all 5 frozen OOD profiles saved`;
+      statusEl.textContent = `${layoutSummary} · Stage 2.2B COMPLETE · all 3 frozen robust OOD profiles saved`;
     } else {
-      statusEl.textContent = `${layoutSummary} · Stage 2.2A ${profileLabel} (${frame.profile_index ?? '—'}/${frame.profile_count ?? 5}) · plasticity off · activity overlay is a proxy`;
+      statusEl.textContent = `${layoutSummary} · Stage 2.2B ${profileLabel} (${frame.profile_index ?? '—'}/${frame.profile_count ?? 3}) · robust encoder · plasticity off · activity overlay is a proxy`;
     }
   });
 
