@@ -29,9 +29,9 @@ body { overflow: hidden; }
   top: 18px;
   left: 18px;
   display: grid;
-  grid-template-columns: repeat(2, minmax(110px, 1fr));
+  grid-template-columns: repeat(2, minmax(120px, 1fr));
   gap: 10px;
-  width: min(390px, calc(100vw - 36px));
+  width: min(430px, calc(100vw - 36px));
   padding: 14px;
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 16px;
@@ -39,7 +39,7 @@ body { overflow: hidden; }
   backdrop-filter: blur(12px);
 }
 
-.hud div {
+.hud > div {
   padding: 10px;
   border-radius: 12px;
   background: rgba(255,255,255,0.045);
@@ -54,19 +54,55 @@ body { overflow: hidden; }
 
 strong { font-size: 18px; }
 
+.success-panel {
+  grid-column: 1 / -1;
+}
+
+.success-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.success-stat {
+  min-width: 0;
+  padding: 9px 8px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.045);
+}
+
+.success-stat span,
+.success-stat small {
+  display: block;
+  color: #9fa9b9;
+  font-size: 11px;
+}
+
+.success-stat strong {
+  display: block;
+  margin: 3px 0 2px;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
 .status {
   position: absolute;
   right: 18px;
   bottom: 18px;
+  max-width: min(760px, calc(100vw - 36px));
   padding: 8px 11px;
   border-radius: 999px;
   background: rgba(12, 15, 22, 0.78);
   border: 1px solid rgba(255,255,255,0.1);
   color: #aab3c2;
   font-size: 12px;
+  text-align: right;
 }
 
-@media (max-width: 520px) {
+@media (max-width: 620px) {
   .hud { grid-template-columns: 1fr 1fr; }
+  .success-grid { grid-template-columns: 1fr 1fr; }
   strong { font-size: 16px; }
+  .status { border-radius: 12px; }
 }
