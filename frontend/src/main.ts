@@ -390,7 +390,7 @@ function connectTelemetry() {
   const socket = new WebSocket('ws://localhost:8000/ws/telemetry');
 
   socket.addEventListener('open', () => {
-    statusEl.textContent = `${layoutSummary} · preparing Stage 2.2B robust 10k replay/checkpoint…`;
+    statusEl.textContent = `${layoutSummary} · preparing Stage 2.2C 30k augmented training/checkpoint…`;
   });
 
   socket.addEventListener('message', (event) => {
@@ -422,7 +422,7 @@ function connectTelemetry() {
     trialEl.textContent = profileTarget
       ? `${profileTrial.toLocaleString()} / ${profileTarget.toLocaleString()}`
       : frame.trial.toLocaleString();
-    trialKindEl.textContent = `${profileLabel} · ROBUST FROZEN`;
+    trialKindEl.textContent = `${profileLabel} · 30K FROZEN`;
 
     plasticityEl.textContent = frame.learning_enabled === false
       ? 'frozen · no update'
@@ -430,9 +430,9 @@ function connectTelemetry() {
     updateMetrics(frame.metrics, frame.accuracy);
 
     if (frame.experiment_complete || frame.metrics?.experiment_complete) {
-      statusEl.textContent = `${layoutSummary} · Stage 2.2B COMPLETE · all 3 frozen robust OOD profiles saved`;
+      statusEl.textContent = `${layoutSummary} · Stage 2.2C COMPLETE · all 3 frozen OOD profiles saved`;
     } else {
-      statusEl.textContent = `${layoutSummary} · Stage 2.2B ${profileLabel} (${frame.profile_index ?? '—'}/${frame.profile_count ?? 3}) · robust encoder · plasticity off · activity overlay is a proxy`;
+      statusEl.textContent = `${layoutSummary} · Stage 2.2C ${profileLabel} (${frame.profile_index ?? '—'}/${frame.profile_count ?? 3}) · 30k learned invariance · plasticity off · activity overlay is a proxy`;
     }
   });
 
