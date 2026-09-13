@@ -47,6 +47,8 @@ class RunLogger:
                     "trial",
                     "timestamp",
                     "phase",
+                    "trial_kind",
+                    "learning_enabled",
                     "target",
                     "answer",
                     "correct",
@@ -55,6 +57,9 @@ class RunLogger:
                     "p1",
                     "p2",
                     "policy_entropy",
+                    "signal_energy",
+                    "area_factor",
+                    "post_noise_energy",
                     "overall",
                     "recent_20",
                     "recent_100",
@@ -64,6 +69,15 @@ class RunLogger:
                     "target_0_accuracy",
                     "target_1_accuracy",
                     "target_2_accuracy",
+                    "probe_overall",
+                    "probe_recent_20",
+                    "probe_recent_100",
+                    "probe_recent_500",
+                    "probe_successes",
+                    "probe_attempts",
+                    "probe_target_0_accuracy",
+                    "probe_target_1_accuracy",
+                    "probe_target_2_accuracy",
                     "active_synapses",
                     "mean_delta_w",
                 ]
@@ -75,6 +89,9 @@ class RunLogger:
         plasticity = frame.get("plasticity", {})
         policy = frame.get("policy", {})
         by_target = metrics.get("by_target_accuracy", {})
+        probe = metrics.get("probe", {})
+        probe_by_target = probe.get("by_target_accuracy", {})
+        controls = (frame.get("stimulus") or {}).get("controls", {})
 
         with self._metrics_path.open("a", newline="", encoding="utf-8") as handle:
             writer = csv.writer(handle)
@@ -83,6 +100,8 @@ class RunLogger:
                     frame.get("trial"),
                     frame.get("timestamp"),
                     frame.get("phase"),
+                    frame.get("trial_kind"),
+                    int(bool(frame.get("learning_enabled"))),
                     frame.get("target"),
                     frame.get("answer"),
                     int(bool(frame.get("correct"))),
@@ -91,6 +110,9 @@ class RunLogger:
                     policy.get("p1"),
                     policy.get("p2"),
                     policy.get("entropy"),
+                    controls.get("signal_energy"),
+                    controls.get("area_factor"),
+                    controls.get("post_noise_energy"),
                     metrics.get("overall"),
                     metrics.get("recent_20"),
                     metrics.get("recent_100"),
@@ -100,6 +122,15 @@ class RunLogger:
                     by_target.get("0"),
                     by_target.get("1"),
                     by_target.get("2"),
+                    probe.get("overall"),
+                    probe.get("recent_20"),
+                    probe.get("recent_100"),
+                    probe.get("recent_500"),
+                    probe.get("successes"),
+                    probe.get("attempts"),
+                    probe_by_target.get("0"),
+                    probe_by_target.get("1"),
+                    probe_by_target.get("2"),
                     plasticity.get("active_synapses"),
                     plasticity.get("mean_delta_w"),
                 ]
@@ -126,7 +157,19 @@ class RunLogger:
             "attempts": 0,
             "by_target_accuracy": {"0": None, "1": None, "2": None},
             "confusion_matrix": [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
+            "probe": {
+                "overall": None,
+                "recent_20": None,
+                "recent_100": None,
+                "recent_500": None,
+                "successes": 0,
+                "attempts": 0,
+                "by_target_accuracy": {"0": None, "1": None, "2": None},
+                "confusion_matrix": [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
+            },
         }
+        probe = metrics.get("probe", {})
+        controls = (last.get("stimulus") or {}).get("controls", {})
         now = ended_at or _now()
         summary = {
             "run_id": self.run_id,
@@ -150,11 +193,14 @@ class RunLogger:
             "recent_500": metrics.get("recent_500"),
             "by_target_accuracy": metrics.get("by_target_accuracy"),
             "confusion_matrix_rows_target_cols_choice": metrics.get("confusion_matrix"),
+            "probe": probe,
+            "last_trial_kind": last.get("trial_kind"),
             "last_target": last.get("target"),
             "last_answer": last.get("answer"),
             "last_correct": last.get("correct"),
             "last_reward": last.get("reward"),
             "last_policy": last.get("policy"),
+            "last_stimulus_controls": controls,
             "scientific_scope": self.config.get("scientific_scope"),
             "note": (
                 "This run validates the reward-learning protocol. It is not yet evidence that the full FlyWire connectome learned numerosity."
