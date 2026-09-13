@@ -55,8 +55,7 @@ body { overflow: hidden; }
   background: rgba(255,255,255,0.045);
 }
 
-/* Keep the four small realtime cards the same height when TRAIN/PROBE text changes. */
-.hud > div:not(.experiment-header):not(.stimulus-panel):not(.policy-panel):not(.success-panel):not(.class-panel) {
+.hud > div:not(.experiment-header):not(.stimulus-panel):not(.policy-panel):not(.success-panel):not(.class-panel):not(.profile-panel) {
   min-height: 84px;
 }
 
@@ -72,7 +71,8 @@ small,
 .label,
 .policy-row,
 .success-stat,
-.class-grid {
+.class-grid,
+.profile-table {
   font-variant-numeric: tabular-nums;
 }
 
@@ -115,7 +115,8 @@ small {
 .stimulus-panel,
 .policy-panel,
 .success-panel,
-.class-panel {
+.class-panel,
+.profile-panel {
   grid-column: 1 / -1;
 }
 
@@ -280,6 +281,54 @@ small {
   white-space: nowrap;
 }
 
+.profile-panel {
+  min-height: 214px;
+}
+
+.profile-table {
+  margin-top: 8px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+}
+
+.profile-row {
+  display: grid;
+  grid-template-columns: minmax(100px, 1.45fr) repeat(3, minmax(58px, 1fr));
+  align-items: center;
+  gap: 6px;
+  min-height: 31px;
+  padding: 6px 8px;
+  border-top: 1px solid rgba(255,255,255,0.055);
+}
+
+.profile-row:first-child {
+  border-top: 0;
+}
+
+.profile-row > span {
+  overflow: hidden;
+  color: #aab3c2;
+  font-size: 11px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.profile-row > strong {
+  min-width: 0;
+  font-size: 12px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.profile-head {
+  background: rgba(255,255,255,0.035);
+}
+
+.profile-head span:not(:first-child) {
+  text-align: right;
+}
+
 .status {
   position: absolute;
   right: 18px;
@@ -305,6 +354,7 @@ small {
   }
   .success-grid { grid-template-columns: 1fr 1fr; }
   .class-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .profile-row { grid-template-columns: minmax(86px, 1.4fr) repeat(3, minmax(52px, 1fr)); }
   strong { font-size: 16px; }
   .status { border-radius: 12px; }
 }

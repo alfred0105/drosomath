@@ -9,6 +9,15 @@ from typing import Any
 import numpy as np
 
 
+STAGE22A_PROFILES = (
+    "position_only",
+    "area_only",
+    "spacing_only",
+    "brightness_only",
+    "combined",
+)
+
+
 @dataclass(frozen=True)
 class NumerosityConfig:
     seed: int = 7
@@ -28,22 +37,27 @@ class NumerosityConfig:
     translation_offsets: tuple[int, ...] = (-3, 0, 3)
     ood_small_area_range: tuple[float, float] = (0.88, 1.02)
     ood_large_area_range: tuple[float, float] = (1.90, 2.05)
+    close_spacing_range: tuple[float, float] = (2.0, 3.0)
+    strong_gain_faint_range: tuple[float, float] = (0.52, 0.72)
+    strong_gain_bright_range: tuple[float, float] = (1.28, 1.48)
 
 
 class NumerosityExperiment:
-    """Reward learner used for Stage 2.1 acquisition and Stage 2.2 OOD tests.
+    """Reward learner used for Stage 2.1 acquisition and Stage 2.2A tests.
 
-    The visual encoder is a fixed sparse receptor bank evaluated over translated
-    retinal views, followed by max pooling and sparse KC activity. It never
-    receives the answer label and does not explicitly count connected components
-    or peaks.
+    Stage 2.2 showed that changing several nuisance factors at once causes a
+    catastrophic 2->1 collapse. Stage 2.2A therefore isolates those factors.
+    The same frozen Stage-2.1 learner can be evaluated on five profiles:
 
-    ``stimulus_profile='train'`` reproduces the Stage-2.1 distribution exactly.
-    ``stimulus_profile='ood'`` keeps the 1-vs-2 total-energy control but uses
-    held-out half-grid positions, unseen total-area bands, and stronger relative
-    brightness asymmetry. Two-dot OOD trials also prefer a closer spacing band
-    than was allowed during training. These changes are nuisance transforms, not
-    an encoded numerosity answer.
+    - ``position_only``: held-out half-grid centers, otherwise training-like.
+    - ``area_only``: held-out total-area bands, otherwise training-like.
+    - ``spacing_only``: held-out close two-dot spacing, otherwise training-like.
+    - ``brightness_only``: stronger relative two-dot brightness asymmetry.
+    - ``combined``: all four nuisance transforms together.
+
+    The integrated signal-energy distribution remains identical for 1- and
+    2-dot stimuli in every profile. The encoder never receives the answer label
+    and does not explicitly count connected components or peaks.
     """
 
     CHECKPOINT_VERSION = 1
@@ -90,25 +104,40 @@ class NumerosityExperiment:
         self.rng.bit_generator.state = payload["rng_state"]
         return dict(payload.get("metadata") or {})
 
-    def _sample_positions_train(self, numerosity: int) -> list[tuple[float, float]]:
-        c = self.config
-        placed: list[tuple[float, float]] = []
-        for _ in range(numerosity):
-            x = y = 1.0
-            for _attempt in range(200):
-                x = float(self.rng.integers(1, c.grid_size - 1))
-                y = float(self.rng.integers(1, c.grid_size - 1))
-                if all((x - px) ** 2 + (y - py) ** 2 >= 9 for px, py in placed):
-                    break
-            placed.append((x, y))
-        return placed
+    @staticmethod
+    def _profile_flags(stimulus_profile: str) -> dict[str, bool]:
+        if stimulus_profile == "train":
+            return {
+                "fractional_position": False,
+                "novel_area": False,
+                "close_spacing": False,
+                "strong_brightness": False,
+            }
+        if stimulus_profile not in STAGE22A_PROFILES:
+            raise ValueError(f"Unknown stimulus profile: {stimulus_profile}")
+        return {
+            "fractional_position": stimulus_profile in {"position_only", "combined"},
+            "novel_area": stimulus_profile in {"area_only", "combined"},
+            "close_spacing": stimulus_profile in {"spacing_only", "combined"},
+            "strong_brightness": stimulus_profile in {"brightness_only", "combined"},
+        }
 
-    def _sample_positions_ood(self, numerosity: int) -> list[tuple[float, float]]:
-        """Half-grid centers; two-dot trials prefer an unseen close-spacing band."""
+    def _sample_positions(
+        self,
+        numerosity: int,
+        *,
+        stimulus_profile: str,
+    ) -> list[tuple[float, float]]:
         c = self.config
-        candidates = [float(i) + 0.5 for i in range(1, c.grid_size - 2)]
+        flags = self._profile_flags(stimulus_profile)
         if numerosity <= 0:
             return []
+
+        if flags["fractional_position"]:
+            candidates = [float(i) + 0.5 for i in range(1, c.grid_size - 2)]
+        else:
+            candidates = [float(i) for i in range(1, c.grid_size - 1)]
+
         if numerosity == 1:
             return [
                 (
@@ -122,17 +151,30 @@ class NumerosityExperiment:
             float(self.rng.choice(candidates)),
         )
         second = first
-        for _attempt in range(400):
-            candidate = (
-                float(self.rng.choice(candidates)),
-                float(self.rng.choice(candidates)),
-            )
-            distance = math.dist(first, candidate)
-            if 2.0 <= distance < 3.0:
-                second = candidate
-                break
+
+        if flags["close_spacing"]:
+            low, high = c.close_spacing_range
+            for _attempt in range(500):
+                candidate = (
+                    float(self.rng.choice(candidates)),
+                    float(self.rng.choice(candidates)),
+                )
+                distance = math.dist(first, candidate)
+                if low <= distance < high:
+                    second = candidate
+                    break
+        else:
+            for _attempt in range(300):
+                candidate = (
+                    float(self.rng.choice(candidates)),
+                    float(self.rng.choice(candidates)),
+                )
+                if math.dist(first, candidate) >= 3.0:
+                    second = candidate
+                    break
+
         if second == first:
-            for _attempt in range(200):
+            for _attempt in range(300):
                 candidate = (
                     float(self.rng.choice(candidates)),
                     float(self.rng.choice(candidates)),
@@ -140,6 +182,7 @@ class NumerosityExperiment:
                 if math.dist(first, candidate) >= 2.0:
                     second = candidate
                     break
+
         return [first, second]
 
     def _controlled_radii(
@@ -152,7 +195,8 @@ class NumerosityExperiment:
         if numerosity <= 0:
             return np.zeros(0, dtype=np.float32), 0.0
 
-        if stimulus_profile == "ood":
+        flags = self._profile_flags(stimulus_profile)
+        if flags["novel_area"]:
             area_range = (
                 c.ood_small_area_range
                 if bool(self.rng.integers(0, 2))
@@ -167,61 +211,57 @@ class NumerosityExperiment:
         scale = math.sqrt(total_area / float(np.sum(raw * raw)))
         return (raw * scale).astype(np.float32), total_area
 
+    def _raw_gains(self, numerosity: int, *, stimulus_profile: str) -> np.ndarray:
+        c = self.config
+        if numerosity <= 0:
+            return np.zeros(0, dtype=np.float32)
+
+        flags = self._profile_flags(stimulus_profile)
+        if flags["strong_brightness"] and numerosity == 2:
+            faint = float(self.rng.uniform(*c.strong_gain_faint_range))
+            bright = float(self.rng.uniform(*c.strong_gain_bright_range))
+            raw_gains = np.array([faint, bright], dtype=np.float32)
+            self.rng.shuffle(raw_gains)
+            return raw_gains
+        if flags["strong_brightness"]:
+            return self.rng.uniform(0.52, 1.48, size=numerosity).astype(np.float32)
+        return self.rng.uniform(0.90, 1.10, size=numerosity).astype(np.float32)
+
     def _make_stimulus(
         self,
         numerosity: int,
         *,
         stimulus_profile: str = "train",
     ) -> tuple[np.ndarray, list[dict[str, float]], dict[str, Any]]:
-        if stimulus_profile not in {"train", "ood"}:
-            raise ValueError(f"Unknown stimulus profile: {stimulus_profile}")
-
+        flags = self._profile_flags(stimulus_profile)
         c = self.config
         grid = np.zeros((c.grid_size, c.grid_size), dtype=np.float32)
-        positions = (
-            self._sample_positions_ood(numerosity)
-            if stimulus_profile == "ood"
-            else self._sample_positions_train(numerosity)
-        )
+        positions = self._sample_positions(numerosity, stimulus_profile=stimulus_profile)
         radii, requested_area = self._controlled_radii(
             numerosity,
             stimulus_profile=stimulus_profile,
         )
+        raw_gains = self._raw_gains(numerosity, stimulus_profile=stimulus_profile)
         dot_payload: list[dict[str, float]] = []
 
-        # Identical total-energy distribution for 1- and 2-dot stimuli in both
-        # train and OOD profiles. Global brightness therefore cannot identify 1/2.
+        # Same total-energy distribution for 1 and 2 in every profile.
         target_energy = (
             float(self.rng.uniform(c.signal_energy_min, c.signal_energy_max))
             if numerosity
             else 0.0
         )
 
-        if numerosity <= 0:
-            raw_gains = np.zeros(0)
-        elif stimulus_profile == "ood" and numerosity == 2:
-            faint = float(self.rng.uniform(0.52, 0.72))
-            bright = float(self.rng.uniform(1.28, 1.48))
-            raw_gains = np.array([faint, bright], dtype=np.float32)
-            self.rng.shuffle(raw_gains)
-        elif stimulus_profile == "ood":
-            raw_gains = self.rng.uniform(0.52, 1.48, size=numerosity)
-        else:
-            raw_gains = self.rng.uniform(0.90, 1.10, size=numerosity)
-
         for dot_index, ((x, y), radius) in enumerate(zip(positions, radii, strict=True)):
             gain = float(raw_gains[dot_index])
             sigma2 = max(0.25, 0.60 * float(radius) * float(radius))
 
-            if stimulus_profile == "train":
-                # Preserve the exact Stage-2.1 rasterizer for deterministic replay.
+            if not flags["fractional_position"]:
                 cx, cy = int(x), int(y)
                 for dx in (-1, 0, 1):
                     for dy in (-1, 0, 1):
                         value = gain * math.exp(-((dx * dx + dy * dy) / sigma2))
                         grid[cy + dy, cx + dx] += value
             else:
-                # Fractional centers were never used in Stage 2.1.
                 x0, y0 = math.floor(x), math.floor(y)
                 for px in range(x0 - 1, x0 + 3):
                     for py in range(y0 - 1, y0 + 3):
@@ -278,6 +318,10 @@ class NumerosityExperiment:
             "post_noise_energy": round(float(np.sum(grid)), 5),
             "min_pair_distance": round(min_pair_distance, 5) if min_pair_distance is not None else None,
             "gain_ratio": round(gain_ratio, 5) if gain_ratio is not None else None,
+            "fractional_position": flags["fractional_position"],
+            "novel_area": flags["novel_area"],
+            "close_spacing": flags["close_spacing"],
+            "strong_brightness": flags["strong_brightness"],
         }
         return grid.reshape(-1), dot_payload, controls
 
@@ -406,6 +450,7 @@ class NumerosityExperiment:
         offsets = list(c.translation_offsets)
         return {
             "stage": 2.2,
+            "substage": "2.2A_factor_isolation",
             "seed": c.seed,
             "grid_size": c.grid_size,
             "n_kc": c.n_kc,
@@ -426,12 +471,24 @@ class NumerosityExperiment:
                 "explicit_object_counter": False,
                 "explicit_peak_counter": False,
             },
-            "stage_2_2_ood": {
-                "fractional_half_grid_positions": True,
-                "two_dot_spacing_range": [2.0, 3.0],
-                "small_total_area_range": list(c.ood_small_area_range),
-                "large_total_area_range": list(c.ood_large_area_range),
-                "two_dot_raw_gain_ratio_is_stronger_than_training": True,
+            "stage_2_2a_profiles": {
+                "position_only": {
+                    "fractional_half_grid_positions": True,
+                },
+                "area_only": {
+                    "small_total_area_range": list(c.ood_small_area_range),
+                    "large_total_area_range": list(c.ood_large_area_range),
+                },
+                "spacing_only": {
+                    "two_dot_spacing_range": list(c.close_spacing_range),
+                },
+                "brightness_only": {
+                    "faint_gain_range": list(c.strong_gain_faint_range),
+                    "bright_gain_range": list(c.strong_gain_bright_range),
+                },
+                "combined": {
+                    "all_above_transforms": True,
+                },
                 "learning_enabled": False,
             },
             "continuous_cue_controls": {
