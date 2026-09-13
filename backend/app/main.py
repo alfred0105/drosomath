@@ -11,7 +11,7 @@ from .flywire import FAFB_V783_TOTAL_NEURONS, load_fafb_soma_layout
 from .numerosity import NumerosityExperiment
 from .run_logging import RunLogger
 
-app = FastAPI(title="DrosoMath telemetry API", version="0.6.1")
+app = FastAPI(title="DrosoMath telemetry API", version="0.7.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -89,7 +89,7 @@ def health() -> dict[str, Any]:
         "layout_source": LAYOUT["source"],
         "layout_count": NEURON_COUNT,
         "telemetry_source": "numerosity_prototype",
-        "experiment": "numerosity_0_2_stage2",
+        "experiment": "numerosity_0_2_stage2_1",
         "probe_every": PROBE_EVERY,
     }
 
@@ -146,11 +146,32 @@ class SuccessMetrics:
             for target in range(3)
         }
 
+    @staticmethod
+    def _balanced_accuracy(successes: list[int], attempts: list[int]) -> float | None:
+        rates = [
+            successes[target] / attempts[target]
+            for target in range(3)
+            if attempts[target]
+        ]
+        return sum(rates) / len(rates) if rates else None
+
+    @staticmethod
+    def _one_vs_two_accuracy(confusion: list[list[int]]) -> float | None:
+        attempts = sum(confusion[1]) + sum(confusion[2])
+        if attempts <= 0:
+            return None
+        return (confusion[1][1] + confusion[2][2]) / attempts
+
     def snapshot(self) -> dict[str, Any]:
         overall = self.total_successes / self.total_attempts if self.total_attempts else None
         probe_overall = self.probe_successes / self.probe_attempts if self.probe_attempts else None
         return {
             "overall": overall,
+            "balanced_accuracy": self._balanced_accuracy(
+                self.target_successes,
+                self.target_attempts,
+            ),
+            "one_vs_two_accuracy": self._one_vs_two_accuracy(self.confusion),
             "recent_20": self._rate(self.outcomes, 20),
             "recent_100": self._rate(self.outcomes, 100),
             "recent_500": self._rate(self.outcomes, 500),
@@ -160,6 +181,11 @@ class SuccessMetrics:
             "confusion_matrix": [row[:] for row in self.confusion],
             "probe": {
                 "overall": probe_overall,
+                "balanced_accuracy": self._balanced_accuracy(
+                    self.probe_target_successes,
+                    self.probe_target_attempts,
+                ),
+                "one_vs_two_accuracy": self._one_vs_two_accuracy(self.probe_confusion),
                 "recent_20": self._rate(self.probe_outcomes, 20),
                 "recent_100": self._rate(self.probe_outcomes, 100),
                 "recent_500": self._rate(self.probe_outcomes, 500),
@@ -222,7 +248,7 @@ def make_frame(result: dict[str, Any]) -> dict[str, Any]:
         "telemetry_source": "numerosity_prototype",
         "activity_source": "display_proxy_not_connectome_spikes",
         "learning_model": "reward_modulated_sparse_associator",
-        "phase": "dots_0_2_stage2",
+        "phase": "dots_0_2_stage2_1",
         "trial_kind": result["trial_kind"],
         "learning_enabled": result["learning_enabled"],
         "timestamp": time.time(),
@@ -248,7 +274,7 @@ async def telemetry(websocket: WebSocket) -> None:
 
     logger = RunLogger(
         {
-            "experiment": "numerosity_0_2_stage2",
+            "experiment": "numerosity_0_2_stage2_1",
             "telemetry_source": "numerosity_prototype",
             "activity_source": "display_proxy_not_connectome_spikes",
             "learning_model": "reward_modulated_sparse_associator",
@@ -264,9 +290,11 @@ async def telemetry(websocket: WebSocket) -> None:
             "probe_learning_enabled": False,
             "learner": experiment.config_dict(),
             "scientific_scope": (
-                "Stage-2 protocol validation: 1-vs-2 total dot area and integrated signal energy are controlled. "
-                "Every tenth trial is an evaluation probe with plasticity disabled. Anatomical coordinates are FlyWire, "
-                "but neural dynamics are not yet the whole-connectome LIF simulation."
+                "Stage-2.1 protocol validation: Stage-2 area/energy controls remain active, while a fixed sparse "
+                "visual receptor bank is max-pooled over nearby translated views before KC sparsification to reduce "
+                "absolute-position dependence. Every tenth trial is an evaluation probe with plasticity disabled. "
+                "This encoder does not explicitly count objects or peaks. Anatomical coordinates are FlyWire, but "
+                "neural dynamics are not yet the whole-connectome LIF simulation."
             ),
         }
     )
