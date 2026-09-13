@@ -48,7 +48,7 @@ jobs:
       - name: Import active FastAPI app
         working-directory: backend
         run: python -c "from app.main import app; print(app.title)"
-      - name: Stage 3S symbolic arithmetic smoke test
+      - name: Stage 3S.1 recurrent symbolic arithmetic smoke test
         working-directory: backend
         run: |
           python - <<'PY'
@@ -56,51 +56,65 @@ jobs:
           from pathlib import Path
 
           import numpy as np
-          from app.symbolic_stage3s import (
+          from app.symbolic_stage3s1 import (
               ADDITION_COMMUTATIVITY_PAIRS,
               ADDITION_HELD_OUT_PAIRS,
               ADDITION_TRAIN_PAIRS,
-              ALL_TOKENS,
-              HELD_OUT_UNORDERED_PAIRS,
               N_OUTPUTS,
-              SymbolicStage3SExperiment,
+              SymbolicStage3S1Experiment,
           )
 
-          exp = SymbolicStage3SExperiment()
+          exp = SymbolicStage3S1Experiment()
           cfg = exp.config_dict()
           enc = cfg['token_encoding']
+          assert cfg['stage'] == '3S.1'
           assert enc['scalar_number_value_injected'] is False
           assert enc['ordinal_embedding_injected'] is False
           assert enc['sum_feature_injected'] is False
+          assert enc['commutativity_feature_injected'] is False
           assert enc['distance_to_answer_injected'] is False
-          assert len(exp.token_codes) == len(ALL_TOKENS)
-          assert all(int(np.count_nonzero(code)) == exp.config.token_active for code in exp.token_codes.values())
-          assert len({code.tobytes() for code in exp.token_codes.values()}) == len(ALL_TOKENS)
-
-          train_unordered = {tuple(sorted(pair)) for pair in ADDITION_TRAIN_PAIRS}
-          comm_unordered = {tuple(sorted(pair)) for pair in ADDITION_COMMUTATIVITY_PAIRS}
-          held_unordered = {tuple(sorted(pair)) for pair in ADDITION_HELD_OUT_PAIRS}
-          assert train_unordered.isdisjoint(held_unordered)
-          assert held_unordered == HELD_OUT_UNORDERED_PAIRS
-          assert comm_unordered.issubset(train_unordered)
+          assert cfg['action_gating']['identity_successor_active_outputs'] == list(range(10))
+          assert cfg['action_gating']['addition_active_outputs'] == list(range(19))
           assert {a + b for a, b in ADDITION_TRAIN_PAIRS} == set(range(N_OUTPUTS))
 
+          # Same token code is reused regardless of sequence position. Identity
+          # and successor can only choose 0..9, so 10..18 are never negatively
+          # selected by those tasks.
+          before_token = exp.w_token.copy()
+          before_rec = exp.w_rec.copy()
+          before_hi_bias = exp.output_bias[10:].copy()
           trial = 1
-          for task in ('identity', 'successor', 'addition'):
-              for _ in range(60):
-                  result = exp.step(
-                      trial,
-                      task=task,
-                      pair_pool=ADDITION_TRAIN_PAIRS if task == 'addition' else None,
-                  )
+          for task in ('identity', 'successor'):
+              for _ in range(80):
+                  result = exp.step(trial, task=task)
                   trial += 1
-                  assert 0 <= result['target'] < N_OUTPUTS
-                  assert 0 <= result['choice'] < N_OUTPUTS
-                  assert len(result['policy']['top']) == 5
-                  assert result['plasticity']['active_synapses'] > 0
+                  assert result['active_output_count'] == 10
+                  assert result['choice'] < 10
+                  assert result['policy']['target_probability'] >= 0.0
+                  assert result['plasticity']['internal_active_synapses'] > 0
+          assert not np.array_equal(before_token, exp.w_token)
+          assert not np.array_equal(before_rec, exp.w_rec)
+          assert np.array_equal(before_hi_bias, exp.output_bias[10:])
 
-          before_w = exp.w_output.copy()
-          before_b = exp.output_bias.copy()
+          # Addition opens all 19 outputs and keeps the strict held-out split.
+          before_hi = exp.w_output[10:].copy()
+          for _ in range(120):
+              result = exp.step(trial, task='addition', pair_pool=ADDITION_TRAIN_PAIRS)
+              trial += 1
+              assert result['active_output_count'] == 19
+              assert len(result['policy']['top']) == 5
+              assert result['plasticity']['internal_active_synapses'] > 0
+          assert not np.array_equal(before_hi, exp.w_output[10:])
+
+          train_unordered = {tuple(sorted(pair)) for pair in ADDITION_TRAIN_PAIRS}
+          held_unordered = {tuple(sorted(pair)) for pair in ADDITION_HELD_OUT_PAIRS}
+          comm_unordered = {tuple(sorted(pair)) for pair in ADDITION_COMMUTATIVITY_PAIRS}
+          assert train_unordered.isdisjoint(held_unordered)
+          assert comm_unordered.issubset(train_unordered)
+
+          before = (
+              exp.w_token.copy(), exp.w_rec.copy(), exp.w_output.copy(), exp.output_bias.copy()
+          )
           for pool in (ADDITION_TRAIN_PAIRS, ADDITION_COMMUTATIVITY_PAIRS, ADDITION_HELD_OUT_PAIRS):
               for a, b in pool[:8]:
                   result = exp.step(trial, task='addition', a=a, b=b, learn=False, trial_kind='frozen')
@@ -108,21 +122,24 @@ jobs:
                   assert result['learning_enabled'] is False
                   assert result['target'] == a + b
                   assert result['plasticity']['active_synapses'] == 0
-          assert np.array_equal(before_w, exp.w_output)
-          assert np.array_equal(before_b, exp.output_bias)
+          assert np.array_equal(before[0], exp.w_token)
+          assert np.array_equal(before[1], exp.w_rec)
+          assert np.array_equal(before[2], exp.w_output)
+          assert np.array_equal(before[3], exp.output_bias)
 
           with tempfile.TemporaryDirectory() as tmp:
-              path = Path(tmp) / 'stage3s.npz'
-              exp.save_checkpoint(path, {'trial': trial, 'stage': '3S'})
-              restored = SymbolicStage3SExperiment()
+              path = Path(tmp) / 'stage3s1.npz'
+              exp.save_checkpoint(path, {'trial': trial, 'stage': '3S.1'})
+              restored = SymbolicStage3S1Experiment()
               meta = restored.load_checkpoint(path)
               assert meta['trial'] == trial
-              assert meta['stage'] == '3S'
-              assert np.array_equal(exp.w_input, restored.w_input)
+              assert meta['stage'] == '3S.1'
+              assert np.array_equal(exp.w_token, restored.w_token)
+              assert np.array_equal(exp.w_rec, restored.w_rec)
               assert np.array_equal(exp.w_output, restored.w_output)
               assert np.array_equal(exp.output_bias, restored.output_bias)
 
-          print('Stage 3S symbolic arithmetic smoke test passed')
+          print('Stage 3S.1 recurrent symbolic arithmetic smoke test passed')
           PY
 
   frontend:
