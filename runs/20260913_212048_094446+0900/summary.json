@@ -2,9 +2,9 @@
   "run_id": "20260913_212048_094446+0900",
   "status": "running",
   "started_at": "2026-09-13T21:20:48+09:00",
-  "updated_at": "2026-09-13T21:28:59+09:00",
+  "updated_at": "2026-09-13T21:30:01+09:00",
   "ended_at": null,
-  "duration_seconds": 491.732,
+  "duration_seconds": 553.137,
   "experiment": "numerosity_0_2_stage2",
   "telemetry_source": "numerosity_prototype",
   "activity_source": "display_proxy_not_connectome_spikes",
@@ -12,79 +12,79 @@
   "chance_accuracy": 0.3333333333333333,
   "layout_source": "FlyWire Codex FAFB v783 coordinates",
   "layout_count": 139255,
-  "successes": 14811,
-  "attempts": 22725,
-  "overall_accuracy": 0.6517491749174917,
+  "successes": 16669,
+  "attempts": 25575,
+  "overall_accuracy": 0.6517693059628543,
   "recent_20": 0.55,
-  "recent_100": 0.7,
-  "recent_500": 0.664,
+  "recent_100": 0.67,
+  "recent_500": 0.65,
   "by_target_accuracy": {
-    "0": 0.9604790419161676,
-    "1": 0.0009282588516111921,
-    "2": 0.9891772069370192
+    "0": 0.9643407179244166,
+    "1": 0.0008210180623973727,
+    "2": 0.9900092936802974
   },
   "confusion_matrix_rows_target_cols_choice": [
     [
-      7218,
-      57,
-      240
+      8140,
+      58,
+      243
     ],
     [
-      91,
+      97,
       7,
-      7443
+      8422
     ],
     [
-      73,
+      76,
       10,
-      7586
+      8522
     ]
   ],
   "probe": {
-    "overall": 0.6505281690140845,
-    "recent_20": 0.75,
-    "recent_100": 0.74,
-    "recent_500": 0.708,
-    "successes": 1478,
-    "attempts": 2272,
+    "overall": 0.657411028549081,
+    "recent_20": 0.9,
+    "recent_100": 0.77,
+    "recent_500": 0.704,
+    "successes": 1681,
+    "attempts": 2557,
     "by_target_accuracy": {
-      "0": 0.9549071618037135,
+      "0": 0.9601873536299765,
       "1": 0.0,
-      "2": 0.9921465968586387
+      "2": 0.9930795847750865
     },
     "confusion_matrix": [
       [
-        720,
+        820,
         5,
         29
       ],
       [
-        10,
+        12,
         0,
-        744
+        824
       ],
       [
         5,
         1,
-        758
+        861
       ]
     ]
   },
   "last_trial_kind": "train",
-  "last_target": 2,
-  "last_answer": 2,
+  "last_target": 0,
+  "last_answer": 0,
   "last_correct": true,
   "last_reward": 1.0,
   "last_policy": {
-    "p0": 0.00147,
-    "p1": 0.0,
-    "p2": 0.99853,
-    "entropy": 0.01107
+    "p0": 0.99468,
+    "p1": 0.00093,
+    "p2": 0.00439,
+    "entropy": 0.03563
   },
   "last_stimulus_controls": {
-    "signal_energy": 1.90281,
-    "area_factor": 1.44,
-    "post_noise_energy": 2.42795
+    "signal_energy": 0.0,
+    "area_factor": 0.0,
+    "post_noise_energy": 0.47813
   },
   "scientific_scope": "Stage-2 protocol validation: 1-vs-2 total dot area and integrated signal energy are controlled. Every tenth trial is an evaluation probe with plasticity disabled. Anatomical coordinates are FlyWire, but neural dynamics are not yet the whole-connectome LIF simulation.",
   "note": "This run validates the reward-learning protocol. It is not yet evidence that the full FlyWire connectome learned numerosity."
