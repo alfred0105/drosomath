@@ -7,9 +7,6 @@ on:
       - bootstrap/realtime-3d
     paths-ignore:
       - 'runs/**'
-  pull_request:
-    paths-ignore:
-      - 'runs/**'
 
 jobs:
   backend:
