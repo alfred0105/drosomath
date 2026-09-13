@@ -9,8 +9,9 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
 from .flywire import FAFB_V783_TOTAL_NEURONS, load_fafb_soma_layout
+from .run_logging import RunLogger
 
-app = FastAPI(title="DrosoMath telemetry API", version="0.3.0")
+app = FastAPI(title="DrosoMath telemetry API", version="0.4.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -130,8 +131,8 @@ def make_frame(t: float, trial: int) -> dict[str, Any]:
             value = max(0.08, min(1.0, base + burst + ((index * 17 + trial) % 13) / 100.0))
             activity.append([index, round(value, 3)])
 
-    # Deterministic mock outcome: 80% success. Unlike the old demo accuracy
-    # curve, the displayed rates are now calculated from these actual outcomes.
+    # Deterministic mock outcome: exactly 4 of every 5 trials are marked correct.
+    # This exists only to test the UI/metric pipeline and is NOT learned behavior.
     answer = 2 if trial % 5 == 0 else 3
     correct = answer == 3
     return {
@@ -157,6 +158,19 @@ async def telemetry(websocket: WebSocket) -> None:
     started = time.monotonic()
     trial = 1
     metrics = SuccessMetrics()
+    logger = RunLogger(
+        {
+            "experiment": "mock_2_plus_1",
+            "telemetry_source": "mock",
+            "layout_source": LAYOUT["source"],
+            "layout_count": NEURON_COUNT,
+            "total_connectome_neurons": FAFB_V783_TOTAL_NEURONS,
+            "rolling_windows": [20, 100, 500],
+            "mock_rule": "trial divisible by 5 -> wrong answer; all other trials -> correct",
+        }
+    )
+
+    status = "completed"
     try:
         while True:
             t = time.monotonic() - started
@@ -166,8 +180,15 @@ async def telemetry(websocket: WebSocket) -> None:
             frame["metrics"] = snapshot
             # Compatibility alias for clients that still expect `accuracy`.
             frame["accuracy"] = snapshot["overall"]
+
+            logger.record(frame, snapshot)
             await websocket.send_json(frame)
             trial += 1
             await asyncio.sleep(0.1)  # 10 Hz UI telemetry
     except WebSocketDisconnect:
-        return
+        status = "completed"
+    except Exception:
+        status = "failed"
+        raise
+    finally:
+        logger.finalize(status=status)
