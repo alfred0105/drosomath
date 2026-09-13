@@ -2,9 +2,9 @@
   "run_id": "20260913_232830_681909+0900",
   "status": "running",
   "started_at": "2026-09-13T23:28:30+09:00",
-  "updated_at": "2026-09-13T23:28:32+09:00",
+  "updated_at": "2026-09-13T23:29:33+09:00",
   "ended_at": null,
-  "duration_seconds": 1.586,
+  "duration_seconds": 63.273,
   "experiment": "numerosity_0_2_stage2_2d",
   "telemetry_source": "numerosity_prototype",
   "activity_source": "display_proxy_not_connectome_spikes",
@@ -27,136 +27,199 @@
   "profile_trials": 2000,
   "total_evaluation_trials": 6000,
   "evaluation_learning_enabled": false,
-  "current_profile": "position_only",
-  "current_profile_trial": 75,
+  "current_profile": "brightness_only",
+  "current_profile_trial": 875,
   "profile_results": {
     "position_only": {
-      "overall": 0.9066666666666666,
-      "balanced_accuracy": 0.9026406926406927,
-      "one_vs_two_accuracy": 0.8723404255319149,
-      "recent_20": 0.9,
-      "recent_100": 0.9066666666666666,
-      "recent_500": 0.9066666666666666,
-      "successes": 68,
-      "attempts": 75,
+      "overall": 0.8515,
+      "balanced_accuracy": 0.8522346883678954,
+      "one_vs_two_accuracy": 0.7882177479492916,
+      "recent_20": 0.95,
+      "recent_100": 0.92,
+      "recent_500": 0.856,
+      "successes": 1703,
+      "attempts": 2000,
       "by_target_accuracy": {
-        "0": 0.9642857142857143,
-        "1": 0.8636363636363636,
-        "2": 0.88
+        "0": 0.9802731411229135,
+        "1": 0.788109756097561,
+        "2": 0.7883211678832117
       },
       "confusion_matrix": [
         [
-          27,
-          0,
-          1
-        ],
-        [
-          0,
-          19,
-          3
-        ],
-        [
+          646,
           1,
-          2,
-          22
+          12
+        ],
+        [
+          6,
+          517,
+          133
+        ],
+        [
+          15,
+          130,
+          540
         ]
       ],
       "probe": {
-        "overall": 0.9066666666666666,
-        "balanced_accuracy": 0.9026406926406927,
-        "one_vs_two_accuracy": 0.8723404255319149,
-        "recent_20": 0.9,
-        "recent_100": 0.9066666666666666,
-        "recent_500": 0.9066666666666666,
-        "successes": 68,
-        "attempts": 75,
+        "overall": 0.8515,
+        "balanced_accuracy": 0.8522346883678954,
+        "one_vs_two_accuracy": 0.7882177479492916,
+        "recent_20": 0.95,
+        "recent_100": 0.92,
+        "recent_500": 0.856,
+        "successes": 1703,
+        "attempts": 2000,
         "by_target_accuracy": {
-          "0": 0.9642857142857143,
-          "1": 0.8636363636363636,
-          "2": 0.88
+          "0": 0.9802731411229135,
+          "1": 0.788109756097561,
+          "2": 0.7883211678832117
         },
         "confusion_matrix": [
           [
-            27,
-            0,
-            1
-          ],
-          [
-            0,
-            19,
-            3
-          ],
-          [
+            646,
             1,
-            2,
-            22
+            12
+          ],
+          [
+            6,
+            517,
+            133
+          ],
+          [
+            15,
+            130,
+            540
           ]
         ]
       }
     },
-    "brightness_only": null,
+    "brightness_only": {
+      "overall": 0.8262857142857143,
+      "balanced_accuracy": 0.8355516391901797,
+      "one_vs_two_accuracy": 0.7524916943521595,
+      "recent_20": 0.9,
+      "recent_100": 0.8,
+      "recent_500": 0.83,
+      "successes": 723,
+      "attempts": 875,
+      "by_target_accuracy": {
+        "0": 0.989010989010989,
+        "1": 0.8540925266903915,
+        "2": 0.6635514018691588
+      },
+      "confusion_matrix": [
+        [
+          270,
+          0,
+          3
+        ],
+        [
+          0,
+          240,
+          41
+        ],
+        [
+          2,
+          106,
+          213
+        ]
+      ],
+      "probe": {
+        "overall": 0.8262857142857143,
+        "balanced_accuracy": 0.8355516391901797,
+        "one_vs_two_accuracy": 0.7524916943521595,
+        "recent_20": 0.9,
+        "recent_100": 0.8,
+        "recent_500": 0.83,
+        "successes": 723,
+        "attempts": 875,
+        "by_target_accuracy": {
+          "0": 0.989010989010989,
+          "1": 0.8540925266903915,
+          "2": 0.6635514018691588
+        },
+        "confusion_matrix": [
+          [
+            270,
+            0,
+            3
+          ],
+          [
+            0,
+            240,
+            41
+          ],
+          [
+            2,
+            106,
+            213
+          ]
+        ]
+      }
+    },
     "combined": null
   },
   "experiment_complete": false,
-  "successes": 68,
-  "attempts": 75,
-  "overall_accuracy": 0.9066666666666666,
-  "balanced_accuracy": 0.9026406926406927,
-  "one_vs_two_accuracy": 0.8723404255319149,
+  "successes": 723,
+  "attempts": 875,
+  "overall_accuracy": 0.8262857142857143,
+  "balanced_accuracy": 0.8355516391901797,
+  "one_vs_two_accuracy": 0.7524916943521595,
   "recent_20": 0.9,
-  "recent_100": 0.9066666666666666,
-  "recent_500": 0.9066666666666666,
+  "recent_100": 0.8,
+  "recent_500": 0.83,
   "by_target_accuracy": {
-    "0": 0.9642857142857143,
-    "1": 0.8636363636363636,
-    "2": 0.88
+    "0": 0.989010989010989,
+    "1": 0.8540925266903915,
+    "2": 0.6635514018691588
   },
   "confusion_matrix_rows_target_cols_choice": [
     [
-      27,
+      270,
       0,
-      1
-    ],
-    [
-      0,
-      19,
       3
     ],
     [
-      1,
+      0,
+      240,
+      41
+    ],
+    [
       2,
-      22
+      106,
+      213
     ]
   ],
   "probe": {
-    "overall": 0.9066666666666666,
-    "balanced_accuracy": 0.9026406926406927,
-    "one_vs_two_accuracy": 0.8723404255319149,
+    "overall": 0.8262857142857143,
+    "balanced_accuracy": 0.8355516391901797,
+    "one_vs_two_accuracy": 0.7524916943521595,
     "recent_20": 0.9,
-    "recent_100": 0.9066666666666666,
-    "recent_500": 0.9066666666666666,
-    "successes": 68,
-    "attempts": 75,
+    "recent_100": 0.8,
+    "recent_500": 0.83,
+    "successes": 723,
+    "attempts": 875,
     "by_target_accuracy": {
-      "0": 0.9642857142857143,
-      "1": 0.8636363636363636,
-      "2": 0.88
+      "0": 0.989010989010989,
+      "1": 0.8540925266903915,
+      "2": 0.6635514018691588
     },
     "confusion_matrix": [
       [
-        27,
+        270,
         0,
-        1
-      ],
-      [
-        0,
-        19,
         3
       ],
       [
-        1,
+        0,
+        240,
+        41
+      ],
+      [
         2,
-        22
+        106,
+        213
       ]
     ]
   },
@@ -166,23 +229,23 @@
   "last_correct": true,
   "last_reward": 1.0,
   "last_policy": {
-    "p0": 0.00709,
-    "p1": 0.54716,
-    "p2": 0.44575,
-    "entropy": 0.72518
+    "p0": 0.00023,
+    "p1": 0.82471,
+    "p2": 0.17506,
+    "entropy": 0.46592
   },
   "last_stimulus_controls": {
-    "stimulus_profile": "position_only",
-    "signal_energy": 2.11391,
-    "area_factor": 1.48798,
-    "requested_area_factor": 1.48798,
-    "post_noise_energy": 2.72539,
+    "stimulus_profile": "brightness_only",
+    "signal_energy": 2.03967,
+    "area_factor": 1.62105,
+    "requested_area_factor": 1.62105,
+    "post_noise_energy": 2.51717,
     "min_pair_distance": null,
     "gain_ratio": null,
-    "fractional_position": true,
+    "fractional_position": false,
     "novel_area": false,
     "close_spacing": false,
-    "strong_brightness": false,
+    "strong_brightness": true,
     "rasterizer": "continuous_gaussian_all_positions",
     "visual_preprocess": "antialias_divisive_contrast_phase_pool_v1",
     "curriculum": "stage2_2d_progressive_brightness",
@@ -192,10 +255,10 @@
       1.68
     ],
     "training_close_spacing_probability": 0.25,
-    "moderate_brightness_training": true,
-    "extreme_brightness_ood": false,
+    "moderate_brightness_training": false,
+    "extreme_brightness_ood": true,
     "close_spacing_sampled": false,
-    "curriculum_phase": "frozen_position_ood",
+    "curriculum_phase": "frozen_brightness_ood",
     "progressive_brightness_training": false,
     "training_gain_envelopes": {
       "weak": {
