@@ -12,8 +12,8 @@
       <section class="hud" aria-label="DrosoMath telemetry">
         <div class="experiment-header">
           <span class="label">Experiment</span>
-          <strong>Stage 3S.2 · staged symbolic arithmetic curriculum</strong>
-          <small>360k training · identity → NEXT → repeated-NEXT composition → 0–2 → 0–4 → full addition · consolidation schedule</small>
+          <strong>Stage 3S.3 · learned NEXT/PREV operator transitions</strong>
+          <small>600k training · symbols → NEXT/PREV → guided chains → autonomous chains → +0/+1/+2 bridge → small addition → full addition</small>
         </div>
 
         <div class="stimulus-panel">
@@ -34,7 +34,7 @@
         </div>
 
         <div class="success-panel">
-          <span class="label">Current frozen profile · addition chance = 5.26% · identity/NEXT chance = 10%</span>
+          <span class="label">Current frozen profile · addition chance = 5.26% · digit/operator tasks chance = 10%</span>
           <div class="success-grid">
             <div class="success-stat"><span>Exact</span><strong id="accuracy-overall">—</strong><small id="accuracy-count">0 / 0</small></div>
             <div class="success-stat"><span>Last 20</span><strong id="accuracy-20">—</strong></div>
@@ -54,11 +54,11 @@
         </div>
 
         <div class="profile-panel">
-          <span class="label">Frozen Stage 3S.2 headline results · Exact / Balanced / MAE</span>
+          <span class="label">Frozen Stage 3S.3 headline results · detailed operator profiles are saved in the run summary</span>
           <div class="profile-table">
             <div class="profile-row profile-head"><span>Profile</span><span>Exact</span><span>Bal.</span><span>MAE</span></div>
             <div class="profile-row"><span>Identity</span><strong id="profile-identity-exact">—</strong><strong id="profile-identity-balanced">—</strong><strong id="profile-identity-mae">—</strong></div>
-            <div class="profile-row"><span>Successor</span><strong id="profile-successor-exact">—</strong><strong id="profile-successor-balanced">—</strong><strong id="profile-successor-mae">—</strong></div>
+            <div class="profile-row"><span>NEXT</span><strong id="profile-successor-exact">—</strong><strong id="profile-successor-balanced">—</strong><strong id="profile-successor-mae">—</strong></div>
             <div class="profile-row"><span>Add seen</span><strong id="profile-seen-exact">—</strong><strong id="profile-seen-balanced">—</strong><strong id="profile-seen-mae">—</strong></div>
             <div class="profile-row"><span>Reverse transfer</span><strong id="profile-comm-exact">—</strong><strong id="profile-comm-balanced">—</strong><strong id="profile-comm-mae">—</strong></div>
             <div class="profile-row"><span>Unseen pairs</span><strong id="profile-heldout-exact">—</strong><strong id="profile-heldout-balanced">—</strong><strong id="profile-heldout-mae">—</strong></div>
