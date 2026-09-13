@@ -1,0 +1,591 @@
+{
+  "run_id": "20260913_232830_681909+0900",
+  "status": "running",
+  "started_at": "2026-09-13T23:28:30+09:00",
+  "updated_at": "2026-09-13T23:28:32+09:00",
+  "ended_at": null,
+  "duration_seconds": 1.586,
+  "experiment": "numerosity_0_2_stage2_2d",
+  "telemetry_source": "numerosity_prototype",
+  "activity_source": "display_proxy_not_connectome_spikes",
+  "learning_model": "reward_modulated_sparse_associator",
+  "chance_accuracy": 0.3333333333333333,
+  "layout_source": "FlyWire Codex FAFB v783 coordinates",
+  "layout_count": 139255,
+  "stage21_replay_trials": null,
+  "stage21_state_source": null,
+  "stage21_pretraining_snapshot": null,
+  "stage22b_replay_trials": null,
+  "stage22b_state_source": null,
+  "stage22b_pretraining_snapshot": null,
+  "evaluation_profile": "progressive_brightness_frozen_retest",
+  "evaluation_profiles": [
+    "position_only",
+    "brightness_only",
+    "combined"
+  ],
+  "profile_trials": 2000,
+  "total_evaluation_trials": 6000,
+  "evaluation_learning_enabled": false,
+  "current_profile": "position_only",
+  "current_profile_trial": 75,
+  "profile_results": {
+    "position_only": {
+      "overall": 0.9066666666666666,
+      "balanced_accuracy": 0.9026406926406927,
+      "one_vs_two_accuracy": 0.8723404255319149,
+      "recent_20": 0.9,
+      "recent_100": 0.9066666666666666,
+      "recent_500": 0.9066666666666666,
+      "successes": 68,
+      "attempts": 75,
+      "by_target_accuracy": {
+        "0": 0.9642857142857143,
+        "1": 0.8636363636363636,
+        "2": 0.88
+      },
+      "confusion_matrix": [
+        [
+          27,
+          0,
+          1
+        ],
+        [
+          0,
+          19,
+          3
+        ],
+        [
+          1,
+          2,
+          22
+        ]
+      ],
+      "probe": {
+        "overall": 0.9066666666666666,
+        "balanced_accuracy": 0.9026406926406927,
+        "one_vs_two_accuracy": 0.8723404255319149,
+        "recent_20": 0.9,
+        "recent_100": 0.9066666666666666,
+        "recent_500": 0.9066666666666666,
+        "successes": 68,
+        "attempts": 75,
+        "by_target_accuracy": {
+          "0": 0.9642857142857143,
+          "1": 0.8636363636363636,
+          "2": 0.88
+        },
+        "confusion_matrix": [
+          [
+            27,
+            0,
+            1
+          ],
+          [
+            0,
+            19,
+            3
+          ],
+          [
+            1,
+            2,
+            22
+          ]
+        ]
+      }
+    },
+    "brightness_only": null,
+    "combined": null
+  },
+  "experiment_complete": false,
+  "successes": 68,
+  "attempts": 75,
+  "overall_accuracy": 0.9066666666666666,
+  "balanced_accuracy": 0.9026406926406927,
+  "one_vs_two_accuracy": 0.8723404255319149,
+  "recent_20": 0.9,
+  "recent_100": 0.9066666666666666,
+  "recent_500": 0.9066666666666666,
+  "by_target_accuracy": {
+    "0": 0.9642857142857143,
+    "1": 0.8636363636363636,
+    "2": 0.88
+  },
+  "confusion_matrix_rows_target_cols_choice": [
+    [
+      27,
+      0,
+      1
+    ],
+    [
+      0,
+      19,
+      3
+    ],
+    [
+      1,
+      2,
+      22
+    ]
+  ],
+  "probe": {
+    "overall": 0.9066666666666666,
+    "balanced_accuracy": 0.9026406926406927,
+    "one_vs_two_accuracy": 0.8723404255319149,
+    "recent_20": 0.9,
+    "recent_100": 0.9066666666666666,
+    "recent_500": 0.9066666666666666,
+    "successes": 68,
+    "attempts": 75,
+    "by_target_accuracy": {
+      "0": 0.9642857142857143,
+      "1": 0.8636363636363636,
+      "2": 0.88
+    },
+    "confusion_matrix": [
+      [
+        27,
+        0,
+        1
+      ],
+      [
+        0,
+        19,
+        3
+      ],
+      [
+        1,
+        2,
+        22
+      ]
+    ]
+  },
+  "last_trial_kind": "stage22d_ood_eval",
+  "last_target": 1,
+  "last_answer": 1,
+  "last_correct": true,
+  "last_reward": 1.0,
+  "last_policy": {
+    "p0": 0.00709,
+    "p1": 0.54716,
+    "p2": 0.44575,
+    "entropy": 0.72518
+  },
+  "last_stimulus_controls": {
+    "stimulus_profile": "position_only",
+    "signal_energy": 2.11391,
+    "area_factor": 1.48798,
+    "requested_area_factor": 1.48798,
+    "post_noise_energy": 2.72539,
+    "min_pair_distance": null,
+    "gain_ratio": null,
+    "fractional_position": true,
+    "novel_area": false,
+    "close_spacing": false,
+    "strong_brightness": false,
+    "rasterizer": "continuous_gaussian_all_positions",
+    "visual_preprocess": "antialias_divisive_contrast_phase_pool_v1",
+    "curriculum": "stage2_2d_progressive_brightness",
+    "training_position_jitter": 0.4,
+    "training_area_range": [
+      1.2,
+      1.68
+    ],
+    "training_close_spacing_probability": 0.25,
+    "moderate_brightness_training": true,
+    "extreme_brightness_ood": false,
+    "close_spacing_sampled": false,
+    "curriculum_phase": "frozen_position_ood",
+    "progressive_brightness_training": false,
+    "training_gain_envelopes": {
+      "weak": {
+        "faint": [
+          0.78,
+          0.96
+        ],
+        "bright": [
+          1.04,
+          1.22
+        ]
+      },
+      "medium": {
+        "faint": [
+          0.62,
+          0.82
+        ],
+        "bright": [
+          1.18,
+          1.38
+        ]
+      },
+      "strong": {
+        "faint": [
+          0.5,
+          0.7
+        ],
+        "bright": [
+          1.3,
+          1.52
+        ]
+      }
+    }
+  },
+  "learner": {
+    "stage": 2.2,
+    "substage": "2.2D_progressive_brightness_curriculum",
+    "seed": 7,
+    "grid_size": 12,
+    "n_kc": 512,
+    "kc_active": 64,
+    "input_fan_in_probability": 0.08,
+    "learning_rate": 0.08,
+    "output_decay": 0.99999,
+    "policy_temperature": 1.0,
+    "training_radius_jitter_range": [
+      0.9,
+      1.1
+    ],
+    "training_total_area_factor_nonzero": 1.44,
+    "signal_energy_range_nonzero": [
+      1.85,
+      2.15
+    ],
+    "pixel_noise_sd": 0.01,
+    "visual_encoder": {
+      "kind": "continuous_gaussian_antialias_contrast_phasepool_sparse_receptors",
+      "rasterizer": "same_continuous_gaussian_for_integer_and_fractional_centers",
+      "antialias_kernel": "3x3_binomial",
+      "local_divisive_contrast_mix": 0.3,
+      "local_divisive_contrast_floor": 0.14,
+      "phase_offsets": [
+        -0.5,
+        0.0,
+        0.5
+      ],
+      "phase_pool": "local_max_then_global_L1_restore",
+      "translation_offsets_x": [
+        -3,
+        0,
+        3
+      ],
+      "translation_offsets_y": [
+        -3,
+        0,
+        3
+      ],
+      "translated_receptor_view_count": 9,
+      "explicit_object_counter": false,
+      "explicit_peak_counter": false,
+      "explicit_numerosity_feature": false
+    },
+    "continuous_cue_controls": {
+      "equalize_signal_energy_distribution_for_1_vs_2": true,
+      "area_distribution_is_identical_for_1_vs_2_within_each_profile": true,
+      "preprocessing_restores_global_L1_after_contrast_and_phase_pool": true,
+      "explicit_object_counter": false,
+      "explicit_peak_counter": false,
+      "explicit_numerosity_feature": false
+    },
+    "stage_2_2d_training": {
+      "total_trials": 60000,
+      "phase_boundaries": [
+        20000,
+        40000,
+        60000
+      ],
+      "phase_profiles": [
+        "train_brightness_weak",
+        "train_brightness_medium",
+        "train_brightness_strong"
+      ],
+      "position_jitter": 0.4,
+      "total_area_range_identical_for_1_vs_2": [
+        1.2,
+        1.68
+      ],
+      "close_spacing_probability": 0.25,
+      "close_spacing_range": [
+        2.4,
+        3.2
+      ],
+      "brightness_curriculum": {
+        "weak": {
+          "faint": [
+            0.78,
+            0.96
+          ],
+          "bright": [
+            1.04,
+            1.22
+          ]
+        },
+        "medium": {
+          "faint": [
+            0.62,
+            0.82
+          ],
+          "bright": [
+            1.18,
+            1.38
+          ]
+        },
+        "strong": {
+          "faint": [
+            0.5,
+            0.7
+          ],
+          "bright": [
+            1.3,
+            1.52
+          ]
+        }
+      }
+    },
+    "stage_2_2d_profiles": {
+      "position_only": {
+        "held_out_half_grid_phase": true,
+        "brightness": "within strongest training envelope"
+      },
+      "brightness_only": {
+        "faint_gain_range": [
+          0.42,
+          0.6
+        ],
+        "bright_gain_range": [
+          1.4,
+          1.62
+        ],
+        "other_nuisance_factors": "training_distribution"
+      },
+      "combined": {
+        "held_out_half_grid_phase": true,
+        "small_total_area_range": [
+          0.88,
+          1.02
+        ],
+        "large_total_area_range": [
+          1.9,
+          2.05
+        ],
+        "two_dot_spacing_range": [
+          2.0,
+          3.0
+        ],
+        "faint_gain_range": [
+          0.42,
+          0.6
+        ],
+        "bright_gain_range": [
+          1.4,
+          1.62
+        ]
+      },
+      "learning_enabled_during_ood": false
+    },
+    "training_trials": 60000,
+    "training_milestones": [
+      20000,
+      40000,
+      60000
+    ],
+    "training_snapshots": {
+      "20000": {
+        "overall": 0.77435,
+        "balanced_accuracy": 0.7733071122124803,
+        "one_vs_two_accuracy": 0.7499436640877338,
+        "recent_20": 0.85,
+        "recent_100": 0.88,
+        "recent_500": 0.866,
+        "successes": 15487,
+        "attempts": 20000,
+        "by_target_accuracy": {
+          "0": 0.822940032899656,
+          "1": 0.830110701107011,
+          "2": 0.6668706026307739
+        },
+        "confusion_matrix": [
+          [
+            5503,
+            431,
+            753
+          ],
+          [
+            139,
+            5624,
+            1012
+          ],
+          [
+            462,
+            1716,
+            4360
+          ]
+        ],
+        "probe": {
+          "overall": 0.78,
+          "balanced_accuracy": 0.7817708062433558,
+          "one_vs_two_accuracy": 0.75165319617928,
+          "recent_20": 0.85,
+          "recent_100": 0.83,
+          "recent_500": 0.882,
+          "successes": 1560,
+          "attempts": 2000,
+          "by_target_accuracy": {
+            "0": 0.8403755868544601,
+            "1": 0.8533333333333334,
+            "2": 0.6516034985422741
+          },
+          "confusion_matrix": [
+            [
+              537,
+              32,
+              70
+            ],
+            [
+              12,
+              576,
+              87
+            ],
+            [
+              52,
+              187,
+              447
+            ]
+          ]
+        },
+        "curriculum_phase": "weak_0_20k"
+      },
+      "40000": {
+        "overall": 0.8292,
+        "balanced_accuracy": 0.8289318223185477,
+        "one_vs_two_accuracy": 0.7964608405503693,
+        "recent_20": 0.95,
+        "recent_100": 0.91,
+        "recent_500": 0.904,
+        "successes": 33168,
+        "attempts": 40000,
+        "by_target_accuracy": {
+          "0": 0.8947249943723269,
+          "1": 0.8573981681435698,
+          "2": 0.7346723044397463
+        },
+        "confusion_matrix": [
+          [
+            11924,
+            459,
+            944
+          ],
+          [
+            157,
+            11514,
+            1758
+          ],
+          [
+            605,
+            2909,
+            9730
+          ]
+        ],
+        "probe": {
+          "overall": 0.833,
+          "balanced_accuracy": 0.8324732230329334,
+          "one_vs_two_accuracy": 0.7976011994002998,
+          "recent_20": 0.95,
+          "recent_100": 0.94,
+          "recent_500": 0.904,
+          "successes": 3332,
+          "attempts": 4000,
+          "by_target_accuracy": {
+            "0": 0.9039039039039038,
+            "1": 0.8717568569310601,
+            "2": 0.7217589082638363
+          },
+          "confusion_matrix": [
+            [
+              1204,
+              39,
+              89
+            ],
+            [
+              12,
+              1176,
+              161
+            ],
+            [
+              65,
+              302,
+              952
+            ]
+          ]
+        },
+        "curriculum_phase": "medium_20_40k"
+      },
+      "60000": {
+        "overall": 0.8422166666666666,
+        "balanced_accuracy": 0.8420768534119668,
+        "one_vs_two_accuracy": 0.8022323769570754,
+        "recent_20": 0.85,
+        "recent_100": 0.89,
+        "recent_500": 0.888,
+        "successes": 50533,
+        "attempts": 60000,
+        "by_target_accuracy": {
+          "0": 0.9224677993284218,
+          "1": 0.8602065131056394,
+          "2": 0.7435562478018389
+        },
+        "confusion_matrix": [
+          [
+            18406,
+            467,
+            1080
+          ],
+          [
+            175,
+            17328,
+            2641
+          ],
+          [
+            698,
+            4406,
+            14799
+          ]
+        ],
+        "probe": {
+          "overall": 0.847,
+          "balanced_accuracy": 0.8470706827589979,
+          "one_vs_two_accuracy": 0.8068948288783413,
+          "recent_20": 0.95,
+          "recent_100": 0.9,
+          "recent_500": 0.878,
+          "successes": 5082,
+          "attempts": 6000,
+          "by_target_accuracy": {
+            "0": 0.927391086629945,
+            "1": 0.8695652173913043,
+            "2": 0.7442557442557443
+          },
+          "confusion_matrix": [
+            [
+              1852,
+              39,
+              106
+            ],
+            [
+              16,
+              1740,
+              245
+            ],
+            [
+              72,
+              440,
+              1490
+            ]
+          ]
+        },
+        "curriculum_phase": "strong_40_60k"
+      }
+    }
+  },
+  "scientific_scope": "Stage-2.2D preserves the Stage-2.2C visual encoder and nuisance controls while progressively raising two-dot brightness asymmetry over three 20k learning phases. Signal-energy and area distributions remain matched across 1 vs 2. Frozen OOD evaluation uses Position, stronger-Brightness, and Combined shifts with zero plastic updates. No explicit object, peak, component, or numerosity count is injected. FlyWire coordinates remain visualization-only; activity is a display proxy rather than connectome spiking.",
+  "note": "This run validates the reward-learning protocol. It is not yet evidence that the full FlyWire connectome learned numerosity."
+}
