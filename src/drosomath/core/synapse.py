@@ -26,18 +26,25 @@ class SynapseState:
         self,
         *,
         step: int,
-        reward: float = 0.0,
+        reward: float | None = None,
         reward_alpha: float = 0.05,
     ) -> None:
         """Record that this synapse participated in the current computation."""
         if not self.alive:
             return
 
+        self.usage_count += 1
+        self.last_used_step = step
+        if reward is not None:
+            self.record_reward(reward=reward, reward_alpha=reward_alpha)
+
+    def record_reward(self, *, reward: float, reward_alpha: float = 0.05) -> None:
+        """Update reward credit without incrementing synapse usage."""
+        if not self.alive:
+            return
         if not 0.0 < reward_alpha <= 1.0:
             raise ValueError("reward_alpha must be in (0, 1]")
 
-        self.usage_count += 1
-        self.last_used_step = step
         self.reward_ema += reward_alpha * (reward - self.reward_ema)
 
     def tick(self) -> None:
