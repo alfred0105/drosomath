@@ -2,7 +2,7 @@ name: DrosoMath CI
 
 on:
   push:
-    branches: [main, bootstrap/realtime-3d]
+    branches: [main, bootstrap/realtime-3d, feature/dual-brain-v2]
     paths-ignore: ['runs/**']
 
 jobs:
@@ -35,6 +35,9 @@ jobs:
         run: pip install -r backend/requirements.txt
       - name: Compile backend
         run: python -m compileall backend/app
+      - name: Run backend unit tests
+        working-directory: backend
+        run: python -m unittest discover -s tests -v
       - name: Import active FastAPI app
         working-directory: backend
         run: python -c "from app.main import app; print(app.title)"
