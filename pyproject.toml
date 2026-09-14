@@ -14,7 +14,7 @@ dependencies = []
 drosomath-demo = "drosomath.demo:main"
 drosomath-memory-demo = "drosomath.memory_demo:main"
 drosomath-ablation-demo = "drosomath.ablation_demo:main"
-drosomath-interference = "drosomath.interference_benchmark:main"
+drosomath-interference = "drosomath.interference_v2:main"
 drosomath-live = "drosomath.dual_live:main"
 drosomath-single-live = "drosomath.live:main"
 
