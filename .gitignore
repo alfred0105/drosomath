@@ -1,0 +1,11 @@
+# Local Python environments
+.venv/
+.venv*/
+__pycache__/
+*.py[cod]
+
+# Real FlyWire v783 data (~large published dataset; download locally)
+data/flywire_v783/
+
+# Local caches
+.pytest_cache/
