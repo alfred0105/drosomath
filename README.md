@@ -17,6 +17,37 @@ DrosoMath is an experimental platform for studying whether a Drosophila connecto
 - **Frontend:** Vite + TypeScript + Three.js
 - **Data:** FlyWire / Codex FAFB v783 (kept local; not committed)
 
+## Experimental Dual-Brain V2
+
+The `feature/dual-brain-v2` branch adds a new fixed-resource architecture experiment without replacing the current Stage 3S.3 baseline.
+
+- two interacting brains;
+- four anonymous modules per brain by default;
+- no pre-assigned math/language/memory roles;
+- reward-modulated sparse routing;
+- fixed-capacity local, inter-module, and cross-brain synapse banks;
+- usage/reward/stability state for each sparse synapse;
+- periodic pruning and regrowth without increasing the global synapse budget;
+- long-term-memory consolidation through stability-protected connections;
+- topology snapshots designed for later realtime visualization;
+- sequential retention benchmark to measure catastrophic forgetting.
+
+The architecture and experiment plan are documented in `docs/dual-brain-v2.md`.
+
+Run the first continual-memory benchmark from `backend/`:
+
+```powershell
+python -m app.dual_brain_v2_benchmark --steps 3000 --eval-trials 300 --bridge 256
+```
+
+Run V2 invariants/tests:
+
+```powershell
+python -m unittest discover -s tests -v
+```
+
+V2 currently uses a small architecture-validation network. It is deliberately not yet presented as a 139k-neuron whole-FlyWire simulation. The next step is to validate retention, spontaneous specialization, bridge-budget effects, and structural plasticity before scaling the same interfaces to connectome-derived populations.
+
 ## Current state
 
 The viewer loads the public **FlyWire Codex FAFB v783 coordinates for 139,255 neurons** and renders them as a realtime point cloud. DrosoMath conservatively calls these Codex coordinates rather than assuming every exported position is a biological soma coordinate.
@@ -147,4 +178,4 @@ The external experiment code may present stimuli, read choices, and deliver rewa
 
 ## Status
 
-Stage-2 0/1/2-dot controlled-cue reinforcement learning with frozen probe trials is integrated. Whole-connectome numerosity learning remains the next major scientific integration step.
+Stage-2 0/1/2-dot controlled-cue reinforcement learning with frozen probe trials is integrated. Whole-connectome numerosity learning remains the next major scientific integration step. Dual-Brain V2 is being developed as a parallel experimental architecture on its feature branch so the existing Stage 3S.3 baseline remains available for direct controls.
