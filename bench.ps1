@@ -6,7 +6,15 @@ $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot
 
 if ($env:VIRTUAL_ENV) {
-    $python = Join-Path $env:VIRTUAL_ENV "Scripts\python.exe"
+    $windowsPython = Join-Path $env:VIRTUAL_ENV "Scripts\python.exe"
+    $unixPython = Join-Path $env:VIRTUAL_ENV "bin/python"
+    if (Test-Path $windowsPython) {
+        $python = $windowsPython
+    } elseif (Test-Path $unixPython) {
+        $python = $unixPython
+    } else {
+        $python = "python"
+    }
 } else {
     $python = "python"
 }
@@ -44,12 +52,8 @@ Write-Host ""
 Write-Host "=== DrosoMath ablation benchmark ==="
 Write-Host ("Elapsed: {0:N3}s" -f $stopwatch.Elapsed.TotalSeconds)
 foreach ($variant in $parsed.variants) {
-    Write-Host (
-        "{0,-42} retention={1:N3} forgetting={2:N3}" -f \
-        $variant.name,
-        [double]$variant.mean_retention,
-        [double]$variant.mean_forgetting
-    )
+    $line = "{0,-42} retention={1:N3} forgetting={2:N3}" -f $variant.name, [double]$variant.mean_retention, [double]$variant.mean_forgetting
+    Write-Host $line
 }
 Write-Host "Saved: $resultRelative"
 
