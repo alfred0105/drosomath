@@ -2,7 +2,11 @@ name: tests
 
 on:
   push:
+    paths-ignore:
+      - "results/**"
   pull_request:
+    paths-ignore:
+      - "results/**"
 
 jobs:
   test:
@@ -25,3 +29,6 @@ jobs:
         run: drosomath-memory-demo
       - name: Ablation benchmark smoke test
         run: drosomath-ablation-demo
+      - name: One-command runner smoke test
+        shell: pwsh
+        run: ./bench.ps1 -NoPush
