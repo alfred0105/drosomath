@@ -25,9 +25,12 @@ Development is intentionally incremental so each mechanism can be tested before 
 - Phase 2: event-driven usage tracking and delayed reward credit
 - Phase 3: bounded reward-modulated weight strengthening/weakening
 - Phase 4: fixed-budget pruning and synapse regrowth
-- Next: sparse dual-brain bridges, self-specializing modules, and neuron/synapse budget reallocation
+- Phase 5: activity/reward-biased regrowth candidate generation
+- Next: dual-brain containers, sparse adaptive bridges, self-specializing modules, budget reallocation, and live topology telemetry
 
 Phase 4 keeps the registered synapse count constant during a rewiring cycle. Stale, low-reward connections can be removed only when replacement candidates are available, while high-stability connections are protected as a first approximation of consolidated memory.
+
+Phase 5 biases replacement candidates toward neurons participating in recent, frequently used, positively rewarded paths. Candidate selection uses small top-k source/target pools instead of constructing a full neuron-by-neuron matrix, keeping the slow structural-plasticity loop scalable for large connectomes.
 
 ## Scientific principle
 
