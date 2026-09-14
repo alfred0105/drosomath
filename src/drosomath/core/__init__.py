@@ -1,3 +1,7 @@
+from .bridge_candidates import (
+    BridgeActivityCandidateConfig,
+    BridgeActivityCandidateGenerator,
+)
 from .bridge_structural import (
     BridgeRewireResult,
     BridgeStructuralConfig,
@@ -28,6 +32,8 @@ __all__ = [
     "AdaptiveBridge",
     "AdaptiveModuleManager",
     "BrainCore",
+    "BridgeActivityCandidateConfig",
+    "BridgeActivityCandidateGenerator",
     "BridgeRewireResult",
     "BridgeStructuralConfig",
     "BridgeStructuralPlasticityManager",
