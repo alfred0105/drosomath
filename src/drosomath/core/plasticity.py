@@ -14,12 +14,42 @@ class SynapseUse:
     post_id: int
 
 
+@dataclass(frozen=True, slots=True)
+class RewardWeightRule:
+    """Minimal reward-modulated learning rule for recently used synapses.
+
+    Positive reward strengthens a used connection and negative reward weakens it.
+    Weight bounds keep the first learning rule stable and easy to inspect.
+    More biological timing rules such as STDP will be layered on later.
+    """
+
+    learning_rate: float = 0.01
+    min_weight: float = 0.0
+    max_weight: float = 1.0
+
+    def __post_init__(self) -> None:
+        if self.learning_rate < 0.0:
+            raise ValueError("learning_rate must be >= 0")
+        if self.min_weight > self.max_weight:
+            raise ValueError("min_weight must be <= max_weight")
+
+    def apply(self, synapse: SynapseState, *, reward: float) -> float:
+        """Apply one bounded reward update and return the actual weight change."""
+        if not synapse.alive or self.learning_rate == 0.0:
+            return 0.0
+
+        old_weight = synapse.weight
+        target = old_weight + self.learning_rate * reward
+        synapse.weight = min(self.max_weight, max(self.min_weight, target))
+        return synapse.weight - old_weight
+
+
 class PlasticityTracker:
     """Event-driven usage and delayed-reward tracker for plastic synapses.
 
-    This phase intentionally does not change synaptic weights. It only records
-    which existing synapses carried activity and assigns delayed reward credit
-    to recently used connections. Weight learning comes in a later phase.
+    Only synapses that actually carry activity enter the recent-credit window.
+    A weight rule can optionally be attached so delayed reward immediately
+    strengthens or weakens those recently used connections.
     """
 
     def __init__(
@@ -28,6 +58,7 @@ class PlasticityTracker:
         *,
         reward_window: int = 32,
         reward_alpha: float = 0.05,
+        weight_rule: RewardWeightRule | None = None,
     ) -> None:
         if reward_window < 0:
             raise ValueError("reward_window must be >= 0")
@@ -36,6 +67,7 @@ class PlasticityTracker:
 
         self.reward_window = reward_window
         self.reward_alpha = reward_alpha
+        self.weight_rule = weight_rule
         self._synapses: dict[tuple[int, int], SynapseState] = {}
         self._recent: deque[SynapseUse] = deque()
         self._last_step = -1
@@ -66,7 +98,7 @@ class PlasticityTracker:
         return True
 
     def apply_reward(self, *, reward: float, step: int) -> int:
-        """Assign delayed reward to unique synapses used inside the reward window."""
+        """Credit unique recent synapses and optionally update their weights."""
         self._check_step(step)
         self._evict_old(step)
 
@@ -82,6 +114,8 @@ class PlasticityTracker:
                     reward=reward,
                     reward_alpha=self.reward_alpha,
                 )
+                if self.weight_rule is not None:
+                    self.weight_rule.apply(synapse, reward=reward)
                 credited.add(key)
 
         return len(credited)
