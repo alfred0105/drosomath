@@ -6,6 +6,8 @@ from .dual_brain import (
     DualBrainStepResult,
     DualBrainSystem,
 )
+from .memory import ConsolidationConfig, MemoryConsolidator
+from .modules import AdaptiveModuleManager, ModuleState
 from .neuron import NeuronState, SpikingNetwork, StepResult
 from .plasticity import PlasticityTracker, RewardWeightRule, SynapseUse
 from .structural import (
@@ -19,10 +21,14 @@ __all__ = [
     "ActivityBiasedCandidateConfig",
     "ActivityBiasedCandidateGenerator",
     "AdaptiveBridge",
+    "AdaptiveModuleManager",
     "BrainCore",
     "BridgeSynapseState",
+    "ConsolidationConfig",
     "DualBrainStepResult",
     "DualBrainSystem",
+    "MemoryConsolidator",
+    "ModuleState",
     "NeuronState",
     "PlasticityTracker",
     "RewardWeightRule",
