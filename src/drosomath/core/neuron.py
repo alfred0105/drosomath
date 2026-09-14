@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Iterable, Mapping
 
 from .plasticity import PlasticityTracker
+from .stdp import STDPPlasticity
 from .synapse import SynapseState
 
 
@@ -29,6 +30,7 @@ class StepResult:
     step: int
     fired: tuple[int, ...]
     transferred_synapses: int
+    stdp_updates: int = 0
 
 
 class SpikingNetwork:
@@ -42,6 +44,8 @@ class SpikingNetwork:
         self,
         neurons: Iterable[NeuronState],
         tracker: PlasticityTracker,
+        *,
+        stdp: STDPPlasticity | None = None,
     ) -> None:
         neuron_list = tuple(neurons)
         if not neuron_list:
@@ -52,6 +56,7 @@ class SpikingNetwork:
 
         self.neurons = {neuron.neuron_id: neuron for neuron in neuron_list}
         self.tracker = tracker
+        self.stdp = stdp
         self.step_index = 0
         self._pending_current: dict[int, float] = {}
         self._outgoing: dict[int, list[SynapseState]] = {}
@@ -66,11 +71,13 @@ class SpikingNetwork:
         *,
         threshold: float = 1.0,
         decay: float = 0.95,
+        stdp: STDPPlasticity | None = None,
     ) -> "SpikingNetwork":
         ids = tuple(neuron_ids)
         return cls(
             (NeuronState(neuron_id=i, threshold=threshold, decay=decay) for i in ids),
             tracker,
+            stdp=stdp,
         )
 
     def refresh_topology(self) -> None:
@@ -112,6 +119,14 @@ class SpikingNetwork:
                 fired.append(neuron.neuron_id)
                 neuron.potential = neuron.reset_potential
 
+        stdp_updates = 0
+        if self.stdp is not None:
+            stdp_updates = self.stdp.observe_spikes(
+                fired,
+                self.tracker.synapses,
+                step=self.step_index,
+            )
+
         next_current: dict[int, float] = {}
         transferred = 0
         for pre_id in fired:
@@ -132,6 +147,7 @@ class SpikingNetwork:
             step=self.step_index,
             fired=tuple(fired),
             transferred_synapses=transferred,
+            stdp_updates=stdp_updates,
         )
         self._pending_current = next_current
         self.step_index += 1
