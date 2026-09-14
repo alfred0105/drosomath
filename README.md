@@ -24,7 +24,10 @@ Development is intentionally incremental so each mechanism can be tested before 
 - Phase 1: compact mutable synapse state
 - Phase 2: event-driven usage tracking and delayed reward credit
 - Phase 3: bounded reward-modulated weight strengthening/weakening
-- Next: pruning/regrowth, sparse dual-brain bridges, self-specializing modules, and budget reallocation
+- Phase 4: fixed-budget pruning and synapse regrowth
+- Next: sparse dual-brain bridges, self-specializing modules, and neuron/synapse budget reallocation
+
+Phase 4 keeps the registered synapse count constant during a rewiring cycle. Stale, low-reward connections can be removed only when replacement candidates are available, while high-stability connections are protected as a first approximation of consolidated memory.
 
 ## Scientific principle
 
@@ -32,4 +35,4 @@ The external experiment code may present stimuli, read choices, and deliver rewa
 
 ## Status
 
-Bootstrap phase. Core plasticity primitives are being added and tested before the full simulator loop is introduced.
+Bootstrap phase. Core weight and structural plasticity primitives are being added and tested before the full simulator loop is introduced.
