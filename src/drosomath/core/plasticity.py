@@ -16,12 +16,7 @@ class SynapseUse:
 
 @dataclass(frozen=True, slots=True)
 class RewardWeightRule:
-    """Minimal reward-modulated learning rule for recently used synapses.
-
-    Positive reward strengthens a used connection and negative reward weakens it.
-    Weight bounds keep the first learning rule stable and easy to inspect.
-    More biological timing rules such as STDP will be layered on later.
-    """
+    """Minimal reward-modulated learning rule for recently used synapses."""
 
     learning_rate: float = 0.01
     min_weight: float = 0.0
@@ -34,7 +29,6 @@ class RewardWeightRule:
             raise ValueError("min_weight must be <= max_weight")
 
     def apply(self, synapse: SynapseState, *, reward: float) -> float:
-        """Apply one bounded reward update and return the actual weight change."""
         if not synapse.alive or self.learning_rate == 0.0:
             return 0.0
 
@@ -45,12 +39,7 @@ class RewardWeightRule:
 
 
 class PlasticityTracker:
-    """Event-driven usage and delayed-reward tracker for plastic synapses.
-
-    Only synapses that actually carry activity enter the recent-credit window.
-    A weight rule can optionally be attached so delayed reward immediately
-    strengthens or weakens those recently used connections.
-    """
+    """Event-driven usage, delayed reward, and topology registry."""
 
     def __init__(
         self,
@@ -71,31 +60,34 @@ class PlasticityTracker:
         self._synapses: dict[tuple[int, int], SynapseState] = {}
         self._recent: deque[SynapseUse] = deque()
         self._last_step = -1
+        self._topology_version = 0
 
         for synapse in synapses:
             self.register_synapse(synapse)
 
     @property
     def synapses(self) -> tuple[SynapseState, ...]:
-        """Return a stable snapshot of currently registered synapses."""
         return tuple(self._synapses.values())
 
     @property
     def synapse_count(self) -> int:
         return len(self._synapses)
 
+    @property
+    def topology_version(self) -> int:
+        return self._topology_version
+
     def has_synapse(self, *, pre_id: int, post_id: int) -> bool:
         return (pre_id, post_id) in self._synapses
 
     def register_synapse(self, synapse: SynapseState) -> None:
-        """Register one connection so future spike transfers can be tracked."""
         key = (synapse.pre_id, synapse.post_id)
         if key in self._synapses:
             raise ValueError(f"duplicate synapse {key}")
         self._synapses[key] = synapse
+        self._topology_version += 1
 
     def unregister_synapse(self, *, pre_id: int, post_id: int) -> SynapseState | None:
-        """Remove a connection and any pending reward-credit events for it."""
         key = (pre_id, post_id)
         synapse = self._synapses.pop(key, None)
         if synapse is None:
@@ -106,10 +98,10 @@ class PlasticityTracker:
             for event in self._recent
             if (event.pre_id, event.post_id) != key
         )
+        self._topology_version += 1
         return synapse
 
     def record_transfer(self, *, pre_id: int, post_id: int, step: int) -> bool:
-        """Record one spike transfer through an existing live synapse."""
         self._check_step(step)
         self._evict_old(step)
 
@@ -118,13 +110,10 @@ class PlasticityTracker:
             return False
 
         synapse.record_use(step=step)
-        self._recent.append(
-            SynapseUse(step=step, pre_id=pre_id, post_id=post_id)
-        )
+        self._recent.append(SynapseUse(step=step, pre_id=pre_id, post_id=post_id))
         return True
 
     def apply_reward(self, *, reward: float, step: int) -> int:
-        """Credit unique recent synapses and optionally update their weights."""
         self._check_step(step)
         self._evict_old(step)
 
@@ -136,10 +125,7 @@ class PlasticityTracker:
 
             synapse = self._synapses.get(key)
             if synapse is not None and synapse.alive:
-                synapse.record_reward(
-                    reward=reward,
-                    reward_alpha=self.reward_alpha,
-                )
+                synapse.record_reward(reward=reward, reward_alpha=self.reward_alpha)
                 if self.weight_rule is not None:
                     self.weight_rule.apply(synapse, reward=reward)
                 credited.add(key)
@@ -147,7 +133,6 @@ class PlasticityTracker:
         return len(credited)
 
     def clear_recent(self) -> None:
-        """Drop pending credit-assignment events without changing synapses."""
         self._recent.clear()
 
     def _check_step(self, step: int) -> None:
