@@ -76,6 +76,25 @@ class PlasticityTrackerTests(unittest.TestCase):
         self.assertEqual(synapse.usage_count, 2)
         self.assertAlmostEqual(synapse.reward_ema, 0.5)
 
+    def test_unregister_clears_pending_reward_credit(self) -> None:
+        old = SynapseState(pre_id=1, post_id=2, weight=0.5)
+        tracker = PlasticityTracker(
+            [old],
+            reward_window=4,
+            weight_rule=RewardWeightRule(learning_rate=0.1),
+        )
+        tracker.record_transfer(pre_id=1, post_id=2, step=1)
+
+        removed = tracker.unregister_synapse(pre_id=1, post_id=2)
+        replacement = SynapseState(pre_id=1, post_id=2, weight=0.2)
+        tracker.register_synapse(replacement)
+        credited = tracker.apply_reward(reward=1.0, step=2)
+
+        self.assertIs(removed, old)
+        self.assertEqual(credited, 0)
+        self.assertAlmostEqual(replacement.reward_ema, 0.0)
+        self.assertAlmostEqual(replacement.weight, 0.2)
+
     def test_steps_must_be_monotonic(self) -> None:
         synapse = SynapseState(pre_id=1, post_id=2, weight=0.5)
         tracker = PlasticityTracker([synapse])
