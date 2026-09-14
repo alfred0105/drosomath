@@ -1,3 +1,4 @@
+from .candidates import ActivityBiasedCandidateConfig, ActivityBiasedCandidateGenerator
 from .plasticity import PlasticityTracker, RewardWeightRule, SynapseUse
 from .structural import (
     RewireResult,
@@ -7,6 +8,8 @@ from .structural import (
 from .synapse import SynapseState
 
 __all__ = [
+    "ActivityBiasedCandidateConfig",
+    "ActivityBiasedCandidateGenerator",
     "PlasticityTracker",
     "RewardWeightRule",
     "RewireResult",
