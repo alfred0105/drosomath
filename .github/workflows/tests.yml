@@ -29,6 +29,8 @@ jobs:
         run: drosomath-memory-demo
       - name: Ablation benchmark smoke test
         run: drosomath-ablation-demo
+      - name: Interference benchmark smoke test
+        run: drosomath-interference --runs 2
       - name: Single live dashboard smoke test
         run: python -m drosomath.live --smoke
       - name: Dual live dashboard smoke test
@@ -36,3 +38,6 @@ jobs:
       - name: One-command benchmark runner smoke test
         shell: pwsh
         run: ./bench.ps1 -NoPush
+      - name: One-command interference runner smoke test
+        shell: pwsh
+        run: ./interference.ps1 -Runs 2 -NoPush
