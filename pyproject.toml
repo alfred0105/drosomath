@@ -14,13 +14,14 @@ dependencies = []
 drosomath-demo = "drosomath.demo:main"
 drosomath-memory-demo = "drosomath.memory_demo:main"
 drosomath-ablation-demo = "drosomath.ablation_demo:main"
-drosomath-live = "drosomath.live:main"
+drosomath-live = "drosomath.dual_live:main"
+drosomath-single-live = "drosomath.live:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-drosomath = ["live_dashboard.html"]
+drosomath = ["live_dashboard.html", "dual_live_dashboard.html"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
