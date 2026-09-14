@@ -1,6 +1,6 @@
 import unittest
 
-from drosomath.core import PlasticityTracker, SynapseState
+from drosomath.core import PlasticityTracker, RewardWeightRule, SynapseState
 
 
 class PlasticityTrackerTests(unittest.TestCase):
@@ -29,6 +29,22 @@ class PlasticityTrackerTests(unittest.TestCase):
         self.assertEqual(credited, 2)
         self.assertAlmostEqual(first.reward_ema, 0.5)
         self.assertAlmostEqual(second.reward_ema, 0.5)
+
+    def test_delayed_reward_can_update_recent_weights(self) -> None:
+        first = SynapseState(pre_id=1, post_id=2, weight=0.5)
+        second = SynapseState(pre_id=2, post_id=3, weight=0.5)
+        tracker = PlasticityTracker(
+            [first, second],
+            reward_window=4,
+            weight_rule=RewardWeightRule(learning_rate=0.1),
+        )
+
+        tracker.record_transfer(pre_id=1, post_id=2, step=10)
+        tracker.record_transfer(pre_id=2, post_id=3, step=11)
+        tracker.apply_reward(reward=1.0, step=12)
+
+        self.assertAlmostEqual(first.weight, 0.6)
+        self.assertAlmostEqual(second.weight, 0.6)
 
     def test_reward_does_not_credit_expired_transfer(self) -> None:
         synapse = SynapseState(pre_id=1, post_id=2, weight=0.5)
