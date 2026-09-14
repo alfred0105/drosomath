@@ -22,23 +22,60 @@ Implemented:
 - CSV connectome edge-list loading with subset/max-edge controls
 - continual-learning retention/forgetting evaluation
 - frozen-plasticity evaluation mode
-- telemetry snapshots
+- realtime local brain/learning dashboard
 - GitHub Actions tests on Python 3.11 and 3.12
 
 The current simulator is a correctness/reference backend for small-to-medium experiments. A large FlyWire-scale run will require a more compact sparse/tensor backend and profiling before claiming practical whole-brain performance.
 
-## Install and run
+## Fast local workflow
 
-```bash
+Install once:
+
+```powershell
 python -m pip install -e .
+```
+
+Run the latest benchmark, save its JSON result, and push only that result so it can be inspected remotely:
+
+```powershell
+.\bench.ps1
+```
+
+Open the realtime dashboard with one command:
+
+```powershell
+.\live.ps1
+```
+
+`live.ps1` starts a local-only server, opens `http://127.0.0.1:8765/`, and streams simulation state without requiring a separate frontend build or external web service.
+
+The live dashboard shows:
+
+- current firing neurons and membrane potential
+- synaptic weight, stability, usage count, and reward EMA
+- current task, expected output, latest prediction, and reward
+- running accuracy, mean weight, mean stability, and STDP update count
+- recent learning history
+- structural rewiring events
+- pause/resume, single-step, reset, and speed controls
+
+The live demo is intentionally small and fast. It is an observability path for the reference simulator, not yet the FlyWire-scale 3D renderer.
+
+## Other commands
+
+```powershell
 python -m unittest discover -s tests -v
 drosomath-demo
 drosomath-memory-demo
+drosomath-ablation-demo
+drosomath-live
 ```
 
 `drosomath-demo` exercises spike propagation, reward learning, and structural rewiring.
 
 `drosomath-memory-demo` runs a small sequential-memory experiment and prints retention, forgetting, and learned synapse statistics as JSON.
+
+`drosomath-ablation-demo` compares learning variants under the same task sequence.
 
 ## Architecture
 
@@ -50,7 +87,9 @@ drosomath-memory-demo
 - **Communication:** sparse adaptive inter-brain bridge
 - **Data input:** CSV edge lists suitable for processed FlyWire/Codex exports
 - **Evaluation:** continual-memory retention/forgetting metrics
-- **Planned live stack:** FastAPI/WebSocket + Vite/TypeScript/Three.js
+- **Live transport:** local HTTP + Server-Sent Events using only Python's standard library
+- **Live UI:** zero-build Canvas dashboard
+- **Planned large visualization:** 3D topology/activity viewer for larger connectomes
 
 ## Development phases
 
@@ -67,9 +106,9 @@ drosomath-memory-demo
 11. memory consolidation and module synapse-budget reallocation — done
 12. bridge structural plasticity and bridge candidate generation — done
 13. STDP and frozen continual-memory evaluation — done
-14. live telemetry transport / 3D topology viewer — next
+14. realtime local telemetry/dashboard — done for reference simulator; 3D large-graph view remains
 15. large-connectome sparse backend and FlyWire-scale performance work — next
-16. real task curricula, controls, and quantitative experiments — next
+16. interference-heavy task curricula, controls, and quantitative experiments — next
 
 ## Scientific principle
 
