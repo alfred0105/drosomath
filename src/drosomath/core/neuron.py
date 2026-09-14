@@ -31,6 +31,10 @@ class StepResult:
     fired: tuple[int, ...]
     transferred_synapses: int
     stdp_updates: int = 0
+    # Pre-reset membrane potential for neurons that fired this step. This lets
+    # experiment readouts resolve simultaneous spikes by activation strength
+    # instead of arbitrary neuron-ID ordering.
+    firing_strengths: tuple[tuple[int, float], ...] = ()
 
 
 class SpikingNetwork:
@@ -127,11 +131,13 @@ class SpikingNetwork:
             neuron.potential += self._pending_current.get(neuron_id, 0.0)
 
         fired: list[int] = []
+        firing_strengths: list[tuple[int, float]] = []
         for neuron in self.neurons.values():
             neuron.fired = neuron.potential >= neuron.threshold
             if neuron.fired:
                 neuron.last_spike_step = self.step_index
                 fired.append(neuron.neuron_id)
+                firing_strengths.append((neuron.neuron_id, neuron.potential))
                 neuron.potential = neuron.reset_potential
 
         stdp_updates = 0
@@ -167,6 +173,7 @@ class SpikingNetwork:
             fired=tuple(fired),
             transferred_synapses=transferred,
             stdp_updates=stdp_updates,
+            firing_strengths=tuple(firing_strengths),
         )
         self._pending_current = next_current
         self.step_index += 1
