@@ -77,21 +77,29 @@ class SequentialMemoryExperiment:
         self.network.set_learning_enabled(training)
         try:
             spike_counts = {neuron_id: 0 for neuron_id in self.output_neurons}
+            strength_sums = {neuron_id: 0.0 for neuron_id in self.output_neurons}
             for index in range(self.response_steps):
                 result = self.network.step(trial.stimulus if index == 0 else None)
                 for neuron_id in result.fired:
                     if neuron_id in spike_counts:
                         spike_counts[neuron_id] += 1
+                for neuron_id, strength in result.firing_strengths:
+                    if neuron_id in strength_sums:
+                        strength_sums[neuron_id] += strength
 
             active = [
-                (count, neuron_id)
-                for neuron_id, count in spike_counts.items()
-                if count > 0
+                (spike_counts[neuron_id], strength_sums[neuron_id], neuron_id)
+                for neuron_id in self.output_neurons
+                if spike_counts[neuron_id] > 0
             ]
             predicted = None
             if active:
-                # Highest spike count wins; neuron ID is a deterministic tie-break.
-                predicted = max(active, key=lambda item: (item[0], -item[1]))[1]
+                # Spike count is primary; summed pre-reset activation resolves
+                # simultaneous spikes. Neuron ID is only the final exact tie-break.
+                predicted = max(
+                    active,
+                    key=lambda item: (item[0], item[1], -item[2]),
+                )[2]
 
             correct = predicted == trial.expected_output
             reward = self.correct_reward if correct else self.wrong_reward
