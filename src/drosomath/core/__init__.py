@@ -1,3 +1,8 @@
+from .bridge_structural import (
+    BridgeRewireResult,
+    BridgeStructuralConfig,
+    BridgeStructuralPlasticityManager,
+)
 from .candidates import ActivityBiasedCandidateConfig, ActivityBiasedCandidateGenerator
 from .dual_brain import (
     AdaptiveBridge,
@@ -23,6 +28,9 @@ __all__ = [
     "AdaptiveBridge",
     "AdaptiveModuleManager",
     "BrainCore",
+    "BridgeRewireResult",
+    "BridgeStructuralConfig",
+    "BridgeStructuralPlasticityManager",
     "BridgeSynapseState",
     "ConsolidationConfig",
     "DualBrainStepResult",
