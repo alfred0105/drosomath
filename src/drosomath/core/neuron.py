@@ -32,11 +32,10 @@ class StepResult:
 
 
 class SpikingNetwork:
-    """Small event-driven leaky integrate-and-fire network.
+    """Executable reference leaky integrate-and-fire network.
 
-    This is the executable reference engine for correctness and experiments on
-    small networks. Large connectomes will later need a compact tensor/sparse
-    backend, but the learning/structural APIs are shared with this engine.
+    This engine prioritizes correctness and inspectability for small networks.
+    A future sparse/tensor backend can reuse the same plasticity interfaces.
     """
 
     def __init__(
@@ -44,18 +43,19 @@ class SpikingNetwork:
         neurons: Iterable[NeuronState],
         tracker: PlasticityTracker,
     ) -> None:
-        self.neurons = {neuron.neuron_id: neuron for neuron in neurons}
-        if not self.neurons:
+        neuron_list = tuple(neurons)
+        if not neuron_list:
             raise ValueError("at least one neuron is required")
-        if len(self.neurons) != len(tuple(neurons)):
-            # This branch is defensive for reusable iterables; normal callers
-            # should pass a list/tuple. Duplicate IDs are checked below too.
-            pass
+        ids = [neuron.neuron_id for neuron in neuron_list]
+        if len(ids) != len(set(ids)):
+            raise ValueError("neuron IDs must be unique")
 
+        self.neurons = {neuron.neuron_id: neuron for neuron in neuron_list}
         self.tracker = tracker
         self.step_index = 0
         self._pending_current: dict[int, float] = {}
         self._outgoing: dict[int, list[SynapseState]] = {}
+        self._seen_topology_version = -1
         self.refresh_topology()
 
     @classmethod
@@ -68,8 +68,6 @@ class SpikingNetwork:
         decay: float = 0.95,
     ) -> "SpikingNetwork":
         ids = tuple(neuron_ids)
-        if len(set(ids)) != len(ids):
-            raise ValueError("neuron IDs must be unique")
         return cls(
             (NeuronState(neuron_id=i, threshold=threshold, decay=decay) for i in ids),
             tracker,
@@ -86,6 +84,7 @@ class SpikingNetwork:
                 )
             outgoing.setdefault(synapse.pre_id, []).append(synapse)
         self._outgoing = outgoing
+        self._seen_topology_version = self.tracker.topology_version
 
     def inject(self, currents: Mapping[int, float]) -> None:
         for neuron_id, current in currents.items():
@@ -96,11 +95,11 @@ class SpikingNetwork:
             )
 
     def step(self, currents: Mapping[int, float] | None = None) -> StepResult:
+        if self._seen_topology_version != self.tracker.topology_version:
+            self.refresh_topology()
         if currents:
             self.inject(currents)
 
-        # Integrate leak plus currents accumulated from previous spikes and any
-        # external stimulus applied for this simulation step.
         for neuron_id, neuron in self.neurons.items():
             neuron.potential *= neuron.decay
             neuron.potential += self._pending_current.get(neuron_id, 0.0)
@@ -146,7 +145,7 @@ class SpikingNetwork:
     ) -> tuple[StepResult, ...]:
         if steps < 0:
             raise ValueError("steps must be >= 0")
-        results = []
-        for index in range(steps):
-            results.append(self.step(stimulus if index == 0 else None))
-        return tuple(results)
+        return tuple(
+            self.step(stimulus if index == 0 else None)
+            for index in range(steps)
+        )
