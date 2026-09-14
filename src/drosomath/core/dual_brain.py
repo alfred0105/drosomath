@@ -18,6 +18,7 @@ class BridgeSynapseState:
     stability: float = 0.0
     usage_count: int = 0
     reward_ema: float = 0.0
+    age: int = 0
     last_used_step: int = -1
     alive: bool = True
 
@@ -29,7 +30,7 @@ class BridgeUse:
 
 
 class AdaptiveBridge:
-    """Sparse reward-modulated communication between otherwise independent brains."""
+    """Sparse reward-modulated communication between independent brains."""
 
     def __init__(
         self,
@@ -56,6 +57,7 @@ class AdaptiveBridge:
         self.min_weight = min_weight
         self.max_weight = max_weight
         self._synapses: dict[tuple[str, int, str, int], BridgeSynapseState] = {}
+        self._outgoing: dict[tuple[str, int], list[BridgeSynapseState]] = {}
         self._recent: deque[BridgeUse] = deque()
         for synapse in synapses:
             self.register(synapse)
@@ -64,6 +66,13 @@ class AdaptiveBridge:
     def synapses(self) -> tuple[BridgeSynapseState, ...]:
         return tuple(self._synapses.values())
 
+    @property
+    def synapse_count(self) -> int:
+        return len(self._synapses)
+
+    def has(self, key: tuple[str, int, str, int]) -> bool:
+        return key in self._synapses
+
     def register(self, synapse: BridgeSynapseState) -> None:
         if synapse.source_brain == synapse.target_brain:
             raise ValueError("bridge synapse must connect different brains")
@@ -71,6 +80,22 @@ class AdaptiveBridge:
         if key in self._synapses:
             raise ValueError(f"duplicate bridge synapse {key}")
         self._synapses[key] = synapse
+        self._outgoing.setdefault((synapse.source_brain, synapse.pre_id), []).append(synapse)
+
+    def unregister(
+        self,
+        key: tuple[str, int, str, int],
+    ) -> BridgeSynapseState | None:
+        synapse = self._synapses.pop(key, None)
+        if synapse is None:
+            return None
+        outgoing_key = (synapse.source_brain, synapse.pre_id)
+        bucket = self._outgoing.get(outgoing_key, [])
+        self._outgoing[outgoing_key] = [item for item in bucket if item is not synapse]
+        if not self._outgoing[outgoing_key]:
+            self._outgoing.pop(outgoing_key, None)
+        self._recent = deque(event for event in self._recent if event.key != key)
+        return synapse
 
     def transfer(
         self,
@@ -81,29 +106,25 @@ class AdaptiveBridge:
         step: int,
     ) -> int:
         self._evict_old(step)
-        fired_set = set(fired)
-        if not fired_set:
-            return 0
-
         transferred = 0
-        for key, synapse in self._synapses.items():
-            if not synapse.alive:
-                continue
-            if synapse.source_brain != source_brain or synapse.pre_id not in fired_set:
-                continue
-            target = target_networks.get(synapse.target_brain)
-            if target is None:
-                raise KeyError(f"unknown target brain {synapse.target_brain}")
-            if synapse.post_id not in target.neurons:
-                raise KeyError(
-                    f"bridge target neuron {synapse.target_brain}:{synapse.post_id} does not exist"
-                )
+        for pre_id in fired:
+            for synapse in self._outgoing.get((source_brain, pre_id), ()):
+                if not synapse.alive:
+                    continue
+                target = target_networks.get(synapse.target_brain)
+                if target is None:
+                    raise KeyError(f"unknown target brain {synapse.target_brain}")
+                if synapse.post_id not in target.neurons:
+                    raise KeyError(
+                        f"bridge target neuron {synapse.target_brain}:{synapse.post_id} does not exist"
+                    )
 
-            target.inject({synapse.post_id: synapse.weight})
-            synapse.usage_count += 1
-            synapse.last_used_step = step
-            self._recent.append(BridgeUse(step=step, key=key))
-            transferred += 1
+                target.inject({synapse.post_id: synapse.weight})
+                synapse.usage_count += 1
+                synapse.last_used_step = step
+                key = self._key(synapse)
+                self._recent.append(BridgeUse(step=step, key=key))
+                transferred += 1
         return transferred
 
     def apply_reward(self, *, reward: float, step: int) -> int:
@@ -209,7 +230,6 @@ class DualBrainSystem:
         return result
 
     def apply_reward(self, reward: float) -> tuple[int, int, int]:
-        """Apply one shared outcome without assigning fixed roles to either brain."""
         step = self.step_index
         credited_a = self.brain_a.tracker.apply_reward(reward=reward, step=step)
         credited_b = self.brain_b.tracker.apply_reward(reward=reward, step=step)
