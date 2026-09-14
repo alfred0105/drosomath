@@ -1,0 +1,53 @@
+{
+  "experiment": "numerosity_0_2_stage2",
+  "telemetry_source": "numerosity_prototype",
+  "activity_source": "display_proxy_not_connectome_spikes",
+  "learning_model": "reward_modulated_sparse_associator",
+  "chance_accuracy": 0.3333333333333333,
+  "classes": [
+    0,
+    1,
+    2
+  ],
+  "layout_source": "FlyWire Codex FAFB v783 coordinates",
+  "layout_count": 139255,
+  "total_connectome_neurons": 139255,
+  "rolling_windows": [
+    20,
+    100,
+    500
+  ],
+  "trials_per_ui_frame": 12,
+  "ui_interval_seconds": 0.24,
+  "probe_every": 10,
+  "probe_learning_enabled": false,
+  "learner": {
+    "stage": 2,
+    "seed": 7,
+    "grid_size": 12,
+    "n_kc": 512,
+    "kc_active": 64,
+    "input_fan_in_probability": 0.08,
+    "learning_rate": 0.14,
+    "output_decay": 0.99999,
+    "policy_temperature": 1.0,
+    "radius_jitter_range": [
+      0.9,
+      1.1
+    ],
+    "total_area_factor_nonzero": 1.44,
+    "signal_energy_range_nonzero": [
+      1.85,
+      2.15
+    ],
+    "pixel_noise_sd": 0.01,
+    "continuous_cue_controls": {
+      "equalize_total_area_for_1_vs_2": true,
+      "equalize_signal_energy_distribution_for_1_vs_2": true,
+      "randomize_positions": true
+    }
+  },
+  "scientific_scope": "Stage-2 protocol validation: 1-vs-2 total dot area and integrated signal energy are controlled. Every tenth trial is an evaluation probe with plasticity disabled. Anatomical coordinates are FlyWire, but neural dynamics are not yet the whole-connectome LIF simulation.",
+  "run_id": "20260913_212048_094446+0900",
+  "started_at": "2026-09-13T21:20:48+09:00"
+}

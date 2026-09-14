@@ -1,0 +1,15 @@
+{
+  "experiment": "mock_2_plus_1",
+  "telemetry_source": "mock",
+  "layout_source": "FlyWire Codex FAFB v783 soma coordinates",
+  "layout_count": 139255,
+  "total_connectome_neurons": 139255,
+  "rolling_windows": [
+    20,
+    100,
+    500
+  ],
+  "mock_rule": "trial divisible by 5 -> wrong answer; all other trials -> correct",
+  "run_id": "20260913_204252_571141+0900",
+  "started_at": "2026-09-13T20:42:52+09:00"
+}

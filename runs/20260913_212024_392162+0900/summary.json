@@ -1,0 +1,91 @@
+{
+  "run_id": "20260913_212024_392162+0900",
+  "status": "completed",
+  "started_at": "2026-09-13T21:20:24+09:00",
+  "updated_at": "2026-09-13T21:33:03+09:00",
+  "ended_at": "2026-09-13T21:33:03+09:00",
+  "duration_seconds": 759.371,
+  "experiment": "numerosity_0_2_stage2",
+  "telemetry_source": "numerosity_prototype",
+  "activity_source": "display_proxy_not_connectome_spikes",
+  "learning_model": "reward_modulated_sparse_associator",
+  "chance_accuracy": 0.3333333333333333,
+  "layout_source": "FlyWire Codex FAFB v783 coordinates",
+  "layout_count": 139255,
+  "successes": 23176,
+  "attempts": 35232,
+  "overall_accuracy": 0.657811080835604,
+  "recent_20": 0.75,
+  "recent_100": 0.64,
+  "recent_500": 0.682,
+  "by_target_accuracy": {
+    "0": 0.9732538330494037,
+    "1": 0.0006003945449867056,
+    "2": 0.9923941519479422
+  },
+  "confusion_matrix_rows_target_cols_choice": [
+    [
+      11426,
+      60,
+      254
+    ],
+    [
+      105,
+      7,
+      11547
+    ],
+    [
+      80,
+      10,
+      11743
+    ]
+  ],
+  "probe": {
+    "overall": 0.6644904910587568,
+    "recent_20": 0.8,
+    "recent_100": 0.76,
+    "recent_500": 0.708,
+    "successes": 2341,
+    "attempts": 3523,
+    "by_target_accuracy": {
+      "0": 0.9713080168776371,
+      "1": 0.0,
+      "2": 0.9949832775919732
+    },
+    "confusion_matrix": [
+      [
+        1151,
+        5,
+        29
+      ],
+      [
+        12,
+        0,
+        1130
+      ],
+      [
+        5,
+        1,
+        1190
+      ]
+    ]
+  },
+  "last_trial_kind": "train",
+  "last_target": 0,
+  "last_answer": 0,
+  "last_correct": true,
+  "last_reward": 1.0,
+  "last_policy": {
+    "p0": 0.99662,
+    "p1": 0.00057,
+    "p2": 0.0028,
+    "entropy": 0.02413
+  },
+  "last_stimulus_controls": {
+    "signal_energy": 0.0,
+    "area_factor": 0.0,
+    "post_noise_energy": 0.5321
+  },
+  "scientific_scope": "Stage-2 protocol validation: 1-vs-2 total dot area and integrated signal energy are controlled. Every tenth trial is an evaluation probe with plasticity disabled. Anatomical coordinates are FlyWire, but neural dynamics are not yet the whole-connectome LIF simulation.",
+  "note": "This run validates the reward-learning protocol. It is not yet evidence that the full FlyWire connectome learned numerosity."
+}

@@ -1,0 +1,137 @@
+{
+  "run_id": "20260913_213359_137889+0900",
+  "status": "completed",
+  "started_at": "2026-09-13T21:33:59+09:00",
+  "updated_at": "2026-09-13T21:54:37+09:00",
+  "ended_at": "2026-09-13T21:54:37+09:00",
+  "duration_seconds": 1238.487,
+  "experiment": "numerosity_0_2_stage2_1",
+  "telemetry_source": "numerosity_prototype",
+  "activity_source": "display_proxy_not_connectome_spikes",
+  "learning_model": "reward_modulated_sparse_associator",
+  "chance_accuracy": 0.3333333333333333,
+  "layout_source": "FlyWire Codex FAFB v783 coordinates",
+  "layout_count": 139255,
+  "successes": 53317,
+  "attempts": 56868,
+  "overall_accuracy": 0.9375571498909756,
+  "balanced_accuracy": 0.9375462337970145,
+  "one_vs_two_accuracy": 0.9339530461879737,
+  "recent_20": 1.0,
+  "recent_100": 0.97,
+  "recent_500": 0.976,
+  "by_target_accuracy": {
+    "0": 0.9447397505394453,
+    "1": 0.9329905105232466,
+    "2": 0.934908440328352
+  },
+  "confusion_matrix_rows_target_cols_choice": [
+    [
+      17951,
+      539,
+      511
+    ],
+    [
+      160,
+      17599,
+      1104
+    ],
+    [
+      89,
+      1148,
+      17767
+    ]
+  ],
+  "probe": {
+    "overall": 0.9430179387970454,
+    "balanced_accuracy": 0.9430523638112023,
+    "one_vs_two_accuracy": 0.9415807560137457,
+    "recent_20": 0.95,
+    "recent_100": 0.98,
+    "recent_500": 0.988,
+    "successes": 5362,
+    "attempts": 5686,
+    "by_target_accuracy": {
+      "0": 0.9458749343142406,
+      "1": 0.9442640692640693,
+      "2": 0.9390180878552972
+    },
+    "confusion_matrix": [
+      [
+        1800,
+        53,
+        50
+      ],
+      [
+        13,
+        1745,
+        90
+      ],
+      [
+        3,
+        115,
+        1817
+      ]
+    ]
+  },
+  "last_trial_kind": "train",
+  "last_target": 1,
+  "last_answer": 1,
+  "last_correct": true,
+  "last_reward": 1.0,
+  "last_policy": {
+    "p0": 0.00081,
+    "p1": 0.98763,
+    "p2": 0.01156,
+    "entropy": 0.06962
+  },
+  "last_stimulus_controls": {
+    "signal_energy": 1.86506,
+    "area_factor": 1.44,
+    "post_noise_energy": 2.49834
+  },
+  "learner": {
+    "stage": 2.1,
+    "seed": 7,
+    "grid_size": 12,
+    "n_kc": 512,
+    "kc_active": 64,
+    "input_fan_in_probability": 0.08,
+    "learning_rate": 0.08,
+    "output_decay": 0.99999,
+    "policy_temperature": 1.0,
+    "radius_jitter_range": [
+      0.9,
+      1.1
+    ],
+    "total_area_factor_nonzero": 1.44,
+    "signal_energy_range_nonzero": [
+      1.85,
+      2.15
+    ],
+    "pixel_noise_sd": 0.01,
+    "visual_encoder": {
+      "kind": "fixed_sparse_receptors_with_translation_max_pooling",
+      "translation_offsets_x": [
+        -3,
+        0,
+        3
+      ],
+      "translation_offsets_y": [
+        -3,
+        0,
+        3
+      ],
+      "view_count": 9,
+      "explicit_object_counter": false,
+      "explicit_peak_counter": false
+    },
+    "continuous_cue_controls": {
+      "equalize_total_area_for_1_vs_2": true,
+      "equalize_signal_energy_distribution_for_1_vs_2": true,
+      "randomize_positions": true
+    }
+  },
+  "scientific_scope": "Stage-2.1 protocol validation: Stage-2 area/energy controls remain active, while a fixed sparse visual receptor bank is max-pooled over nearby translated views before KC sparsification to reduce absolute-position dependence. Every tenth trial is an evaluation probe with plasticity disabled. This encoder does not explicitly count objects or peaks. Anatomical coordinates are FlyWire, but neural dynamics are not yet the whole-connectome LIF simulation.",
+  "note": "This run validates the reward-learning protocol. It is not yet evidence that the full FlyWire connectome learned numerosity."
+}
