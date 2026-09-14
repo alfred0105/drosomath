@@ -73,6 +73,10 @@ class AdaptiveBridge:
     def has(self, key: tuple[str, int, str, int]) -> bool:
         return key in self._synapses
 
+    def clear_recent(self) -> None:
+        """Clear pending delayed-reward credit without changing learned bridge state."""
+        self._recent.clear()
+
     def register(self, synapse: BridgeSynapseState) -> None:
         if synapse.source_brain == synapse.target_brain:
             raise ValueError("bridge synapse must connect different brains")
