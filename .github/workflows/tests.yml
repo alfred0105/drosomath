@@ -23,3 +23,5 @@ jobs:
         run: drosomath-demo
       - name: Continual-memory demo smoke test
         run: drosomath-memory-demo
+      - name: Ablation benchmark smoke test
+        run: drosomath-ablation-demo
