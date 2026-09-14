@@ -90,6 +90,11 @@ class ModuleBudgetReallocator:
         if max_moves is not None and max_moves < 0:
             raise ValueError("max_moves must be >= 0")
 
+        # This is a slow structural-plasticity cycle, so age all live synapses
+        # once before deciding whether they are old enough to be reallocated.
+        for synapse in self.tracker.synapses:
+            synapse.tick()
+
         before = self.plan()
         surplus = before.surplus.copy()
         deficit = before.deficit.copy()
@@ -185,6 +190,8 @@ class ModuleBudgetReallocator:
 
     def _eligible_for_prune(self, synapse: SynapseState, step: int) -> bool:
         if not synapse.alive:
+            return False
+        if synapse.age < self.config.min_age_cycles:
             return False
         if synapse.stability >= self.config.protected_stability:
             return False
