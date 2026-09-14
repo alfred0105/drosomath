@@ -13,6 +13,14 @@ class SynapseStateTests(unittest.TestCase):
         self.assertEqual(synapse.last_used_step, 10)
         self.assertAlmostEqual(synapse.reward_ema, 0.5)
 
+    def test_record_reward_does_not_increment_usage(self) -> None:
+        synapse = SynapseState(pre_id=1, post_id=2, weight=0.5)
+
+        synapse.record_reward(reward=1.0, reward_alpha=0.5)
+
+        self.assertEqual(synapse.usage_count, 0)
+        self.assertAlmostEqual(synapse.reward_ema, 0.5)
+
     def test_decay_weight_respects_floor(self) -> None:
         synapse = SynapseState(pre_id=1, post_id=2, weight=0.1)
 
