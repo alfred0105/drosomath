@@ -24,6 +24,7 @@ from .module_budget import (
 from .modules import AdaptiveModuleManager, ModuleState
 from .neuron import NeuronState, SpikingNetwork, StepResult
 from .plasticity import PlasticityTracker, RewardWeightRule, SynapseUse
+from .stdp import STDPPlasticity, STDPRule
 from .structural import (
     RewireResult,
     StructuralPlasticityConfig,
@@ -56,6 +57,8 @@ __all__ = [
     "RewardWeightRule",
     "RewireResult",
     "SpikingNetwork",
+    "STDPPlasticity",
+    "STDPRule",
     "StepResult",
     "StructuralPlasticityConfig",
     "StructuralPlasticityManager",
