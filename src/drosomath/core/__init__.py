@@ -16,6 +16,11 @@ from .dual_brain import (
     DualBrainSystem,
 )
 from .memory import ConsolidationConfig, MemoryConsolidator
+from .module_budget import (
+    ModuleBudgetPlan,
+    ModuleBudgetReallocator,
+    ModuleBudgetRewireResult,
+)
 from .modules import AdaptiveModuleManager, ModuleState
 from .neuron import NeuronState, SpikingNetwork, StepResult
 from .plasticity import PlasticityTracker, RewardWeightRule, SynapseUse
@@ -42,6 +47,9 @@ __all__ = [
     "DualBrainStepResult",
     "DualBrainSystem",
     "MemoryConsolidator",
+    "ModuleBudgetPlan",
+    "ModuleBudgetReallocator",
+    "ModuleBudgetRewireResult",
     "ModuleState",
     "NeuronState",
     "PlasticityTracker",
