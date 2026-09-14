@@ -11,7 +11,7 @@ from .core import (
     PlasticityTracker,
     RewardWeightRule,
     SpikingNetwork,
-    STDPlasticity,
+    STDPPlasticity,
     STDPRule,
     StructuralPlasticityConfig,
     StructuralPlasticityManager,
@@ -54,7 +54,7 @@ def _build_experiment(
     )
     stdp = None
     if use_stdp:
-        stdp = STDPlasticity(
+        stdp = STDPPlasticity(
             rule=STDPRule(
                 potentiation_rate=0.01,
                 depression_rate=0.012,
