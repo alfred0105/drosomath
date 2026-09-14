@@ -57,6 +57,7 @@ class SpikingNetwork:
         self.neurons = {neuron.neuron_id: neuron for neuron in neuron_list}
         self.tracker = tracker
         self.stdp = stdp
+        self.learning_enabled = True
         self.step_index = 0
         self._pending_current: dict[int, float] = {}
         self._outgoing: dict[int, list[SynapseState]] = {}
@@ -93,6 +94,20 @@ class SpikingNetwork:
         self._outgoing = outgoing
         self._seen_topology_version = self.tracker.topology_version
 
+    def set_learning_enabled(self, enabled: bool) -> None:
+        self.learning_enabled = bool(enabled)
+
+    def reset_state(self, *, clear_spike_history: bool = True) -> None:
+        """Clear fast neural dynamics without erasing learned synaptic state."""
+        self._pending_current.clear()
+        for neuron in self.neurons.values():
+            neuron.potential = neuron.reset_potential
+            neuron.fired = False
+            if clear_spike_history:
+                neuron.last_spike_step = -1
+        if clear_spike_history and self.stdp is not None:
+            self.stdp.reset()
+
     def inject(self, currents: Mapping[int, float]) -> None:
         for neuron_id, current in currents.items():
             if neuron_id not in self.neurons:
@@ -120,7 +135,7 @@ class SpikingNetwork:
                 neuron.potential = neuron.reset_potential
 
         stdp_updates = 0
-        if self.stdp is not None:
+        if self.learning_enabled and self.stdp is not None:
             stdp_updates = self.stdp.observe_spikes(
                 fired,
                 self.tracker.synapses,
@@ -133,11 +148,15 @@ class SpikingNetwork:
             for synapse in self._outgoing.get(pre_id, ()):
                 if not synapse.alive:
                     continue
-                if self.tracker.record_transfer(
-                    pre_id=synapse.pre_id,
-                    post_id=synapse.post_id,
-                    step=self.step_index,
-                ):
+                if self.learning_enabled:
+                    should_transfer = self.tracker.record_transfer(
+                        pre_id=synapse.pre_id,
+                        post_id=synapse.post_id,
+                        step=self.step_index,
+                    )
+                else:
+                    should_transfer = True
+                if should_transfer:
                     next_current[synapse.post_id] = (
                         next_current.get(synapse.post_id, 0.0) + synapse.weight
                     )
