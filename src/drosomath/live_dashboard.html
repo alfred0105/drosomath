@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DrosoMath Live</title>
+<style>
+:root{color-scheme:dark;--bg:#070b12;--panel:#0d1420;--panel2:#111b2a;--line:#26364b;--text:#e8eef7;--muted:#91a4ba;--good:#68e0a0;--bad:#ff7f87;--accent:#71b7ff;--hot:#ffd166}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at 30% 0%,#101d31 0,#070b12 42%);color:var(--text);font:14px/1.4 ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+header{display:flex;gap:18px;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);background:rgba(7,11,18,.9);position:sticky;top:0;z-index:5;backdrop-filter:blur(10px)}
+h1{font-size:18px;margin:0}.status{display:flex;gap:12px;align-items:center;color:var(--muted)}.dot{width:9px;height:9px;border-radius:50%;background:var(--good);box-shadow:0 0 12px var(--good)}
+.controls{display:flex;gap:8px;flex-wrap:wrap}button{border:1px solid var(--line);background:#142235;color:var(--text);border-radius:8px;padding:7px 11px;cursor:pointer}button:hover{background:#1a2d46}
+main{padding:14px;display:grid;grid-template-columns:minmax(520px,1.7fr) minmax(300px,.8fr);gap:14px}.panel{background:linear-gradient(180deg,rgba(17,27,42,.96),rgba(11,18,29,.96));border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 10px 35px rgba(0,0,0,.2)}
+.panel h2{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0;padding:11px 13px;border-bottom:1px solid var(--line)}.body{padding:12px}
+#brain{width:100%;height:520px;display:block;background:radial-gradient(circle at center,#0d1726,#080e17 65%)}
+.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.metric{padding:10px;border:1px solid var(--line);border-radius:9px;background:rgba(9,15,24,.7)}.metric .k{font-size:11px;color:var(--muted);text-transform:uppercase}.metric .v{font-size:21px;margin-top:2px;font-variant-numeric:tabular-nums}.good{color:var(--good)}.bad{color:var(--bad)}
+.taskbox{margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:9px}.taskrow{display:flex;justify-content:space-between;margin:4px 0}.taskrow span:first-child{color:var(--muted)}
+#history{width:100%;height:190px;display:block}.legend{display:flex;gap:14px;color:var(--muted);font-size:12px;margin:6px 0 0}.sw{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+.tablewrap{max-height:255px;overflow:auto}table{width:100%;border-collapse:collapse;font-size:12px}th,td{text-align:right;padding:5px 7px;border-bottom:1px solid rgba(38,54,75,.55);font-variant-numeric:tabular-nums}th:first-child,td:first-child{text-align:left}th{position:sticky;top:0;background:#111b2a;color:var(--muted)}
+.event{margin-top:10px;padding:8px 10px;border-radius:8px;background:#0a111b;color:var(--muted);min-height:37px}.footer{grid-column:1/-1;color:var(--muted);font-size:12px;padding:0 2px 8px}
+@media(max-width:920px){main{grid-template-columns:1fr}#brain{height:430px}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>DrosoMath Live</h1><div class="status"><span class="dot" id="dot"></span><span id="conn">connecting…</span><span id="speed"></span></div></div>
+  <div class="controls">
+    <button onclick="control('pause')">Pause</button><button onclick="control('resume')">Resume</button><button onclick="control('step')">Step</button><button onclick="control('slower')">Slower</button><button onclick="control('faster')">Faster</button><button onclick="control('reset')">Reset</button>
+  </div>
+</header>
+<main>
+  <section class="panel"><h2>Brain state</h2><canvas id="brain"></canvas></section>
+  <aside class="panel"><h2>Learning state</h2><div class="body">
+    <div class="metrics">
+      <div class="metric"><div class="k">Step</div><div class="v" id="mStep">0</div></div>
+      <div class="metric"><div class="k">Accuracy</div><div class="v" id="mAcc">0%</div></div>
+      <div class="metric"><div class="k">Reward</div><div class="v" id="mReward">0</div></div>
+      <div class="metric"><div class="k">STDP updates</div><div class="v" id="mStdp">0</div></div>
+      <div class="metric"><div class="k">Mean weight</div><div class="v" id="mWeight">0</div></div>
+      <div class="metric"><div class="k">Mean stability</div><div class="v" id="mStability">0</div></div>
+    </div>
+    <div class="taskbox">
+      <div class="taskrow"><span>Current task</span><strong id="task">-</strong></div>
+      <div class="taskrow"><span>Expected</span><strong id="expected">-</strong></div>
+      <div class="taskrow"><span>Last prediction</span><strong id="prediction">-</strong></div>
+      <div class="taskrow"><span>Trials</span><strong id="trials">0</strong></div>
+      <div class="taskrow"><span>Fired / transfers</span><strong id="activity">0 / 0</strong></div>
+    </div>
+    <div class="event" id="event">No structural change yet.</div>
+  </div></aside>
+
+  <section class="panel"><h2>Learning history</h2><div class="body"><canvas id="history"></canvas><div class="legend"><span><i class="sw" style="background:#68e0a0"></i>accuracy</span><span><i class="sw" style="background:#71b7ff"></i>mean weight</span><span><i class="sw" style="background:#ffd166"></i>stability</span><span><i class="sw" style="background:#ff7f87"></i>reward</span></div></div></section>
+  <section class="panel"><h2>Synapses</h2><div class="body tablewrap"><table><thead><tr><th>edge</th><th>w</th><th>stable</th><th>use</th><th>reward</th></tr></thead><tbody id="synapses"></tbody></table></div></section>
+  <div class="footer">Node brightness = firing, node ring = membrane potential, edge width = synaptic weight, edge opacity = stability/reward history. Dashboard is local-only.</div>
+</main>
+<script>
+const brain=document.getElementById('brain'), bctx=brain.getContext('2d');
+const hist=document.getElementById('history'), hctx=hist.getContext('2d');
+let state=null;
+const positions={0:[.11,.32],1:[.11,.68],2:[.39,.28],3:[.39,.72],4:[.78,.30],5:[.78,.70],6:[.22,.12],7:[.22,.88]};
+function fit(c){const r=c.getBoundingClientRect(),d=devicePixelRatio||1;if(c.width!==Math.round(r.width*d)||c.height!==Math.round(r.height*d)){c.width=Math.round(r.width*d);c.height=Math.round(r.height*d)}return [c.width,c.height]}
+function fmt(x,n=3){return Number(x||0).toFixed(n)}
+function renderBrain(s){const [w,h]=fit(brain);bctx.clearRect(0,0,w,h);const p={};for(const n of s.neurons){const q=positions[n.id]||[.5,.5];p[n.id]=[q[0]*w,q[1]*h]}
+ for(const e of s.synapses){const a=p[e.pre],b=p[e.post];if(!a||!b)continue;const alpha=Math.min(.9,.16+e.stability*.48+Math.max(0,e.reward_ema)*.22);bctx.beginPath();bctx.moveTo(...a);bctx.lineTo(...b);bctx.lineWidth=Math.max(1,1+e.weight*7);bctx.strokeStyle=`rgba(113,183,255,${alpha})`;bctx.stroke()}
+ for(const n of s.neurons){const [x,y]=p[n.id],r=15*(devicePixelRatio||1),pot=Math.max(0,Math.min(1,n.potential/.5));bctx.beginPath();bctx.arc(x,y,r+5*pot,0,Math.PI*2);bctx.strokeStyle=n.fired?'#ffd166':'rgba(113,183,255,.45)';bctx.lineWidth=n.fired?5:2;bctx.stroke();bctx.beginPath();bctx.arc(x,y,r,0,Math.PI*2);bctx.fillStyle=n.fired?'#fff0ad':n.role==='input'?'#315b85':n.role==='output'?'#315f4d':'#28384d';bctx.fill();bctx.fillStyle=n.fired?'#111':'#e8eef7';bctx.font=`${12*(devicePixelRatio||1)}px system-ui`;bctx.textAlign='center';bctx.textBaseline='middle';bctx.fillText(String(n.id),x,y);bctx.fillStyle='#91a4ba';bctx.font=`${9*(devicePixelRatio||1)}px system-ui`;bctx.fillText(n.role,x,y+r+14*(devicePixelRatio||1))}}
+function renderHistory(s){const [w,h]=fit(hist);hctx.clearRect(0,0,w,h);const H=s.history||[];if(H.length<2)return;hctx.strokeStyle='rgba(38,54,75,.6)';hctx.lineWidth=1;for(let i=1;i<4;i++){const y=h*i/4;hctx.beginPath();hctx.moveTo(0,y);hctx.lineTo(w,y);hctx.stroke()}
+ const series=[['accuracy','#68e0a0',v=>v],['mean_weight','#71b7ff',v=>v],['mean_stability','#ffd166',v=>v],['reward','#ff7f87',v=>(v+1)/2]];for(const [key,color,map] of series){hctx.beginPath();H.forEach((row,i)=>{const x=i/(H.length-1)*w,y=h-Math.max(0,Math.min(1,map(Number(row[key]||0))))*h*.92-h*.04;i?hctx.lineTo(x,y):hctx.moveTo(x,y)});hctx.strokeStyle=color;hctx.lineWidth=2*(devicePixelRatio||1);hctx.stroke()}}
+function renderTable(s){document.getElementById('synapses').innerHTML=[...s.synapses].sort((a,b)=>b.weight-a.weight).map(e=>`<tr><td>${e.pre}→${e.post}</td><td>${fmt(e.weight)}</td><td>${fmt(e.stability)}</td><td>${e.usage}</td><td>${fmt(e.reward_ema)}</td></tr>`).join('')}
+function render(s){state=s;renderBrain(s);renderHistory(s);renderTable(s);mStep.textContent=s.step;mAcc.textContent=(s.accuracy*100).toFixed(1)+'%';mReward.textContent=fmt(s.last_reward,2);mReward.className='v '+(s.last_reward>=0?'good':'bad');mStdp.textContent=s.metrics.stdp_updates;mWeight.textContent=fmt(s.metrics.mean_weight);mStability.textContent=fmt(s.metrics.mean_stability);task.textContent=s.task;expected.textContent=s.expected_output;prediction.textContent=s.last_prediction??'—';trials.textContent=s.completed_trials;activity.textContent=`${s.metrics.fired_count} / ${s.metrics.transferred_synapses}`;speed.textContent=`${fmt(s.hz,1)} Hz`;dot.style.background=s.running?'var(--good)':'var(--hot)';event.textContent=s.last_rewire?`rewire: ${JSON.stringify(s.last_rewire)}`:'No structural change yet.'}
+async function control(action){const r=await fetch('/api/control?action='+encodeURIComponent(action));render(await r.json())}
+const es=new EventSource('/events');es.onopen=()=>{conn.textContent='live';dot.style.boxShadow='0 0 12px var(--good)'};es.onmessage=e=>render(JSON.parse(e.data));es.onerror=()=>{conn.textContent='reconnecting…';dot.style.background='var(--bad)'};
+addEventListener('resize',()=>state&&render(state));
+</script>
+</body>
+</html>
