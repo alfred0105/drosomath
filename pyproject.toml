@@ -13,6 +13,7 @@ dependencies = []
 [project.scripts]
 drosomath-demo = "drosomath.demo:main"
 drosomath-memory-demo = "drosomath.memory_demo:main"
+drosomath-ablation-demo = "drosomath.ablation_demo:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
