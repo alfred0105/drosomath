@@ -75,12 +75,38 @@ class PlasticityTracker:
         for synapse in synapses:
             self.register_synapse(synapse)
 
+    @property
+    def synapses(self) -> tuple[SynapseState, ...]:
+        """Return a stable snapshot of currently registered synapses."""
+        return tuple(self._synapses.values())
+
+    @property
+    def synapse_count(self) -> int:
+        return len(self._synapses)
+
+    def has_synapse(self, *, pre_id: int, post_id: int) -> bool:
+        return (pre_id, post_id) in self._synapses
+
     def register_synapse(self, synapse: SynapseState) -> None:
         """Register one connection so future spike transfers can be tracked."""
         key = (synapse.pre_id, synapse.post_id)
         if key in self._synapses:
             raise ValueError(f"duplicate synapse {key}")
         self._synapses[key] = synapse
+
+    def unregister_synapse(self, *, pre_id: int, post_id: int) -> SynapseState | None:
+        """Remove a connection and any pending reward-credit events for it."""
+        key = (pre_id, post_id)
+        synapse = self._synapses.pop(key, None)
+        if synapse is None:
+            return None
+
+        self._recent = deque(
+            event
+            for event in self._recent
+            if (event.pre_id, event.post_id) != key
+        )
+        return synapse
 
     def record_transfer(self, *, pre_id: int, post_id: int, step: int) -> bool:
         """Record one spike transfer through an existing live synapse."""
