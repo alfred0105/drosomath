@@ -17,10 +17,19 @@ DrosoMath is an experimental platform for studying whether a Drosophila connecto
 - **Frontend:** Vite + TypeScript + Three.js
 - **Data:** FlyWire / Codex-derived connectome data (not committed to the repository)
 
+## Plasticity roadmap
+
+Development is intentionally incremental so each mechanism can be tested before structural complexity is added.
+
+- Phase 1: compact mutable synapse state
+- Phase 2: event-driven usage tracking and delayed reward credit
+- Phase 3: bounded reward-modulated weight strengthening/weakening
+- Next: pruning/regrowth, sparse dual-brain bridges, self-specializing modules, and budget reallocation
+
 ## Scientific principle
 
 The external experiment code may present stimuli, read choices, and deliver reward/punishment signals, but it should not directly compute the answer for the simulated brain. Claims of learning must be tested against frozen-plasticity, random-reward, and shuffled-connectome controls.
 
 ## Status
 
-Bootstrap phase.
+Bootstrap phase. Core plasticity primitives are being added and tested before the full simulator loop is introduced.
