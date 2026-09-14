@@ -29,8 +29,10 @@ jobs:
         run: drosomath-memory-demo
       - name: Ablation benchmark smoke test
         run: drosomath-ablation-demo
-      - name: Live dashboard smoke test
+      - name: Single live dashboard smoke test
         run: python -m drosomath.live --smoke
-      - name: One-command runner smoke test
+      - name: Dual live dashboard smoke test
+        run: python -m drosomath.dual_live --smoke
+      - name: One-command benchmark runner smoke test
         shell: pwsh
         run: ./bench.ps1 -NoPush
