@@ -1,7 +1,8 @@
 param(
     [int]$Port = 8765,
     [double]$Hz = 8.0,
-    [switch]$NoBrowser
+    [switch]$NoBrowser,
+    [switch]$Single
 )
 
 $ErrorActionPreference = "Stop"
@@ -21,12 +22,19 @@ if ($env:VIRTUAL_ENV) {
     $python = "python"
 }
 
-$argsList = @("-m", "drosomath.live", "--port", "$Port", "--hz", "$Hz")
+$module = "drosomath.dual_live"
+$label = "DrosoMath Dual Live"
+if ($Single) {
+    $module = "drosomath.live"
+    $label = "DrosoMath Single Live"
+}
+
+$argsList = @("-m", $module, "--port", "$Port", "--hz", "$Hz")
 if ($NoBrowser) {
     $argsList += "--no-browser"
 }
 
-Write-Host "Starting DrosoMath Live on http://127.0.0.1:$Port/"
+Write-Host "Starting $label on http://127.0.0.1:$Port/"
 Write-Host "Press Ctrl+C to stop."
 & $python @argsList
 exit $LASTEXITCODE
