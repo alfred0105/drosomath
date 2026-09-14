@@ -27,7 +27,7 @@ $resultRelative = "results/latest_interference.json"
 New-Item -ItemType Directory -Force -Path $resultDir | Out-Null
 
 $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
-$output = & $python -m drosomath.interference_benchmark --runs $Runs --seed-start $SeedStart
+$output = & $python -m drosomath.interference_v2 --runs $Runs --seed-start $SeedStart
 $exitCode = $LASTEXITCODE
 $stopwatch.Stop()
 if ($exitCode -ne 0) {
@@ -45,11 +45,11 @@ $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllText($resultPath, $json + [Environment]::NewLine, $utf8NoBom)
 
 Write-Host ""
-Write-Host "=== DrosoMath catastrophic interference ==="
+Write-Host "=== DrosoMath catastrophic interference v2 ==="
 Write-Host ("Model runs: {0} ({1} variants x {2} seeds)" -f $parsed.total_model_runs, $parsed.variants, $parsed.runs_per_variant)
 Write-Host ("Elapsed: {0:N3}s" -f $stopwatch.Elapsed.TotalSeconds)
 foreach ($variant in $parsed.results) {
-    $line = "{0,-34} accuracy={1:N3} retention={2:N3} forgetting={3:N3}" -f $variant.name, [double]$variant.final_accuracy.mean, [double]$variant.mean_retention.mean, [double]$variant.mean_forgetting.mean
+    $line = "{0,-34} acquire={1:N3} final={2:N3} retain={3:N3} forget={4:N3} cat={5:P1}" -f $variant.name, [double]$variant.acquisition_accuracy.mean, [double]$variant.final_accuracy.mean, [double]$variant.learned_task_retention.mean, [double]$variant.mean_forgetting.mean, [double]$variant.catastrophic_forgetting_rate
     Write-Host $line
 }
 Write-Host "Saved: $resultRelative"
