@@ -15,6 +15,7 @@ from urllib.parse import parse_qs, urlparse
 from .adaptive_training import AdaptiveTrainingConfig, run_adaptive_training
 from .download import DEFAULT_DATA_DIR, download_malecns
 from .loader import load_malecns_v1
+from .morphology import MorphologySpace, SkeletonCache
 from .visualize_training import build_html
 
 
@@ -37,12 +38,33 @@ class LiveTrainingState:
         self.error: str | None = None
         self.report_path: str | None = None
         self.dashboard_path: str | None = None
+        self.morphology: MorphologySpace | None = None
+        self.morphology_error: str | None = None
         self.latest: dict[str, Any] = {
             "phase": "loading",
             "status": "starting",
             "message": "Loading MaleCNS v1.0",
         }
         self.history: deque[dict[str, Any]] = deque(maxlen=history_limit)
+
+    def set_morphology(self, morphology: MorphologySpace) -> None:
+        with self._lock:
+            self.morphology = morphology
+            self.morphology_error = None
+            self.latest = {
+                **self.latest,
+                "morphology_ready": True,
+                "positioned_neurons": morphology.positioned_count,
+            }
+
+    def set_morphology_error(self, exc: BaseException) -> None:
+        with self._lock:
+            self.morphology_error = f"{type(exc).__name__}: {exc}"
+            self.latest = {
+                **self.latest,
+                "morphology_ready": False,
+                "morphology_error": self.morphology_error,
+            }
 
     def wait_if_paused(self) -> None:
         while self._pause.is_set() and not self._stop.is_set():
@@ -53,9 +75,18 @@ class LiveTrainingState:
     def update(self, event: dict[str, object], brain) -> None:
         self.wait_if_paused()
         telemetry = brain.live_telemetry_snapshot()
+        morphology = self.morphology
+        if morphology is not None:
+            telemetry = morphology.annotate_telemetry(telemetry)
+
         payload: dict[str, Any] = dict(event)
         payload["telemetry"] = telemetry
         payload["wall_time_s"] = time.time() - self.started_at
+        payload["morphology_ready"] = morphology is not None
+        if morphology is not None:
+            payload["positioned_neurons"] = morphology.positioned_count
+        elif self.morphology_error:
+            payload["morphology_error"] = self.morphology_error
 
         trial = payload.get("last_trial")
         if isinstance(trial, dict):
@@ -107,6 +138,11 @@ class LiveTrainingState:
                 "paused": self._pause.is_set(),
                 "report_path": self.report_path,
                 "dashboard_path": self.dashboard_path,
+                "morphology_ready": self.morphology is not None,
+                "morphology_error": self.morphology_error,
+                "positioned_neurons": (
+                    self.morphology.positioned_count if self.morphology is not None else 0
+                ),
                 "history": list(self.history),
             }
 
@@ -141,6 +177,8 @@ class LiveTrainingRunner:
         self.checkpoint_path = Path(checkpoint_path)
         self.download = bool(download)
         self.state = LiveTrainingState()
+        self.morphology: MorphologySpace | None = None
+        self.skeletons: SkeletonCache | None = None
         self._thread: threading.Thread | None = None
 
     def start(self) -> None:
@@ -148,6 +186,18 @@ class LiveTrainingRunner:
             return
         self._thread = threading.Thread(target=self._run, daemon=True)
         self._thread.start()
+
+    def geometry_payload(self, *, max_points: int = 30_000) -> dict[str, object]:
+        morphology = self.morphology
+        if morphology is None:
+            raise RuntimeError("MaleCNS morphology is still loading or unavailable")
+        return morphology.point_cloud(max_points=max_points)
+
+    def skeleton_payload(self, body_id: int, *, max_segments: int = 3500) -> dict[str, object]:
+        skeletons = self.skeletons
+        if skeletons is None:
+            raise RuntimeError("MaleCNS morphology is still loading or unavailable")
+        return skeletons.payload(body_id, max_segments=max_segments)
 
     def _run(self) -> None:
         try:
@@ -157,6 +207,19 @@ class LiveTrainingRunner:
                 self.data_dir,
                 min_connection_synapses=self.config.min_connection_synapses,
             )
+
+            # Morphology is deliberately optional for computation: a display
+            # issue must never invalidate the actual learning experiment.
+            try:
+                self.morphology = MorphologySpace.from_annotations(
+                    connectome.body_ids,
+                    self.data_dir,
+                )
+                self.skeletons = SkeletonCache(self.morphology, self.data_dir)
+                self.state.set_morphology(self.morphology)
+            except BaseException as exc:
+                self.state.set_morphology_error(exc)
+
             report = run_adaptive_training(
                 connectome,
                 config=self.config,
@@ -187,14 +250,35 @@ class LiveTrainingHandler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:  # noqa: N802
         parsed = urlparse(self.path)
+        query = parse_qs(parsed.query)
         if parsed.path == "/":
             self._send_bytes(self.dashboard_html, "text/html; charset=utf-8")
             return
         if parsed.path == "/api/state":
             self._send_json(self.runner.state.snapshot())
             return
+        if parsed.path == "/api/geometry":
+            try:
+                max_points = min(60_000, max(100, int(query.get("max_points", ["30000"])[0])))
+                self._send_json(self.runner.geometry_payload(max_points=max_points))
+            except (ValueError, RuntimeError) as exc:
+                self._send_json({"error": str(exc)}, status=HTTPStatus.SERVICE_UNAVAILABLE)
+            return
+        if parsed.path == "/api/skeleton":
+            try:
+                body_id = int(query.get("body_id", [""])[0])
+                max_segments = min(
+                    10_000,
+                    max(10, int(query.get("max_segments", ["3500"])[0])),
+                )
+                self._send_json(
+                    self.runner.skeleton_payload(body_id, max_segments=max_segments)
+                )
+            except (ValueError, KeyError, FileNotFoundError, RuntimeError) as exc:
+                self._send_json({"error": str(exc)}, status=HTTPStatus.BAD_REQUEST)
+            return
         if parsed.path == "/api/control":
-            action = parse_qs(parsed.query).get("action", [""])[0]
+            action = query.get("action", [""])[0]
             try:
                 payload = self.runner.state.control(action)
             except ValueError as exc:
@@ -257,7 +341,8 @@ def run_server(
     server = ThreadingHTTPServer((host, port), handler)
     url = f"http://{host}:{port}/"
     print(f"MaleCNS live training: {url}")
-    print("The full connectome is simulated; the browser renders a bounded active-edge sample.")
+    print("Full connectome simulation + real MaleCNS 3-D soma coordinates.")
+    print("Neuron SWC skeletons are downloaded on demand when selected in the UI.")
     if open_browser:
         threading.Timer(0.35, lambda: webbrowser.open(url)).start()
     runner.start()
