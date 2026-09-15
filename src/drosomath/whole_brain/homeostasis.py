@@ -14,21 +14,24 @@ class BudgetNormalizationStats:
 
 @dataclass(frozen=True, slots=True)
 class OutgoingBudgetNormalizer:
-    """Keep frequently strengthened pathways from consuming unlimited strength.
+    """Keep strengthened pathways from consuming unlimited outgoing strength.
 
-    Normalization happens per presynaptic neuron.  The source connectome remains
-    untouched; only plastic multipliers are rescaled toward a configurable
-    fraction of the neuron's original outgoing anatomical budget.
+    ``stability_protection`` lets consolidated edges resist normalization. This
+    matters for continual learning: otherwise a later task can indirectly erase
+    an old memory even when the reward rule itself protects stable edges.
     """
 
     target_scale: float = 1.0
     strength: float = 0.25
+    stability_protection: float = 0.0
 
     def __post_init__(self) -> None:
         if self.target_scale <= 0.0:
             raise ValueError("target_scale must be > 0")
         if not 0.0 <= self.strength <= 1.0:
             raise ValueError("strength must be in [0, 1]")
+        if not 0.0 <= self.stability_protection <= 1.0:
+            raise ValueError("stability_protection must be in [0, 1]")
 
     def normalize_presynaptic(
         self,
@@ -40,12 +43,9 @@ class OutgoingBudgetNormalizer:
     ) -> BudgetNormalizationStats:
         """Normalize selected neurons' outgoing plastic multipliers.
 
-        ``indptr`` is the CSR pointer array. ``base_abs`` should contain the
-        absolute anatomical connection strength for every edge. When omitted,
-        each edge is treated as having unit anatomical cost.
-
-        Passing only recently active presynaptic neurons avoids scanning all
-        ~166k neurons every learning step on MaleCNS.
+        Passing only recently active presynaptic neurons avoids scanning every
+        MaleCNS neuron on each reward update. Stable edges can be protected from
+        the normalization displacement while newer edges absorb more of it.
         """
         np = state.np
         indptr = np.asarray(indptr)
@@ -83,7 +83,6 @@ class OutgoingBudgetNormalizer:
 
             multiplier = state.multiplier[start:stop]
             if base_abs is None:
-                anatomical = None
                 baseline_budget = float(stop - start)
                 current_budget = float(multiplier.sum())
             else:
@@ -97,7 +96,17 @@ class OutgoingBudgetNormalizer:
 
             exact_scale = target_budget / current_budget
             applied_scale = 1.0 + self.strength * (exact_scale - 1.0)
-            multiplier[plastic_mask] *= applied_scale
+
+            if self.stability_protection <= 0.0:
+                multiplier[plastic_mask] *= applied_scale
+            else:
+                local_stability = state.stability[start:stop]
+                # Unconsolidated edges receive the full normalization pressure;
+                # stability==1 can resist up to ``stability_protection`` of it.
+                pressure = 1.0 - self.stability_protection * local_stability
+                edge_scale = 1.0 + (applied_scale - 1.0) * pressure
+                multiplier[plastic_mask] *= edge_scale[plastic_mask]
+
             np.clip(
                 multiplier,
                 state.config.min_multiplier,
