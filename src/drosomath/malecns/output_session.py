@@ -1,17 +1,21 @@
 from __future__ import annotations
 
 import math
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 
 from drosomath.whole_brain import OutgoingBudgetNormalizer, UsageRewardRule
 
 from .output_readout import PopulationReadout, ReadoutTrainResult
 
 
+NO_OUTPUT = "NO_OUTPUT"
+
+
 @dataclass(frozen=True, slots=True)
 class OutputSessionConfig:
     correct_reward: float = 1.0
     incorrect_reward: float = -1.0
+    no_output_reward: float = -0.35
     reset_fast_state_before_trial: bool = True
 
 
@@ -41,6 +45,10 @@ class MaleCNSOutputSession:
     Phase A trains only the external population decoder while synaptic usage
     tracking is disabled. Phase B requires the decoder to be frozen and then
     trains only the CNS through reward-modulated local plasticity.
+
+    A silent output population is represented explicitly as ``NO_OUTPUT``.
+    This prevents the decoder bias from turning zero-spike trials into an
+    arbitrary LEFT/RIGHT (or other task-label) response.
     """
 
     def __init__(
@@ -108,13 +116,17 @@ class MaleCNSOutputSession:
                     np.add.at(counts, local, 1)
 
         features = self.readout.features_from_counts(counts, duration_ms=duration_ms)
-        prediction, confidence = self.readout.predict(features)
+        total = int(counts.sum())
+        if total == 0:
+            prediction, confidence = NO_OUTPUT, 0.0
+        else:
+            prediction, confidence = self.readout.predict(features)
         return OutputObservation(
             prediction=prediction,
             confidence=confidence,
             spike_counts=counts,
             features=features,
-            total_output_spikes=int(counts.sum()),
+            total_output_spikes=total,
         )
 
     def train_decoder_on_features(self, features, *, target: str) -> ReadoutTrainResult:
@@ -167,9 +179,10 @@ class MaleCNSOutputSession:
                 stimulus_rate_hz=stimulus_rate_hz,
             )
             correct = observation.prediction == target
-            reward = (
-                self.config.correct_reward if correct else self.config.incorrect_reward
-            )
+            if observation.total_output_spikes == 0:
+                reward = self.config.no_output_reward
+            else:
+                reward = self.config.correct_reward if correct else self.config.incorrect_reward
             learning = self.brain.learn_from_reward(
                 reward=reward,
                 rule=self.reward_rule,
@@ -201,6 +214,11 @@ class MaleCNSOutputSession:
         try:
             observation = self._run_window(
                 stimulus_body_ids=stimulus_body_ids,
+                target=target,
+                duration_ms=duration_ms,
+                stimulus_rate_hz=stimulus_rate_hz,
+            ) if False else self._run_window(
+                stimulus_body_ids=stimulus_body_ids,
                 duration_ms=duration_ms,
                 stimulus_rate_hz=stimulus_rate_hz,
             )
@@ -213,6 +231,7 @@ class MaleCNSOutputSession:
             "confidence": observation.confidence,
             "correct": observation.prediction == target,
             "total_output_spikes": observation.total_output_spikes,
+            "silent": observation.total_output_spikes == 0,
             "readout": self.readout.summary(),
         }
 
@@ -221,5 +240,6 @@ class MaleCNSOutputSession:
             "readout": self.readout.summary(),
             "correct_reward": self.config.correct_reward,
             "incorrect_reward": self.config.incorrect_reward,
+            "no_output_reward": self.config.no_output_reward,
             "plasticity": self.brain.plasticity.summary(),
         }
