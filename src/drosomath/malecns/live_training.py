@@ -15,7 +15,7 @@ from urllib.parse import parse_qs, urlparse
 from .adaptive_training import AdaptiveTrainingConfig, run_adaptive_training
 from .download import DEFAULT_DATA_DIR, download_malecns
 from .loader import load_malecns_v1
-from .visualize_training import render_training_report
+from .visualize_training import build_html
 
 
 DEFAULT_RESULT = Path("results/latest_malecns_adaptive_training.json")
@@ -57,8 +57,6 @@ class LiveTrainingState:
         payload["telemetry"] = telemetry
         payload["wall_time_s"] = time.time() - self.started_at
 
-        # Keep the browser payload bounded. Full synaptic learning state stays in
-        # the simulator/checkpoint; the live view receives only recent summaries.
         trial = payload.get("last_trial")
         if isinstance(trial, dict):
             self.history.append(
@@ -170,12 +168,13 @@ class LiveTrainingRunner:
             self.result_path.write_text(
                 json.dumps(report, indent=2, sort_keys=True), encoding="utf-8"
             )
-            render_training_report(report, self.html_path)
+            self.html_path.parent.mkdir(parents=True, exist_ok=True)
+            self.html_path.write_text(build_html(report), encoding="utf-8")
             self.state.set_finished(
                 report_path=self.result_path,
                 dashboard_path=self.html_path,
             )
-        except BaseException as exc:  # keep error visible to the dashboard
+        except BaseException as exc:
             self.state.set_error(exc)
 
 
