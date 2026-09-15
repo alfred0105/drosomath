@@ -4,8 +4,9 @@
 __pycache__/
 *.py[cod]
 
-# Real FlyWire v783 data (~large published dataset; download locally)
+# Real connectome datasets (large; download locally)
 data/flywire_v783/
+data/malecns_v1/
 
 # Local caches
 .pytest_cache/
