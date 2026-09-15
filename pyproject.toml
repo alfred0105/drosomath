@@ -28,6 +28,8 @@ drosomath-malecns-train = "drosomath.malecns.first_training:main"
 drosomath-malecns-adaptive = "drosomath.malecns.adaptive_training:main"
 drosomath-malecns-viz = "drosomath.malecns.visualize_training:main"
 drosomath-malecns-live = "drosomath.malecns.live_training:main"
+drosomath-malecns-v1 = "drosomath.malecns.curriculum_v1:main"
+drosomath-malecns-v1-viz = "drosomath.malecns.visualize_curriculum:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
