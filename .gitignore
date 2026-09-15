@@ -1,0 +1,15 @@
+# Local Python environments
+.venv/
+.venv*/
+__pycache__/
+*.py[cod]
+
+# Real connectome datasets (large; download locally)
+data/flywire_v783/
+data/malecns_v1/
+
+# Local learned-state checkpoints (large, reproducible from result metadata)
+checkpoints/
+
+# Local caches
+.pytest_cache/
