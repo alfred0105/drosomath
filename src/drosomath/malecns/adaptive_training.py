@@ -4,6 +4,7 @@ import argparse
 import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
+from typing import Callable
 
 from drosomath.flywire_real import FlyBrainParams
 from drosomath.whole_brain import OutgoingBudgetNormalizer, PlasticStateConfig, UsageRewardRule
@@ -18,6 +19,7 @@ from .output_session import MaleCNSOutputSession, OutputSessionConfig
 
 DEFAULT_RESULT = Path("results/latest_malecns_adaptive_training.json")
 DEFAULT_CHECKPOINT = Path("checkpoints/latest_malecns_adaptive_training.npz")
+ProgressObserver = Callable[[dict[str, object], PlasticMaleCNSBrain], None]
 
 
 @dataclass(frozen=True, slots=True)
@@ -56,7 +58,7 @@ class AdaptiveTrainingConfig:
             raise ValueError("invalid target baseline interval")
 
 
-# Increasingly difficult visual degradation.  The calibration phase selects a
+# Increasingly difficult visual degradation. The calibration phase selects a
 # non-silent condition near the requested 55-80% pre-learning accuracy window.
 CHALLENGE_GRID: tuple[tuple[float, float], ...] = (
     (0.60, 230.0),
@@ -69,6 +71,11 @@ CHALLENGE_GRID: tuple[tuple[float, float], ...] = (
     (0.15, 80.0),
     (0.10, 65.0),
 )
+
+
+def _emit(observer: ProgressObserver | None, brain: PlasticMaleCNSBrain, **payload: object) -> None:
+    if observer is not None:
+        observer(dict(payload), brain)
 
 
 def _degraded(rng, ids: tuple[int, ...], fraction: float) -> tuple[int, ...]:
@@ -174,6 +181,8 @@ def run_adaptive_training(
     *,
     config: AdaptiveTrainingConfig,
     checkpoint_path: Path | None = DEFAULT_CHECKPOINT,
+    observer: ProgressObserver | None = None,
+    live_telemetry: bool = False,
 ) -> dict[str, object]:
     np = __import__("numpy")
     rng = np.random.default_rng(config.seed)
@@ -192,6 +201,9 @@ def run_adaptive_training(
             seed=config.seed,
         ),
     )
+    if live_telemetry:
+        brain.configure_live_telemetry(True, max_active_edges=128, edges_per_firing_neuron=4)
+
     readout = PopulationReadout(
         output,
         ("LEFT", "RIGHT"),
@@ -208,6 +220,15 @@ def run_adaptive_training(
         config=OutputSessionConfig(correct_reward=1.0, incorrect_reward=-1.0),
     )
 
+    _emit(
+        observer,
+        brain,
+        phase="decoder_training",
+        status="started",
+        populations=population_info,
+        total_decoder_steps=config.decoder_epochs * len(readout.labels),
+    )
+
     # A. Teach only the fixed external decoder on clean left/right examples.
     decoder_rows: list[dict[str, object]] = []
     for _ in range(config.decoder_epochs):
@@ -220,19 +241,37 @@ def run_adaptive_training(
                 duration_ms=config.duration_ms,
                 stimulus_rate_hz=config.decoder_stimulus_rate_hz,
             )
-            decoder_rows.append(
-                {
-                    "target": label,
-                    "loss": trained.loss,
-                    "prediction_after": trained.prediction_after,
-                    "confidence_after": trained.confidence_after,
-                    "output_spikes": obs.total_output_spikes,
-                }
+            row = {
+                "target": label,
+                "loss": trained.loss,
+                "prediction_after": trained.prediction_after,
+                "confidence_after": trained.confidence_after,
+                "output_spikes": obs.total_output_spikes,
+            }
+            decoder_rows.append(row)
+            _emit(
+                observer,
+                brain,
+                phase="decoder_training",
+                status="running",
+                completed_decoder_steps=len(decoder_rows),
+                total_decoder_steps=config.decoder_epochs * len(readout.labels),
+                last_decoder_row=row,
             )
     session.freeze_decoder()
 
     # B. Find a challenge the decoder cannot already solve perfectly.
+    _emit(observer, brain, phase="calibration", status="started")
     fraction, rate_hz, calibration = _select_challenge(session, stimuli, config)
+    _emit(
+        observer,
+        brain,
+        phase="calibration",
+        status="complete",
+        selected_input_fraction=fraction,
+        selected_stimulus_rate_hz=rate_hz,
+        calibration_candidates=calibration,
+    )
 
     # C. Measure the frozen brain on fresh degraded stimuli.
     before_acc, before_spikes, before_rows = _evaluate_degraded(
@@ -244,10 +283,22 @@ def run_adaptive_training(
         duration_ms=config.duration_ms,
         seed=config.seed + 20_000,
     )
+    _emit(
+        observer,
+        brain,
+        phase="brain_training",
+        status="started",
+        before_accuracy=before_acc,
+        before_mean_output_spikes=before_spikes,
+        total_brain_trials=config.brain_trials,
+        selected_input_fraction=fraction,
+        selected_stimulus_rate_hz=rate_hz,
+    )
 
     # D. Decoder remains frozen; only MaleCNS local synaptic state may change.
     brain_rows: list[dict[str, object]] = []
     labels = list(readout.labels)
+    correct_count = 0
     for trial in range(config.brain_trials):
         label = labels[int(rng.integers(0, len(labels)))]
         subset = _degraded(rng, stimuli[label], fraction)
@@ -257,20 +308,32 @@ def run_adaptive_training(
             duration_ms=config.duration_ms,
             stimulus_rate_hz=rate_hz,
         )
-        brain_rows.append(
-            {
-                "trial": trial + 1,
-                "target": result.target,
-                "prediction": result.prediction,
-                "confidence": result.confidence,
-                "correct": result.correct,
-                "reward": result.reward,
-                "output_spikes": result.total_output_spikes,
-                "edge_updates": result.learning["learning"]["edge_updates"],
-            }
+        row = {
+            "trial": trial + 1,
+            "target": result.target,
+            "prediction": result.prediction,
+            "confidence": result.confidence,
+            "correct": result.correct,
+            "reward": result.reward,
+            "output_spikes": result.total_output_spikes,
+            "edge_updates": result.learning["learning"]["edge_updates"],
+        }
+        brain_rows.append(row)
+        if result.correct:
+            correct_count += 1
+        _emit(
+            observer,
+            brain,
+            phase="brain_training",
+            status="running",
+            completed_brain_trials=trial + 1,
+            total_brain_trials=config.brain_trials,
+            running_accuracy=correct_count / (trial + 1),
+            last_trial=row,
         )
 
     # E. Re-evaluate under the same challenge distribution with a fresh mask stream.
+    _emit(observer, brain, phase="evaluation", status="started")
     after_acc, after_spikes, after_rows = _evaluate_degraded(
         session,
         stimuli,
@@ -285,7 +348,8 @@ def run_adaptive_training(
     if checkpoint_path is not None:
         checkpoint = save_checkpoint(Path(checkpoint_path), brain=brain, readout=readout, config=config)
 
-    return {
+    plasticity = _plasticity_stats(brain)
+    report = {
         "experiment": "malecns_adaptive_output_curriculum_v2",
         "config": asdict(config),
         "connectome": connectome.summary(),
@@ -312,12 +376,24 @@ def run_adaptive_training(
         },
         "brain_training": {
             "trials": len(brain_rows),
-            "training_accuracy": sum(bool(row["correct"]) for row in brain_rows) / len(brain_rows),
+            "training_accuracy": correct_count / len(brain_rows),
             "rows": brain_rows,
         },
-        "plasticity": _plasticity_stats(brain),
+        "plasticity": plasticity,
         "checkpoint": checkpoint,
     }
+    _emit(
+        observer,
+        brain,
+        phase="complete",
+        status="complete",
+        before_accuracy=before_acc,
+        after_accuracy=after_acc,
+        delta_accuracy=after_acc - before_acc,
+        plasticity=plasticity,
+        checkpoint=checkpoint,
+    )
+    return report
 
 
 def main() -> None:
