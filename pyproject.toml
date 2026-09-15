@@ -11,6 +11,7 @@ requires-python = ">=3.11"
 dependencies = []
 
 [project.optional-dependencies]
+wholebrain = ["numpy"]
 flywire = ["numpy", "pyarrow"]
 
 [project.scripts]
