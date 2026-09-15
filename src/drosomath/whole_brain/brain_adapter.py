@@ -14,6 +14,8 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
 
     The anatomical graph stays immutable in ``connectome``. Learned memory is
     stored in ``plasticity.multiplier`` and related compact float32 arrays.
+    Plasticity tracking can be disabled while an external decoder is being
+    trained, so that readout pretraining does not contaminate the brain state.
     """
 
     def __init__(
@@ -44,7 +46,22 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
         self.plasticity = plasticity
         self.usage_alpha = usage_alpha
         self.eligibility_gain = eligibility_gain
+        self.plasticity_tracking_enabled = True
         self._recent_presynaptic: set[int] = set()
+
+    def set_plasticity_tracking(self, enabled: bool) -> bool:
+        """Enable/disable usage and eligibility recording.
+
+        Returns the previous state so callers can restore it in a ``finally``
+        block. Disabling tracking never changes the anatomical graph or learned
+        multipliers.
+        """
+        previous = self.plasticity_tracking_enabled
+        self.plasticity_tracking_enabled = bool(enabled)
+        if not self.plasticity_tracking_enabled:
+            self._recent_presynaptic.clear()
+            self.plasticity.clear_eligibility()
+        return previous
 
     def reset(self) -> None:
         """Reset fast neural state while deliberately preserving learned memory."""
@@ -83,13 +100,15 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
                 stop,
             )
             np.add.at(target_slot, posts[start:stop], effective * scale)
-            self.plasticity.record_use_slice(
-                start,
-                stop,
-                usage_alpha=self.usage_alpha,
-                eligibility_gain=self.eligibility_gain,
-            )
-            self._recent_presynaptic.add(pre)
+
+            if self.plasticity_tracking_enabled:
+                self.plasticity.record_use_slice(
+                    start,
+                    stop,
+                    usage_alpha=self.usage_alpha,
+                    eligibility_gain=self.eligibility_gain,
+                )
+                self._recent_presynaptic.add(pre)
             transferred += stop - start
 
         return transferred
@@ -111,6 +130,9 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
         Optional outgoing-budget normalization prevents runaway rich-get-richer
         dynamics.
         """
+        if not self.plasticity_tracking_enabled:
+            raise RuntimeError("cannot learn from reward while plasticity tracking is disabled")
+
         update = rule.apply(self.plasticity, reward=reward)
 
         budget = None
