@@ -8,5 +8,8 @@ __pycache__/
 data/flywire_v783/
 data/malecns_v1/
 
+# Local learned-state checkpoints (large, reproducible from result metadata)
+checkpoints/
+
 # Local caches
 .pytest_cache/
