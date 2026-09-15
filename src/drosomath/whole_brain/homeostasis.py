@@ -1,0 +1,113 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+from .plastic_state import SparsePlasticityState
+
+
+@dataclass(frozen=True, slots=True)
+class BudgetNormalizationStats:
+    neurons_touched: int
+    edges_scaled: int
+    mean_scale: float
+
+
+@dataclass(frozen=True, slots=True)
+class OutgoingBudgetNormalizer:
+    """Keep frequently strengthened pathways from consuming unlimited strength.
+
+    Normalization happens per presynaptic neuron.  The source connectome remains
+    untouched; only plastic multipliers are rescaled toward a configurable
+    fraction of the neuron's original outgoing anatomical budget.
+    """
+
+    target_scale: float = 1.0
+    strength: float = 0.25
+
+    def __post_init__(self) -> None:
+        if self.target_scale <= 0.0:
+            raise ValueError("target_scale must be > 0")
+        if not 0.0 <= self.strength <= 1.0:
+            raise ValueError("strength must be in [0, 1]")
+
+    def normalize_presynaptic(
+        self,
+        state: SparsePlasticityState,
+        *,
+        indptr,
+        base_abs=None,
+        presynaptic_indices=None,
+    ) -> BudgetNormalizationStats:
+        """Normalize selected neurons' outgoing plastic multipliers.
+
+        ``indptr`` is the CSR pointer array. ``base_abs`` should contain the
+        absolute anatomical connection strength for every edge. When omitted,
+        each edge is treated as having unit anatomical cost.
+
+        Passing only recently active presynaptic neurons avoids scanning all
+        ~166k neurons every learning step on MaleCNS.
+        """
+        np = state.np
+        indptr = np.asarray(indptr)
+        if indptr.ndim != 1 or len(indptr) < 1:
+            raise ValueError("indptr must be a one-dimensional CSR pointer array")
+        neuron_count = len(indptr) - 1
+        if int(indptr[-1]) != state.edge_count:
+            raise ValueError("indptr edge count does not match plasticity state")
+
+        if base_abs is not None:
+            base_abs = np.asarray(base_abs)
+            if len(base_abs) != state.edge_count:
+                raise ValueError("base_abs edge count does not match plasticity state")
+
+        if presynaptic_indices is None:
+            presynaptic_indices = range(neuron_count)
+
+        neurons_touched = 0
+        edges_scaled = 0
+        scale_sum = 0.0
+
+        for pre in presynaptic_indices:
+            pre = int(pre)
+            if pre < 0 or pre >= neuron_count:
+                raise IndexError(f"presynaptic index {pre} is outside 0:{neuron_count}")
+            start = int(indptr[pre])
+            stop = int(indptr[pre + 1])
+            if start == stop:
+                continue
+
+            plastic_mask = state.plastic_mask[start:stop]
+            plastic_count = int(plastic_mask.sum())
+            if plastic_count == 0:
+                continue
+
+            multiplier = state.multiplier[start:stop]
+            if base_abs is None:
+                anatomical = None
+                baseline_budget = float(stop - start)
+                current_budget = float(multiplier.sum())
+            else:
+                anatomical = base_abs[start:stop]
+                baseline_budget = float(anatomical.sum())
+                current_budget = float((anatomical * multiplier).sum())
+
+            target_budget = baseline_budget * self.target_scale
+            if current_budget <= 0.0:
+                continue
+
+            exact_scale = target_budget / current_budget
+            applied_scale = 1.0 + self.strength * (exact_scale - 1.0)
+            multiplier[plastic_mask] *= applied_scale
+            np.clip(
+                multiplier,
+                state.config.min_multiplier,
+                state.config.max_multiplier,
+                out=multiplier,
+            )
+
+            neurons_touched += 1
+            edges_scaled += plastic_count
+            scale_sum += applied_scale
+
+        mean_scale = scale_sum / neurons_touched if neurons_touched else 1.0
+        return BudgetNormalizationStats(neurons_touched, edges_scaled, mean_scale)
