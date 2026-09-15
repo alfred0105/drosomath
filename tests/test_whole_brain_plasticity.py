@@ -76,6 +76,38 @@ class WholeBrainPlasticityTests(unittest.TestCase):
         self.assertEqual(state.plastic_edge_count, 0)
         self.assertTrue((state.multiplier == 1.0).all())
 
+    def test_sparse_brain_records_use_and_preserves_learned_memory_on_reset(self) -> None:
+        import numpy as np
+
+        from drosomath.flywire_real import FlyWireConnectome
+        from drosomath.whole_brain import PlasticSparseFlyBrain, UsageRewardRule
+
+        connectome = FlyWireConnectome(
+            flywire_ids=np.asarray([101, 102], dtype=np.int64),
+            indptr=np.asarray([0, 1, 1], dtype=np.int64),
+            post_indices=np.asarray([1], dtype=np.int32),
+            signed_synapse_counts=np.asarray([12.0], dtype=np.float32),
+            outgoing_strength=np.asarray([12.0, 0.0], dtype=np.float32),
+        )
+        brain = PlasticSparseFlyBrain(connectome, usage_alpha=1.0)
+
+        brain._schedule_spike_outputs(np.asarray([0], dtype=np.int32))
+        before = float(brain.plasticity.multiplier[0])
+        report = brain.learn_from_reward(
+            reward=1.0,
+            rule=UsageRewardRule(learning_rate=0.1),
+        )
+        learned = float(brain.plasticity.multiplier[0])
+
+        self.assertEqual(report["learning"]["edge_updates"], 1)
+        self.assertGreater(learned, before)
+
+        brain.reset()
+        self.assertAlmostEqual(float(brain.plasticity.multiplier[0]), learned)
+
+        brain.reset_all()
+        self.assertAlmostEqual(float(brain.plasticity.multiplier[0]), 1.0)
+
 
 if __name__ == "__main__":
     unittest.main()
