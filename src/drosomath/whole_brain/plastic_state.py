@@ -75,6 +75,10 @@ class SparsePlasticityState:
     def plastic_edge_count(self) -> int:
         return int(self.plastic_mask.sum())
 
+    @property
+    def plastic_fraction(self) -> float:
+        return float(self.config.plastic_fraction)
+
     def set_plastic_fraction(self, fraction: float) -> dict[str, int | float]:
         """Deterministically unlock/freeze edges while preserving learned values."""
         if not 0.0 <= fraction <= 1.0:
