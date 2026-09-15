@@ -13,6 +13,7 @@ dependencies = []
 [project.optional-dependencies]
 wholebrain = ["numpy"]
 flywire = ["numpy", "pyarrow"]
+malecns = ["numpy", "pyarrow"]
 
 [project.scripts]
 drosomath-demo = "drosomath.demo:main"
@@ -22,6 +23,7 @@ drosomath-interference = "drosomath.interference_v2:main"
 drosomath-live = "drosomath.dual_live:main"
 drosomath-single-live = "drosomath.live:main"
 drosomath-flybrain = "drosomath.flywire_real:main"
+drosomath-malecns = "drosomath.malecns.brain:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
