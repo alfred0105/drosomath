@@ -101,7 +101,6 @@ class MaleCNSV1Tests(unittest.TestCase):
         from drosomath.whole_brain import PlasticStateConfig
 
         graph = self._graph()
-        # Remove the only anatomical transfer so output neuron 20 stays silent.
         graph.indptr[:] = 0
         graph.post_indices = graph.post_indices[:0]
         graph.synapse_counts = graph.synapse_counts[:0]
@@ -109,7 +108,6 @@ class MaleCNSV1Tests(unittest.TestCase):
         graph.outgoing_strength[:] = 0
         brain = PlasticMaleCNSBrain(graph, plasticity_config=PlasticStateConfig(plastic_fraction=1.0))
         output = OutputPopulation.from_body_ids(graph, [20])
-        # PopulationReadout requires >=2 features only in labels, not output neurons.
         readout = PopulationReadout(output, ("A", "B"))
         readout.freeze()
         session = MaleCNSOutputSession(brain, readout, config=OutputSessionConfig(no_output_reward=-0.25))
@@ -117,6 +115,36 @@ class MaleCNSV1Tests(unittest.TestCase):
         self.assertEqual(row["prediction"], NO_OUTPUT)
         self.assertFalse(row["correct"])
         self.assertTrue(row["silent"])
+
+    def test_memory_v2_gate_requires_measurable_learning_and_retention(self):
+        from drosomath.malecns.curriculum_v1 import CurriculumV1Config, build_curriculum
+        from drosomath.malecns.curriculum_v2_memory import _phase1_gate
+
+        tasks, _ = build_curriculum(
+            self._graph(many=True),
+            config=CurriculumV1Config(output_population_size=16, visual_pool_size=192, token_size=6),
+        )
+        stages = [
+            {"stage": "laterality", "after_accuracy": 0.90},
+            {"stage": "numerosity_1_4", "after_accuracy": 0.50},
+            {"stage": "compare_1_3", "after_accuracy": 0.55},
+            {"stage": "addition_1_3", "after_accuracy": 0.30},
+        ]
+        retention = [{
+            "after_stage": "addition_1_3",
+            "tasks": {
+                "laterality": {"accuracy": 0.90},
+                "numerosity_1_4": {"accuracy": 0.42},
+                "compare_1_3": {"accuracy": 0.46},
+                "addition_1_3": {"accuracy": 0.30},
+            },
+        }]
+        gate = _phase1_gate(tasks, stages, retention)
+        self.assertTrue(gate["passed"])
+        retention[0]["tasks"]["compare_1_3"]["accuracy"] = 0.30
+        gate = _phase1_gate(tasks, stages, retention)
+        self.assertFalse(gate["passed"])
+        self.assertFalse(gate["tasks"]["compare_1_3"]["passed"])
 
 
 if __name__ == "__main__":
