@@ -1,0 +1,809 @@
+{
+  "config": {
+    "checkpoint_every": 64,
+    "common_eval_fraction": 0.7,
+    "common_eval_rate_hz": 205.0,
+    "decoder_epochs": 8,
+    "min_connection_synapses": 5,
+    "seeds": [
+      7,
+      17,
+      27
+    ],
+    "stage_trials": 512,
+    "validation_trials_per_label": 32
+  },
+  "connectome": {
+    "dataset": "MaleCNS v1.0 / HHMI Janelia",
+    "edge_count": 6242118,
+    "inhibitory_neuron_fraction": 0.355500899820036,
+    "min_connection_synapses": 5,
+    "neuron_count": 166700,
+    "sign_model": "presynaptic consensus_nt in {gaba, glutamate, histamine} -> inhibitory; all other/unclear -> positive drive",
+    "synapse_count_in_loaded_edges": 89860280
+  },
+  "experiment": "malecns_phase1_stat_benchmark",
+  "phase1_stat_gate": {
+    "criterion": "paired common held-out evaluation: v2 mean retention clears threshold and does not regress versus same-seed v1",
+    "passed": false,
+    "tasks": {
+      "compare_1_3": {
+        "mean_paired_delta_vs_v1": -0.05208333333333337,
+        "passed": false,
+        "threshold": 0.4,
+        "v2_mean_accuracy": 0.4756944444444444
+      },
+      "laterality": {
+        "mean_paired_delta_vs_v1": -0.010416666666666666,
+        "passed": false,
+        "threshold": 0.8,
+        "v2_mean_accuracy": 0.9791666666666666
+      },
+      "numerosity_1_4": {
+        "mean_paired_delta_vs_v1": 0.046875,
+        "passed": true,
+        "threshold": 0.3,
+        "v2_mean_accuracy": 0.3880208333333333
+      }
+    }
+  },
+  "runs": [
+    {
+      "common_eval": {
+        "v1": {
+          "macro_accuracy": 0.52734375,
+          "micro_accuracy": 0.45535714285714285,
+          "tasks": {
+            "addition_1_3": {
+              "accuracy": 0.375,
+              "chance": 0.2,
+              "correct": 60,
+              "mean_output_spikes": 21.925,
+              "silent_fraction": 0.01875,
+              "trials": 160
+            },
+            "compare_1_3": {
+              "accuracy": 0.46875,
+              "chance": 0.3333333333333333,
+              "correct": 45,
+              "mean_output_spikes": 28.333333333333332,
+              "silent_fraction": 0.010416666666666666,
+              "trials": 96
+            },
+            "laterality": {
+              "accuracy": 0.984375,
+              "chance": 0.5,
+              "correct": 63,
+              "mean_output_spikes": 24.765625,
+              "silent_fraction": 0.0,
+              "trials": 64
+            },
+            "numerosity_1_4": {
+              "accuracy": 0.28125,
+              "chance": 0.25,
+              "correct": 36,
+              "mean_output_spikes": 13.6953125,
+              "silent_fraction": 0.0625,
+              "trials": 128
+            }
+          },
+          "total_correct": 204,
+          "total_trials": 448
+        },
+        "v2": {
+          "macro_accuracy": 0.5305989583333334,
+          "micro_accuracy": 0.45982142857142855,
+          "tasks": {
+            "addition_1_3": {
+              "accuracy": 0.34375,
+              "chance": 0.2,
+              "correct": 55,
+              "mean_output_spikes": 28.46875,
+              "silent_fraction": 0.01875,
+              "trials": 160
+            },
+            "compare_1_3": {
+              "accuracy": 0.4895833333333333,
+              "chance": 0.3333333333333333,
+              "correct": 47,
+              "mean_output_spikes": 31.635416666666668,
+              "silent_fraction": 0.010416666666666666,
+              "trials": 96
+            },
+            "laterality": {
+              "accuracy": 0.953125,
+              "chance": 0.5,
+              "correct": 61,
+              "mean_output_spikes": 35.640625,
+              "silent_fraction": 0.0,
+              "trials": 64
+            },
+            "numerosity_1_4": {
+              "accuracy": 0.3359375,
+              "chance": 0.25,
+              "correct": 43,
+              "mean_output_spikes": 20.34375,
+              "silent_fraction": 0.03125,
+              "trials": 128
+            }
+          },
+          "total_correct": 206,
+          "total_trials": 448
+        }
+      },
+      "reports": {
+        "v1": {
+          "final_plasticity": {
+            "changed_edges": 112821,
+            "edge_count": 6242118,
+            "mean_multiplier": 0.9996525049209595,
+            "mean_stability": 0.003667480545118451,
+            "mean_usage_ema": 0.0034487431403249502,
+            "plastic_edge_count": 1249700,
+            "plastic_fraction": 0.2
+          },
+          "phase1_gate": null,
+          "result_path": "results\\phase1_stat\\seed_7\\v1.json",
+          "stage_summary": {
+            "addition_1_3": {
+              "after_accuracy": 0.33125,
+              "before_accuracy": 0.3375,
+              "delta_accuracy": -0.006250000000000033,
+              "training_accuracy": 0.328125
+            },
+            "compare_1_3": {
+              "after_accuracy": 0.375,
+              "before_accuracy": 0.2916666666666667,
+              "delta_accuracy": 0.08333333333333331,
+              "training_accuracy": 0.37890625
+            },
+            "laterality": {
+              "after_accuracy": 0.703125,
+              "before_accuracy": 0.5625,
+              "delta_accuracy": 0.140625,
+              "training_accuracy": 0.58203125
+            },
+            "numerosity_1_4": {
+              "after_accuracy": 0.328125,
+              "before_accuracy": 0.375,
+              "delta_accuracy": -0.046875,
+              "training_accuracy": 0.310546875
+            }
+          }
+        },
+        "v2": {
+          "final_plasticity": {
+            "changed_edges": 171702,
+            "edge_count": 6242118,
+            "mean_multiplier": 1.0036756992340088,
+            "mean_stability": 0.012444411404430866,
+            "mean_usage_ema": 0.009034709073603153,
+            "plastic_edge_count": 1249700,
+            "plastic_fraction": 0.2
+          },
+          "phase1_gate": {
+            "criterion": "prior tasks must first exceed chance+5pp, then survive later tasks at configured retention thresholds",
+            "passed": true,
+            "tasks": {
+              "compare_1_3": {
+                "chance": 0.3333333333333333,
+                "final_retention_accuracy": 0.4479166666666667,
+                "immediate_accuracy": 0.4791666666666667,
+                "measurable_learning": true,
+                "passed": true,
+                "required_accuracy": 0.4,
+                "retention_ratio": 0.9347826086956522
+              },
+              "laterality": {
+                "chance": 0.5,
+                "final_retention_accuracy": 0.96875,
+                "immediate_accuracy": 0.796875,
+                "measurable_learning": true,
+                "passed": true,
+                "required_accuracy": 0.8,
+                "retention_ratio": 1.2156862745098038
+              },
+              "numerosity_1_4": {
+                "chance": 0.25,
+                "final_retention_accuracy": 0.359375,
+                "immediate_accuracy": 0.3203125,
+                "measurable_learning": true,
+                "passed": true,
+                "required_accuracy": 0.3,
+                "retention_ratio": 1.1219512195121952
+              }
+            }
+          },
+          "result_path": "results\\phase1_stat\\seed_7\\v2.json",
+          "stage_summary": {
+            "addition_1_3": {
+              "after_accuracy": 0.35625,
+              "before_accuracy": 0.34375,
+              "delta_accuracy": 0.012500000000000011,
+              "training_accuracy": 0.373046875
+            },
+            "compare_1_3": {
+              "after_accuracy": 0.4791666666666667,
+              "before_accuracy": 0.4270833333333333,
+              "delta_accuracy": 0.05208333333333337,
+              "training_accuracy": 0.40234375
+            },
+            "laterality": {
+              "after_accuracy": 0.796875,
+              "before_accuracy": 0.640625,
+              "delta_accuracy": 0.15625,
+              "training_accuracy": 0.775390625
+            },
+            "numerosity_1_4": {
+              "after_accuracy": 0.3203125,
+              "before_accuracy": 0.3125,
+              "delta_accuracy": 0.0078125,
+              "training_accuracy": 0.345703125
+            }
+          }
+        }
+      },
+      "seed": 7
+    },
+    {
+      "common_eval": {
+        "v1": {
+          "macro_accuracy": 0.544921875,
+          "micro_accuracy": 0.4732142857142857,
+          "tasks": {
+            "addition_1_3": {
+              "accuracy": 0.34375,
+              "chance": 0.2,
+              "correct": 55,
+              "mean_output_spikes": 24.51875,
+              "silent_fraction": 0.0125,
+              "trials": 160
+            },
+            "compare_1_3": {
+              "accuracy": 0.46875,
+              "chance": 0.3333333333333333,
+              "correct": 45,
+              "mean_output_spikes": 32.197916666666664,
+              "silent_fraction": 0.0,
+              "trials": 96
+            },
+            "laterality": {
+              "accuracy": 0.984375,
+              "chance": 0.5,
+              "correct": 63,
+              "mean_output_spikes": 26.6875,
+              "silent_fraction": 0.0,
+              "trials": 64
+            },
+            "numerosity_1_4": {
+              "accuracy": 0.3828125,
+              "chance": 0.25,
+              "correct": 49,
+              "mean_output_spikes": 14.1953125,
+              "silent_fraction": 0.0390625,
+              "trials": 128
+            }
+          },
+          "total_correct": 212,
+          "total_trials": 448
+        },
+        "v2": {
+          "macro_accuracy": 0.5079427083333333,
+          "micro_accuracy": 0.4330357142857143,
+          "tasks": {
+            "addition_1_3": {
+              "accuracy": 0.3,
+              "chance": 0.2,
+              "correct": 48,
+              "mean_output_spikes": 23.56875,
+              "silent_fraction": 0.0125,
+              "trials": 160
+            },
+            "compare_1_3": {
+              "accuracy": 0.3958333333333333,
+              "chance": 0.3333333333333333,
+              "correct": 38,
+              "mean_output_spikes": 34.041666666666664,
+              "silent_fraction": 0.0,
+              "trials": 96
+            },
+            "laterality": {
+              "accuracy": 0.984375,
+              "chance": 0.5,
+              "correct": 63,
+              "mean_output_spikes": 31.921875,
+              "silent_fraction": 0.0,
+              "trials": 64
+            },
+            "numerosity_1_4": {
+              "accuracy": 0.3515625,
+              "chance": 0.25,
+              "correct": 45,
+              "mean_output_spikes": 19.7734375,
+              "silent_fraction": 0.015625,
+              "trials": 128
+            }
+          },
+          "total_correct": 194,
+          "total_trials": 448
+        }
+      },
+      "reports": {
+        "v1": {
+          "final_plasticity": {
+            "changed_edges": 131122,
+            "edge_count": 6242118,
+            "mean_multiplier": 1.0010755062103271,
+            "mean_stability": 0.006835111882537603,
+            "mean_usage_ema": 0.005426573101431131,
+            "plastic_edge_count": 1250551,
+            "plastic_fraction": 0.2
+          },
+          "phase1_gate": null,
+          "result_path": "results\\phase1_stat\\seed_17\\v1.json",
+          "stage_summary": {
+            "addition_1_3": {
+              "after_accuracy": 0.4,
+              "before_accuracy": 0.39375,
+              "delta_accuracy": 0.006250000000000033,
+              "training_accuracy": 0.4140625
+            },
+            "compare_1_3": {
+              "after_accuracy": 0.40625,
+              "before_accuracy": 0.4583333333333333,
+              "delta_accuracy": -0.052083333333333315,
+              "training_accuracy": 0.4765625
+            },
+            "laterality": {
+              "after_accuracy": 0.671875,
+              "before_accuracy": 0.78125,
+              "delta_accuracy": -0.109375,
+              "training_accuracy": 0.759765625
+            },
+            "numerosity_1_4": {
+              "after_accuracy": 0.3359375,
+              "before_accuracy": 0.3984375,
+              "delta_accuracy": -0.0625,
+              "training_accuracy": 0.41015625
+            }
+          }
+        },
+        "v2": {
+          "final_plasticity": {
+            "changed_edges": 169073,
+            "edge_count": 6242118,
+            "mean_multiplier": 1.0040860176086426,
+            "mean_stability": 0.012257692404091358,
+            "mean_usage_ema": 0.008251538500189781,
+            "plastic_edge_count": 1250551,
+            "plastic_fraction": 0.2
+          },
+          "phase1_gate": {
+            "criterion": "prior tasks must first exceed chance+5pp, then survive later tasks at configured retention thresholds",
+            "passed": true,
+            "tasks": {
+              "compare_1_3": {
+                "chance": 0.3333333333333333,
+                "final_retention_accuracy": 0.4479166666666667,
+                "immediate_accuracy": 0.5,
+                "measurable_learning": true,
+                "passed": true,
+                "required_accuracy": 0.4,
+                "retention_ratio": 0.8958333333333334
+              },
+              "laterality": {
+                "chance": 0.5,
+                "final_retention_accuracy": 0.984375,
+                "immediate_accuracy": 0.796875,
+                "measurable_learning": true,
+                "passed": true,
+                "required_accuracy": 0.8,
+                "retention_ratio": 1.2352941176470589
+              },
+              "numerosity_1_4": {
+                "chance": 0.25,
+                "final_retention_accuracy": 0.3671875,
+                "immediate_accuracy": 0.359375,
+                "measurable_learning": true,
+                "passed": true,
+                "required_accuracy": 0.3,
+                "retention_ratio": 1.0217391304347827
+              }
+            }
+          },
+          "result_path": "results\\phase1_stat\\seed_17\\v2.json",
+          "stage_summary": {
+            "addition_1_3": {
+              "after_accuracy": 0.34375,
+              "before_accuracy": 0.2625,
+              "delta_accuracy": 0.08124999999999999,
+              "training_accuracy": 0.26953125
+            },
+            "compare_1_3": {
+              "after_accuracy": 0.5,
+              "before_accuracy": 0.4895833333333333,
+              "delta_accuracy": 0.010416666666666685,
+              "training_accuracy": 0.455078125
+            },
+            "laterality": {
+              "after_accuracy": 0.796875,
+              "before_accuracy": 0.734375,
+              "delta_accuracy": 0.0625,
+              "training_accuracy": 0.75
+            },
+            "numerosity_1_4": {
+              "after_accuracy": 0.359375,
+              "before_accuracy": 0.328125,
+              "delta_accuracy": 0.03125,
+              "training_accuracy": 0.380859375
+            }
+          }
+        }
+      },
+      "seed": 17
+    },
+    {
+      "common_eval": {
+        "v1": {
+          "macro_accuracy": 0.5778645833333333,
+          "micro_accuracy": 0.49330357142857145,
+          "tasks": {
+            "addition_1_3": {
+              "accuracy": 0.30625,
+              "chance": 0.2,
+              "correct": 49,
+              "mean_output_spikes": 20.3125,
+              "silent_fraction": 0.0125,
+              "trials": 160
+            },
+            "compare_1_3": {
+              "accuracy": 0.6458333333333334,
+              "chance": 0.3333333333333333,
+              "correct": 62,
+              "mean_output_spikes": 31.072916666666668,
+              "silent_fraction": 0.0,
+              "trials": 96
+            },
+            "laterality": {
+              "accuracy": 1.0,
+              "chance": 0.5,
+              "correct": 64,
+              "mean_output_spikes": 26.84375,
+              "silent_fraction": 0.0,
+              "trials": 64
+            },
+            "numerosity_1_4": {
+              "accuracy": 0.359375,
+              "chance": 0.25,
+              "correct": 46,
+              "mean_output_spikes": 14.8046875,
+              "silent_fraction": 0.078125,
+              "trials": 128
+            }
+          },
+          "total_correct": 221,
+          "total_trials": 448
+        },
+        "v2": {
+          "macro_accuracy": 0.5858072916666667,
+          "micro_accuracy": 0.5111607142857143,
+          "tasks": {
+            "addition_1_3": {
+              "accuracy": 0.325,
+              "chance": 0.2,
+              "correct": 52,
+              "mean_output_spikes": 23.1875,
+              "silent_fraction": 0.0125,
+              "trials": 160
+            },
+            "compare_1_3": {
+              "accuracy": 0.5416666666666666,
+              "chance": 0.3333333333333333,
+              "correct": 52,
+              "mean_output_spikes": 34.6875,
+              "silent_fraction": 0.0,
+              "trials": 96
+            },
+            "laterality": {
+              "accuracy": 1.0,
+              "chance": 0.5,
+              "correct": 64,
+              "mean_output_spikes": 32.5625,
+              "silent_fraction": 0.0,
+              "trials": 64
+            },
+            "numerosity_1_4": {
+              "accuracy": 0.4765625,
+              "chance": 0.25,
+              "correct": 61,
+              "mean_output_spikes": 17.046875,
+              "silent_fraction": 0.0625,
+              "trials": 128
+            }
+          },
+          "total_correct": 229,
+          "total_trials": 448
+        }
+      },
+      "reports": {
+        "v1": {
+          "final_plasticity": {
+            "changed_edges": 127035,
+            "edge_count": 6242118,
+            "mean_multiplier": 1.0002673864364624,
+            "mean_stability": 0.00544399069622159,
+            "mean_usage_ema": 0.003995136357843876,
+            "plastic_edge_count": 1247916,
+            "plastic_fraction": 0.2
+          },
+          "phase1_gate": null,
+          "result_path": "results\\phase1_stat\\seed_27\\v1.json",
+          "stage_summary": {
+            "addition_1_3": {
+              "after_accuracy": 0.2625,
+              "before_accuracy": 0.26875,
+              "delta_accuracy": -0.006249999999999978,
+              "training_accuracy": 0.27734375
+            },
+            "compare_1_3": {
+              "after_accuracy": 0.6041666666666666,
+              "before_accuracy": 0.5416666666666666,
+              "delta_accuracy": 0.0625,
+              "training_accuracy": 0.55859375
+            },
+            "laterality": {
+              "after_accuracy": 0.75,
+              "before_accuracy": 0.671875,
+              "delta_accuracy": 0.078125,
+              "training_accuracy": 0.76171875
+            },
+            "numerosity_1_4": {
+              "after_accuracy": 0.4375,
+              "before_accuracy": 0.3984375,
+              "delta_accuracy": 0.0390625,
+              "training_accuracy": 0.3828125
+            }
+          }
+        },
+        "v2": {
+          "final_plasticity": {
+            "changed_edges": 167048,
+            "edge_count": 6242118,
+            "mean_multiplier": 1.0040866136550903,
+            "mean_stability": 0.011455781757831573,
+            "mean_usage_ema": 0.008650419302284718,
+            "plastic_edge_count": 1247916,
+            "plastic_fraction": 0.2
+          },
+          "phase1_gate": {
+            "criterion": "prior tasks must first exceed chance+5pp, then survive later tasks at configured retention thresholds",
+            "passed": true,
+            "tasks": {
+              "compare_1_3": {
+                "chance": 0.3333333333333333,
+                "final_retention_accuracy": 0.5729166666666666,
+                "immediate_accuracy": 0.4166666666666667,
+                "measurable_learning": true,
+                "passed": true,
+                "required_accuracy": 0.4,
+                "retention_ratio": 1.3749999999999998
+              },
+              "laterality": {
+                "chance": 0.5,
+                "final_retention_accuracy": 1.0,
+                "immediate_accuracy": 0.609375,
+                "measurable_learning": true,
+                "passed": true,
+                "required_accuracy": 0.8,
+                "retention_ratio": 1.641025641025641
+              },
+              "numerosity_1_4": {
+                "chance": 0.25,
+                "final_retention_accuracy": 0.40625,
+                "immediate_accuracy": 0.359375,
+                "measurable_learning": true,
+                "passed": true,
+                "required_accuracy": 0.3,
+                "retention_ratio": 1.1304347826086956
+              }
+            }
+          },
+          "result_path": "results\\phase1_stat\\seed_27\\v2.json",
+          "stage_summary": {
+            "addition_1_3": {
+              "after_accuracy": 0.2875,
+              "before_accuracy": 0.375,
+              "delta_accuracy": -0.08750000000000002,
+              "training_accuracy": 0.3125
+            },
+            "compare_1_3": {
+              "after_accuracy": 0.4166666666666667,
+              "before_accuracy": 0.5208333333333334,
+              "delta_accuracy": -0.10416666666666669,
+              "training_accuracy": 0.494140625
+            },
+            "laterality": {
+              "after_accuracy": 0.609375,
+              "before_accuracy": 0.5625,
+              "delta_accuracy": 0.046875,
+              "training_accuracy": 0.634765625
+            },
+            "numerosity_1_4": {
+              "after_accuracy": 0.359375,
+              "before_accuracy": 0.28125,
+              "delta_accuracy": 0.078125,
+              "training_accuracy": 0.41015625
+            }
+          }
+        }
+      },
+      "seed": 27
+    }
+  ],
+  "summary": {
+    "macro_accuracy": {
+      "paired_delta": {
+        "mean": -0.008593749999999992,
+        "sd": 0.024693968364110877
+      },
+      "v1": {
+        "mean": 0.5500434027777777,
+        "sd": 0.02564685527033526
+      },
+      "v2": {
+        "mean": 0.5414496527777778,
+        "sd": 0.040050299772453966
+      }
+    },
+    "tasks": {
+      "addition_1_3": {
+        "paired_delta": {
+          "mean": -0.018750000000000006,
+          "sd": 0.03307189138830738
+        },
+        "per_seed": [
+          {
+            "delta": -0.03125,
+            "seed": 7,
+            "v1": 0.375,
+            "v2": 0.34375
+          },
+          {
+            "delta": -0.04375000000000001,
+            "seed": 17,
+            "v1": 0.34375,
+            "v2": 0.3
+          },
+          {
+            "delta": 0.01874999999999999,
+            "seed": 27,
+            "v1": 0.30625,
+            "v2": 0.325
+          }
+        ],
+        "seed_losses_v2": 2,
+        "seed_ties": 0,
+        "seed_wins_v2": 1,
+        "v1": {
+          "mean": 0.3416666666666667,
+          "sd": 0.03442231592053813
+        },
+        "v2": {
+          "mean": 0.3229166666666667,
+          "sd": 0.021949278651776545
+        }
+      },
+      "compare_1_3": {
+        "paired_delta": {
+          "mean": -0.05208333333333337,
+          "sd": 0.06505206248331667
+        },
+        "per_seed": [
+          {
+            "delta": 0.020833333333333315,
+            "seed": 7,
+            "v1": 0.46875,
+            "v2": 0.4895833333333333
+          },
+          {
+            "delta": -0.07291666666666669,
+            "seed": 17,
+            "v1": 0.46875,
+            "v2": 0.3958333333333333
+          },
+          {
+            "delta": -0.10416666666666674,
+            "seed": 27,
+            "v1": 0.6458333333333334,
+            "v2": 0.5416666666666666
+          }
+        ],
+        "seed_losses_v2": 2,
+        "seed_ties": 0,
+        "seed_wins_v2": 1,
+        "v1": {
+          "mean": 0.5277777777777778,
+          "sd": 0.10223911016899626
+        },
+        "v2": {
+          "mean": 0.4756944444444444,
+          "sd": 0.07390207171455819
+        }
+      },
+      "laterality": {
+        "paired_delta": {
+          "mean": -0.010416666666666666,
+          "sd": 0.018042195912175804
+        },
+        "per_seed": [
+          {
+            "delta": -0.03125,
+            "seed": 7,
+            "v1": 0.984375,
+            "v2": 0.953125
+          },
+          {
+            "delta": 0.0,
+            "seed": 17,
+            "v1": 0.984375,
+            "v2": 0.984375
+          },
+          {
+            "delta": 0.0,
+            "seed": 27,
+            "v1": 1.0,
+            "v2": 1.0
+          }
+        ],
+        "seed_losses_v2": 1,
+        "seed_ties": 2,
+        "seed_wins_v2": 0,
+        "v1": {
+          "mean": 0.9895833333333334,
+          "sd": 0.009021097956087902
+        },
+        "v2": {
+          "mean": 0.9791666666666666,
+          "sd": 0.023867581744561668
+        }
+      },
+      "numerosity_1_4": {
+        "paired_delta": {
+          "mean": 0.046875,
+          "sd": 0.07452650011069888
+        },
+        "per_seed": [
+          {
+            "delta": 0.0546875,
+            "seed": 7,
+            "v1": 0.28125,
+            "v2": 0.3359375
+          },
+          {
+            "delta": -0.03125,
+            "seed": 17,
+            "v1": 0.3828125,
+            "v2": 0.3515625
+          },
+          {
+            "delta": 0.1171875,
+            "seed": 27,
+            "v1": 0.359375,
+            "v2": 0.4765625
+          }
+        ],
+        "seed_losses_v2": 1,
+        "seed_ties": 0,
+        "seed_wins_v2": 2,
+        "v1": {
+          "mean": 0.3411458333333333,
+          "sd": 0.05317858816839098
+        },
+        "v2": {
+          "mean": 0.3880208333333333,
+          "sd": 0.07707629472369136
+        }
+      }
+    }
+  }
+}
