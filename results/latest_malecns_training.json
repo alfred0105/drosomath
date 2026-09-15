@@ -1,0 +1,608 @@
+{
+  "brain_training": {
+    "last_rows": [
+      {
+        "confidence": 0.8609748482704163,
+        "correct": true,
+        "edge_updates": 7260,
+        "output_spikes": 21,
+        "prediction": "RIGHT",
+        "reward": 1.0,
+        "target": "RIGHT",
+        "trial": 53
+      },
+      {
+        "confidence": 0.7701579928398132,
+        "correct": true,
+        "edge_updates": 3392,
+        "output_spikes": 12,
+        "prediction": "RIGHT",
+        "reward": 1.0,
+        "target": "RIGHT",
+        "trial": 54
+      },
+      {
+        "confidence": 0.797507643699646,
+        "correct": true,
+        "edge_updates": 5614,
+        "output_spikes": 15,
+        "prediction": "RIGHT",
+        "reward": 1.0,
+        "target": "RIGHT",
+        "trial": 55
+      },
+      {
+        "confidence": 0.7833983898162842,
+        "correct": true,
+        "edge_updates": 4857,
+        "output_spikes": 19,
+        "prediction": "LEFT",
+        "reward": 1.0,
+        "target": "LEFT",
+        "trial": 56
+      },
+      {
+        "confidence": 0.8265219926834106,
+        "correct": true,
+        "edge_updates": 6749,
+        "output_spikes": 17,
+        "prediction": "RIGHT",
+        "reward": 1.0,
+        "target": "RIGHT",
+        "trial": 57
+      },
+      {
+        "confidence": 0.8273851871490479,
+        "correct": true,
+        "edge_updates": 3293,
+        "output_spikes": 17,
+        "prediction": "LEFT",
+        "reward": 1.0,
+        "target": "LEFT",
+        "trial": 58
+      },
+      {
+        "confidence": 0.8233075141906738,
+        "correct": true,
+        "edge_updates": 8936,
+        "output_spikes": 57,
+        "prediction": "LEFT",
+        "reward": 1.0,
+        "target": "LEFT",
+        "trial": 59
+      },
+      {
+        "confidence": 0.9027684330940247,
+        "correct": true,
+        "edge_updates": 4465,
+        "output_spikes": 22,
+        "prediction": "RIGHT",
+        "reward": 1.0,
+        "target": "RIGHT",
+        "trial": 60
+      },
+      {
+        "confidence": 0.7865282297134399,
+        "correct": true,
+        "edge_updates": 3964,
+        "output_spikes": 15,
+        "prediction": "LEFT",
+        "reward": 1.0,
+        "target": "LEFT",
+        "trial": 61
+      },
+      {
+        "confidence": 0.8966953158378601,
+        "correct": true,
+        "edge_updates": 6969,
+        "output_spikes": 27,
+        "prediction": "LEFT",
+        "reward": 1.0,
+        "target": "LEFT",
+        "trial": 62
+      },
+      {
+        "confidence": 0.7816709280014038,
+        "correct": true,
+        "edge_updates": 7655,
+        "output_spikes": 22,
+        "prediction": "RIGHT",
+        "reward": 1.0,
+        "target": "RIGHT",
+        "trial": 63
+      },
+      {
+        "confidence": 0.823631227016449,
+        "correct": true,
+        "edge_updates": 7733,
+        "output_spikes": 22,
+        "prediction": "RIGHT",
+        "reward": 1.0,
+        "target": "RIGHT",
+        "trial": 64
+      }
+    ],
+    "plasticity": {
+      "edge_count": 6242118,
+      "mean_multiplier": 1.0008798837661743,
+      "mean_stability": 0.0007859859615564346,
+      "mean_usage_ema": 0.0019250240875408053,
+      "plastic_edge_count": 312534
+    },
+    "training_accuracy": 1.0,
+    "trials": 64
+  },
+  "checkpoint": {
+    "changed_edge_count": 26438,
+    "output_weight_shape": [
+      2,
+      512
+    ],
+    "path": "checkpoints\\latest_malecns_training.npz"
+  },
+  "config": {
+    "brain_input_fraction": 0.65,
+    "brain_stimulus_rate_hz": 250.0,
+    "brain_trials": 64,
+    "budget_strength": 0.25,
+    "decoder_epochs": 8,
+    "decoder_learning_rate": 0.08,
+    "decoder_stimulus_rate_hz": 350.0,
+    "duration_ms": 20.0,
+    "input_per_side": 32,
+    "min_connection_synapses": 5,
+    "output_population_size": 512,
+    "plastic_fraction": 0.05,
+    "seed": 0,
+    "synaptic_learning_rate": 0.02,
+    "validation_trials_per_class": 4
+  },
+  "connectome": {
+    "dataset": "MaleCNS v1.0 / HHMI Janelia",
+    "edge_count": 6242118,
+    "inhibitory_neuron_fraction": 0.355500899820036,
+    "min_connection_synapses": 5,
+    "neuron_count": 166700,
+    "sign_model": "presynaptic consensus_nt in {gaba, glutamate, histamine} -> inhibitory; all other/unclear -> positive drive",
+    "synapse_count_in_loaded_edges": 89860280
+  },
+  "decoder_training": {
+    "last_rows": [
+      {
+        "confidence_after": 0.9161033630371094,
+        "loss": 0.1929154324042294,
+        "output_spikes": 40,
+        "prediction_after": "RIGHT",
+        "prediction_before": "RIGHT",
+        "target": "RIGHT"
+      },
+      {
+        "confidence_after": 0.9462022185325623,
+        "loss": 0.09004616908460406,
+        "output_spikes": 53,
+        "prediction_after": "LEFT",
+        "prediction_before": "LEFT",
+        "target": "LEFT"
+      },
+      {
+        "confidence_after": 0.9276390075683594,
+        "loss": 0.12196103665766252,
+        "output_spikes": 40,
+        "prediction_after": "LEFT",
+        "prediction_before": "LEFT",
+        "target": "LEFT"
+      },
+      {
+        "confidence_after": 0.9683595299720764,
+        "loss": 0.03811955878209181,
+        "output_spikes": 43,
+        "prediction_after": "RIGHT",
+        "prediction_before": "RIGHT",
+        "target": "RIGHT"
+      },
+      {
+        "confidence_after": 0.9346491694450378,
+        "loss": 0.1545188062589674,
+        "output_spikes": 56,
+        "prediction_after": "LEFT",
+        "prediction_before": "LEFT",
+        "target": "LEFT"
+      },
+      {
+        "confidence_after": 0.9307647943496704,
+        "loss": 0.08990008498281399,
+        "output_spikes": 24,
+        "prediction_after": "RIGHT",
+        "prediction_before": "RIGHT",
+        "target": "RIGHT"
+      },
+      {
+        "confidence_after": 0.9380767941474915,
+        "loss": 0.08347087217419939,
+        "output_spikes": 29,
+        "prediction_after": "RIGHT",
+        "prediction_before": "RIGHT",
+        "target": "RIGHT"
+      },
+      {
+        "confidence_after": 0.975064218044281,
+        "loss": 0.028556467327553334,
+        "output_spikes": 38,
+        "prediction_after": "LEFT",
+        "prediction_before": "LEFT",
+        "target": "LEFT"
+      }
+    ],
+    "steps": 16
+  },
+  "evaluation": {
+    "after": [
+      {
+        "confidence": 0.9499096274375916,
+        "correct": true,
+        "prediction": "LEFT",
+        "readout": {
+          "frozen": true,
+          "labels": [
+            "LEFT",
+            "RIGHT"
+          ],
+          "population_size": 512,
+          "population_source": "explicit_body_ids",
+          "train_steps": 16
+        },
+        "target": "LEFT",
+        "total_output_spikes": 39
+      },
+      {
+        "confidence": 0.9503591060638428,
+        "correct": true,
+        "prediction": "LEFT",
+        "readout": {
+          "frozen": true,
+          "labels": [
+            "LEFT",
+            "RIGHT"
+          ],
+          "population_size": 512,
+          "population_source": "explicit_body_ids",
+          "train_steps": 16
+        },
+        "target": "LEFT",
+        "total_output_spikes": 51
+      },
+      {
+        "confidence": 0.8766269683837891,
+        "correct": true,
+        "prediction": "LEFT",
+        "readout": {
+          "frozen": true,
+          "labels": [
+            "LEFT",
+            "RIGHT"
+          ],
+          "population_size": 512,
+          "population_source": "explicit_body_ids",
+          "train_steps": 16
+        },
+        "target": "LEFT",
+        "total_output_spikes": 31
+      },
+      {
+        "confidence": 0.9058059453964233,
+        "correct": true,
+        "prediction": "LEFT",
+        "readout": {
+          "frozen": true,
+          "labels": [
+            "LEFT",
+            "RIGHT"
+          ],
+          "population_size": 512,
+          "population_source": "explicit_body_ids",
+          "train_steps": 16
+        },
+        "target": "LEFT",
+        "total_output_spikes": 36
+      },
+      {
+        "confidence": 0.9341975450515747,
+        "correct": true,
+        "prediction": "RIGHT",
+        "readout": {
+          "frozen": true,
+          "labels": [
+            "LEFT",
+            "RIGHT"
+          ],
+          "population_size": 512,
+          "population_source": "explicit_body_ids",
+          "train_steps": 16
+        },
+        "target": "RIGHT",
+        "total_output_spikes": 33
+      },
+      {
+        "confidence": 0.7470608949661255,
+        "correct": true,
+        "prediction": "RIGHT",
+        "readout": {
+          "frozen": true,
+          "labels": [
+            "LEFT",
+            "RIGHT"
+          ],
+          "population_size": 512,
+          "population_source": "explicit_body_ids",
+          "train_steps": 16
+        },
+        "target": "RIGHT",
+        "total_output_spikes": 16
+      },
+      {
+        "confidence": 0.9700628519058228,
+        "correct": true,
+        "prediction": "RIGHT",
+        "readout": {
+          "frozen": true,
+          "labels": [
+            "LEFT",
+            "RIGHT"
+          ],
+          "population_size": 512,
+          "population_source": "explicit_body_ids",
+          "train_steps": 16
+        },
+        "target": "RIGHT",
+        "total_output_spikes": 37
+      },
+      {
+        "confidence": 0.9486086368560791,
+        "correct": true,
+        "prediction": "RIGHT",
+        "readout": {
+          "frozen": true,
+          "labels": [
+            "LEFT",
+            "RIGHT"
+          ],
+          "population_size": 512,
+          "population_source": "explicit_body_ids",
+          "train_steps": 16
+        },
+        "target": "RIGHT",
+        "total_output_spikes": 32
+      }
+    ],
+    "after_brain_training_accuracy": 1.0,
+    "before": [
+      {
+        "confidence": 0.8924722075462341,
+        "correct": true,
+        "prediction": "LEFT",
+        "readout": {
+          "frozen": true,
+          "labels": [
+            "LEFT",
+            "RIGHT"
+          ],
+          "population_size": 512,
+          "population_source": "explicit_body_ids",
+          "train_steps": 16
+        },
+        "target": "LEFT",
+        "total_output_spikes": 38
+      },
+      {
+        "confidence": 0.9494912624359131,
+        "correct": true,
+        "prediction": "LEFT",
+        "readout": {
+          "frozen": true,
+          "labels": [
+            "LEFT",
+            "RIGHT"
+          ],
+          "population_size": 512,
+          "population_source": "explicit_body_ids",
+          "train_steps": 16
+        },
+        "target": "LEFT",
+        "total_output_spikes": 52
+      },
+      {
+        "confidence": 0.9787275195121765,
+        "correct": true,
+        "prediction": "LEFT",
+        "readout": {
+          "frozen": true,
+          "labels": [
+            "LEFT",
+            "RIGHT"
+          ],
+          "population_size": 512,
+          "population_source": "explicit_body_ids",
+          "train_steps": 16
+        },
+        "target": "LEFT",
+        "total_output_spikes": 50
+      },
+      {
+        "confidence": 0.9405820965766907,
+        "correct": true,
+        "prediction": "LEFT",
+        "readout": {
+          "frozen": true,
+          "labels": [
+            "LEFT",
+            "RIGHT"
+          ],
+          "population_size": 512,
+          "population_source": "explicit_body_ids",
+          "train_steps": 16
+        },
+        "target": "LEFT",
+        "total_output_spikes": 33
+      },
+      {
+        "confidence": 0.9141636490821838,
+        "correct": true,
+        "prediction": "RIGHT",
+        "readout": {
+          "frozen": true,
+          "labels": [
+            "LEFT",
+            "RIGHT"
+          ],
+          "population_size": 512,
+          "population_source": "explicit_body_ids",
+          "train_steps": 16
+        },
+        "target": "RIGHT",
+        "total_output_spikes": 25
+      },
+      {
+        "confidence": 0.8010615110397339,
+        "correct": true,
+        "prediction": "RIGHT",
+        "readout": {
+          "frozen": true,
+          "labels": [
+            "LEFT",
+            "RIGHT"
+          ],
+          "population_size": 512,
+          "population_source": "explicit_body_ids",
+          "train_steps": 16
+        },
+        "target": "RIGHT",
+        "total_output_spikes": 18
+      },
+      {
+        "confidence": 0.9284805059432983,
+        "correct": true,
+        "prediction": "RIGHT",
+        "readout": {
+          "frozen": true,
+          "labels": [
+            "LEFT",
+            "RIGHT"
+          ],
+          "population_size": 512,
+          "population_source": "explicit_body_ids",
+          "train_steps": 16
+        },
+        "target": "RIGHT",
+        "total_output_spikes": 26
+      },
+      {
+        "confidence": 0.7924653887748718,
+        "correct": true,
+        "prediction": "RIGHT",
+        "readout": {
+          "frozen": true,
+          "labels": [
+            "LEFT",
+            "RIGHT"
+          ],
+          "population_size": 512,
+          "population_source": "explicit_body_ids",
+          "train_steps": 16
+        },
+        "target": "RIGHT",
+        "total_output_spikes": 17
+      }
+    ],
+    "before_brain_training_accuracy": 1.0,
+    "delta_accuracy": 0.0
+  },
+  "experiment": "malecns_first_output_curriculum_v1",
+  "populations": {
+    "input_side_field": "deterministic_split",
+    "input_superclass": "visual_projection",
+    "left_input_count": 32,
+    "output_count": 512,
+    "output_superclass": "descending_neuron",
+    "right_input_count": 32
+  },
+  "readout": {
+    "frozen": true,
+    "labels": [
+      "LEFT",
+      "RIGHT"
+    ],
+    "population_size": 512,
+    "population_source": "explicit_body_ids",
+    "train_steps": 16
+  },
+  "stimulus_body_ids": {
+    "LEFT": [
+      10398,
+      10309,
+      10439,
+      10229,
+      10250,
+      10450,
+      13532,
+      10685,
+      10149,
+      512309,
+      10764,
+      10579,
+      10272,
+      524331,
+      10164,
+      10121,
+      10190,
+      513930,
+      10312,
+      11375,
+      11435,
+      10675,
+      12957,
+      10771,
+      11291,
+      10481,
+      11187,
+      519658,
+      11161,
+      11219,
+      11077,
+      13740
+    ],
+    "RIGHT": [
+      10682,
+      10372,
+      10485,
+      10335,
+      10231,
+      10387,
+      10266,
+      11055,
+      10476,
+      10693,
+      10400,
+      10200,
+      10445,
+      10248,
+      551781,
+      16286,
+      11009,
+      10896,
+      10170,
+      11522,
+      523062,
+      10067,
+      10796,
+      10718,
+      10214,
+      10936,
+      21071,
+      10480,
+      13984,
+      520798,
+      10178,
+      14207
+    ]
+  }
+}
