@@ -55,6 +55,75 @@ class MaleCNSAdaptiveVisualizationTests(unittest.TestCase):
             self.assertTrue(output.is_file())
             self.assertGreater(output.stat().st_size, 1000)
 
+    def test_memory_v2_dashboard_and_live_runner_import(self) -> None:
+        from drosomath.malecns.curriculum_v2_memory import MemoryV2Config
+        from drosomath.malecns.live_memory_v2 import LiveMemoryV2Runner
+        from drosomath.malecns.visualize_memory_v2 import build_memory_v2_html
+
+        config = MemoryV2Config(stage_trials=8, replay_interval=2)
+        self.assertEqual(config.replay_interval, 2)
+        self.assertTrue(callable(LiveMemoryV2Runner))
+
+        report = {
+            "experiment": "malecns_memory_v2",
+            "config": {
+                "replay_interval": 4,
+                "consolidation_top_fraction": 0.15,
+            },
+            "connectome": {"neuron_count": 166700, "edge_count": 6242118},
+            "stages": [
+                {
+                    "stage": "laterality",
+                    "before_accuracy": 0.5,
+                    "after_accuracy": 0.7,
+                    "delta_accuracy": 0.2,
+                    "training_accuracy": 0.65,
+                    "replay": {"count": 0, "accuracy": None},
+                }
+            ],
+            "phase1_gate": {
+                "passed": True,
+                "tasks": {
+                    "laterality": {
+                        "immediate_accuracy": 0.9,
+                        "final_retention_accuracy": 0.9,
+                        "retention_ratio": 1.0,
+                        "required_accuracy": 0.8,
+                        "passed": True,
+                    }
+                },
+            },
+            "v1_comparison": {
+                "final_retention": {
+                    "laterality": {
+                        "v1_accuracy": 1.0,
+                        "v2_accuracy": 1.0,
+                        "delta_accuracy": 0.0,
+                    }
+                }
+            },
+            "consolidation_history": [
+                {"after_stage": "laterality", "consolidated_edges": 20, "mean_stability_gain": 0.2}
+            ],
+            "replay_history": [{"count": 0, "accuracy": None}],
+            "retention_history": [
+                {"after_stage": "laterality", "tasks": {"laterality": {"accuracy": 1.0, "silent_fraction": 0.0}}}
+            ],
+            "final_plasticity": {
+                "changed_edges": 100,
+                "plastic_edge_count": 1000,
+                "plastic_fraction": 0.2,
+                "mean_multiplier": 1.01,
+                "mean_usage_ema": 0.02,
+                "mean_stability": 0.03,
+            },
+        }
+        page = build_memory_v2_html(report)
+        self.assertIn("Phase 1 Memory v2", page)
+        self.assertIn("v1 vs v2", page)
+        self.assertIn("PASS", page)
+        self.assertGreater(len(page), 1000)
+
 
 if __name__ == "__main__":
     unittest.main()
