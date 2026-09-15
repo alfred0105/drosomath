@@ -4,6 +4,41 @@ from dataclasses import asdict, is_dataclass
 from pathlib import Path
 
 
+def save_readout_checkpoint(path: str | Path, readout) -> dict[str, object]:
+    np = readout.np
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(
+        path,
+        weights=readout.weights,
+        bias=readout.bias,
+        labels=np.asarray(readout.labels, dtype="U64"),
+        output_body_ids=np.asarray(readout.population.body_ids, dtype=np.int64),
+        train_steps=np.asarray([readout.train_steps], dtype=np.int64),
+        frozen=np.asarray([readout.frozen], dtype=np.bool_),
+    )
+    return {"path": str(path), "labels": list(readout.labels), "train_steps": readout.train_steps}
+
+
+def restore_readout_checkpoint(path: str | Path, readout) -> dict[str, object]:
+    np = readout.np
+    path = Path(path)
+    with np.load(path, allow_pickle=False) as data:
+        labels = tuple(str(x) for x in data["labels"].tolist())
+        body_ids = tuple(int(x) for x in data["output_body_ids"].tolist())
+        if labels != tuple(readout.labels):
+            raise ValueError("readout labels do not match checkpoint")
+        if body_ids != tuple(readout.population.body_ids):
+            raise ValueError("output population does not match checkpoint")
+        if data["weights"].shape != readout.weights.shape:
+            raise ValueError("readout weight shape mismatch")
+        readout.weights[:] = data["weights"]
+        readout.bias[:] = data["bias"]
+        readout.train_steps = int(data["train_steps"][0])
+        readout.frozen = bool(data["frozen"][0])
+    return {"path": str(path), "labels": list(labels), "train_steps": readout.train_steps}
+
+
 def save_learning_checkpoint(
     path: str | Path,
     *,
@@ -13,12 +48,7 @@ def save_learning_checkpoint(
     completed_trials: int = 0,
     stage: str = "",
 ) -> dict[str, object]:
-    """Persist long-term learned state without copying the immutable anatomy.
-
-    Eligibility is intentionally not saved: it is a short-lived credit trace.
-    Multipliers, stability and usage are saved because they are persistent
-    learned state. The checkpoint validates graph size before restoration.
-    """
+    """Persist long-term learned state without copying immutable anatomy."""
     np = brain.np
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
