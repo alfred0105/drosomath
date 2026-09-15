@@ -108,6 +108,37 @@ class WholeBrainPlasticityTests(unittest.TestCase):
         brain.reset_all()
         self.assertAlmostEqual(float(brain.plasticity.multiplier[0]), 1.0)
 
+    def test_live_telemetry_samples_actual_transmitted_edges(self) -> None:
+        import numpy as np
+
+        from drosomath.flywire_real import FlyWireConnectome
+        from drosomath.whole_brain import PlasticSparseFlyBrain
+
+        connectome = FlyWireConnectome(
+            flywire_ids=np.asarray([101, 102, 103], dtype=np.int64),
+            indptr=np.asarray([0, 2, 2, 2], dtype=np.int64),
+            post_indices=np.asarray([1, 2], dtype=np.int32),
+            signed_synapse_counts=np.asarray([12.0, -8.0], dtype=np.float32),
+            outgoing_strength=np.asarray([20.0, 0.0, 0.0], dtype=np.float32),
+        )
+        brain = PlasticSparseFlyBrain(connectome)
+        brain.configure_live_telemetry(
+            True,
+            max_active_edges=1,
+            edges_per_firing_neuron=2,
+        )
+        transferred = brain._schedule_spike_outputs(np.asarray([0], dtype=np.int32))
+        snap = brain.live_telemetry_snapshot()
+
+        self.assertEqual(transferred, 2)
+        self.assertEqual(snap["fired_neuron_count"], 1)
+        self.assertEqual(snap["fired_neuron_ids"], [101])
+        self.assertEqual(snap["transferred_synapses"], 2)
+        self.assertEqual(len(snap["active_edges"]), 1)
+        self.assertEqual(snap["active_edges"][0]["pre_id"], 101)
+        self.assertEqual(snap["active_edges"][0]["post_id"], 102)
+        self.assertGreater(abs(snap["active_edges"][0]["signal_mv"]), 0.0)
+
 
 if __name__ == "__main__":
     unittest.main()
