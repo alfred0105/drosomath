@@ -24,6 +24,7 @@ drosomath-live = "drosomath.dual_live:main"
 drosomath-single-live = "drosomath.live:main"
 drosomath-flybrain = "drosomath.flywire_real:main"
 drosomath-malecns = "drosomath.malecns.brain:main"
+drosomath-malecns-train = "drosomath.malecns.first_training:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
