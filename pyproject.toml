@@ -27,12 +27,13 @@ drosomath-malecns = "drosomath.malecns.brain:main"
 drosomath-malecns-train = "drosomath.malecns.first_training:main"
 drosomath-malecns-adaptive = "drosomath.malecns.adaptive_training:main"
 drosomath-malecns-viz = "drosomath.malecns.visualize_training:main"
+drosomath-malecns-live = "drosomath.malecns.live_training:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-drosomath = ["live_dashboard.html", "dual_live_dashboard.html"]
+drosomath = ["live_dashboard.html", "dual_live_dashboard.html", "malecns/live_training_dashboard.html"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
