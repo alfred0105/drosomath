@@ -48,7 +48,7 @@ class MaleCNSOutputSession:
 
     A silent output population is represented explicitly as ``NO_OUTPUT``.
     This prevents the decoder bias from turning zero-spike trials into an
-    arbitrary LEFT/RIGHT (or other task-label) response.
+    arbitrary task-label response.
     """
 
     def __init__(
@@ -130,7 +130,6 @@ class MaleCNSOutputSession:
         )
 
     def train_decoder_on_features(self, features, *, target: str) -> ReadoutTrainResult:
-        """Train only the external decoder from already-collected population features."""
         return self.readout.train(features, target=target)
 
     def train_decoder_trial(
@@ -141,7 +140,6 @@ class MaleCNSOutputSession:
         duration_ms: float = 20.0,
         stimulus_rate_hz: float = 300.0,
     ) -> tuple[OutputObservation, ReadoutTrainResult]:
-        """Phase A: learn the output language without modifying the CNS."""
         previous = self.brain.set_plasticity_tracking(False)
         try:
             observation = self._run_window(
@@ -165,7 +163,6 @@ class MaleCNSOutputSession:
         duration_ms: float = 20.0,
         stimulus_rate_hz: float = 300.0,
     ) -> BrainOutputTrialResult:
-        """Phase B: freeze the decoder and train only MaleCNS synaptic state."""
         if not self.readout.frozen:
             raise RuntimeError("freeze the output decoder before training the CNS")
         if target not in self.readout.labels:
@@ -209,15 +206,9 @@ class MaleCNSOutputSession:
         duration_ms: float = 20.0,
         stimulus_rate_hz: float = 300.0,
     ) -> dict[str, object]:
-        """Evaluate with both decoder and CNS plasticity frozen."""
         previous = self.brain.set_plasticity_tracking(False)
         try:
             observation = self._run_window(
-                stimulus_body_ids=stimulus_body_ids,
-                target=target,
-                duration_ms=duration_ms,
-                stimulus_rate_hz=stimulus_rate_hz,
-            ) if False else self._run_window(
                 stimulus_body_ids=stimulus_body_ids,
                 duration_ms=duration_ms,
                 stimulus_rate_hz=stimulus_rate_hz,
