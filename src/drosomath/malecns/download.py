@@ -30,9 +30,11 @@ def missing_files(data_dir: str | Path = DEFAULT_DATA_DIR) -> tuple[str, ...]:
 
 
 def _download_with_curl(url: str, destination: Path) -> None:
+    """Resume into .part and publish the destination only after curl succeeds."""
     curl = shutil.which("curl") or shutil.which("curl.exe")
     if curl is None:
         raise FileNotFoundError("curl executable not found")
+    partial = destination.with_suffix(destination.suffix + ".part")
     subprocess.run(
         [
             curl,
@@ -43,15 +45,16 @@ def _download_with_curl(url: str, destination: Path) -> None:
             "-C",
             "-",
             "-o",
-            str(destination),
+            str(partial),
             url,
         ],
         check=True,
     )
+    partial.replace(destination)
 
 
 def _download_with_urllib(url: str, destination: Path) -> None:
-    # Fallback path for systems without curl. It does not resume partial files.
+    # Fallback path for systems without curl. It restarts the .part file.
     partial = destination.with_suffix(destination.suffix + ".part")
     with urllib.request.urlopen(url) as response, partial.open("wb") as handle:
         while True:
@@ -69,8 +72,9 @@ def download_malecns(
 ) -> tuple[Path, ...]:
     """Download the three public MaleCNS v1.0 flat-connectome tables we need.
 
-    Existing non-empty files are kept. curl is preferred because the 1.1 GB
-    weights table can be resumed; urllib is a portable fallback.
+    Existing completed files are kept. curl is preferred because the 1.1 GB
+    weights table can be resumed from its ``.part`` file. The final filename is
+    created only after the transfer exits successfully.
     """
     root = Path(data_dir)
     root.mkdir(parents=True, exist_ok=True)
