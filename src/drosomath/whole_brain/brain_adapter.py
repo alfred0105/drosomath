@@ -16,6 +16,11 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
     stored in ``plasticity.multiplier`` and related compact float32 arrays.
     Plasticity tracking can be disabled while an external decoder is being
     trained, so that readout pretraining does not contaminate the brain state.
+
+    Live telemetry is opt-in. The simulator still computes the full sparse
+    graph, but only a capped sample of the strongest recently transmitted edges
+    is copied for visualization. This avoids turning a 6M-edge simulation into
+    a browser-rendering benchmark.
     """
 
     def __init__(
@@ -49,6 +54,17 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
         self.plasticity_tracking_enabled = True
         self._recent_presynaptic: set[int] = set()
 
+        self._telemetry_enabled = False
+        self._telemetry_max_edges = 128
+        self._telemetry_edges_per_neuron = 4
+        self._last_telemetry: dict[str, object] = {
+            "step": 0,
+            "fired_neuron_ids": [],
+            "fired_neuron_count": 0,
+            "transferred_synapses": 0,
+            "active_edges": [],
+        }
+
     def set_plasticity_tracking(self, enabled: bool) -> bool:
         """Enable/disable usage and eligibility recording.
 
@@ -63,6 +79,41 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
             self.plasticity.clear_eligibility()
         return previous
 
+    def configure_live_telemetry(
+        self,
+        enabled: bool = True,
+        *,
+        max_active_edges: int = 128,
+        edges_per_firing_neuron: int = 4,
+    ) -> None:
+        """Enable a bounded visualization sample of recent spike transfers."""
+        if max_active_edges < 1:
+            raise ValueError("max_active_edges must be >= 1")
+        if edges_per_firing_neuron < 1:
+            raise ValueError("edges_per_firing_neuron must be >= 1")
+        self._telemetry_enabled = bool(enabled)
+        self._telemetry_max_edges = int(max_active_edges)
+        self._telemetry_edges_per_neuron = int(edges_per_firing_neuron)
+        if not self._telemetry_enabled:
+            self._last_telemetry = {
+                "step": int(self.step_index),
+                "fired_neuron_ids": [],
+                "fired_neuron_count": 0,
+                "transferred_synapses": 0,
+                "active_edges": [],
+            }
+
+    def live_telemetry_snapshot(self) -> dict[str, object]:
+        """Return the latest immutable-ish telemetry payload for UI polling."""
+        snap = self._last_telemetry
+        return {
+            "step": int(snap["step"]),
+            "fired_neuron_ids": list(snap["fired_neuron_ids"]),
+            "fired_neuron_count": int(snap["fired_neuron_count"]),
+            "transferred_synapses": int(snap["transferred_synapses"]),
+            "active_edges": [dict(row) for row in snap["active_edges"]],
+        }
+
     def reset(self) -> None:
         """Reset fast neural state while deliberately preserving learned memory."""
         super().reset()
@@ -73,9 +124,58 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
         self.reset()
         self.plasticity.reset_learning_state()
 
+    def _neuron_identifier(self, index: int) -> int:
+        ids = getattr(self.connectome, "body_ids", None)
+        if ids is None:
+            ids = getattr(self.connectome, "flywire_ids")
+        return int(ids[int(index)])
+
+    def _sample_live_edges(self, *, pre: int, start: int, stop: int, effective) -> list[dict[str, object]]:
+        np = self.np
+        count = stop - start
+        if count <= 0:
+            return []
+        k = min(self._telemetry_edges_per_neuron, count)
+        magnitude = np.abs(effective)
+        if count <= k:
+            local = np.arange(count, dtype=np.int32)
+        else:
+            local = np.argpartition(magnitude, -k)[-k:]
+            local = local[np.argsort(magnitude[local])[::-1]]
+
+        rows: list[dict[str, object]] = []
+        posts = self.connectome.post_indices
+        base = self.connectome.signed_synapse_counts
+        scale = self.params.mv_per_synapse
+        for rel_raw in local:
+            rel = int(rel_raw)
+            edge = start + rel
+            post = int(posts[edge])
+            rows.append(
+                {
+                    "edge_index": int(edge),
+                    "pre_id": self._neuron_identifier(pre),
+                    "post_id": self._neuron_identifier(post),
+                    "base_signed_synapses": float(base[edge]),
+                    "multiplier": float(self.plasticity.multiplier[edge]),
+                    "signal_mv": float(effective[rel] * scale),
+                    "stability": float(self.plasticity.stability[edge]),
+                    "usage_ema": float(self.plasticity.usage_ema[edge]),
+                }
+            )
+        return rows
+
     def _schedule_spike_outputs(self, fired_indices) -> int:
         np = self.np
         if len(fired_indices) == 0:
+            if self._telemetry_enabled:
+                self._last_telemetry = {
+                    "step": int(self.step_index),
+                    "fired_neuron_ids": [],
+                    "fired_neuron_count": 0,
+                    "transferred_synapses": 0,
+                    "active_edges": [],
+                }
             return 0
 
         target_slot = self._delay_ring[
@@ -86,6 +186,7 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
         indptr = self.connectome.indptr
         posts = self.connectome.post_indices
         base_signed = self.connectome.signed_synapse_counts
+        telemetry_edges: list[dict[str, object]] = []
 
         for pre_raw in fired_indices:
             pre = int(pre_raw)
@@ -101,6 +202,11 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
             )
             np.add.at(target_slot, posts[start:stop], effective * scale)
 
+            if self._telemetry_enabled and len(telemetry_edges) < self._telemetry_max_edges:
+                telemetry_edges.extend(
+                    self._sample_live_edges(pre=pre, start=start, stop=stop, effective=effective)
+                )
+
             if self.plasticity_tracking_enabled:
                 self.plasticity.record_use_slice(
                     start,
@@ -110,6 +216,22 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
                 )
                 self._recent_presynaptic.add(pre)
             transferred += stop - start
+
+        if self._telemetry_enabled:
+            if len(telemetry_edges) > self._telemetry_max_edges:
+                telemetry_edges = sorted(
+                    telemetry_edges,
+                    key=lambda row: abs(float(row["signal_mv"])),
+                    reverse=True,
+                )[: self._telemetry_max_edges]
+            fired_ids = [self._neuron_identifier(int(x)) for x in fired_indices[:256]]
+            self._last_telemetry = {
+                "step": int(self.step_index),
+                "fired_neuron_ids": fired_ids,
+                "fired_neuron_count": int(len(fired_indices)),
+                "transferred_synapses": int(transferred),
+                "active_edges": telemetry_edges,
+            }
 
         return transferred
 
