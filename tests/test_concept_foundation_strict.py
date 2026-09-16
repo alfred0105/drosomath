@@ -2,7 +2,7 @@ import unittest
 
 
 class StrictConceptFoundationGateTests(unittest.TestCase):
-    def _report(self, *, before=0.50, after=0.85, train=0.90, final=0.82):
+    def _report(self, *, before=0.50, after=0.85, final=0.82):
         names = ["object_presence", "single_vs_multiple", "latent_quantity_1_3"]
         thresholds = [0.80, 0.70, 0.50]
         chances = [0.50, 0.50, 1 / 3]
@@ -14,7 +14,7 @@ class StrictConceptFoundationGateTests(unittest.TestCase):
             stages.append({
                 "stage": name,
                 "before_heldout": {"accuracy": pre},
-                "after_train": {"accuracy": min(1.0, max(train, held))},
+                "after_train": {"accuracy": min(1.0, held + 0.05)},
                 "after_heldout": {"accuracy": held, "chance": chance},
             })
             final_tasks[name] = {"heldout_accuracy": max(final, threshold)}
