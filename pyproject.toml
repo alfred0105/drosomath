@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "drosomath"
+version = "0.1.0"
+description = "Experimental Drosophila-connectome spiking learning platform"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+wholebrain = ["numpy"]
+flywire = ["numpy", "pyarrow"]
+malecns = ["numpy", "pyarrow"]
+
+[project.scripts]
+drosomath-demo = "drosomath.demo:main"
+drosomath-memory-demo = "drosomath.memory_demo:main"
+drosomath-ablation-demo = "drosomath.ablation_demo:main"
+drosomath-interference = "drosomath.interference_v2:main"
+drosomath-live = "drosomath.dual_live:main"
+drosomath-single-live = "drosomath.live:main"
+drosomath-flybrain = "drosomath.flywire_real:main"
+drosomath-malecns = "drosomath.malecns.brain:main"
+drosomath-malecns-train = "drosomath.malecns.first_training:main"
+drosomath-malecns-adaptive = "drosomath.malecns.adaptive_training:main"
+drosomath-malecns-viz = "drosomath.malecns.visualize_training:main"
+drosomath-malecns-live = "drosomath.malecns.live_training:main"
+drosomath-malecns-v1 = "drosomath.malecns.curriculum_v1:main"
+drosomath-malecns-v1-viz = "drosomath.malecns.visualize_curriculum:main"
+drosomath-malecns-memory-v2 = "drosomath.malecns.curriculum_v2_memory:main"
+drosomath-malecns-memory-v2-viz = "drosomath.malecns.visualize_memory_v2:main"
+drosomath-malecns-memory-v2-live = "drosomath.malecns.live_memory_v2:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+drosomath = ["live_dashboard.html", "dual_live_dashboard.html", "malecns/live_training_dashboard.html"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

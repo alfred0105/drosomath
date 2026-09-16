@@ -1,0 +1,64 @@
+{
+  "variants": [
+    {
+      "forgetting": {
+        "pattern_A": 0.0,
+        "pattern_B": 0.0
+      },
+      "mean_forgetting": 0.0,
+      "mean_retention": 1.0,
+      "name": "reward_only",
+      "retention": {
+        "pattern_A": 1.0,
+        "pattern_B": 1.0
+      },
+      "synapse_count": 5,
+      "tasks": 2
+    },
+    {
+      "forgetting": {
+        "pattern_A": 0.0,
+        "pattern_B": 0.0
+      },
+      "mean_forgetting": 0.0,
+      "mean_retention": 1.0,
+      "name": "reward_plus_stdp",
+      "retention": {
+        "pattern_A": 1.0,
+        "pattern_B": 1.0
+      },
+      "synapse_count": 5,
+      "tasks": 2
+    },
+    {
+      "forgetting": {
+        "pattern_A": 0.0,
+        "pattern_B": 0.0
+      },
+      "mean_forgetting": 0.0,
+      "mean_retention": 1.0,
+      "name": "reward_plus_consolidation",
+      "retention": {
+        "pattern_A": 1.0,
+        "pattern_B": 1.0
+      },
+      "synapse_count": 5,
+      "tasks": 2
+    },
+    {
+      "forgetting": {
+        "pattern_A": 0.0,
+        "pattern_B": 0.0
+      },
+      "mean_forgetting": 0.0,
+      "mean_retention": 1.0,
+      "name": "reward_stdp_consolidation_rewiring",
+      "retention": {
+        "pattern_A": 1.0,
+        "pattern_B": 1.0
+      },
+      "synapse_count": 5,
+      "tasks": 2
+    }
+  ]
+}

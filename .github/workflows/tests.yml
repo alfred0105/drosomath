@@ -1,0 +1,43 @@
+name: tests
+
+on:
+  push:
+    paths-ignore:
+      - "results/**"
+  pull_request:
+    paths-ignore:
+      - "results/**"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: python -m pip install -e ".[wholebrain,malecns]"
+      - name: Test
+        run: python -m unittest discover -s tests -v
+      - name: Core demo smoke test
+        run: drosomath-demo
+      - name: Continual-memory demo smoke test
+        run: drosomath-memory-demo
+      - name: Ablation benchmark smoke test
+        run: drosomath-ablation-demo
+      - name: Interference benchmark smoke test
+        run: drosomath-interference --runs 2
+      - name: Single live dashboard smoke test
+        run: python -m drosomath.live --smoke
+      - name: Dual live dashboard smoke test
+        run: python -m drosomath.dual_live --smoke
+      - name: One-command benchmark runner smoke test
+        shell: pwsh
+        run: ./bench.ps1 -NoPush
+      - name: One-command interference runner smoke test
+        shell: pwsh
+        run: ./interference.ps1 -Runs 2 -NoPush

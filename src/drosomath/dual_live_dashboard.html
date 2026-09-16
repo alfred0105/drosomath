@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DrosoMath Dual Live</title>
+<style>
+:root{color-scheme:dark;--bg:#070b12;--panel:#0d1420;--panel2:#111b2a;--line:#26364b;--text:#e8eef7;--muted:#91a4ba;--good:#68e0a0;--bad:#ff7f87;--accent:#71b7ff;--hot:#ffd166;--bridge:#d39cff;--a:#6db6ff;--b:#63dfb0}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0%,#132039 0,#070b12 46%);color:var(--text);font:14px/1.4 ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+header{display:flex;gap:16px;align-items:center;justify-content:space-between;padding:13px 17px;border-bottom:1px solid var(--line);background:rgba(7,11,18,.91);position:sticky;top:0;z-index:5;backdrop-filter:blur(10px)}
+h1{font-size:18px;margin:0}.status{display:flex;gap:12px;align-items:center;color:var(--muted);font-size:12px}.dot{width:9px;height:9px;border-radius:50%;background:var(--good);box-shadow:0 0 12px var(--good)}
+.controls{display:flex;gap:7px;flex-wrap:wrap}button{border:1px solid var(--line);background:#142235;color:var(--text);border-radius:8px;padding:7px 10px;cursor:pointer}button:hover{background:#1b304a}
+main{padding:13px;display:grid;grid-template-columns:minmax(620px,1.8fr) minmax(320px,.82fr);gap:13px}.panel{background:linear-gradient(180deg,rgba(17,27,42,.97),rgba(10,17,28,.97));border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 10px 35px rgba(0,0,0,.22)}
+.panel h2{font-size:12px;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);margin:0;padding:10px 12px;border-bottom:1px solid var(--line)}.body{padding:11px}
+#brain{width:100%;height:560px;display:block;background:radial-gradient(circle at center,#0e192a,#080e17 68%)}
+.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.metric{padding:9px;border:1px solid var(--line);border-radius:9px;background:rgba(9,15,24,.72)}.metric .k{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.metric .v{font-size:20px;margin-top:2px;font-variant-numeric:tabular-nums}.good{color:var(--good)}.bad{color:var(--bad)}
+.taskbox,.modulebox{margin-top:9px;padding:9px;border:1px solid var(--line);border-radius:9px}.taskrow{display:flex;justify-content:space-between;gap:12px;margin:4px 0}.taskrow span:first-child{color:var(--muted)}
+.braincards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.braincard{border:1px solid var(--line);border-radius:9px;padding:8px;background:#0a111b}.braincard strong{font-size:12px}.brainline{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:4px}.brainline b{color:var(--text);font-weight:600}
+#history{width:100%;height:190px;display:block}.legend{display:flex;gap:13px;flex-wrap:wrap;color:var(--muted);font-size:11px;margin:6px 0 0}.sw{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+.tablewrap{max-height:290px;overflow:auto}table{width:100%;border-collapse:collapse;font-size:11px}th,td{text-align:right;padding:5px 6px;border-bottom:1px solid rgba(38,54,75,.55);font-variant-numeric:tabular-nums}th:first-child,td:first-child{text-align:left}th{position:sticky;top:0;background:#111b2a;color:var(--muted)}
+.event{margin-top:9px;padding:8px 10px;border-radius:8px;background:#0a111b;color:var(--muted);min-height:37px;word-break:break-word}.footer{grid-column:1/-1;color:var(--muted);font-size:11px;padding:0 2px 8px}
+@media(max-width:980px){main{grid-template-columns:1fr}#brain{height:480px}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>DrosoMath Dual Live</h1><div class="status"><span class="dot" id="dot"></span><span id="conn">connecting…</span><span id="speed"></span><span id="mode">dual brain</span></div></div>
+  <div class="controls"><button onclick="control('pause')">Pause</button><button onclick="control('resume')">Resume</button><button onclick="control('step')">Step</button><button onclick="control('slower')">Slower</button><button onclick="control('faster')">Faster</button><button onclick="control('reset')">Reset</button></div>
+</header>
+<main>
+  <section class="panel"><h2>Brain A ↔ adaptive bridge ↔ Brain B</h2><canvas id="brain"></canvas></section>
+  <aside class="panel"><h2>Learning state</h2><div class="body">
+    <div class="metrics">
+      <div class="metric"><div class="k">Step</div><div class="v" id="mStep">0</div></div>
+      <div class="metric"><div class="k">Accuracy</div><div class="v" id="mAcc">0%</div></div>
+      <div class="metric"><div class="k">Reward</div><div class="v" id="mReward">0</div></div>
+      <div class="metric"><div class="k">Bridge transfers</div><div class="v" id="mBridgeTx">0</div></div>
+      <div class="metric"><div class="k">Mean weight</div><div class="v" id="mWeight">0</div></div>
+      <div class="metric"><div class="k">Bridge weight</div><div class="v" id="mBridgeWeight">0</div></div>
+      <div class="metric"><div class="k">Mean stability</div><div class="v" id="mStability">0</div></div>
+      <div class="metric"><div class="k">Module specialization</div><div class="v" id="mSpec">0</div></div>
+    </div>
+    <div class="taskbox">
+      <div class="taskrow"><span>Current task</span><strong id="task">-</strong></div>
+      <div class="taskrow"><span>Expected B output</span><strong id="expected">-</strong></div>
+      <div class="taskrow"><span>Last prediction</span><strong id="prediction">-</strong></div>
+      <div class="taskrow"><span>Trials</span><strong id="trials">0</strong></div>
+      <div class="taskrow"><span>Reward credit A / B / bridge</span><strong id="credit">0 / 0 / 0</strong></div>
+    </div>
+    <div class="braincards">
+      <div class="braincard"><strong style="color:var(--a)">Brain A</strong><div class="brainline"><span>fired</span><b id="aFired">0</b></div><div class="brainline"><span>STDP</span><b id="aStdp">0</b></div><div class="brainline"><span>weight</span><b id="aWeight">0</b></div></div>
+      <div class="braincard"><strong style="color:var(--b)">Brain B</strong><div class="brainline"><span>fired</span><b id="bFired">0</b></div><div class="brainline"><span>STDP</span><b id="bStdp">0</b></div><div class="brainline"><span>weight</span><b id="bWeight">0</b></div></div>
+    </div>
+    <div class="modulebox" id="modules">module state loading…</div>
+    <div class="event" id="event">No bridge rewiring yet.</div>
+  </div></aside>
+
+  <section class="panel"><h2>Learning history</h2><div class="body"><canvas id="history"></canvas><div class="legend"><span><i class="sw" style="background:#68e0a0"></i>accuracy</span><span><i class="sw" style="background:#71b7ff"></i>mean weight</span><span><i class="sw" style="background:#d39cff"></i>bridge weight</span><span><i class="sw" style="background:#ffd166"></i>stability</span><span><i class="sw" style="background:#ff7f87"></i>reward</span></div></div></section>
+  <section class="panel"><h2>Synapses + bridge</h2><div class="body tablewrap"><table><thead><tr><th>edge</th><th>w</th><th>stable</th><th>use</th><th>reward</th></tr></thead><tbody id="synapses"></tbody></table></div></section>
+  <div class="footer">Brain A receives the external pattern. Brain B produces the scored output. Purple edges are inter-brain bridges; brighter purple means the bridge was used on the latest step. Node outer ring indicates module membership, node brightness indicates firing.</div>
+</main>
+<script>
+const brain=document.getElementById('brain'),bctx=brain.getContext('2d'),hist=document.getElementById('history'),hctx=hist.getContext('2d');let state=null;
+function fit(c){const r=c.getBoundingClientRect(),d=devicePixelRatio||1;if(c.width!==Math.round(r.width*d)||c.height!==Math.round(r.height*d)){c.width=Math.round(r.width*d);c.height=Math.round(r.height*d)}return[c.width,c.height]}
+function fmt(x,n=3){return Number(x||0).toFixed(n)}
+function nodePos(brainName,id,w,h){const left=brainName==='A';const x0=left?.06:.56,x1=left?.44:.94;const map={0:[.08,.28],1:[.08,.72],2:[.45,.26],3:[.45,.74],4:[.82,.31],5:[.82,.69],6:[.24,.09],7:[.24,.91]};const q=map[id]||[.5,.5];return[(x0+(x1-x0)*q[0])*w,(.08+.84*q[1])*h]}
+function drawRoundedRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.stroke()}
+function renderBrain(s){const[w,h]=fit(brain);bctx.clearRect(0,0,w,h);const d=devicePixelRatio||1;
+ bctx.lineWidth=1.5*d;bctx.strokeStyle='rgba(109,182,255,.28)';drawRoundedRect(bctx,.025*w,.04*h,.45*w,.91*h,18*d);bctx.strokeStyle='rgba(99,223,176,.28)';drawRoundedRect(bctx,.525*w,.04*h,.45*w,.91*h,18*d);
+ bctx.fillStyle='rgba(109,182,255,.85)';bctx.font=`${15*d}px system-ui`;bctx.textAlign='left';bctx.fillText('Brain A',.05*w,.08*h);bctx.fillStyle='rgba(99,223,176,.85)';bctx.fillText('Brain B',.55*w,.08*h);
+ const pos={};for(const br of s.brains){for(const n of br.neurons)pos[`${br.name}:${n.id}`]=nodePos(br.name,n.id,w,h)}
+ for(const br of s.brains){for(const e of br.synapses){const a=pos[`${br.name}:${e.pre}`],b=pos[`${br.name}:${e.post}`];if(!a||!b)continue;const alpha=e.active?.82:Math.min(.72,.11+e.stability*.38+Math.max(0,e.reward_ema)*.22);bctx.beginPath();bctx.moveTo(...a);bctx.lineTo(...b);bctx.lineWidth=Math.max(1,1+e.weight*5)*d;bctx.strokeStyle=br.name==='A'?`rgba(109,182,255,${alpha})`:`rgba(99,223,176,${alpha})`;bctx.stroke()}}
+ for(const e of s.bridge.synapses){const a=pos[`${e.source_brain}:${e.pre}`],b=pos[`${e.target_brain}:${e.post}`];if(!a||!b)continue;const alpha=e.active?.98:Math.min(.82,.16+Math.max(0,e.reward_ema)*.35);bctx.beginPath();bctx.moveTo(...a);bctx.lineTo(...b);bctx.lineWidth=Math.max(1.2,1.2+e.weight*7)*d;bctx.strokeStyle=`rgba(211,156,255,${alpha})`;bctx.stroke()}
+ for(const br of s.brains){for(const n of br.neurons){const[x,y]=pos[`${br.name}:${n.id}`],r=13*d,pot=Math.max(0,Math.min(1,n.potential/.5));bctx.beginPath();bctx.arc(x,y,r+6+4*pot*d,0,Math.PI*2);bctx.strokeStyle=n.module===0?'#71b7ff':'#d39cff';bctx.lineWidth=2*d;bctx.stroke();bctx.beginPath();bctx.arc(x,y,r,0,Math.PI*2);let fill=br.name==='A'?'#2b5075':'#285d4d';if(n.role==='spare')fill='#252d39';if(n.fired)fill='#fff0ad';bctx.fillStyle=fill;bctx.fill();bctx.fillStyle=n.fired?'#111':'#e8eef7';bctx.font=`${11*d}px system-ui`;bctx.textAlign='center';bctx.textBaseline='middle';bctx.fillText(String(n.id),x,y);bctx.fillStyle='#91a4ba';bctx.font=`${8*d}px system-ui`;bctx.fillText(n.role,x,y+r+13*d)}}}
+function renderHistory(s){const[w,h]=fit(hist);hctx.clearRect(0,0,w,h);const H=s.history||[];if(H.length<2)return;hctx.strokeStyle='rgba(38,54,75,.6)';hctx.lineWidth=1;for(let i=1;i<4;i++){const y=h*i/4;hctx.beginPath();hctx.moveTo(0,y);hctx.lineTo(w,y);hctx.stroke()}const series=[['accuracy','#68e0a0',v=>v],['mean_weight','#71b7ff',v=>v],['bridge_weight','#d39cff',v=>v],['mean_stability','#ffd166',v=>v],['reward','#ff7f87',v=>(v+1)/2]];for(const[key,color,map]of series){hctx.beginPath();H.forEach((row,i)=>{const x=i/(H.length-1)*w,y=h-Math.max(0,Math.min(1,map(Number(row[key]||0))))*h*.92-h*.04;i?hctx.lineTo(x,y):hctx.moveTo(x,y)});hctx.strokeStyle=color;hctx.lineWidth=2*(devicePixelRatio||1);hctx.stroke()}}
+function renderTable(s){const rows=[];for(const br of s.brains){for(const e of br.synapses)rows.push({label:`${br.name}:${e.pre}→${br.name}:${e.post}`,w:e.weight,stable:e.stability,use:e.usage,reward:e.reward_ema,bridge:false})}for(const e of s.bridge.synapses)rows.push({label:`${e.source_brain}:${e.pre}⇢${e.target_brain}:${e.post}`,w:e.weight,stable:e.stability,use:e.usage,reward:e.reward_ema,bridge:true});rows.sort((a,b)=>Number(b.bridge)-Number(a.bridge)||b.w-a.w);synapses.innerHTML=rows.map(e=>`<tr><td style="color:${e.bridge?'#d39cff':'inherit'}">${e.label}</td><td>${fmt(e.w)}</td><td>${fmt(e.stable)}</td><td>${e.use}</td><td>${fmt(e.reward)}</td></tr>`).join('')}
+function renderModules(s){modules.innerHTML=s.brains.map(br=>`<div style="margin-bottom:6px"><strong style="color:${br.name==='A'?'#6db6ff':'#63dfb0'}">Brain ${br.name}</strong> `+br.modules.map(m=>`<span style="margin-left:8px;color:#91a4ba">M${m.id}: activity <b style="color:#e8eef7">${fmt(m.activity,2)}</b> reward <b style="color:#e8eef7">${fmt(m.reward,2)}</b></span>`).join('')+`</div>`).join('')}
+function render(s){state=s;renderBrain(s);renderHistory(s);renderTable(s);renderModules(s);mStep.textContent=s.step;mAcc.textContent=(s.accuracy*100).toFixed(1)+'%';mReward.textContent=fmt(s.last_reward,2);mReward.className='v '+(s.last_reward>=0?'good':'bad');mBridgeTx.textContent=s.metrics.bridge_transfers;mWeight.textContent=fmt(s.metrics.mean_weight);mBridgeWeight.textContent=fmt(s.metrics.bridge_mean_weight);mStability.textContent=fmt(s.metrics.mean_stability);mSpec.textContent=fmt(s.metrics.module_specialization,2);task.textContent=s.task;expected.textContent=s.expected_output;prediction.textContent=s.last_prediction??'—';trials.textContent=s.completed_trials;credit.textContent=`${s.reward_credit.A} / ${s.reward_credit.B} / ${s.reward_credit.bridge}`;const A=s.brains.find(x=>x.name==='A'),B=s.brains.find(x=>x.name==='B');aFired.textContent=A.metrics.fired_count;aStdp.textContent=A.metrics.stdp_updates;aWeight.textContent=fmt(A.metrics.mean_weight);bFired.textContent=B.metrics.fired_count;bStdp.textContent=B.metrics.stdp_updates;bWeight.textContent=fmt(B.metrics.mean_weight);speed.textContent=`${fmt(s.hz,1)} Hz`;dot.style.background=s.running?'var(--good)':'var(--hot)';event.textContent=s.last_rewire?`bridge rewire: ${JSON.stringify(s.last_rewire)}`:'No bridge rewiring yet.'}
+async function control(action){const r=await fetch('/api/control?action='+encodeURIComponent(action));render(await r.json())}
+const es=new EventSource('/events');es.onopen=()=>{conn.textContent='live';dot.style.boxShadow='0 0 12px var(--good)'};es.onmessage=e=>render(JSON.parse(e.data));es.onerror=()=>{conn.textContent='reconnecting…';dot.style.background='var(--bad)'};addEventListener('resize',()=>state&&render(state));
+</script>
+</body>
+</html>
