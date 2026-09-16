@@ -9,11 +9,12 @@ from drosomath.whole_brain import (
     OutgoingBudgetNormalizer,
     PlasticSparseFlyBrain,
     PlasticStateConfig,
+    StructuralOverlayConfig,
     UsageRewardRule,
 )
 
 from .download import DEFAULT_DATA_DIR, download_malecns
-from .fast_state import FastSparseStateMixin
+from .fast_state import FastLearnedStructuralOverlay, FastSparseStateMixin
 from .loader import MaleCNSConnectome, load_malecns_v1
 
 
@@ -38,6 +39,20 @@ class PlasticMaleCNSBrain(FastSparseStateMixin, PlasticSparseFlyBrain):
             usage_alpha=usage_alpha,
             eligibility_gain=eligibility_gain,
         )
+
+    def configure_structural_plasticity(
+        self,
+        config: StructuralOverlayConfig | None = None,
+    ) -> FastLearnedStructuralOverlay:
+        """Enable MaleCNS structural plasticity with bounded donor scans."""
+        overlay = FastLearnedStructuralOverlay(
+            self.connectome,
+            self.plasticity,
+            config=config,
+        )
+        self.structural_overlay = overlay
+        self._structural_reward_events = 0
+        return overlay
 
     def run_malecns(
         self,
