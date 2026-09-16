@@ -5,6 +5,7 @@ param(
     [int]$DecoderEpochs = 8,
     [int]$CheckpointEvery = 64,
     [int]$Seed = 7,
+    [double]$MinLearningGain = 0.03,
     [switch]$NoDownload,
     [switch]$NoOpen,
     [switch]$NoPush
@@ -17,18 +18,20 @@ Write-Host "=== DrosoMath Concept Foundation ==="
 Write-Host "object presence -> single/multiple -> latent quantity A/B/C"
 Write-Host "No number symbols, comparison operators, or arithmetic are used."
 Write-Host "seed=$Seed | trials/stage=$StageTrials | validation/class=$ValidationTrials"
+Write-Host "strict gate requires held-out learning gain >= $MinLearningGain"
 
 python -m pip install -e ".[malecns]"
 if ($LASTEXITCODE -ne 0) { throw "dependency install failed" }
 
 $argsList = @(
-    "-m", "drosomath.malecns.concept_foundation",
+    "-m", "drosomath.malecns.concept_foundation_strict",
     "--min-syn", "$MinSyn",
     "--stage-trials", "$StageTrials",
     "--validation-trials", "$ValidationTrials",
     "--decoder-epochs", "$DecoderEpochs",
     "--checkpoint-every", "$CheckpointEvery",
-    "--seed", "$Seed"
+    "--seed", "$Seed",
+    "--min-learning-gain", "$MinLearningGain"
 )
 if (-not $NoDownload) { $argsList += "--download" }
 
