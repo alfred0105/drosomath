@@ -1,5 +1,74 @@
 from __future__ import annotations
 
+import math
+
+from drosomath.whole_brain.structural_overlay import LearnedStructuralOverlay
+
+
+class FastLearnedStructuralOverlay(LearnedStructuralOverlay):
+    """MaleCNS structural overlay with bounded deterministic donor scans.
+
+    The generic overlay scans every anatomical edge to choose a low-value donor.
+    On the 6.2M-edge MaleCNS graph that becomes expensive when rewiring repeats.
+    This variant evaluates a deterministic pseudo-strided sample spread across
+    the whole edge array while preserving the same donor eligibility/protection
+    criteria. Small graphs are scanned exhaustively.
+    """
+
+    donor_scan_size: int = 65_536
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        n = max(1, int(self.plasticity.edge_count))
+        stride = 104_729
+        while math.gcd(stride, n) != 1:
+            stride += 2
+        self._fast_donor_stride = int(stride)
+
+    def _select_donor_edges(self, count: int):
+        np = self.np
+        if count <= 0:
+            return np.empty(0, dtype=np.int32)
+        n = int(self.plasticity.edge_count)
+        if n == 0:
+            return np.empty(0, dtype=np.int32)
+
+        scan_n = min(n, max(self.donor_scan_size, int(count) * 256))
+        if scan_n == n:
+            idx = np.arange(n, dtype=np.int64)
+        else:
+            base = np.arange(scan_n, dtype=np.int64)
+            offset = (int(self._cycles) * 97_531) % n
+            idx = (offset + base * self._fast_donor_stride) % n
+
+        eligible = self.plasticity.plastic_mask[idx]
+        eligible &= self.plasticity.stability[idx] < self.config.donor_protected_stability
+        eligible &= (
+            self.plasticity.multiplier[idx]
+            > self.plasticity.config.min_multiplier + 1e-6
+        )
+
+        used = self.donor_edge[self.active]
+        used = used[used >= 0]
+        if len(used):
+            eligible &= ~np.isin(idx, used, assume_unique=False)
+        idx = idx[eligible]
+        if len(idx) == 0:
+            return np.empty(0, dtype=np.int32)
+
+        score = (
+            self.plasticity.usage_ema[idx]
+            + 2.0 * self.plasticity.stability[idx]
+            + 0.10 * np.abs(self.plasticity.multiplier[idx] - 1.0)
+        )
+        k = min(int(count), len(idx))
+        if len(idx) <= k:
+            order = np.argsort(score)
+        else:
+            order = np.argpartition(score, k - 1)[:k]
+            order = order[np.argsort(score[order])]
+        return idx[order].astype(np.int32, copy=False)
+
 
 class FastSparseStateMixin:
     """Exact sparse-state update fast path for reset-between-trial MaleCNS runs.
