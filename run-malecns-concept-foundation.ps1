@@ -4,8 +4,10 @@ param(
     [int]$ValidationTrials = 32,
     [int]$DecoderEpochs = 8,
     [int]$CheckpointEvery = 64,
+    [int]$StructuralEvery = 64,
     [int]$Seed = 7,
     [double]$MinLearningGain = 0.03,
+    [switch]$NoStructural,
     [switch]$NoDownload,
     [switch]$NoOpen,
     [switch]$NoPush
@@ -19,6 +21,14 @@ Write-Host "object presence -> single/multiple -> latent quantity A/B/C"
 Write-Host "No number symbols, comparison operators, or arithmetic are used."
 Write-Host "seed=$Seed | trials/stage=$StageTrials | validation/class=$ValidationTrials"
 Write-Host "strict gate requires held-out learning gain >= $MinLearningGain"
+if ($NoStructural) {
+    Write-Host "structural plasticity: OFF (ablation mode)"
+    Remove-Item Env:DROSOMATH_STRUCTURAL -ErrorAction SilentlyContinue
+} else {
+    $env:DROSOMATH_STRUCTURAL = "1"
+    $env:DROSOMATH_STRUCTURAL_INTERVAL = "$StructuralEvery"
+    Write-Host "structural plasticity: ON | slow rewiring every $StructuralEvery rewarded training episodes"
+}
 
 python -m pip install -e ".[malecns]"
 if ($LASTEXITCODE -ne 0) { throw "dependency install failed" }
@@ -35,8 +45,13 @@ $argsList = @(
 )
 if (-not $NoDownload) { $argsList += "--download" }
 
-python @argsList
-if ($LASTEXITCODE -ne 0) { throw "concept foundation failed with exit code $LASTEXITCODE" }
+try {
+    python @argsList
+    if ($LASTEXITCODE -ne 0) { throw "concept foundation failed with exit code $LASTEXITCODE" }
+} finally {
+    Remove-Item Env:DROSOMATH_STRUCTURAL -ErrorAction SilentlyContinue
+    Remove-Item Env:DROSOMATH_STRUCTURAL_INTERVAL -ErrorAction SilentlyContinue
+}
 
 if (-not $NoPush) {
     git add .\results\latest_malecns_concept_foundation.json .\results\latest_malecns_concept_foundation.html
