@@ -8,6 +8,8 @@ networks but is not appropriate for millions of MaleCNS edges.
 from .brain_adapter import PlasticSparseFlyBrain
 from .homeostasis import BudgetNormalizationStats, OutgoingBudgetNormalizer
 from .memory_consolidation import (
+    AdaptiveReplayConfig,
+    AdaptiveReplayScheduler,
     ConsolidationConfig,
     MemoryConsolidator,
     ProtectedRewardRule,
@@ -18,6 +20,8 @@ from .plastic_state import PlasticStateConfig, SparsePlasticityState
 from .usage_learning import LearningUpdateStats, UsageRewardRule
 
 __all__ = [
+    "AdaptiveReplayConfig",
+    "AdaptiveReplayScheduler",
     "BudgetNormalizationStats",
     "ConsolidationConfig",
     "LearningUpdateStats",
