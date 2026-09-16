@@ -17,6 +17,7 @@ from .memory_consolidation import (
     ReplayScheduler,
 )
 from .plastic_state import PlasticStateConfig, SparsePlasticityState
+from .structural_overlay import LearnedStructuralOverlay, StructuralOverlayConfig
 from .usage_learning import LearningUpdateStats, UsageRewardRule
 
 __all__ = [
@@ -24,6 +25,7 @@ __all__ = [
     "AdaptiveReplayScheduler",
     "BudgetNormalizationStats",
     "ConsolidationConfig",
+    "LearnedStructuralOverlay",
     "LearningUpdateStats",
     "MemoryConsolidator",
     "OutgoingBudgetNormalizer",
@@ -33,5 +35,6 @@ __all__ = [
     "ReplayConfig",
     "ReplayScheduler",
     "SparsePlasticityState",
+    "StructuralOverlayConfig",
     "UsageRewardRule",
 ]
