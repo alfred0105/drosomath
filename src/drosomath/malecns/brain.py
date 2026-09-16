@@ -13,11 +13,12 @@ from drosomath.whole_brain import (
 )
 
 from .download import DEFAULT_DATA_DIR, download_malecns
+from .fast_state import FastSparseStateMixin
 from .loader import MaleCNSConnectome, load_malecns_v1
 
 
-class PlasticMaleCNSBrain(PlasticSparseFlyBrain):
-    """Plastic sparse simulator using MaleCNS body IDs as neuron identifiers."""
+class PlasticMaleCNSBrain(FastSparseStateMixin, PlasticSparseFlyBrain):
+    """Plastic MaleCNS simulator with sparse active-state acceleration."""
 
     def __init__(
         self,
@@ -62,6 +63,7 @@ class PlasticMaleCNSBrain(PlasticSparseFlyBrain):
             if "flywire_id" in row:
                 row["body_id"] = row.pop("flywire_id")
         result["dataset"] = self.connectome.source
+        result["fast_state"] = self.fast_state_summary()
         return result
 
 
