@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import asdict, is_dataclass
+from dataclasses import asdict, fields, is_dataclass
 from pathlib import Path
 
 
@@ -59,7 +59,7 @@ def save_learning_checkpoint(
     ).astype(np.int32, copy=False)
 
     payload: dict[str, object] = {
-        "format_version": np.asarray([2], dtype=np.int32),
+        "format_version": np.asarray([3], dtype=np.int32),
         "neuron_count": np.asarray([brain.connectome.neuron_count], dtype=np.int64),
         "edge_count": np.asarray([brain.connectome.edge_count], dtype=np.int64),
         "min_connection_synapses": np.asarray(
@@ -76,6 +76,10 @@ def save_learning_checkpoint(
         "completed_trials": np.asarray([int(completed_trials)], dtype=np.int64),
         "stage": np.asarray([str(stage)], dtype="U64"),
     }
+
+    structural = getattr(brain, "structural_overlay", None)
+    if structural is not None:
+        payload.update(structural.checkpoint_payload())
 
     if config is not None:
         cfg = asdict(config) if is_dataclass(config) else dict(config)
@@ -104,11 +108,38 @@ def save_learning_checkpoint(
     np.savez_compressed(path, **payload)
     return {
         "path": str(path),
-        "format_version": 2,
+        "format_version": 3,
         "changed_edge_count": int(len(changed)),
+        "structural_edge_count": int(structural.edge_count) if structural is not None else 0,
         "completed_trials": int(completed_trials),
         "stage": str(stage),
     }
+
+
+def _restore_structural_if_present(data, brain) -> int:
+    if "structural__present" not in data or not bool(data["structural__present"][0]):
+        return 0
+
+    from drosomath.whole_brain import StructuralOverlayConfig
+
+    structural = getattr(brain, "structural_overlay", None)
+    if structural is None:
+        kwargs = {}
+        for field in fields(StructuralOverlayConfig):
+            key = "structural__config__" + field.name
+            if key not in data:
+                continue
+            value = data[key][0]
+            if field.type is bool or isinstance(field.default, bool):
+                value = bool(value)
+            elif field.type is int or isinstance(field.default, int):
+                value = int(value)
+            elif field.type is float or isinstance(field.default, float):
+                value = float(value)
+            kwargs[field.name] = value
+        structural = brain.configure_structural_plasticity(StructuralOverlayConfig(**kwargs))
+    structural.restore_from_checkpoint(data)
+    return structural.edge_count
 
 
 def restore_learning_checkpoint(
@@ -118,7 +149,7 @@ def restore_learning_checkpoint(
     readout=None,
     strict_readout: bool = True,
 ) -> dict[str, object]:
-    """Restore long-term plastic state into a freshly loaded MaleCNS graph."""
+    """Restore long-term plastic and optional structural state."""
     np = brain.np
     path = Path(path)
     if not path.is_file():
@@ -145,6 +176,7 @@ def restore_learning_checkpoint(
         if "usage_ema" in data:
             brain.plasticity.usage_ema[changed] = data["usage_ema"]
         brain.plasticity.clear_eligibility()
+        structural_edge_count = _restore_structural_if_present(data, brain)
 
         readout_restored = False
         if readout is not None and "readout_weights" in data:
@@ -165,6 +197,7 @@ def restore_learning_checkpoint(
         return {
             "path": str(path),
             "changed_edge_count": int(len(changed)),
+            "structural_edge_count": int(structural_edge_count),
             "completed_trials": int(data["completed_trials"][0]) if "completed_trials" in data else 0,
             "stage": str(data["stage"][0]) if "stage" in data else "",
             "readout_restored": readout_restored,
