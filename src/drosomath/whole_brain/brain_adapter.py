@@ -6,21 +6,17 @@ from drosomath.flywire_real import FlyBrainParams, FlyWireConnectome, SparseFlyB
 
 from .homeostasis import OutgoingBudgetNormalizer
 from .plastic_state import PlasticStateConfig, SparsePlasticityState
+from .structural_overlay import LearnedStructuralOverlay, StructuralOverlayConfig
 from .usage_learning import UsageRewardRule
 
 
 class PlasticSparseFlyBrain(SparseFlyBrain):
-    """Sparse whole-brain simulator with sign-preserving synaptic learning.
+    """Sparse whole-brain simulator with weight and structural plasticity.
 
-    The anatomical graph stays immutable in ``connectome``. Learned memory is
-    stored in ``plasticity.multiplier`` and related compact float32 arrays.
-    Plasticity tracking can be disabled while an external decoder is being
-    trained, so that readout pretraining does not contaminate the brain state.
-
-    Live telemetry is opt-in. The simulator still computes the full sparse
-    graph, but only a capped sample of the strongest recently transmitted edges
-    is copied for visualization. This avoids turning a 6M-edge simulation into
-    a browser-rendering benchmark.
+    The anatomical graph stays immutable in ``connectome``. Learned anatomical
+    weight memory is stored in ``plasticity``. Optional structural plasticity is
+    stored in a separate learned-edge overlay; donor anatomical edges are only
+    functionally silenced, never removed from the source connectome.
     """
 
     def __init__(
@@ -53,6 +49,7 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
         self.eligibility_gain = eligibility_gain
         self.plasticity_tracking_enabled = True
         self._recent_presynaptic: set[int] = set()
+        self.structural_overlay: LearnedStructuralOverlay | None = None
 
         self._telemetry_enabled = False
         self._telemetry_max_edges = 128
@@ -65,18 +62,35 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
             "active_edges": [],
         }
 
-    def set_plasticity_tracking(self, enabled: bool) -> bool:
-        """Enable/disable usage and eligibility recording.
+    def configure_structural_plasticity(
+        self,
+        config: StructuralOverlayConfig | None = None,
+    ) -> LearnedStructuralOverlay:
+        """Enable auditable learned-edge structural plasticity."""
+        overlay = LearnedStructuralOverlay(self.connectome, self.plasticity, config=config)
+        self.structural_overlay = overlay
+        return overlay
 
-        Returns the previous state so callers can restore it in a ``finally``
-        block. Disabling tracking never changes the anatomical graph or learned
-        multipliers.
-        """
+    def run_structural_cycle(self, *, cycle_label: str = "") -> dict[str, object]:
+        if self.structural_overlay is None:
+            return {"enabled": False, "added": 0, "replaced": 0, "active_edges": 0}
+        return self.structural_overlay.rewire(cycle_label=cycle_label)
+
+    def structural_summary(self) -> dict[str, object]:
+        if self.structural_overlay is None:
+            return {"enabled": False, "active_edges": 0}
+        return self.structural_overlay.summary()
+
+    def set_plasticity_tracking(self, enabled: bool) -> bool:
+        """Enable/disable usage and eligibility recording."""
         previous = self.plasticity_tracking_enabled
         self.plasticity_tracking_enabled = bool(enabled)
         if not self.plasticity_tracking_enabled:
             self._recent_presynaptic.clear()
             self.plasticity.clear_eligibility()
+            if self.structural_overlay is not None:
+                self.structural_overlay.eligibility.fill(0.0)
+                self.structural_overlay._clear_trial_activity()
         return previous
 
     def configure_live_telemetry(
@@ -86,7 +100,6 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
         max_active_edges: int = 128,
         edges_per_firing_neuron: int = 4,
     ) -> None:
-        """Enable a bounded visualization sample of recent spike transfers."""
         if max_active_edges < 1:
             raise ValueError("max_active_edges must be >= 1")
         if edges_per_firing_neuron < 1:
@@ -104,7 +117,6 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
             }
 
     def live_telemetry_snapshot(self) -> dict[str, object]:
-        """Return the latest immutable-ish telemetry payload for UI polling."""
         snap = self._last_telemetry
         return {
             "step": int(snap["step"]),
@@ -115,13 +127,15 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
         }
 
     def reset(self) -> None:
-        """Reset fast neural state while deliberately preserving learned memory."""
+        """Reset fast neural state while preserving learned memory/structure."""
         super().reset()
         self._recent_presynaptic.clear()
 
     def reset_all(self) -> None:
-        """Reset both neural dynamics and learned synaptic state."""
+        """Reset neural dynamics, learned weights, and learned structure."""
         self.reset()
+        if self.structural_overlay is not None:
+            self.structural_overlay.reset()
         self.plasticity.reset_learning_state()
 
     def _neuron_identifier(self, index: int) -> int:
@@ -154,6 +168,7 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
             rows.append(
                 {
                     "edge_index": int(edge),
+                    "learned_structural": False,
                     "pre_id": self._neuron_identifier(pre),
                     "post_id": self._neuron_identifier(post),
                     "base_signed_synapses": float(base[edge]),
@@ -161,6 +176,40 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
                     "signal_mv": float(effective[rel] * scale),
                     "stability": float(self.plasticity.stability[edge]),
                     "usage_ema": float(self.plasticity.usage_ema[edge]),
+                }
+            )
+        return rows
+
+    def _sample_structural_live_edges(self, *, pre: int, slots) -> list[dict[str, object]]:
+        overlay = self.structural_overlay
+        if overlay is None or len(slots) == 0:
+            return []
+        np = self.np
+        k = min(self._telemetry_edges_per_neuron, len(slots))
+        magnitude = np.abs(overlay.signed_strength[slots])
+        if len(slots) <= k:
+            chosen = slots
+        else:
+            local = np.argpartition(magnitude, -k)[-k:]
+            chosen = slots[local[np.argsort(magnitude[local])[::-1]]]
+        scale = self.params.mv_per_synapse
+        rows = []
+        for slot_raw in chosen:
+            slot = int(slot_raw)
+            post = int(overlay.post_index[slot])
+            rows.append(
+                {
+                    "edge_index": -1,
+                    "structural_slot": slot,
+                    "learned_structural": True,
+                    "pre_id": self._neuron_identifier(pre),
+                    "post_id": self._neuron_identifier(post),
+                    "base_signed_synapses": 0.0,
+                    "multiplier": 1.0,
+                    "signal_mv": float(overlay.signed_strength[slot] * scale),
+                    "stability": float(overlay.stability[slot]),
+                    "usage_ema": float(overlay.usage_ema[slot]),
+                    "donor_edge": int(overlay.donor_edge[slot]),
                 }
             )
         return rows
@@ -178,6 +227,9 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
                 }
             return 0
 
+        if self.plasticity_tracking_enabled and self.structural_overlay is not None:
+            self.structural_overlay.record_firing(fired_indices)
+
         target_slot = self._delay_ring[
             (self.step_index + self.delay_steps) % len(self._delay_ring)
         ]
@@ -192,30 +244,39 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
             pre = int(pre_raw)
             start = int(indptr[pre])
             stop = int(indptr[pre + 1])
-            if start == stop:
-                continue
+            if stop > start:
+                effective = self.plasticity.effective_signed_slice(base_signed, start, stop)
+                np.add.at(target_slot, posts[start:stop], effective * scale)
 
-            effective = self.plasticity.effective_signed_slice(
-                base_signed,
-                start,
-                stop,
-            )
-            np.add.at(target_slot, posts[start:stop], effective * scale)
+                if self._telemetry_enabled and len(telemetry_edges) < self._telemetry_max_edges:
+                    telemetry_edges.extend(
+                        self._sample_live_edges(pre=pre, start=start, stop=stop, effective=effective)
+                    )
 
-            if self._telemetry_enabled and len(telemetry_edges) < self._telemetry_max_edges:
-                telemetry_edges.extend(
-                    self._sample_live_edges(pre=pre, start=start, stop=stop, effective=effective)
-                )
+                if self.plasticity_tracking_enabled:
+                    self.plasticity.record_use_slice(
+                        start,
+                        stop,
+                        usage_alpha=self.usage_alpha,
+                        eligibility_gain=self.eligibility_gain,
+                    )
+                    self._recent_presynaptic.add(pre)
+                transferred += stop - start
 
-            if self.plasticity_tracking_enabled:
-                self.plasticity.record_use_slice(
-                    start,
-                    stop,
-                    usage_alpha=self.usage_alpha,
-                    eligibility_gain=self.eligibility_gain,
-                )
-                self._recent_presynaptic.add(pre)
-            transferred += stop - start
+            overlay = self.structural_overlay
+            if overlay is not None:
+                structural_slots = overlay.slots_for_pre(pre)
+                if len(structural_slots):
+                    structural_posts = overlay.post_index[structural_slots]
+                    structural_strength = overlay.signed_strength[structural_slots]
+                    np.add.at(target_slot, structural_posts, structural_strength * scale)
+                    if self.plasticity_tracking_enabled:
+                        overlay.record_use(structural_slots)
+                    if self._telemetry_enabled and len(telemetry_edges) < self._telemetry_max_edges:
+                        telemetry_edges.extend(
+                            self._sample_structural_live_edges(pre=pre, slots=structural_slots)
+                        )
+                    transferred += len(structural_slots)
 
         if self._telemetry_enabled:
             if len(telemetry_edges) > self._telemetry_max_edges:
@@ -245,17 +306,14 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
         eligibility_decay: float = 0.90,
         clear_eligibility: bool = True,
     ) -> dict[str, object]:
-        """Turn recent synaptic use into long-term weight changes.
-
-        Positive reward strengthens frequently used eligible routes. Negative
-        reward weakens them, with consolidated (stable) routes changing less.
-        Optional outgoing-budget normalization prevents runaway rich-get-richer
-        dynamics.
-        """
+        """Turn recent synaptic use into long-term weight/structural changes."""
         if not self.plasticity_tracking_enabled:
             raise RuntimeError("cannot learn from reward while plasticity tracking is disabled")
 
         update = rule.apply(self.plasticity, reward=reward)
+        structural_learning = None
+        if self.structural_overlay is not None:
+            structural_learning = self.structural_overlay.learn_from_reward(float(reward))
 
         budget = None
         if normalizer is not None and self._recent_presynaptic:
@@ -279,4 +337,6 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
             "learning": asdict(update),
             "budget": asdict(budget) if budget is not None else None,
             "plasticity": self.plasticity.summary(),
+            "structural_learning": structural_learning,
+            "structural": self.structural_summary(),
         }
