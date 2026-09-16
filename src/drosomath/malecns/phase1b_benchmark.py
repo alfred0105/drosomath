@@ -12,7 +12,7 @@ from .curriculum_v2_memory import MemoryV2Config, run_memory_curriculum
 from .curriculum_v21_memory import MemoryV21Config, run_memory_v21_curriculum
 from .download import DEFAULT_DATA_DIR, download_malecns
 from .loader import load_malecns_v1
-from .phase1_stat_benchmark import _common_final_evaluation
+from .phase1_stat_benchmark import _common_eval
 
 
 DEFAULT_RESULT_ROOT = Path("results/phase1b_stat")
@@ -75,15 +75,7 @@ def _clean(paths: dict[str, Path]) -> None:
         shutil.rmtree(paths["readouts"])
 
 
-def _ensure_v2(
-    connectome,
-    *,
-    seed: int,
-    config: Phase1BConfig,
-    baseline_result_root: Path,
-    baseline_checkpoint_root: Path,
-) -> tuple[dict[str, object], dict[str, Path], bool]:
-    # Reuse the already-completed Phase-1A v2 paired run when possible.
+def _ensure_v2(connectome, *, seed: int, config: Phase1BConfig, baseline_result_root: Path, baseline_checkpoint_root: Path):
     paths = _paths(baseline_result_root, baseline_checkpoint_root, seed, "v2")
     report = _load(paths["result"])
     reusable = (
@@ -93,7 +85,7 @@ def _ensure_v2(
     )
     if reusable:
         print(f"[v2 seed={seed}] reusing Phase-1A baseline")
-        return report, paths, True  # type: ignore[return-value]
+        return report, paths, True
 
     print(f"[v2 seed={seed}] Phase-1A baseline unavailable; retraining")
     _clean(paths)
@@ -118,15 +110,7 @@ def _ensure_v2(
     return report, paths, False
 
 
-def _train_v21(
-    connectome,
-    *,
-    seed: int,
-    config: Phase1BConfig,
-    result_root: Path,
-    checkpoint_root: Path,
-    fresh: bool,
-) -> tuple[dict[str, object], dict[str, Path]]:
+def _train_v21(connectome, *, seed: int, config: Phase1BConfig, result_root: Path, checkpoint_root: Path, fresh: bool):
     paths = _paths(result_root, checkpoint_root, seed, "v21")
     existing = None if fresh else _load(paths["result"])
     reusable = (
@@ -136,10 +120,8 @@ def _train_v21(
     )
     if reusable:
         print(f"[v2.1 seed={seed}] completed result found; reusing")
-        return existing, paths  # type: ignore[return-value]
+        return existing, paths
 
-    # Restart an interrupted v2.1 seed from the beginning. This preserves a clean
-    # stage-local stability baseline instead of consolidating only the post-resume tail.
     _clean(paths)
     run_config = MemoryV21Config(
         min_connection_synapses=config.min_connection_synapses,
@@ -163,10 +145,7 @@ def _train_v21(
 
 
 def _mean_sd(values: list[float]) -> dict[str, float]:
-    return {
-        "mean": statistics.mean(values),
-        "sd": statistics.stdev(values) if len(values) >= 2 else 0.0,
-    }
+    return {"mean": statistics.mean(values), "sd": statistics.stdev(values) if len(values) >= 2 else 0.0}
 
 
 def _replay_allocation(report: dict[str, object]) -> dict[str, object]:
@@ -192,10 +171,7 @@ def _aggregate(runs: list[dict[str, object]]) -> dict[str, object]:
             "v21_wins": sum(int(x > 0) for x in delta),
             "ties": sum(int(abs(x) < 1e-12) for x in delta),
             "v21_losses": sum(int(x < 0) for x in delta),
-            "per_seed": [
-                {"seed": int(runs[i]["seed"]), "v2": base[i], "v21": new[i], "delta": delta[i]}
-                for i in range(len(runs))
-            ],
+            "per_seed": [{"seed": int(runs[i]["seed"]), "v2": base[i], "v21": new[i], "delta": delta[i]} for i in range(len(runs))],
         }
     return out
 
@@ -209,18 +185,9 @@ def _gate(summary: dict[str, object]) -> dict[str, object]:
         mean_new = float(row["v21"]["mean"])
         delta = float(row["paired_delta"]["mean"])
         ok = mean_new >= threshold and delta >= 0.0
-        checks[task] = {
-            "v21_mean_accuracy": mean_new,
-            "threshold": threshold,
-            "mean_paired_delta_vs_v2": delta,
-            "passed": ok,
-        }
+        checks[task] = {"v21_mean_accuracy": mean_new, "threshold": threshold, "mean_paired_delta_vs_v2": delta, "passed": ok}
         passed &= ok
-    return {
-        "passed": bool(passed),
-        "criterion": "same-seed common held-out evaluation: v2.1 clears retention threshold and does not regress versus v2",
-        "tasks": checks,
-    }
+    return {"passed": bool(passed), "criterion": "same-seed common held-out evaluation: v2.1 clears retention threshold and does not regress versus v2", "tasks": checks}
 
 
 def build_html(report: dict[str, object]) -> str:
@@ -228,114 +195,36 @@ def build_html(report: dict[str, object]) -> str:
     gate = report["phase1b_gate"]
     rows = []
     for task, row in summary.items():
-        rows.append(
-            f"<tr><td>{task}</td>"
-            f"<td>{100*row['v2']['mean']:.1f}% ± {100*row['v2']['sd']:.1f}</td>"
-            f"<td>{100*row['v21']['mean']:.1f}% ± {100*row['v21']['sd']:.1f}</td>"
-            f"<td>{100*row['paired_delta']['mean']:+.1f} pp</td>"
-            f"<td>{row['v21_wins']}/{len(report['runs'])}</td></tr>"
-        )
+        rows.append(f"<tr><td>{task}</td><td>{100*row['v2']['mean']:.1f}% ± {100*row['v2']['sd']:.1f}</td><td>{100*row['v21']['mean']:.1f}% ± {100*row['v21']['sd']:.1f}</td><td>{100*row['paired_delta']['mean']:+.1f} pp</td><td>{row['v21_wins']}/{len(report['runs'])}</td></tr>")
     seed_tables = []
     for run in report["runs"]:
         rs = []
-        for task, b in run["common_eval"]["v2"]["tasks"].items():
-            n = run["common_eval"]["v21"]["tasks"][task]
-            rs.append(
-                f"<tr><td>{task}</td><td>{100*b['accuracy']:.1f}%</td>"
-                f"<td>{100*n['accuracy']:.1f}%</td>"
-                f"<td>{100*(n['accuracy']-b['accuracy']):+.1f} pp</td></tr>"
-            )
-        seed_tables.append(
-            f"<h2>Seed {run['seed']}</h2><table><tr><th>Task</th><th>v2</th><th>v2.1</th><th>Δ</th></tr>{''.join(rs)}</table>"
-        )
+        for task, base in run["common_eval"]["v2"]["tasks"].items():
+            new = run["common_eval"]["v21"]["tasks"][task]
+            rs.append(f"<tr><td>{task}</td><td>{100*base['accuracy']:.1f}%</td><td>{100*new['accuracy']:.1f}%</td><td>{100*(new['accuracy']-base['accuracy']):+.1f} pp</td></tr>")
+        seed_tables.append(f"<h2>Seed {run['seed']}</h2><table><tr><th>Task</th><th>v2</th><th>v2.1</th><th>Δ</th></tr>{''.join(rs)}</table>")
     cls = "pass" if gate["passed"] else "fail"
     status = "PASS" if gate["passed"] else "FAIL"
-    return f"""<!doctype html><html><head><meta charset='utf-8'><title>DrosoMath Phase-1B</title>
-<style>body{{font-family:system-ui;background:#101318;color:#e8edf5;max-width:1150px;margin:auto;padding:28px}}table{{width:100%;border-collapse:collapse}}th,td{{padding:9px;border-bottom:1px solid #2b3442;text-align:right}}th:first-child,td:first-child{{text-align:left}}.card{{padding:16px;border:1px solid #2b3442;border-radius:12px;background:#171c24}}.pass{{color:#6ee7a8}}.fail{{color:#ff8a8a}}</style></head><body>
-<h1>DrosoMath Phase-1B: adaptive memory</h1><div class='card'>Gate: <b class='{cls}'>{status}</b><br>v2 baseline vs v2.1 adaptive replay + stage-local consolidation</div>
-<h2>Paired summary</h2><table><tr><th>Task</th><th>v2 mean ± SD</th><th>v2.1 mean ± SD</th><th>Mean Δ</th><th>v2.1 wins</th></tr>{''.join(rows)}</table>
-{''.join(seed_tables)}</body></html>"""
+    return f"""<!doctype html><html><head><meta charset='utf-8'><title>DrosoMath Phase-1B</title><style>body{{font-family:system-ui;background:#101318;color:#e8edf5;max-width:1150px;margin:auto;padding:28px}}table{{width:100%;border-collapse:collapse}}th,td{{padding:9px;border-bottom:1px solid #2b3442;text-align:right}}th:first-child,td:first-child{{text-align:left}}.card{{padding:16px;border:1px solid #2b3442;border-radius:12px;background:#171c24}}.pass{{color:#6ee7a8}}.fail{{color:#ff8a8a}}</style></head><body><h1>DrosoMath Phase-1B: adaptive memory</h1><div class='card'>Gate: <b class='{cls}'>{status}</b><br>v2 baseline vs v2.1 adaptive replay + stage-local consolidation</div><h2>Paired summary</h2><table><tr><th>Task</th><th>v2 mean ± SD</th><th>v2.1 mean ± SD</th><th>Mean Δ</th><th>v2.1 wins</th></tr>{''.join(rows)}</table>{''.join(seed_tables)}</body></html>"""
 
 
-def run_benchmark(
-    *,
-    data_dir: Path,
-    config: Phase1BConfig,
-    result_root: Path = DEFAULT_RESULT_ROOT,
-    checkpoint_root: Path = DEFAULT_CHECKPOINT_ROOT,
-    baseline_result_root: Path = DEFAULT_BASELINE_RESULT_ROOT,
-    baseline_checkpoint_root: Path = DEFAULT_BASELINE_CHECKPOINT_ROOT,
-    fresh: bool = False,
-    download: bool = False,
-) -> dict[str, object]:
+def run_benchmark(*, data_dir: Path, config: Phase1BConfig, result_root: Path = DEFAULT_RESULT_ROOT, checkpoint_root: Path = DEFAULT_CHECKPOINT_ROOT, baseline_result_root: Path = DEFAULT_BASELINE_RESULT_ROOT, baseline_checkpoint_root: Path = DEFAULT_BASELINE_CHECKPOINT_ROOT, fresh: bool = False, download: bool = False) -> dict[str, object]:
     if download:
         download_malecns(data_dir)
     connectome = load_malecns_v1(data_dir, min_connection_synapses=config.min_connection_synapses)
     runs = []
-
     for seed in config.seeds:
-        v2_report, v2_paths, baseline_reused = _ensure_v2(
-            connectome,
-            seed=seed,
-            config=config,
-            baseline_result_root=baseline_result_root,
-            baseline_checkpoint_root=baseline_checkpoint_root,
-        )
-        v21_report, v21_paths = _train_v21(
-            connectome,
-            seed=seed,
-            config=config,
-            result_root=result_root,
-            checkpoint_root=checkpoint_root,
-            fresh=fresh,
-        )
-
-        common_v2 = _common_final_evaluation(
-            connectome,
-            seed=seed,
-            config=config,
-            checkpoint_path=v2_paths["checkpoint"],
-            readout_dir=v2_paths["readouts"],
-        )
-        common_v21 = _common_final_evaluation(
-            connectome,
-            seed=seed,
-            config=config,
-            checkpoint_path=v21_paths["checkpoint"],
-            readout_dir=v21_paths["readouts"],
-        )
-        runs.append({
-            "seed": seed,
-            "baseline_reused": baseline_reused,
-            "common_eval": {"v2": common_v2, "v21": common_v21},
-            "v2": {"phase1_gate": v2_report.get("phase1_gate")},
-            "v21": {
-                "phase1_gate": v21_report.get("phase1_gate"),
-                "replay_allocation": _replay_allocation(v21_report),
-                "consolidation_history": v21_report.get("consolidation_history"),
-            },
-        })
+        v2_report, v2_paths, baseline_reused = _ensure_v2(connectome, seed=seed, config=config, baseline_result_root=baseline_result_root, baseline_checkpoint_root=baseline_checkpoint_root)
+        v21_report, v21_paths = _train_v21(connectome, seed=seed, config=config, result_root=result_root, checkpoint_root=checkpoint_root, fresh=fresh)
+        common_v2 = _common_eval(connectome, seed, config, v2_paths["checkpoint"], v2_paths["readouts"])
+        common_v21 = _common_eval(connectome, seed, config, v21_paths["checkpoint"], v21_paths["readouts"])
+        runs.append({"seed": seed, "baseline_reused": baseline_reused, "common_eval": {"v2": common_v2, "v21": common_v21}, "v2": {"phase1_gate": v2_report.get("phase1_gate")}, "v21": {"phase1_gate": v21_report.get("phase1_gate"), "replay_allocation": _replay_allocation(v21_report), "consolidation_history": v21_report.get("consolidation_history")}})
         gc.collect()
-
     task_summary = _aggregate(runs)
     macro_v2 = [float(r["common_eval"]["v2"]["macro_accuracy"]) for r in runs]
     macro_v21 = [float(r["common_eval"]["v21"]["macro_accuracy"]) for r in runs]
     macro_delta = [b - a for a, b in zip(macro_v2, macro_v21)]
-    return {
-        "experiment": "malecns_phase1b_adaptive_memory_benchmark",
-        "config": asdict(config),
-        "connectome": connectome.summary(),
-        "runs": runs,
-        "summary": {
-            "tasks": task_summary,
-            "macro_accuracy": {
-                "v2": _mean_sd(macro_v2),
-                "v21": _mean_sd(macro_v21),
-                "paired_delta": _mean_sd(macro_delta),
-            },
-        },
-        "phase1b_gate": _gate(task_summary),
-    }
+    return {"experiment": "malecns_phase1b_adaptive_memory_benchmark", "config": asdict(config), "connectome": connectome.summary(), "runs": runs, "summary": {"tasks": task_summary, "macro_accuracy": {"v2": _mean_sd(macro_v2), "v21": _mean_sd(macro_v21), "paired_delta": _mean_sd(macro_delta)}}, "phase1b_gate": _gate(task_summary)}
 
 
 def _parse_seeds(value: str) -> tuple[int, ...]:
@@ -358,28 +247,15 @@ def main() -> None:
     p.add_argument("--fresh", action="store_true")
     p.add_argument("--result", type=Path, default=DEFAULT_RESULT)
     p.add_argument("--html", type=Path, default=DEFAULT_HTML)
-    a = p.parse_args()
-
-    config = Phase1BConfig(
-        seeds=tuple(a.seeds),
-        stage_trials=a.stage_trials,
-        validation_trials_per_label=a.validation_trials,
-        decoder_epochs=a.decoder_epochs,
-        checkpoint_every=a.checkpoint_every,
-        min_connection_synapses=a.min_syn,
-    )
-    report = run_benchmark(
-        data_dir=a.data_dir,
-        config=config,
-        fresh=a.fresh,
-        download=a.download,
-    )
-    _write(a.result, report)
-    a.html.parent.mkdir(parents=True, exist_ok=True)
-    a.html.write_text(build_html(report), encoding="utf-8")
+    args = p.parse_args()
+    config = Phase1BConfig(seeds=tuple(args.seeds), stage_trials=args.stage_trials, validation_trials_per_label=args.validation_trials, decoder_epochs=args.decoder_epochs, checkpoint_every=args.checkpoint_every, min_connection_synapses=args.min_syn)
+    report = run_benchmark(data_dir=args.data_dir, config=config, fresh=args.fresh, download=args.download)
+    _write(args.result, report)
+    args.html.parent.mkdir(parents=True, exist_ok=True)
+    args.html.write_text(build_html(report), encoding="utf-8")
     print(json.dumps({"phase1b_gate": report["phase1b_gate"], "summary": report["summary"]}, indent=2, sort_keys=True))
-    print(f"saved result: {a.result}")
-    print(f"saved dashboard: {a.html}")
+    print(f"saved result: {args.result}")
+    print(f"saved dashboard: {args.html}")
 
 
 if __name__ == "__main__":
