@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from dataclasses import asdict
 
 from drosomath.flywire_real import FlyBrainParams, FlyWireConnectome, SparseFlyBrain
@@ -50,6 +51,14 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
         self.plasticity_tracking_enabled = True
         self._recent_presynaptic: set[int] = set()
         self.structural_overlay: LearnedStructuralOverlay | None = None
+        self._structural_reward_events = 0
+        self.structural_rewire_interval = max(
+            1,
+            int(os.environ.get("DROSOMATH_STRUCTURAL_INTERVAL", "64")),
+        )
+
+        if os.environ.get("DROSOMATH_STRUCTURAL", "").strip().lower() in {"1", "true", "yes", "on"}:
+            self.configure_structural_plasticity()
 
         self._telemetry_enabled = False
         self._telemetry_max_edges = 128
@@ -69,6 +78,7 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
         """Enable auditable learned-edge structural plasticity."""
         overlay = LearnedStructuralOverlay(self.connectome, self.plasticity, config=config)
         self.structural_overlay = overlay
+        self._structural_reward_events = 0
         return overlay
 
     def run_structural_cycle(self, *, cycle_label: str = "") -> dict[str, object]:
@@ -136,6 +146,7 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
         self.reset()
         if self.structural_overlay is not None:
             self.structural_overlay.reset()
+        self._structural_reward_events = 0
         self.plasticity.reset_learning_state()
 
     def _neuron_identifier(self, index: int) -> int:
@@ -312,8 +323,14 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
 
         update = rule.apply(self.plasticity, reward=reward)
         structural_learning = None
+        structural_rewire = None
         if self.structural_overlay is not None:
             structural_learning = self.structural_overlay.learn_from_reward(float(reward))
+            self._structural_reward_events += 1
+            if self._structural_reward_events % self.structural_rewire_interval == 0:
+                structural_rewire = self.run_structural_cycle(
+                    cycle_label=f"reward_event_{self._structural_reward_events}"
+                )
 
         budget = None
         if normalizer is not None and self._recent_presynaptic:
@@ -338,5 +355,7 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
             "budget": asdict(budget) if budget is not None else None,
             "plasticity": self.plasticity.summary(),
             "structural_learning": structural_learning,
+            "structural_rewire": structural_rewire,
+            "structural_reward_events": int(self._structural_reward_events),
             "structural": self.structural_summary(),
         }
