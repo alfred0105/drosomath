@@ -1,9 +1,9 @@
 param(
     [int]$MinSyn = 5,
-    [int]$StageTrials = 512,
+    [int]$StageTrials = 2048,
     [int]$ValidationTrials = 32,
     [int]$DecoderEpochs = 8,
-    [int]$CheckpointEvery = 64,
+    [int]$CheckpointEvery = 256,
     [int]$StructuralEvery = 64,
     [int]$Seed = 7,
     [double]$MinLearningGain = 0.03,
@@ -20,6 +20,9 @@ Write-Host "=== DrosoMath Concept Foundation ==="
 Write-Host "object presence -> single/multiple -> latent quantity A/B/C"
 Write-Host "No number symbols, comparison operators, or arithmetic are used."
 Write-Host "seed=$Seed | trials/stage=$StageTrials | validation/class=$ValidationTrials"
+Write-Host "training bank: 384 examples/label | held-out bank: 128 examples/label"
+Write-Host "fast path: sparse active-state CNS updates + cached stimulus indices"
+Write-Host "checkpoint every $CheckpointEvery trials"
 Write-Host "strict gate requires held-out learning gain >= $MinLearningGain"
 if ($NoStructural) {
     Write-Host "structural plasticity: OFF (ablation mode)"
