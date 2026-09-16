@@ -113,10 +113,10 @@ def main() -> None:
     p.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
     p.add_argument("--download", action="store_true")
     p.add_argument("--min-syn", type=int, default=5)
-    p.add_argument("--stage-trials", type=int, default=512)
+    p.add_argument("--stage-trials", type=int, default=2048)
     p.add_argument("--validation-trials", type=int, default=32)
     p.add_argument("--decoder-epochs", type=int, default=8)
-    p.add_argument("--checkpoint-every", type=int, default=64)
+    p.add_argument("--checkpoint-every", type=int, default=256)
     p.add_argument("--seed", type=int, default=7)
     p.add_argument("--min-learning-gain", type=float, default=0.03)
     p.add_argument("--result", type=Path, default=DEFAULT_RESULT)
@@ -135,6 +135,8 @@ def main() -> None:
         validation_trials_per_label=a.validation_trials,
         decoder_epochs=a.decoder_epochs,
         checkpoint_every=a.checkpoint_every,
+        train_examples_per_label=384,
+        heldout_examples_per_label=128,
         seed=a.seed,
     )
     report = run_concept_foundation(
@@ -149,6 +151,14 @@ def main() -> None:
         min_learning_gain=a.min_learning_gain,
     )
     report["final_structural"] = checkpoint_structural_summary(a.checkpoint)
+    report["execution_profile"] = {
+        "stage_trials": int(a.stage_trials),
+        "train_examples_per_label": 384,
+        "heldout_examples_per_label": 128,
+        "checkpoint_every": int(a.checkpoint_every),
+        "male_cns_sparse_active_state": True,
+        "stimulus_index_cache": True,
+    }
     a.result.parent.mkdir(parents=True, exist_ok=True)
     a.result.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
     a.html.parent.mkdir(parents=True, exist_ok=True)
@@ -158,6 +168,7 @@ def main() -> None:
         "curriculum_order": report["curriculum_order"],
         "final_plasticity": report["final_plasticity"],
         "final_structural": report["final_structural"],
+        "execution_profile": report["execution_profile"],
     }, indent=2, sort_keys=True))
     print(f"saved result: {a.result}")
     print(f"saved dashboard: {a.html}")
