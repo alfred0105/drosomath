@@ -222,7 +222,7 @@ class AdaptiveReplayConfig(ReplayConfig):
     default_accuracy: float = 0.50
 
     def __post_init__(self) -> None:
-        super().__post_init__()
+        ReplayConfig.__post_init__(self)
         if self.error_power <= 0.0:
             raise ValueError("error_power must be > 0")
         if self.min_weight <= 0.0:
@@ -237,7 +237,7 @@ class AdaptiveReplayScheduler(ReplayScheduler):
     """Replay weak prior tasks more often than already-mastered tasks."""
 
     def __init__(self, config: AdaptiveReplayConfig | None = None) -> None:
-        super().__init__(config or AdaptiveReplayConfig())
+        ReplayScheduler.__init__(self, config or AdaptiveReplayConfig())
         self.config: AdaptiveReplayConfig
         self._accuracy: dict[int, float] = {}
         self._updates: dict[int, int] = {}
