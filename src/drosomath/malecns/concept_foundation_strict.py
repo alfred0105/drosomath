@@ -84,6 +84,30 @@ def strict_foundation_gate(report: dict[str, object], *, min_learning_gain: floa
     }
 
 
+def checkpoint_structural_summary(path: Path) -> dict[str, object]:
+    """Read compact structural metrics without reloading the full MaleCNS graph."""
+    import numpy as np
+
+    if not path.is_file():
+        return {"enabled": False, "active_edges": 0, "reason": "checkpoint_missing"}
+    with np.load(path, allow_pickle=False) as data:
+        if "structural__present" not in data or not bool(data["structural__present"][0]):
+            return {"enabled": False, "active_edges": 0}
+        slots = data["structural__slots"]
+        strength = data["structural__signed_strength"]
+        stability = data["structural__stability"]
+        return {
+            "enabled": True,
+            "active_edges": int(len(slots)),
+            "rewire_cycles": int(data["structural__cycles"][0]) if "structural__cycles" in data else 0,
+            "total_regrown": int(data["structural__total_regrown"][0]) if "structural__total_regrown" in data else int(len(slots)),
+            "total_replaced": int(data["structural__total_replaced"][0]) if "structural__total_replaced" in data else 0,
+            "donor_edges_silenced": int(len(slots)),
+            "mean_abs_strength": float(np.mean(np.abs(strength))) if len(strength) else 0.0,
+            "mean_stability": float(np.mean(stability)) if len(stability) else 0.0,
+        }
+
+
 def main() -> None:
     p = argparse.ArgumentParser(description="Run strict concept-first MaleCNS foundation curriculum")
     p.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
@@ -124,6 +148,7 @@ def main() -> None:
         report,
         min_learning_gain=a.min_learning_gain,
     )
+    report["final_structural"] = checkpoint_structural_summary(a.checkpoint)
     a.result.parent.mkdir(parents=True, exist_ok=True)
     a.result.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
     a.html.parent.mkdir(parents=True, exist_ok=True)
@@ -132,6 +157,7 @@ def main() -> None:
         "foundation_gate": report["foundation_gate"],
         "curriculum_order": report["curriculum_order"],
         "final_plasticity": report["final_plasticity"],
+        "final_structural": report["final_structural"],
     }, indent=2, sort_keys=True))
     print(f"saved result: {a.result}")
     print(f"saved dashboard: {a.html}")
