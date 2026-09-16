@@ -82,6 +82,18 @@ class MaleCNSOutputSession:
             dtype=np.int32,
         )
         self._output_lookup[output_indices] = np.arange(len(output_indices), dtype=np.int32)
+        # Concept curricula repeatedly sample from a finite bank of scenes. Avoid
+        # rebuilding body-id -> simulation-index arrays on every presentation.
+        self._stimulus_index_cache: dict[tuple[int, ...], object] = {}
+        self._step_count_cache: dict[float, int] = {}
+
+    def _indices_for_stimulus(self, stimulus_body_ids):
+        key = tuple(int(x) for x in stimulus_body_ids)
+        cached = self._stimulus_index_cache.get(key)
+        if cached is None:
+            cached = self.brain.indices_for_ids(key)
+            self._stimulus_index_cache[key] = cached
+        return cached
 
     def _run_window(
         self,
@@ -99,9 +111,12 @@ class MaleCNSOutputSession:
         if self.config.reset_fast_state_before_trial:
             self.brain.reset()
 
-        stimulus_ids = tuple(int(x) for x in stimulus_body_ids)
-        stimulus_indices = self.brain.indices_for_ids(stimulus_ids)
-        steps = max(1, int(math.ceil(duration_ms / self.brain.params.dt_ms)))
+        stimulus_indices = self._indices_for_stimulus(stimulus_body_ids)
+        duration_key = float(duration_ms)
+        steps = self._step_count_cache.get(duration_key)
+        if steps is None:
+            steps = max(1, int(math.ceil(duration_ms / self.brain.params.dt_ms)))
+            self._step_count_cache[duration_key] = steps
         counts = np.zeros(len(self.readout.population.body_ids), dtype=np.int32)
 
         for _ in range(steps):
@@ -233,4 +248,5 @@ class MaleCNSOutputSession:
             "incorrect_reward": self.config.incorrect_reward,
             "no_output_reward": self.config.no_output_reward,
             "plasticity": self.brain.plasticity.summary(),
+            "stimulus_cache_entries": len(self._stimulus_index_cache),
         }
