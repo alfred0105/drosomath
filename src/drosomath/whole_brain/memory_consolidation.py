@@ -8,13 +8,7 @@ from .usage_learning import LearningUpdateStats
 
 @dataclass(frozen=True, slots=True)
 class ProtectedRewardRule:
-    """Reward-modulated plasticity with stability-dependent protection.
-
-    Stability is treated as a task-agnostic estimate of memory importance.
-    Consolidated edges can still change, but their learning rate is reduced so
-    a later task cannot overwrite them as easily. Positive updates retain more
-    plasticity than negative updates to avoid freezing useful reusable routes.
-    """
+    """Reward-modulated plasticity with stability-dependent protection."""
 
     learning_rate: float = 0.02
     positive_reward_scale: float = 1.0
@@ -86,7 +80,6 @@ class ProtectedRewardRule:
                 stability[active] += self.stability_gain * local_credit * (1.0 - stability[active])
                 np.clip(stability, 0.0, 1.0, out=stability)
             elif reward < 0.0 and self.stability_loss > 0.0:
-                # Strong memories decay much more slowly on a single mistake.
                 stability[active] *= 1.0 - self.stability_loss * abs(reward) * (1.0 - local_stability)
 
             count = int(active.sum())
@@ -106,38 +99,63 @@ class ConsolidationConfig:
     boost: float = 0.30
     min_stability: float = 1e-5
     min_usage: float = 1e-5
+    min_stage_gain: float = 1e-6
 
     def __post_init__(self) -> None:
         if not 0.0 < self.top_fraction <= 1.0:
             raise ValueError("top_fraction must be in (0, 1]")
         if not 0.0 <= self.boost <= 1.0:
             raise ValueError("boost must be in [0, 1]")
-        if self.min_stability < 0.0 or self.min_usage < 0.0:
+        if self.min_stability < 0.0 or self.min_usage < 0.0 or self.min_stage_gain < 0.0:
             raise ValueError("minimums must be >= 0")
 
 
 class MemoryConsolidator:
-    """Convert repeatedly rewarded/used edges into harder-to-overwrite memory."""
+    """Convert repeatedly rewarded/used edges into harder-to-overwrite memory.
+
+    Passing ``baseline_stability`` switches to stage-local mode. Only edges whose
+    stability increased during the current stage are candidates, preventing old
+    already-stable memories from repeatedly winning every consolidation round.
+    """
 
     def __init__(self, config: ConsolidationConfig | None = None) -> None:
         self.config = config or ConsolidationConfig()
 
-    def consolidate(self, state: SparsePlasticityState) -> dict[str, float | int]:
+    def consolidate(
+        self,
+        state: SparsePlasticityState,
+        *,
+        baseline_stability=None,
+    ) -> dict[str, float | int | bool]:
         np = state.np
+        stage_local = baseline_stability is not None
+        stage_gain = None
         candidate = (
             state.plastic_mask
             & (state.stability >= self.config.min_stability)
             & (state.usage_ema >= self.config.min_usage)
         )
+
+        if stage_local:
+            baseline = np.asarray(baseline_stability, dtype=state.stability.dtype)
+            if baseline.shape != state.stability.shape:
+                raise ValueError("baseline_stability shape must match state.stability")
+            stage_gain = state.stability - baseline
+            candidate &= stage_gain > self.config.min_stage_gain
+
         idx = np.flatnonzero(candidate)
         if len(idx) == 0 or self.config.boost == 0.0:
-            return {"candidate_edges": int(len(idx)), "consolidated_edges": 0, "mean_stability_gain": 0.0}
+            return {
+                "candidate_edges": int(len(idx)),
+                "consolidated_edges": 0,
+                "mean_stability_gain": 0.0,
+                "stage_local": bool(stage_local),
+                "mean_preboost_stage_gain": 0.0,
+            }
 
-        # Stability is reward-derived; usage favors routes that repeatedly
-        # participated. A small multiplier term favors potentiated pathways
-        # without making it the sole memory signal.
+        signal = state.stability[idx] if stage_gain is None else np.maximum(stage_gain[idx], 0.0)
         importance = (
-            state.stability[idx]
+            signal
             * (0.25 + state.usage_ema[idx])
             * (0.5 + np.maximum(state.multiplier[idx] - 1.0, 0.0))
         )
@@ -152,10 +170,13 @@ class MemoryConsolidator:
         state.stability[selected] += self.config.boost * (1.0 - state.stability[selected])
         np.clip(state.stability[selected], 0.0, 1.0, out=state.stability[selected])
         gain = state.stability[selected] - old
+        preboost = 0.0 if stage_gain is None else float(np.maximum(stage_gain[selected], 0.0).mean())
         return {
             "candidate_edges": int(len(idx)),
             "consolidated_edges": int(len(selected)),
             "mean_stability_gain": float(gain.mean()) if len(gain) else 0.0,
+            "stage_local": bool(stage_local),
+            "mean_preboost_stage_gain": preboost,
         }
 
 
@@ -178,7 +199,7 @@ class ReplayConfig:
 
 
 class ReplayScheduler:
-    """Interleave previously learned tasks while a new task is trained."""
+    """Uniformly interleave previously learned tasks while a new task is trained."""
 
     def __init__(self, config: ReplayConfig | None = None) -> None:
         self.config = config or ReplayConfig()
@@ -191,3 +212,76 @@ class ReplayScheduler:
             raise ValueError("prior_task_count must be >= 1")
         first = max(0, prior_task_count - self.config.max_prior_tasks)
         return int(rng.integers(first, prior_task_count))
+
+
+@dataclass(frozen=True, slots=True)
+class AdaptiveReplayConfig(ReplayConfig):
+    error_power: float = 2.0
+    min_weight: float = 0.03
+    ema_decay: float = 0.85
+    default_accuracy: float = 0.50
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        if self.error_power <= 0.0:
+            raise ValueError("error_power must be > 0")
+        if self.min_weight <= 0.0:
+            raise ValueError("min_weight must be > 0")
+        if not 0.0 <= self.ema_decay < 1.0:
+            raise ValueError("ema_decay must be in [0, 1)")
+        if not 0.0 <= self.default_accuracy <= 1.0:
+            raise ValueError("default_accuracy must be in [0, 1]")
+
+
+class AdaptiveReplayScheduler(ReplayScheduler):
+    """Replay weak prior tasks more often than already-mastered tasks."""
+
+    def __init__(self, config: AdaptiveReplayConfig | None = None) -> None:
+        super().__init__(config or AdaptiveReplayConfig())
+        self.config: AdaptiveReplayConfig
+        self._accuracy: dict[int, float] = {}
+        self._updates: dict[int, int] = {}
+
+    def set_accuracy(self, task_index: int, accuracy: float) -> None:
+        self._accuracy[int(task_index)] = min(1.0, max(0.0, float(accuracy)))
+
+    def update(self, task_index: int, *, correct: bool) -> float:
+        idx = int(task_index)
+        old = self._accuracy.get(idx, self.config.default_accuracy)
+        target = 1.0 if correct else 0.0
+        new = self.config.ema_decay * old + (1.0 - self.config.ema_decay) * target
+        self._accuracy[idx] = float(new)
+        self._updates[idx] = self._updates.get(idx, 0) + 1
+        return float(new)
+
+    def accuracy(self, task_index: int) -> float:
+        return float(self._accuracy.get(int(task_index), self.config.default_accuracy))
+
+    def weight(self, task_index: int) -> float:
+        error = max(0.0, 1.0 - self.accuracy(task_index))
+        return max(self.config.min_weight, error ** self.config.error_power)
+
+    def choose_prior_index(self, rng, prior_task_count: int) -> int:
+        if prior_task_count < 1:
+            raise ValueError("prior_task_count must be >= 1")
+        np = __import__("numpy")
+        first = max(0, prior_task_count - self.config.max_prior_tasks)
+        indices = np.arange(first, prior_task_count, dtype=np.int32)
+        weights = np.asarray([self.weight(int(i)) for i in indices], dtype=np.float64)
+        weights /= weights.sum()
+        return int(rng.choice(indices, p=weights))
+
+    def snapshot(self, prior_task_count: int) -> dict[str, object]:
+        first = max(0, prior_task_count - self.config.max_prior_tasks)
+        rows = []
+        for i in range(first, prior_task_count):
+            rows.append({
+                "task_index": int(i),
+                "accuracy_ema": self.accuracy(i),
+                "weight": self.weight(i),
+                "updates": int(self._updates.get(i, 0)),
+            })
+        total = sum(float(x["weight"]) for x in rows) or 1.0
+        for row in rows:
+            row["probability"] = float(row["weight"]) / total
+        return {"tasks": rows}
