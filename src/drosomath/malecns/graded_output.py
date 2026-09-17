@@ -11,6 +11,82 @@ BETWEEN_LEVELS = "BETWEEN_LEVELS"
 
 
 @dataclass(frozen=True, slots=True)
+class TwoLevelRateCalibration:
+    """Empirical rate-code calibration for the first two output levels."""
+
+    background_mean_hz: float
+    background_std_hz: float
+    present_mean_hz: float
+    present_std_hz: float
+    separation_hz: float
+    usable: bool
+    reason: str
+
+    def code_config(self, *, max_level: int = 7, max_teaching_signal: float = 1.0) -> "GradedRateCodeConfig":
+        step = self.present_mean_hz - self.background_mean_hz
+        if step == 0.0:
+            step = 1e-6
+        tolerance = max(1e-6, abs(step) * 0.24)
+        return GradedRateCodeConfig(
+            base_rate_hz=self.background_mean_hz,
+            level_step_hz=step,
+            tolerance_hz=tolerance,
+            max_level=max_level,
+            max_teaching_signal=max_teaching_signal,
+        )
+
+    def summary(self) -> dict[str, object]:
+        return {
+            "background_mean_hz": self.background_mean_hz,
+            "background_std_hz": self.background_std_hz,
+            "present_mean_hz": self.present_mean_hz,
+            "present_std_hz": self.present_std_hz,
+            "separation_hz": self.separation_hz,
+            "usable": self.usable,
+            "reason": self.reason,
+        }
+
+
+def calibrate_two_level_rate_code(
+    background_rates_hz,
+    present_rates_hz,
+    *,
+    min_separation_hz: float = 0.10,
+) -> TwoLevelRateCalibration:
+    """Measure output distributions before learning and derive a fixed code."""
+    background = tuple(float(x) for x in background_rates_hz)
+    present = tuple(float(x) for x in present_rates_hz)
+    if not background or not present:
+        raise ValueError("both calibration classes must contain at least one rate")
+    if min_separation_hz < 0.0:
+        raise ValueError("min_separation_hz must be >= 0")
+
+    def mean(values):
+        return sum(values) / len(values)
+
+    def std(values, center):
+        return (sum((x - center) ** 2 for x in values) / len(values)) ** 0.5
+
+    background_mean = mean(background)
+    present_mean = mean(present)
+    separation = abs(present_mean - background_mean)
+    usable = separation >= float(min_separation_hz)
+    return TwoLevelRateCalibration(
+        background_mean_hz=background_mean,
+        background_std_hz=std(background, background_mean),
+        present_mean_hz=present_mean,
+        present_std_hz=std(present, present_mean),
+        separation_hz=separation,
+        usable=usable,
+        reason=(
+            "measured separation is large enough"
+            if usable
+            else "background and present output-rate distributions are not separated"
+        ),
+    )
+
+
+@dataclass(frozen=True, slots=True)
 class GradedRateCodeConfig:
     """Fixed, non-trainable population-rate code for MaleCNS outputs.
 
@@ -28,11 +104,11 @@ class GradedRateCodeConfig:
     def __post_init__(self) -> None:
         if self.base_rate_hz < 0.0:
             raise ValueError("base_rate_hz must be >= 0")
-        if self.level_step_hz <= 0.0:
-            raise ValueError("level_step_hz must be > 0")
+        if self.level_step_hz == 0.0:
+            raise ValueError("level_step_hz must be non-zero")
         if self.tolerance_hz <= 0.0:
             raise ValueError("tolerance_hz must be > 0")
-        if self.tolerance_hz >= self.level_step_hz / 2.0:
+        if self.tolerance_hz >= abs(self.level_step_hz) / 2.0:
             raise ValueError("tolerance_hz must be < half the level spacing")
         if self.max_level < 1:
             raise ValueError("max_level must be >= 1")
@@ -137,6 +213,10 @@ class GradedPopulationCode:
             "level_step_hz": self.config.level_step_hz,
             "tolerance_hz": self.config.tolerance_hz,
             "max_level": self.config.max_level,
+            "target_rates_hz": [
+                self.config.target_rate_hz(level)
+                for level in range(self.config.max_level + 1)
+            ],
             "trainable_decoder": False,
         }
 
@@ -157,6 +237,7 @@ class GradedPopulationSession:
         code_config: GradedRateCodeConfig | None = None,
         reward_rule: UsageRewardRule | None = None,
         normalizer: OutgoingBudgetNormalizer | None = None,
+        probe_indices=None,
     ) -> None:
         np = brain.np
         self.np = np
@@ -171,6 +252,19 @@ class GradedPopulationSession:
             raise ValueError("output population must not be empty")
         self._output_lookup = np.full(brain.connectome.neuron_count, -1, dtype=np.int32)
         self._output_lookup[output_indices] = np.arange(len(output_indices), dtype=np.int32)
+        if probe_indices is not None:
+            probe_indices = np.asarray(probe_indices, dtype=np.int32)
+            if len(probe_indices) == 0:
+                raise ValueError("activity probe must not be empty")
+            if np.any(probe_indices < 0) or np.any(probe_indices >= brain.connectome.neuron_count):
+                raise ValueError("activity probe contains indices outside the brain")
+            if len(np.unique(probe_indices)) != len(probe_indices):
+                raise ValueError("activity probe contains duplicate neurons")
+            self._probe_indices = probe_indices
+            self._probe_lookup = np.full(brain.connectome.neuron_count, -1, dtype=np.int32)
+            self._probe_lookup[probe_indices] = np.arange(len(probe_indices), dtype=np.int32)
+        else:
+            self._probe_indices = None
         self._stimulus_index_cache: dict[tuple[int, ...], object] = {}
         self._step_count_cache: dict[float, int] = {}
 
@@ -182,7 +276,14 @@ class GradedPopulationSession:
             self._stimulus_index_cache[key] = cached
         return cached
 
-    def _run_window(self, *, stimulus_body_ids, duration_ms: float, stimulus_rate_hz: float) -> int:
+    def _run_window(
+        self,
+        *,
+        stimulus_body_ids,
+        duration_ms: float,
+        stimulus_rate_hz: float,
+        collect_probe: bool = False,
+    ):
         if duration_ms <= 0.0:
             raise ValueError("duration_ms must be > 0")
         if stimulus_rate_hz < 0.0:
@@ -195,6 +296,11 @@ class GradedPopulationSession:
             self._step_count_cache[float(duration_ms)] = steps
 
         total = 0
+        probe_counts = None
+        if collect_probe:
+            if self._probe_indices is None:
+                raise RuntimeError("activity probe is not configured")
+            probe_counts = self.np.zeros(len(self._probe_indices), dtype=self.np.int32)
         for _ in range(steps):
             fired, _ = self.brain.step(
                 stimulus_indices=stimulus_indices,
@@ -203,7 +309,51 @@ class GradedPopulationSession:
             if len(fired):
                 local = self._output_lookup[fired]
                 total += int((local >= 0).sum())
-        return total
+                if probe_counts is not None:
+                    probe_local = self._probe_lookup[fired]
+                    probe_local = probe_local[probe_local >= 0]
+                    if len(probe_local):
+                        self.np.add.at(probe_counts, probe_local, 1)
+        return (total, probe_counts) if probe_counts is not None else total
+
+    def measure_trial_rate(
+        self,
+        *,
+        stimulus_body_ids,
+        duration_ms: float = 20.0,
+        stimulus_rate_hz: float = 205.0,
+    ) -> GradedObservation:
+        """Measure an untrained output rate without applying learning."""
+        previous = self.brain.set_plasticity_tracking(False)
+        try:
+            total = self._run_window(
+                stimulus_body_ids=stimulus_body_ids,
+                duration_ms=duration_ms,
+                stimulus_rate_hz=stimulus_rate_hz,
+            )
+        finally:
+            self.brain.set_plasticity_tracking(previous)
+        return self.code.observe(total, duration_ms=duration_ms)
+
+    def measure_trial_activity(
+        self,
+        *,
+        stimulus_body_ids,
+        duration_ms: float = 20.0,
+        stimulus_rate_hz: float = 205.0,
+    ):
+        """Return the output observation and a fixed internal probe vector."""
+        previous = self.brain.set_plasticity_tracking(False)
+        try:
+            total, probe_counts = self._run_window(
+                stimulus_body_ids=stimulus_body_ids,
+                duration_ms=duration_ms,
+                stimulus_rate_hz=stimulus_rate_hz,
+                collect_probe=True,
+            )
+        finally:
+            self.brain.set_plasticity_tracking(previous)
+        return self.code.observe(total, duration_ms=duration_ms), probe_counts
 
     def evaluate_trial(
         self,
@@ -252,6 +402,7 @@ class GradedPopulationSession:
     def summary(self) -> dict[str, object]:
         return {
             "code": self.code.summary(),
+            "activity_probe_size": 0 if self._probe_indices is None else int(len(self._probe_indices)),
             "stimulus_cache_entries": len(self._stimulus_index_cache),
             "plasticity": self.brain.plasticity.summary(),
         }

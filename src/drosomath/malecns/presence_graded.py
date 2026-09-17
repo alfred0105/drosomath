@@ -12,7 +12,11 @@ from .brain import PlasticMaleCNSBrain
 from .checkpoint import save_learning_checkpoint
 from .concept_foundation import ConceptFoundationConfig, build_concept_foundation
 from .download import DEFAULT_DATA_DIR, download_malecns
-from .graded_output import GradedPopulationSession, GradedRateCodeConfig
+from .graded_output import (
+    GradedPopulationSession,
+    GradedRateCodeConfig,
+    calibrate_two_level_rate_code,
+)
 from .loader import load_malecns_v1
 
 
@@ -25,8 +29,12 @@ DEFAULT_CHECKPOINT = Path("checkpoints/malecns_presence_graded_brain.npz")
 @dataclass(frozen=True, slots=True)
 class PresenceMasteryConfig:
     min_connection_synapses: int = 5
-    duration_ms: float = 20.0
+    duration_ms: float = 100.0
     stimulus_rate_hz: float = 205.0
+    calibration_trials_per_class: int = 32
+    calibration_min_separation_hz: float = 0.10
+    representation_probe_size: int = 512
+    representation_trials_per_class: int = 16
     fixed_full_trials: int = 2048
     varied_full_trials: int = 3072
     varied_dropout_trials: int = 3072
@@ -47,6 +55,14 @@ class PresenceMasteryConfig:
             raise ValueError("phase trial counts must be positive")
         if self.validation_trials_per_class < 1:
             raise ValueError("validation_trials_per_class must be positive")
+        if self.calibration_trials_per_class < 2:
+            raise ValueError("calibration_trials_per_class must be >= 2")
+        if self.calibration_min_separation_hz < 0.0:
+            raise ValueError("calibration_min_separation_hz must be >= 0")
+        if self.representation_probe_size < 1:
+            raise ValueError("representation_probe_size must be positive")
+        if self.representation_trials_per_class < 2:
+            raise ValueError("representation_trials_per_class must be >= 2")
         if not 0.5 < self.mastery_accuracy <= 1.0:
             raise ValueError("mastery_accuracy must be in (0.5, 1]")
         if self.max_attempts_per_phase < 1:
@@ -63,6 +79,80 @@ class PresencePhase:
     keep_min: float
     keep_max: float
     evaluation_split: str
+
+
+def _choose_representation_probe(connectome, field, output, size: int):
+    np = __import__("numpy")
+    if size < 1:
+        raise ValueError("representation probe size must be positive")
+    input_ids = set(int(x) for x in field.background_body_ids)
+    input_ids.update(int(x) for group in field.position_body_ids for x in group)
+    input_indices = set(int(connectome.index_of(x)) for x in input_ids)
+    output_indices = set(int(x) for x in output.indices)
+    excluded = input_indices | output_indices
+    candidates = np.asarray(
+        [i for i in range(connectome.neuron_count) if i not in excluded],
+        dtype=np.int32,
+    )
+    if len(candidates) < size:
+        raise ValueError("not enough non-input, non-output neurons for representation probe")
+    return candidates[:size]
+
+
+def _cosine(a, b) -> float:
+    np = __import__("numpy")
+    left = np.asarray(a, dtype=np.float32)
+    right = np.asarray(b, dtype=np.float32)
+    denom = float(np.linalg.norm(left) * np.linalg.norm(right))
+    if denom == 0.0:
+        return 0.0
+    return float(np.dot(left, right) / denom)
+
+
+def _mean_pairwise(vectors) -> float:
+    if len(vectors) < 2:
+        return 0.0
+    values = []
+    for i in range(len(vectors)):
+        for j in range(i + 1, len(vectors)):
+            values.append(_cosine(vectors[i], vectors[j]))
+    return sum(values) / len(values)
+
+
+def _representation_audit(session, field, phase, config: PresenceMasteryConfig, *, seed: int) -> dict[str, object]:
+    np = __import__("numpy")
+    rng = np.random.default_rng(seed)
+    vectors = {0: [], 1: []}
+    for target_level in (0, 1):
+        for _ in range(config.representation_trials_per_class):
+            stimulus = _scene(
+                field,
+                present=bool(target_level),
+                phase=phase,
+                split="heldout",
+                rng=rng,
+            )
+            _, vector = session.measure_trial_activity(
+                stimulus_body_ids=stimulus,
+                duration_ms=config.duration_ms,
+                stimulus_rate_hz=config.stimulus_rate_hz,
+            )
+            vectors[target_level].append(np.asarray(vector, dtype=np.float32))
+
+    between = []
+    for left in vectors[0]:
+        for right in vectors[1]:
+            between.append(_cosine(left, right))
+    all_vectors = vectors[0] + vectors[1]
+    return {
+        "probe_size": int(len(all_vectors[0])) if all_vectors else 0,
+        "within_background_cosine": _mean_pairwise(vectors[0]),
+        "within_present_cosine": _mean_pairwise(vectors[1]),
+        "between_class_cosine": sum(between) / len(between) if between else 0.0,
+        "invariance_margin": _mean_pairwise(vectors[1]) - (sum(between) / len(between) if between else 0.0),
+        "nonzero_vector_fraction": sum(int(float(np.linalg.norm(x)) > 0.0) for x in all_vectors) / max(1, len(all_vectors)),
+        "split": "heldout",
+    }
 
 
 def _phases(config: PresenceMasteryConfig) -> tuple[PresencePhase, ...]:
@@ -186,6 +276,12 @@ def run_presence_mastery(
         seed=config.seed,
         plasticity_config=PlasticStateConfig(plastic_fraction=0.05, seed=config.seed),
     )
+    representation_probe = _choose_representation_probe(
+        connectome,
+        bundle.field,
+        bundle.output,
+        config.representation_probe_size,
+    )
     session = GradedPopulationSession(
         brain,
         bundle.output,
@@ -197,7 +293,88 @@ def run_presence_mastery(
         ),
         reward_rule=UsageRewardRule(learning_rate=config.learning_rate),
         normalizer=OutgoingBudgetNormalizer(strength=config.budget_strength),
+        probe_indices=representation_probe,
     )
+
+    # Calibrate the fixed rate code from the untrained MaleCNS output
+    # distribution.  This is measurement only: tracking is disabled and no
+    # synaptic state is changed.  Do not train if the two classes are not
+    # separable at the chosen output population and time window.
+    calibration_phase = _phases(config)[0]
+    calibration_rng = np.random.default_rng(config.seed + 90_000)
+    background_rates = []
+    present_rates = []
+    for _ in range(config.calibration_trials_per_class):
+        background = _scene(
+            bundle.field,
+            present=False,
+            phase=calibration_phase,
+            split="train",
+            rng=calibration_rng,
+        )
+        present = _scene(
+            bundle.field,
+            present=True,
+            phase=calibration_phase,
+            split="train",
+            rng=calibration_rng,
+        )
+        background_rates.append(
+            session.measure_trial_rate(
+                stimulus_body_ids=background,
+                duration_ms=config.duration_ms,
+                stimulus_rate_hz=config.stimulus_rate_hz,
+            ).population_rate_hz
+        )
+        present_rates.append(
+            session.measure_trial_rate(
+                stimulus_body_ids=present,
+                duration_ms=config.duration_ms,
+                stimulus_rate_hz=config.stimulus_rate_hz,
+            ).population_rate_hz
+        )
+
+    calibration = calibrate_two_level_rate_code(
+        background_rates,
+        present_rates,
+        min_separation_hz=config.calibration_min_separation_hz,
+    )
+    if calibration.usable:
+        session.code.config = calibration.code_config(
+            max_level=config.max_output_level,
+        )
+    else:
+        report = {
+            "experiment": "malecns_presence_graded_v1",
+            "purpose": "master object absence/presence before any quantity curriculum",
+            "config": asdict(config),
+            "connectome": connectome.summary(),
+            "provenance": {
+                **bundle.provenance,
+                "representation_probe_size": len(representation_probe),
+                "representation_probe_scope": "deterministic non-input, non-output neurons",
+            },
+            "calibration": calibration.summary(),
+            "output_code": session.code.summary(),
+            "phase_reports": [],
+            "completed_training_trials": 0,
+            "curriculum_passed": False,
+            "failed_phase": "output_rate_calibration",
+            "next_curriculum_unlocked": False,
+            "final_plasticity": {**brain.plasticity.summary(), "changed_edges": 0},
+            "structural": brain.structural_summary(),
+            "execution_profile": {
+                "backend": "numpy_cpu",
+                "gpu_used": False,
+                "sparse_active_state": True,
+                "output_rate_calibration": True,
+            },
+            "checkpoint": str(checkpoint_path),
+        }
+        result_path.parent.mkdir(parents=True, exist_ok=True)
+        result_path.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
+        _write_progress(progress_path, report)
+        return report
 
     phase_reports = []
     completed_training_trials = 0
@@ -212,6 +389,13 @@ def run_presence_mastery(
             phase,
             config,
             seed=config.seed + 100_000 + phase_index * 10_000,
+        )
+        representation_before = _representation_audit(
+            session,
+            bundle.field,
+            phase,
+            config,
+            seed=config.seed + 110_000 + phase_index * 10_000,
         )
         phase_passed = False
 
@@ -280,6 +464,13 @@ def run_presence_mastery(
                 config,
                 seed=config.seed + 200_000 + phase_index * 10_000 + attempt_index,
             )
+            representation_after = _representation_audit(
+                session,
+                bundle.field,
+                phase,
+                config,
+                seed=config.seed + 210_000 + phase_index * 10_000 + attempt_index,
+            )
             phase_passed = mastery_passed(evaluation["accuracy"], config.mastery_accuracy)
             attempt_report = {
                 "attempt": attempt_index + 1,
@@ -288,6 +479,7 @@ def run_presence_mastery(
                 "training_between_levels_fraction": between / max(1, phase.trials),
                 "mean_signed_error_hz": signed_error_sum / max(1, phase.trials),
                 "evaluation": evaluation,
+                "representation": representation_after,
                 "mastery_threshold": config.mastery_accuracy,
                 "passed": phase_passed,
                 "last_rows": last_rows,
@@ -301,6 +493,7 @@ def run_presence_mastery(
                 "phase_reports": phase_reports + [{
                     "phase": phase.name,
                     "before": before,
+                    "representation_before": representation_before,
                     "attempts": attempts,
                     "passed": phase_passed,
                 }],
@@ -345,7 +538,12 @@ def run_presence_mastery(
         "purpose": "master object absence/presence before any quantity curriculum",
         "config": asdict(config),
         "connectome": connectome.summary(),
-        "provenance": bundle.provenance,
+        "provenance": {
+            **bundle.provenance,
+            "representation_probe_size": len(representation_probe),
+            "representation_probe_scope": "deterministic non-input, non-output neurons",
+        },
+        "calibration": calibration.summary(),
         "output_code": session.code.summary(),
         "phase_reports": phase_reports,
         "completed_training_trials": completed_training_trials,
@@ -354,6 +552,12 @@ def run_presence_mastery(
         "next_curriculum_unlocked": bool(curriculum_passed),
         "final_plasticity": {**plast, "changed_edges": changed},
         "structural": brain.structural_summary(),
+        "execution_profile": {
+            "backend": "numpy_cpu",
+            "gpu_used": False,
+            "sparse_active_state": True,
+            "output_rate_calibration": True,
+        },
         "checkpoint": str(checkpoint_path),
     }
     result_path.parent.mkdir(parents=True, exist_ok=True)
@@ -389,6 +593,12 @@ def main() -> None:
     p.add_argument("--fixed-trials", type=int, default=2048)
     p.add_argument("--varied-trials", type=int, default=3072)
     p.add_argument("--dropout-trials", type=int, default=3072)
+    p.add_argument("--duration-ms", type=float, default=100.0)
+    p.add_argument("--stimulus-rate-hz", type=float, default=205.0)
+    p.add_argument("--calibration-trials", type=int, default=32)
+    p.add_argument("--calibration-min-separation-hz", type=float, default=0.10)
+    p.add_argument("--representation-probe-size", type=int, default=512)
+    p.add_argument("--representation-trials", type=int, default=16)
     p.add_argument("--validation-trials", type=int, default=64)
     p.add_argument("--mastery", type=float, default=0.85)
     p.add_argument("--max-attempts", type=int, default=3)
@@ -408,6 +618,12 @@ def main() -> None:
         fixed_full_trials=a.fixed_trials,
         varied_full_trials=a.varied_trials,
         varied_dropout_trials=a.dropout_trials,
+        duration_ms=a.duration_ms,
+        stimulus_rate_hz=a.stimulus_rate_hz,
+        calibration_trials_per_class=a.calibration_trials,
+        calibration_min_separation_hz=a.calibration_min_separation_hz,
+        representation_probe_size=a.representation_probe_size,
+        representation_trials_per_class=a.representation_trials,
         validation_trials_per_class=a.validation_trials,
         mastery_accuracy=a.mastery,
         max_attempts_per_phase=a.max_attempts,
