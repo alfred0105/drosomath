@@ -43,6 +43,7 @@ class CurriculumV1Config:
     budget_strength: float = 0.25
     silent_reward: float = -0.35
     seed: int = 7
+    numeric_first: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -179,6 +180,8 @@ def build_curriculum(
         plastic_fraction=0.20,
     )
 
+    if config.numeric_first:
+        return (numerosity, compare_task, addition_task), output
     return (laterality, numerosity, compare_task, addition_task), output
 
 
@@ -486,6 +489,11 @@ def main() -> None:
     parser.add_argument("--validation-trials", type=int, default=8)
     parser.add_argument("--checkpoint-every", type=int, default=64)
     parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument(
+        "--numeric-first",
+        action="store_true",
+        help="start with quantity concepts instead of the legacy laterality stage",
+    )
     parser.add_argument("--fresh", action="store_true")
     parser.add_argument("--result", type=Path, default=DEFAULT_RESULT)
     parser.add_argument("--checkpoint", type=Path, default=DEFAULT_CHECKPOINT)
@@ -502,6 +510,7 @@ def main() -> None:
         validation_trials_per_label=args.validation_trials,
         checkpoint_every=args.checkpoint_every,
         seed=args.seed,
+        numeric_first=args.numeric_first,
     )
     report = run_curriculum(
         connectome,

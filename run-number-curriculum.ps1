@@ -29,7 +29,8 @@ $argsList = @(
     "--decoder-epochs", "$DecoderEpochs",
     "--validation-trials", "$ValidationTrials",
     "--checkpoint-every", "$CheckpointEvery",
-    "--seed", "$Seed"
+    "--seed", "$Seed",
+    "--numeric-first"
 )
 
 if ($Download -and -not $NoDownload) {
@@ -41,7 +42,7 @@ if ($Fresh) {
 
 Write-Host "=== DrosoMath number-concept curriculum ==="
 Write-Host "Python: $python"
-Write-Host "Stages: laterality -> numerosity 1-4 -> comparison -> addition 1-3"
+Write-Host "Stages: numerosity 1-4 -> comparison -> addition 1-3"
 & $python @argsList
 if ($LASTEXITCODE -ne 0) {
     throw "Number curriculum failed with exit code $LASTEXITCODE"
