@@ -16,6 +16,10 @@ $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $python = Join-Path $root '.venv\Scripts\python.exe'
 if (-not (Test-Path -LiteralPath $python)) { $python = 'python' }
 $dataDir = Join-Path $root 'data\malecns_v1'
+Write-Host "=== DrosoMath virtual keyboard matching ==="
+Write-Host "Keys: 한글 영어 O X 0-9 | four-arm virtual body | 20 motor channels"
+Write-Host "Trials: $Trials | duration: ${DurationMs}ms | control window: ${ControlWindowMs}ms"
+Write-Host "The Python process will update the current trial live below."
 $args = @('-u', '-m', 'drosomath.malecns.keyboard_learning', '--data-dir', $dataDir,
   '--trials', $Trials, '--duration-ms', $DurationMs,
   '--control-window-ms', $ControlWindowMs, '--max-control-windows', $MaxControlWindows,

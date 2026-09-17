@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import sys
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -23,6 +24,22 @@ from .virtual_keyboard import KEY_LABELS, KeyboardMatchingTask
 DEFAULT_RESULT = Path("results/latest_malecns_keyboard_matching.json")
 DEFAULT_PROGRESS = Path("results/malecns_keyboard_matching_progress.json")
 DEFAULT_CHECKPOINT = Path("checkpoints/malecns_keyboard_matching_brain.npz")
+
+
+def _live_status(message: str) -> None:
+    """Show progress in-place in a terminal, or line-buffered otherwise."""
+    text = str(message)
+    if sys.stdout.isatty():
+        sys.stdout.write("\r\033[2K" + text)
+        sys.stdout.flush()
+    else:
+        print(text, flush=True)
+
+
+def _finish_live_status() -> None:
+    if sys.stdout.isatty():
+        sys.stdout.write("\r\033[2K\n")
+        sys.stdout.flush()
 
 
 @dataclass(frozen=True, slots=True)
@@ -198,15 +215,33 @@ def run_keyboard_training(
     progress_path: Path = DEFAULT_PROGRESS,
     checkpoint_path: Path = DEFAULT_CHECKPOINT,
 ) -> dict[str, object]:
+    _live_status("keyboard matching: building token encoder and motor populations...")
     session = KeyboardNeuralSession(connectome, config=config)
+    _finish_live_status()
+    print(
+        "keyboard matching: ready "
+        f"tokens={len(KEY_LABELS)} motor_channels={session.motor_channel_count} "
+        f"route_outputs={len(session.output.body_ids)}",
+        flush=True,
+    )
     rows = []
     correct = 0
+    started = time.perf_counter()
     for trial in range(1, config.trials + 1):
         label = KEY_LABELS[(trial - 1) % len(KEY_LABELS)]
         row = session.run_trial(label)
         row["trial"] = trial
         rows.append(row)
         correct += int(row["correct"])
+        update_stats = row["learning"].get("learning", {})
+        _live_status(
+            f"keyboard_matching trial={trial:>4}/{config.trials:<4} "
+            f"key={label:<2} clicked={str(row['clicked_label'] or '-'): <2} "
+            f"correct={int(row['correct'])} reward={row['reward']:+.2f} "
+            f"windows={row['windows']:>2} updates={int(update_stats.get('edge_updates', 0)):>6} "
+            f"accuracy={correct / trial:.3f} "
+            f"elapsed={time.perf_counter() - started:6.1f}s"
+        )
         payload = {
             "experiment": "malecns_virtual_keyboard_matching_v1",
             "config": asdict(config),
@@ -226,6 +261,15 @@ def run_keyboard_training(
                 completed_trials=trial,
                 stage="keyboard_matching",
             )
+            if sys.stdout.isatty():
+                _finish_live_status()
+                print(
+                    f"checkpoint trial={trial} accuracy={correct / trial:.3f} "
+                    f"path={checkpoint_path}",
+                    flush=True,
+                )
+
+    _finish_live_status()
 
     np = session.np
     report = {
@@ -287,8 +331,19 @@ def main() -> None:
         checkpoint_every=args.checkpoint_every,
         seed=args.seed,
     )
+    print(
+        f"keyboard matching: loading MaleCNS data from {args.data_dir} "
+        f"(min_syn={args.min_syn})...",
+        flush=True,
+    )
+    connectome = load_malecns_v1(args.data_dir, min_connection_synapses=args.min_syn)
+    print(
+        f"keyboard matching: loaded neurons={connectome.neuron_count} "
+        f"edges={connectome.edge_count}; backend=numpy_cpu; gpu_used=False",
+        flush=True,
+    )
     report = run_keyboard_training(
-        load_malecns_v1(args.data_dir, min_connection_synapses=args.min_syn),
+        connectome,
         config=config,
     )
     print(json.dumps({
