@@ -7,6 +7,7 @@ from .loader import (
     MaleCNSConnectome,
     load_malecns_v1,
 )
+from .mushroom_body import MushroomBodyCircuit, MushroomBodyConfig, MushroomBodyRoles
 from .output_readout import (
     OutputPopulation,
     OutputReadoutConfig,
@@ -29,6 +30,9 @@ __all__ = [
     "FILES",
     "MaleCNSConnectome",
     "MaleCNSOutputSession",
+    "MushroomBodyCircuit",
+    "MushroomBodyConfig",
+    "MushroomBodyRoles",
     "OutputObservation",
     "OutputPopulation",
     "OutputReadoutConfig",
