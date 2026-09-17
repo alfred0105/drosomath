@@ -1,0 +1,82 @@
+{
+  "accuracy": 0.0,
+  "checkpoint": "checkpoints\\malecns_keyboard_matching_brain.npz",
+  "completed_trials": 128,
+  "config": {
+    "background_neurons": 6,
+    "budget_strength": 0.25,
+    "checkpoint_every": 32,
+    "control_window_ms": 20.0,
+    "duration_ms": 100.0,
+    "learning_rate": 0.02,
+    "max_control_windows": 30,
+    "min_connection_synapses": 5,
+    "motor_population_size": 32,
+    "plastic_fraction": 0.05,
+    "seed": 7,
+    "stimulus_rate_hz": 205.0,
+    "token_neurons": 6,
+    "trials": 128
+  },
+  "connectome": {
+    "dataset": "MaleCNS v1.0 / HHMI Janelia",
+    "edge_count": 6242118,
+    "inhibitory_neuron_fraction": 0.355500899820036,
+    "min_connection_synapses": 5,
+    "neuron_count": 166700,
+    "sign_model": "presynaptic consensus_nt in {gaba, glutamate, histamine} -> inhibitory; all other/unclear -> positive drive",
+    "synapse_count_in_loaded_edges": 89860280
+  },
+  "execution_profile": {
+    "backend": "numpy_cpu",
+    "closed_loop_virtual_body": true,
+    "external_decoder": false,
+    "gpu_used": false
+  },
+  "experiment": "malecns_virtual_keyboard_matching_v1",
+  "final_plasticity": {
+    "changed_edges": 80220,
+    "edge_count": 6242118,
+    "mean_multiplier": 0.9943326711654663,
+    "mean_stability": 0.0,
+    "mean_usage_ema": 0.008242370560765266,
+    "plastic_edge_count": 311433,
+    "plastic_fraction": 0.05
+  },
+  "motor_channel_count": 20,
+  "purpose": "match 14 prompt tokens to virtual keyboard clicks with four-arm motor output",
+  "route_provenance": {
+    "output_count": 640,
+    "output_superclass": "descending_neuron",
+    "route_direct_edge_count": 569,
+    "route_first_hop_neuron_count": 13834,
+    "route_input_count": 90,
+    "route_max_hops": 2,
+    "route_score_max": 9.213550567626953,
+    "route_scored_descending_count": 1259,
+    "route_second_hop_edge_count": 44252,
+    "route_selected_positive_count": 640,
+    "selection": "route_aware_2hop"
+  },
+  "token_encoder": {
+    "background_count": 6,
+    "token_group_size": 6,
+    "type": "virtual_visual_projection_groups"
+  },
+  "token_labels": [
+    "\ud55c\uae00",
+    "\uc601\uc5b4",
+    "O",
+    "X",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9"
+  ]
+}
