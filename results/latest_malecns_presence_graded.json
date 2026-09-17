@@ -9,19 +9,20 @@
     "usable": false
   },
   "checkpoint": "checkpoints\\malecns_presence_graded_brain.npz",
-  "completed_training_trials": 0,
+  "completed_training_trials": 384,
   "config": {
     "base_rate_hz": 1.0,
+    "bootstrap_step_hz": 1.0,
     "budget_strength": 0.25,
     "calibration_min_separation_hz": 0.1,
     "calibration_trials_per_class": 8,
-    "checkpoint_every": 16,
+    "checkpoint_every": 32,
     "duration_ms": 100.0,
-    "fixed_full_trials": 32,
+    "fixed_full_trials": 128,
     "learning_rate": 0.02,
     "level_step_hz": 1.5,
     "mastery_accuracy": 0.85,
-    "max_attempts_per_phase": 1,
+    "max_attempts_per_phase": 3,
     "max_output_level": 7,
     "min_connection_synapses": 5,
     "representation_probe_size": 512,
@@ -29,9 +30,9 @@
     "seed": 7,
     "stimulus_rate_hz": 205.0,
     "tolerance_hz": 0.5,
-    "validation_trials_per_class": 8,
-    "varied_dropout_trials": 32,
-    "varied_full_trials": 32
+    "validation_trials_per_class": 16,
+    "varied_dropout_trials": 128,
+    "varied_full_trials": 128
   },
   "connectome": {
     "dataset": "MaleCNS v1.0 / HHMI Janelia",
@@ -50,37 +51,624 @@
     "sparse_active_state": true
   },
   "experiment": "malecns_presence_graded_v1",
-  "failed_phase": "output_rate_calibration",
+  "failed_phase": "presence_fixed_full",
   "final_plasticity": {
-    "changed_edges": 0,
+    "changed_edges": 76634,
     "edge_count": 6242118,
-    "mean_multiplier": 1.0,
-    "mean_stability": 0.0,
-    "mean_usage_ema": 0.0,
+    "mean_multiplier": 1.0009901523590088,
+    "mean_stability": 0.006262501701712608,
+    "mean_usage_ema": 0.008976860903203487,
     "plastic_edge_count": 311433,
     "plastic_fraction": 0.05
   },
   "next_curriculum_unlocked": false,
   "output_code": {
-    "base_rate_hz": 1.0,
-    "level_step_hz": 1.5,
+    "base_rate_hz": 7.12158203125,
+    "level_step_hz": 1.0572050212566222,
     "max_level": 7,
     "population_size": 512,
     "target_rates_hz": [
-      1.0,
-      2.5,
-      4.0,
-      5.5,
-      7.0,
-      8.5,
-      10.0,
-      11.5
+      7.12158203125,
+      8.178787052506623,
+      9.235992073763244,
+      10.293197095019867,
+      11.350402116276488,
+      12.40760713753311,
+      13.464812158789734,
+      14.522017180046355
     ],
-    "tolerance_hz": 0.5,
+    "tolerance_hz": 0.2537292051015893,
     "trainable_decoder": false,
     "type": "fixed_population_rate_code"
   },
-  "phase_reports": [],
+  "phase_reports": [
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "evaluation": {
+            "accuracy": 0.0625,
+            "between_levels_fraction": 0.5,
+            "correct": 2,
+            "mean_population_rate_hz": 8.3319091796875,
+            "no_output_fraction": 0.0,
+            "split": "train_fixed",
+            "trials": 32
+          },
+          "last_rows": [
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 8.61328125,
+              "signed_error_hz": -1.49169921875,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": -1.0,
+              "trial": 113
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 6.42578125,
+              "signed_error_hz": 0.69580078125,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": 0.6581512263562205,
+              "trial": 114
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 8.88671875,
+              "signed_error_hz": -1.76513671875,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": -1.0,
+              "trial": 115
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 7.8515625,
+              "signed_error_hz": 0.32722455250662286,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 1,
+              "teaching_signal": 0.30951853796312373,
+              "trial": 116
+            },
+            {
+              "correct": false,
+              "predicted_level": 2,
+              "rate_hz": 9.375,
+              "signed_error_hz": -2.25341796875,
+              "status": "LEVEL_2",
+              "target_level": 0,
+              "teaching_signal": -1.0,
+              "trial": 117
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 7.5390625,
+              "signed_error_hz": 0.6397245525066229,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 1,
+              "teaching_signal": 0.6051092641862683,
+              "trial": 118
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 8.65234375,
+              "signed_error_hz": -1.53076171875,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": -1.0,
+              "trial": 119
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 9.84375,
+              "signed_error_hz": -2.72216796875,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": -1.0,
+              "trial": 120
+            },
+            {
+              "correct": false,
+              "predicted_level": 2,
+              "rate_hz": 9.0234375,
+              "signed_error_hz": -0.8446504474933771,
+              "status": "LEVEL_2",
+              "target_level": 1,
+              "teaching_signal": -0.7989466853736686,
+              "trial": 121
+            },
+            {
+              "correct": false,
+              "predicted_level": 0,
+              "rate_hz": 7.16796875,
+              "signed_error_hz": 1.0108183025066229,
+              "status": "LEVEL_0",
+              "target_level": 1,
+              "teaching_signal": 0.9561232515762526,
+              "trial": 122
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 7.6953125,
+              "signed_error_hz": 0.48347455250662286,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 1,
+              "teaching_signal": 0.45731390107469605,
+              "trial": 123
+            },
+            {
+              "correct": true,
+              "predicted_level": 1,
+              "rate_hz": 8.046875,
+              "signed_error_hz": 0.13191205250662286,
+              "status": "LEVEL_1",
+              "target_level": 1,
+              "teaching_signal": 0.0,
+              "trial": 124
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 8.69140625,
+              "signed_error_hz": -1.56982421875,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": -1.0,
+              "trial": 125
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 6.62109375,
+              "signed_error_hz": 1.5576933025066229,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 1,
+              "teaching_signal": 1.0,
+              "trial": 126
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 7.7734375,
+              "signed_error_hz": 0.40534955250662286,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 1,
+              "teaching_signal": 0.3834162195189099,
+              "trial": 127
+            },
+            {
+              "correct": true,
+              "predicted_level": 1,
+              "rate_hz": 8.0078125,
+              "signed_error_hz": 0.17097455250662286,
+              "status": "LEVEL_1",
+              "target_level": 1,
+              "teaching_signal": 0.0,
+              "trial": 128
+            }
+          ],
+          "mastery_threshold": 0.85,
+          "mean_signed_error_hz": -0.18779287866814975,
+          "passed": false,
+          "representation": {
+            "between_class_cosine": 0.9400078684557229,
+            "invariance_margin": 0.008503832373147224,
+            "nonzero_vector_fraction": 1.0,
+            "probe_size": 512,
+            "split": "heldout",
+            "within_background_cosine": 0.9307167857885361,
+            "within_present_cosine": 0.9485117008288702
+          },
+          "training_accuracy": 0.125,
+          "training_between_levels_fraction": 0.5703125,
+          "training_trials": 128
+        },
+        {
+          "attempt": 2,
+          "evaluation": {
+            "accuracy": 0.21875,
+            "between_levels_fraction": 0.5,
+            "correct": 7,
+            "mean_population_rate_hz": 8.0743408203125,
+            "no_output_fraction": 0.0,
+            "split": "train_fixed",
+            "trials": 32
+          },
+          "last_rows": [
+            {
+              "correct": false,
+              "predicted_level": 0,
+              "rate_hz": 7.109375,
+              "signed_error_hz": 1.0694120525066229,
+              "status": "LEVEL_0",
+              "target_level": 1,
+              "teaching_signal": 1.0,
+              "trial": 113
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 7.6953125,
+              "signed_error_hz": 0.48347455250662286,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 1,
+              "teaching_signal": 0.45731390107469605,
+              "trial": 114
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 9.53125,
+              "signed_error_hz": -2.40966796875,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": -1.0,
+              "trial": 115
+            },
+            {
+              "correct": false,
+              "predicted_level": 2,
+              "rate_hz": 9.35546875,
+              "signed_error_hz": -2.23388671875,
+              "status": "LEVEL_2",
+              "target_level": 0,
+              "teaching_signal": -1.0,
+              "trial": 116
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 8.49609375,
+              "signed_error_hz": -1.37451171875,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": -1.0,
+              "trial": 117
+            },
+            {
+              "correct": false,
+              "predicted_level": 1,
+              "rate_hz": 7.9296875,
+              "signed_error_hz": -0.80810546875,
+              "status": "LEVEL_1",
+              "target_level": 0,
+              "teaching_signal": -0.764379143592663,
+              "trial": 118
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 9.62890625,
+              "signed_error_hz": -2.50732421875,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": -1.0,
+              "trial": 119
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 9.78515625,
+              "signed_error_hz": -2.66357421875,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": -1.0,
+              "trial": 120
+            },
+            {
+              "correct": false,
+              "predicted_level": 3,
+              "rate_hz": 10.2734375,
+              "signed_error_hz": -3.15185546875,
+              "status": "LEVEL_3",
+              "target_level": 0,
+              "teaching_signal": -1.0,
+              "trial": 121
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 7.71484375,
+              "signed_error_hz": -0.59326171875,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": -0.5611605193142511,
+              "trial": 122
+            },
+            {
+              "correct": true,
+              "predicted_level": 1,
+              "rate_hz": 8.0078125,
+              "signed_error_hz": 0.17097455250662286,
+              "status": "LEVEL_1",
+              "target_level": 1,
+              "teaching_signal": 0.0,
+              "trial": 123
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 9.6875,
+              "signed_error_hz": -2.56591796875,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": -1.0,
+              "trial": 124
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 8.671875,
+              "signed_error_hz": -1.55029296875,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": -1.0,
+              "trial": 125
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 7.51953125,
+              "signed_error_hz": 0.6592558025066229,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 1,
+              "teaching_signal": 0.6235836845752148,
+              "trial": 126
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 6.484375,
+              "signed_error_hz": 1.6944120525066229,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 1,
+              "teaching_signal": 1.0,
+              "trial": 127
+            },
+            {
+              "correct": false,
+              "predicted_level": 1,
+              "rate_hz": 7.96875,
+              "signed_error_hz": -0.84716796875,
+              "status": "LEVEL_1",
+              "target_level": 0,
+              "teaching_signal": -0.8013279843705561,
+              "trial": 128
+            }
+          ],
+          "mastery_threshold": 0.85,
+          "mean_signed_error_hz": -0.45165667782841,
+          "passed": false,
+          "representation": {
+            "between_class_cosine": 0.9224377605132759,
+            "invariance_margin": -0.021270818791041757,
+            "nonzero_vector_fraction": 1.0,
+            "probe_size": 512,
+            "split": "heldout",
+            "within_background_cosine": 0.9678820202747981,
+            "within_present_cosine": 0.9011669417222341
+          },
+          "training_accuracy": 0.1640625,
+          "training_between_levels_fraction": 0.5234375,
+          "training_trials": 128
+        },
+        {
+          "attempt": 3,
+          "evaluation": {
+            "accuracy": 0.1875,
+            "between_levels_fraction": 0.5625,
+            "correct": 6,
+            "mean_population_rate_hz": 8.062744140625,
+            "no_output_fraction": 0.0,
+            "split": "train_fixed",
+            "trials": 32
+          },
+          "last_rows": [
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 6.2109375,
+              "signed_error_hz": 1.9678495525066229,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 1,
+              "teaching_signal": 1.0,
+              "trial": 113
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 8.73046875,
+              "signed_error_hz": -1.60888671875,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": -1.0,
+              "trial": 114
+            },
+            {
+              "correct": true,
+              "predicted_level": 1,
+              "rate_hz": 8.0078125,
+              "signed_error_hz": 0.17097455250662286,
+              "status": "LEVEL_1",
+              "target_level": 1,
+              "teaching_signal": 0.0,
+              "trial": 115
+            },
+            {
+              "correct": true,
+              "predicted_level": 1,
+              "rate_hz": 8.28125,
+              "signed_error_hz": -0.10246294749337714,
+              "status": "LEVEL_1",
+              "target_level": 1,
+              "teaching_signal": 0.0,
+              "trial": 116
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 8.73046875,
+              "signed_error_hz": -0.5516816974933771,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 1,
+              "teaching_signal": -0.5218303795394705,
+              "trial": 117
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 7.67578125,
+              "signed_error_hz": -0.55419921875,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": -0.5242116785363581,
+              "trial": 118
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 8.45703125,
+              "signed_error_hz": -1.33544921875,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": -1.0,
+              "trial": 119
+            },
+            {
+              "correct": true,
+              "predicted_level": 0,
+              "rate_hz": 7.12890625,
+              "signed_error_hz": -0.00732421875,
+              "status": "LEVEL_0",
+              "target_level": 0,
+              "teaching_signal": 0.0,
+              "trial": 120
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 7.6171875,
+              "signed_error_hz": 0.5615995525066229,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 1,
+              "teaching_signal": 0.5312115826304822,
+              "trial": 121
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 8.84765625,
+              "signed_error_hz": -1.72607421875,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": -1.0,
+              "trial": 122
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 7.83203125,
+              "signed_error_hz": -0.71044921875,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": -0.6720070416479303,
+              "trial": 123
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 6.58203125,
+              "signed_error_hz": 1.5967558025066229,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 1,
+              "teaching_signal": 1.0,
+              "trial": 124
+            },
+            {
+              "correct": true,
+              "predicted_level": 1,
+              "rate_hz": 8.30078125,
+              "signed_error_hz": -0.12199419749337714,
+              "status": "LEVEL_1",
+              "target_level": 1,
+              "teaching_signal": 0.0,
+              "trial": 125
+            },
+            {
+              "correct": false,
+              "predicted_level": 0,
+              "rate_hz": 7.32421875,
+              "signed_error_hz": 0.8545683025066229,
+              "status": "LEVEL_0",
+              "target_level": 1,
+              "teaching_signal": 0.8083278884646803,
+              "trial": 126
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 8.671875,
+              "signed_error_hz": -0.49308794749337714,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 1,
+              "teaching_signal": -0.4664071183726309,
+              "trial": 127
+            },
+            {
+              "correct": false,
+              "predicted_level": null,
+              "rate_hz": 9.84375,
+              "signed_error_hz": -2.72216796875,
+              "status": "BETWEEN_LEVELS",
+              "target_level": 0,
+              "teaching_signal": -1.0,
+              "trial": 128
+            }
+          ],
+          "mastery_threshold": 0.85,
+          "mean_signed_error_hz": -0.375273906217651,
+          "passed": false,
+          "representation": {
+            "between_class_cosine": 0.9272637355607003,
+            "invariance_margin": -0.012170981196686581,
+            "nonzero_vector_fraction": 1.0,
+            "probe_size": 512,
+            "split": "heldout",
+            "within_background_cosine": 0.9454976042111715,
+            "within_present_cosine": 0.9150927543640137
+          },
+          "training_accuracy": 0.2578125,
+          "training_between_levels_fraction": 0.5078125,
+          "training_trials": 128
+        }
+      ],
+      "attempts_used": 3,
+      "before": {
+        "accuracy": 0.0625,
+        "between_levels_fraction": 0.78125,
+        "correct": 2,
+        "mean_population_rate_hz": 6.7706298828125,
+        "no_output_fraction": 0.0,
+        "split": "train_fixed",
+        "trials": 32
+      },
+      "evaluation_split": "train_fixed",
+      "passed": false,
+      "phase": "presence_fixed_full",
+      "retraining_count": 2,
+      "training_trials_per_attempt": 128
+    }
+  ],
   "provenance": {
     "background_neuron_count": 6,
     "biological_retinotopy_claimed": false,
@@ -210,5 +798,6 @@
   "structural": {
     "active_edges": 0,
     "enabled": false
-  }
+  },
+  "training_mode": "bootstrap_rate_teacher"
 }
