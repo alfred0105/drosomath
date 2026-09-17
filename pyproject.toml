@@ -33,6 +33,7 @@ drosomath-malecns-v1-viz = "drosomath.malecns.visualize_curriculum:main"
 drosomath-malecns-memory-v2 = "drosomath.malecns.curriculum_v2_memory:main"
 drosomath-malecns-memory-v2-viz = "drosomath.malecns.visualize_memory_v2:main"
 drosomath-malecns-memory-v2-live = "drosomath.malecns.live_memory_v2:main"
+drosomath-mushroom-body = "drosomath.malecns.mushroom_body_demo:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
