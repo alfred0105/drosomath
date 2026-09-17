@@ -19,7 +19,7 @@ from .checkpoint import save_learning_checkpoint, save_readout_checkpoint
 from .curriculum_v1 import _readout_path, _top_visual_ids
 from .curriculum_v2_memory import MemoryV2Config, _make_memory_session
 from .download import DEFAULT_DATA_DIR, download_malecns
-from .first_training import choose_default_populations
+from .first_training import choose_route_aware_output_population
 from .loader import load_malecns_v1
 
 
@@ -249,11 +249,22 @@ def build_concept_foundation(
         heldout_positions=tuple(heldout),
     )
 
-    _, output, output_provenance = choose_default_populations(
-        connectome,
-        input_per_side=16,
-        output_population_size=config.output_population_size,
+    route_input_ids = tuple(
+        list(field.background_body_ids)
+        + [body_id for group in field.position_body_ids for body_id in group]
     )
+    output, output_provenance = choose_route_aware_output_population(
+        connectome,
+        route_input_ids,
+        output_population_size=config.output_population_size,
+        max_hops=2,
+    )
+    output_provenance = {
+        **output_provenance,
+        "input_superclass": "visual_projection",
+        "route_input_scope": "background plus every virtual field position",
+        "biological_retinotopy_claimed": False,
+    }
 
     def q_examples(quantity: int, *, split: str, count: int, salt: int):
         local_rng = np.random.default_rng(config.seed + salt)

@@ -79,6 +79,110 @@ def _top_by_outgoing(connectome: MaleCNSConnectome, indices, count: int):
     return idx[local]
 
 
+def choose_route_aware_output_population(
+    connectome: MaleCNSConnectome,
+    input_body_ids,
+    *,
+    output_population_size: int,
+    max_hops: int = 2,
+) -> tuple[OutputPopulation, dict[str, object]]:
+    """Select descending outputs that are downstream of the task inputs.
+
+    Global outgoing-strength ranking can select cells that never receive the
+    experiment's input. This selector audits direct and two-hop paths in the
+    immutable CSR graph before choosing the output population.
+    """
+    np = __import__("numpy")
+    if output_population_size < 2:
+        raise ValueError("output_population_size must be >= 2")
+    if max_hops not in (1, 2):
+        raise ValueError("max_hops must be 1 or 2")
+
+    superclass = np.asarray(connectome.metadata.get("superclass"), dtype=object)
+    if superclass.shape != (connectome.neuron_count,):
+        raise ValueError("MaleCNS superclass metadata is required for route selection")
+    candidates = np.flatnonzero(superclass == "descending_neuron").astype(np.int32)
+    if len(candidates) < output_population_size:
+        raise ValueError("not enough descending_neuron candidates")
+
+    input_indices = np.unique(np.asarray(
+        [connectome.index_of(int(body_id)) for body_id in input_body_ids],
+        dtype=np.int32,
+    ))
+    if len(input_indices) == 0:
+        raise ValueError("route selection requires at least one input neuron")
+
+    candidate_mask = np.zeros(connectome.neuron_count, dtype=np.bool_)
+    candidate_mask[candidates] = True
+    direct_score = np.zeros(connectome.neuron_count, dtype=np.float32)
+    two_hop_score = np.zeros(connectome.neuron_count, dtype=np.float32)
+    first_hop_chunks = []
+    direct_edge_count = 0
+    indptr = connectome.indptr
+    posts = connectome.post_indices
+    signed = np.abs(connectome.signed_synapse_counts)
+
+    for pre_raw in input_indices:
+        pre = int(pre_raw)
+        start = int(indptr[pre])
+        stop = int(indptr[pre + 1])
+        if stop <= start:
+            continue
+        local_posts = posts[start:stop]
+        first_hop_chunks.append(local_posts)
+        mask = candidate_mask[local_posts]
+        if np.any(mask):
+            chosen = local_posts[mask]
+            np.add.at(direct_score, chosen, signed[start:stop][mask])
+            direct_edge_count += int(mask.sum())
+
+    first_hop = (
+        np.unique(np.concatenate(first_hop_chunks)).astype(np.int32, copy=False)
+        if first_hop_chunks
+        else np.empty(0, dtype=np.int32)
+    )
+    second_hop_edge_count = 0
+    if max_hops >= 2 and len(first_hop):
+        for pre_raw in first_hop:
+            pre = int(pre_raw)
+            start = int(indptr[pre])
+            stop = int(indptr[pre + 1])
+            if stop <= start:
+                continue
+            local_posts = posts[start:stop]
+            mask = candidate_mask[local_posts]
+            if np.any(mask):
+                chosen = local_posts[mask]
+                np.add.at(two_hop_score, chosen, signed[start:stop][mask])
+                second_hop_edge_count += int(mask.sum())
+
+    route_score = np.log1p(direct_score) + 0.25 * np.log1p(two_hop_score)
+    scored = candidates[route_score[candidates] > 0.0]
+    fallback = len(scored) < output_population_size
+    if fallback:
+        selected = _top_by_outgoing(connectome, candidates, output_population_size)
+    else:
+        order = np.argsort(route_score[scored], kind="stable")[::-1]
+        selected = scored[order[:output_population_size]]
+
+    output_ids = tuple(int(connectome.body_ids[i]) for i in selected)
+    output = OutputPopulation.from_body_ids(connectome, output_ids)
+    info = {
+        "selection": "route_aware_2hop" if not fallback else "outgoing_strength_fallback",
+        "route_max_hops": int(max_hops),
+        "route_input_count": int(len(input_indices)),
+        "route_first_hop_neuron_count": int(len(first_hop)),
+        "route_direct_edge_count": int(direct_edge_count),
+        "route_second_hop_edge_count": int(second_hop_edge_count),
+        "route_scored_descending_count": int(len(scored)),
+        "route_selected_positive_count": int(np.count_nonzero(route_score[selected] > 0.0)),
+        "route_score_max": float(route_score[selected].max()) if len(selected) else 0.0,
+        "output_superclass": "descending_neuron",
+        "output_count": int(len(output.body_ids)),
+    }
+    return output, info
+
+
 def choose_default_populations(
     connectome: MaleCNSConnectome,
     *,
