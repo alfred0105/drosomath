@@ -7,8 +7,8 @@ class VirtualKeyboardTests(unittest.TestCase):
 
         keyboard = VirtualKeyboard()
         self.assertEqual(set(KEY_LABELS), set(keyboard.labels()))
-        prompt = keyboard.prompt_vector("한글")
-        self.assertEqual(len(prompt), 14)
+        prompt = keyboard.prompt_vector("ㄱ")
+        self.assertEqual(len(prompt), 60)
         self.assertEqual(sum(prompt), 1)
         self.assertEqual(prompt[0], 1)
 
@@ -18,7 +18,7 @@ class VirtualKeyboardTests(unittest.TestCase):
         task = KeyboardMatchingTask(seed=1)
         observation = task.reset("X")
         self.assertEqual(observation["prompt"], "X")
-        self.assertEqual(len(observation["keyboard"]), 14)
+        self.assertEqual(len(observation["keyboard"]), 60)
         self.assertEqual(observation["body"]["done"], False)
 
     def test_wrong_click_is_penalized_and_target_remains(self):

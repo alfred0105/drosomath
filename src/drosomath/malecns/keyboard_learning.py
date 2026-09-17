@@ -48,8 +48,9 @@ class KeyboardTrainingConfig:
     token_neurons: int = 6
     background_neurons: int = 6
     motor_population_size: int = 32
-    # Fourteen keys need repeated visits; the default gives every key 64 trials.
-    trials: int = 896
+    # Sixty physical keys need repeated visits; the default gives every key
+    # 32 trials (a balanced first keyboard curriculum).
+    trials: int = 1920
     duration_ms: float = 100.0
     control_window_ms: float = 20.0
     max_control_windows: int = 30
@@ -89,7 +90,7 @@ class TokenVisualEncoder:
 
 
 def build_token_encoder(connectome, *, config: KeyboardTrainingConfig) -> TokenVisualEncoder:
-    """Assign deterministic visual_projection groups to the 14 prompt tokens."""
+    """Assign deterministic visual_projection groups to the physical key set."""
     np = __import__("numpy")
     superclass = np.asarray(connectome.metadata.get("superclass"), dtype=object)
     visual = np.flatnonzero(superclass == "visual_projection").astype(np.int32)
@@ -275,7 +276,7 @@ def run_keyboard_training(
     np = session.np
     report = {
         "experiment": "malecns_virtual_keyboard_matching_v1",
-        "purpose": "match 14 prompt tokens to virtual keyboard clicks with four-arm motor output",
+        "purpose": "match physical Korean, English, O/X, and digit keys to virtual clicks with four-arm motor output",
         "config": asdict(config),
         "connectome": connectome.summary(),
         "token_labels": list(KEY_LABELS),
@@ -310,7 +311,7 @@ def main() -> None:
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
     parser.add_argument("--download", action="store_true")
     parser.add_argument("--min-syn", type=int, default=5)
-    parser.add_argument("--trials", type=int, default=896)
+    parser.add_argument("--trials", type=int, default=1920)
     parser.add_argument("--duration-ms", type=float, default=100.0)
     parser.add_argument("--control-window-ms", type=float, default=20.0)
     parser.add_argument("--max-control-windows", type=int, default=30)

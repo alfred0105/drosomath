@@ -12,7 +12,13 @@ from .virtual_body import ArmAction, FourArmWorld, VirtualStepResult, VirtualTar
 from .virtual_motor import FourArmMotorAdapter
 
 
-KEY_LABELS: tuple[str, ...] = ("한글", "영어", "O", "X") + tuple(str(x) for x in range(10))
+KOREAN_JAMO: tuple[str, ...] = tuple("ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣ")
+ENGLISH_KEYS: tuple[str, ...] = tuple("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+DIGIT_KEYS: tuple[str, ...] = tuple(str(x) for x in range(10))
+
+# O and X are real English letter keys, not mode labels. Hangul syllable
+# composition (for example ㄱ + ㅏ -> 가) is intentionally a later layer.
+KEY_LABELS: tuple[str, ...] = KOREAN_JAMO + ENGLISH_KEYS + DIGIT_KEYS
 
 
 @dataclass(frozen=True, slots=True)
@@ -42,26 +48,22 @@ class VirtualKeyboard:
     """Compact keyboard containing the first language/control token set."""
 
     def __init__(self, keys: Iterable[VirtualKey] | None = None) -> None:
-        rows = (
-            ("한글", "영어", "O", "X"),
-            tuple(str(x) for x in range(1, 8)),
-            ("7", "8", "9", "0"),
-        )
+        rows = (KOREAN_JAMO, ENGLISH_KEYS, DIGIT_KEYS)
         default_keys = []
         for row_index, row in enumerate(rows):
-            y = 0.62 - row_index * 0.14
-            spacing = 0.13
-            start = 0.24 if len(row) == 4 else 0.11
+            y = 0.70 - row_index * 0.16
+            gap = 0.008
+            width = min(0.10, (0.86 - gap * (len(row) - 1)) / len(row))
+            total = len(row) * width + (len(row) - 1) * gap
+            start = (1.0 - total) / 2.0 + width / 2.0
             for col_index, label in enumerate(row):
-                # The third row intentionally repeats 7 only in the layout
-                # source? Reject duplicates below and keep a single key map.
-                if any(key.label == label for key in default_keys):
-                    continue
                 default_keys.append(
                     VirtualKey(
                         label=label,
-                        x=start + col_index * spacing,
+                        x=start + col_index * (width + gap),
                         y=y,
+                        width=width,
+                        height=0.10,
                         owner_arm=None,
                     )
                 )
