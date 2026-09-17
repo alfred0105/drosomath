@@ -1,6 +1,6 @@
 param(
   [switch]$Download,
-  [int]$Trials = 128,
+  [int]$Trials = 896,
   [double]$DurationMs = 100,
   [double]$ControlWindowMs = 20,
   [int]$MaxControlWindows = 30,
@@ -18,7 +18,7 @@ if (-not (Test-Path -LiteralPath $python)) { $python = 'python' }
 $dataDir = Join-Path $root 'data\malecns_v1'
 Write-Host "=== DrosoMath virtual keyboard matching ==="
 Write-Host "Keys: 한글 영어 O X 0-9 | four-arm virtual body | 20 motor channels"
-Write-Host "Trials: $Trials | duration: ${DurationMs}ms | control window: ${ControlWindowMs}ms"
+Write-Host "Trials: $Trials (64 visits per key by default) | duration: ${DurationMs}ms | control window: ${ControlWindowMs}ms"
 Write-Host "The Python process will update the current trial live below."
 $args = @('-u', '-m', 'drosomath.malecns.keyboard_learning', '--data-dir', $dataDir,
   '--trials', $Trials, '--duration-ms', $DurationMs,

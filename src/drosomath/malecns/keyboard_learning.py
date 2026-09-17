@@ -48,7 +48,8 @@ class KeyboardTrainingConfig:
     token_neurons: int = 6
     background_neurons: int = 6
     motor_population_size: int = 32
-    trials: int = 128
+    # Fourteen keys need repeated visits; the default gives every key 64 trials.
+    trials: int = 896
     duration_ms: float = 100.0
     control_window_ms: float = 20.0
     max_control_windows: int = 30
@@ -309,7 +310,7 @@ def main() -> None:
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
     parser.add_argument("--download", action="store_true")
     parser.add_argument("--min-syn", type=int, default=5)
-    parser.add_argument("--trials", type=int, default=128)
+    parser.add_argument("--trials", type=int, default=896)
     parser.add_argument("--duration-ms", type=float, default=100.0)
     parser.add_argument("--control-window-ms", type=float, default=20.0)
     parser.add_argument("--max-control-windows", type=int, default=30)
