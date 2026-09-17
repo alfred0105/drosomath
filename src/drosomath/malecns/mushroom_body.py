@@ -189,10 +189,11 @@ class MushroomBodyCircuit:
 
         np = _require_numpy()
         brain = self._brain
+        stimulus_body_ids = tuple(int(x) for x in stimulus_body_ids)
         previous_tracking = brain.set_plasticity_tracking(True)
         try:
             brain.reset()
-            stimulus_indices = brain.indices_for_ids(tuple(int(x) for x in stimulus_body_ids))
+            stimulus_indices = brain.indices_for_ids(stimulus_body_ids)
             steps = max(1, int(math.ceil(float(duration_ms) / brain.params.dt_ms)))
             kc_mask = np.zeros(brain.connectome.neuron_count, dtype=np.bool_)
             kc_mask[self.roles.kenyon_cells] = True
