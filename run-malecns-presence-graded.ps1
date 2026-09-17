@@ -7,6 +7,7 @@ param(
     [double]$StimulusRateHz = 205.0,
     [int]$CalibrationTrials = 32,
     [double]$CalibrationMinSeparationHz = 0.10,
+    [double]$BootstrapStepHz = 1.0,
     [int]$RepresentationProbeSize = 512,
     [int]$RepresentationTrials = 16,
     [int]$ValidationTrials = 64,
@@ -51,7 +52,7 @@ if (Test-Path $venvPython) { $python = $venvPython }
 if ($LASTEXITCODE -ne 0) { throw "dependency install failed" }
 
 $argsList = @(
-    "-m", "drosomath.malecns.presence_graded",
+    "-u", "-m", "drosomath.malecns.presence_graded",
     "--data-dir", (Join-Path $PSScriptRoot "data\malecns_v1"),
     "--min-syn", "$MinSyn",
     "--fixed-trials", "$FixedTrials",
@@ -61,6 +62,7 @@ $argsList = @(
     "--stimulus-rate-hz", "$StimulusRateHz",
     "--calibration-trials", "$CalibrationTrials",
     "--calibration-min-separation-hz", "$CalibrationMinSeparationHz",
+    "--bootstrap-step-hz", "$BootstrapStepHz",
     "--representation-probe-size", "$RepresentationProbeSize",
     "--representation-trials", "$RepresentationTrials",
     "--validation-trials", "$ValidationTrials",

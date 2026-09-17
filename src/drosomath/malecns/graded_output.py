@@ -22,8 +22,18 @@ class TwoLevelRateCalibration:
     usable: bool
     reason: str
 
-    def code_config(self, *, max_level: int = 7, max_teaching_signal: float = 1.0) -> "GradedRateCodeConfig":
-        step = self.present_mean_hz - self.background_mean_hz
+    def code_config(
+        self,
+        *,
+        max_level: int = 7,
+        max_teaching_signal: float = 1.0,
+        step_override_hz: float | None = None,
+    ) -> "GradedRateCodeConfig":
+        step = (
+            self.present_mean_hz - self.background_mean_hz
+            if step_override_hz is None
+            else float(step_override_hz)
+        )
         if step == 0.0:
             step = 1e-6
         tolerance = max(1e-6, abs(step) * 0.24)

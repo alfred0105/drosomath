@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
+import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -26,6 +28,21 @@ DEFAULT_PROGRESS = Path("results/malecns_presence_graded_progress.json")
 DEFAULT_CHECKPOINT = Path("checkpoints/malecns_presence_graded_brain.npz")
 
 
+def _live_status(message: str) -> None:
+    text = str(message)
+    if sys.stdout.isatty():
+        sys.stdout.write("\r\033[2K" + text)
+        sys.stdout.flush()
+    else:
+        print(text, flush=True)
+
+
+def _finish_live_status() -> None:
+    if sys.stdout.isatty():
+        sys.stdout.write("\r\033[2K\n")
+        sys.stdout.flush()
+
+
 @dataclass(frozen=True, slots=True)
 class PresenceMasteryConfig:
     min_connection_synapses: int = 5
@@ -33,6 +50,7 @@ class PresenceMasteryConfig:
     stimulus_rate_hz: float = 205.0
     calibration_trials_per_class: int = 32
     calibration_min_separation_hz: float = 0.10
+    bootstrap_step_hz: float = 1.0
     representation_probe_size: int = 512
     representation_trials_per_class: int = 16
     fixed_full_trials: int = 2048
@@ -59,6 +77,8 @@ class PresenceMasteryConfig:
             raise ValueError("calibration_trials_per_class must be >= 2")
         if self.calibration_min_separation_hz < 0.0:
             raise ValueError("calibration_min_separation_hz must be >= 0")
+        if self.bootstrap_step_hz <= 0.0:
+            raise ValueError("bootstrap_step_hz must be > 0")
         if self.representation_probe_size < 1:
             raise ValueError("representation_probe_size must be positive")
         if self.representation_trials_per_class < 2:
@@ -297,14 +317,16 @@ def run_presence_mastery(
     )
 
     # Calibrate the fixed rate code from the untrained MaleCNS output
-    # distribution.  This is measurement only: tracking is disabled and no
-    # synaptic state is changed.  Do not train if the two classes are not
-    # separable at the chosen output population and time window.
+    # distribution. This is measurement only: tracking is disabled and no
+    # synaptic state is changed. If the classes are not separated yet, use a
+    # bounded bootstrap target so the network can be taught instead of
+    # declaring failure before the first learning trial.
     calibration_phase = _phases(config)[0]
     calibration_rng = np.random.default_rng(config.seed + 90_000)
     background_rates = []
     present_rates = []
-    for _ in range(config.calibration_trials_per_class):
+    calibration_started = time.perf_counter()
+    for calibration_index in range(config.calibration_trials_per_class):
         background = _scene(
             bundle.field,
             present=False,
@@ -333,6 +355,12 @@ def run_presence_mastery(
                 stimulus_rate_hz=config.stimulus_rate_hz,
             ).population_rate_hz
         )
+        _live_status(
+            f"calibration {calibration_index + 1:>3}/{config.calibration_trials_per_class} "
+            f"background={background_rates[-1]:6.2f}Hz present={present_rates[-1]:6.2f}Hz "
+            f"elapsed={time.perf_counter() - calibration_started:6.1f}s"
+        )
+    _finish_live_status()
 
     calibration = calibrate_two_level_rate_code(
         background_rates,
@@ -344,37 +372,22 @@ def run_presence_mastery(
             max_level=config.max_output_level,
         )
     else:
-        report = {
-            "experiment": "malecns_presence_graded_v1",
-            "purpose": "master object absence/presence before any quantity curriculum",
-            "config": asdict(config),
-            "connectome": connectome.summary(),
-            "provenance": {
-                **bundle.provenance,
-                "representation_probe_size": len(representation_probe),
-                "representation_probe_scope": "deterministic non-input, non-output neurons",
-            },
-            "calibration": calibration.summary(),
-            "output_code": session.code.summary(),
-            "phase_reports": [],
-            "completed_training_trials": 0,
-            "curriculum_passed": False,
-            "failed_phase": "output_rate_calibration",
-            "next_curriculum_unlocked": False,
-            "final_plasticity": {**brain.plasticity.summary(), "changed_edges": 0},
-            "structural": brain.structural_summary(),
-            "execution_profile": {
-                "backend": "numpy_cpu",
-                "gpu_used": False,
-                "sparse_active_state": True,
-                "output_rate_calibration": True,
-            },
-            "checkpoint": str(checkpoint_path),
-        }
-        result_path.parent.mkdir(parents=True, exist_ok=True)
-        result_path.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
-        _write_progress(progress_path, report)
-        return report
+        bootstrap_step = max(
+            float(config.bootstrap_step_hz),
+            2.0 * max(calibration.background_std_hz, calibration.present_std_hz),
+        )
+        session.code.config = calibration.code_config(
+            max_level=config.max_output_level,
+            step_override_hz=bootstrap_step,
+        )
+        training_mode = "bootstrap_rate_teacher"
+    if calibration.usable:
+        training_mode = "empirical_rate_teacher"
+    print(
+        f"rate teacher: mode={training_mode} "
+        f"background={session.code.config.target_rate_hz(0):.3f}Hz "
+        f"present={session.code.config.target_rate_hz(1):.3f}Hz"
+    )
 
     phase_reports = []
     completed_training_trials = 0
@@ -383,6 +396,7 @@ def run_presence_mastery(
 
     for phase_index, phase in enumerate(_phases(config)):
         attempts = []
+        _live_status(f"{phase.name} baseline evaluation...")
         before = _evaluate(
             session,
             bundle.field,
@@ -390,6 +404,8 @@ def run_presence_mastery(
             config,
             seed=config.seed + 100_000 + phase_index * 10_000,
         )
+        _finish_live_status()
+        _live_status(f"{phase.name} baseline representation audit...")
         representation_before = _representation_audit(
             session,
             bundle.field,
@@ -397,6 +413,7 @@ def run_presence_mastery(
             config,
             seed=config.seed + 110_000 + phase_index * 10_000,
         )
+        _finish_live_status()
         phase_passed = False
 
         for attempt_index in range(config.max_attempts_per_phase):
@@ -404,6 +421,8 @@ def run_presence_mastery(
             between = 0
             signed_error_sum = 0.0
             last_rows = []
+            attempt_started = time.perf_counter()
+            update_interval = max(1, phase.trials // 100)
 
             for trial in range(phase.trials):
                 rng = np.random.default_rng(
@@ -433,6 +452,18 @@ def run_presence_mastery(
                 signed_error_sum += float(obs.signed_error_hz or 0.0)
                 completed_training_trials += 1
 
+                if trial == 0 or (trial + 1) % update_interval == 0 or trial + 1 == phase.trials:
+                    edge_updates = int(result.learning["learning"].get("edge_updates", 0))
+                    _live_status(
+                        f"{phase.name} attempt={attempt_index + 1}/{config.max_attempts_per_phase} "
+                        f"trial={trial + 1:>5}/{phase.trials:<5} "
+                        f"train={correct / max(1, trial + 1):.3f} "
+                        f"rate={obs.population_rate_hz:6.2f}Hz "
+                        f"err={obs.signed_error_hz or 0.0:+6.2f} "
+                        f"updates={edge_updates:>5} "
+                        f"elapsed={time.perf_counter() - attempt_started:6.1f}s"
+                    )
+
                 if len(last_rows) >= 16:
                     last_rows.pop(0)
                 last_rows.append(
@@ -457,6 +488,8 @@ def run_presence_mastery(
                         stage=f"{phase.name}_attempt_{attempt_index + 1}",
                     )
 
+            _finish_live_status()
+            _live_status(f"{phase.name} attempt {attempt_index + 1} evaluation...")
             evaluation = _evaluate(
                 session,
                 bundle.field,
@@ -464,6 +497,8 @@ def run_presence_mastery(
                 config,
                 seed=config.seed + 200_000 + phase_index * 10_000 + attempt_index,
             )
+            _finish_live_status()
+            _live_status(f"{phase.name} attempt {attempt_index + 1} representation audit...")
             representation_after = _representation_audit(
                 session,
                 bundle.field,
@@ -471,6 +506,7 @@ def run_presence_mastery(
                 config,
                 seed=config.seed + 210_000 + phase_index * 10_000 + attempt_index,
             )
+            _finish_live_status()
             phase_passed = mastery_passed(evaluation["accuracy"], config.mastery_accuracy)
             attempt_report = {
                 "attempt": attempt_index + 1,
@@ -499,11 +535,20 @@ def run_presence_mastery(
                 }],
                 "completed_training_trials": completed_training_trials,
                 "output_code": session.code.summary(),
+                "training_mode": training_mode,
             }
             _write_progress(progress_path, partial)
 
             if phase_passed:
+                print(
+                    f"[{phase.name}] attempt={attempt_index + 1} "
+                    f"accuracy={evaluation['accuracy']:.3f} PASS"
+                )
                 break
+            print(
+                f"[{phase.name}] attempt={attempt_index + 1} "
+                f"accuracy={evaluation['accuracy']:.3f} retry"
+            )
 
         phase_reports.append(
             {
@@ -544,6 +589,7 @@ def run_presence_mastery(
             "representation_probe_scope": "deterministic non-input, non-output neurons",
         },
         "calibration": calibration.summary(),
+        "training_mode": training_mode,
         "output_code": session.code.summary(),
         "phase_reports": phase_reports,
         "completed_training_trials": completed_training_trials,
@@ -597,6 +643,7 @@ def main() -> None:
     p.add_argument("--stimulus-rate-hz", type=float, default=205.0)
     p.add_argument("--calibration-trials", type=int, default=32)
     p.add_argument("--calibration-min-separation-hz", type=float, default=0.10)
+    p.add_argument("--bootstrap-step-hz", type=float, default=1.0)
     p.add_argument("--representation-probe-size", type=int, default=512)
     p.add_argument("--representation-trials", type=int, default=16)
     p.add_argument("--validation-trials", type=int, default=64)
@@ -622,6 +669,7 @@ def main() -> None:
         stimulus_rate_hz=a.stimulus_rate_hz,
         calibration_trials_per_class=a.calibration_trials,
         calibration_min_separation_hz=a.calibration_min_separation_hz,
+        bootstrap_step_hz=a.bootstrap_step_hz,
         representation_probe_size=a.representation_probe_size,
         representation_trials_per_class=a.representation_trials,
         validation_trials_per_class=a.validation_trials,
@@ -642,6 +690,7 @@ def main() -> None:
     print(json.dumps({
         "curriculum_passed": report["curriculum_passed"],
         "failed_phase": report["failed_phase"],
+        "training_mode": report.get("training_mode"),
         "completed_training_trials": report["completed_training_trials"],
         "output_code": report["output_code"],
         "phase_reports": [
