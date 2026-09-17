@@ -37,6 +37,8 @@ drosomath-malecns-memory-v2-live = "drosomath.malecns.live_memory_v2:main"
 drosomath-mushroom-body = "drosomath.malecns.mushroom_body_demo:main"
 drosomath-virtual-body = "drosomath.malecns.virtual_body:main"
 drosomath-virtual-motor = "drosomath.malecns.virtual_motor:main"
+drosomath-virtual-keyboard = "drosomath.malecns.virtual_keyboard:main"
+drosomath-malecns-keyboard-learning = "drosomath.malecns.keyboard_learning:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
