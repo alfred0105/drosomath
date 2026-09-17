@@ -79,6 +79,9 @@ Open the realtime dashboard with one command:
 
 `live.ps1` starts a local-only server, opens `http://127.0.0.1:8765/`, and streams simulation state without requiring a separate frontend build or external web service.
 
+`run-mushroom-body.ps1` saves `results/latest_mushroom_body_trial.json` and pushes that result to the current Git branch by default, so later analysis can read it directly from GitHub. Use `-NoPush` for a local-only run.
+
+
 The live dashboard shows:
 
 - current firing neurons and membrane potential
