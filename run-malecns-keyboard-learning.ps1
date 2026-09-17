@@ -1,6 +1,8 @@
 param(
   [switch]$Download,
-  [int]$Trials = 1920,
+  [int]$Trials = 20000,
+  [int]$MinTrialsPerKey = 32,
+  [double]$TargetAccuracy = 0.80,
   [double]$DurationMs = 100,
   [double]$ControlWindowMs = 20,
   [int]$MaxControlWindows = 30,
@@ -8,7 +10,8 @@ param(
   [int]$MotorPopulationSize = 32,
   [int]$CheckpointEvery = 32,
   [int]$Seed = 7,
-  [switch]$NoPush
+  [switch]$NoPush,
+  [switch]$Open
 )
 
 $ErrorActionPreference = 'Stop'
@@ -18,10 +21,11 @@ if (-not (Test-Path -LiteralPath $python)) { $python = 'python' }
 $dataDir = Join-Path $root 'data\malecns_v1'
 Write-Host "=== DrosoMath virtual keyboard matching ==="
 Write-Host "Keys: Korean jamo + English A-Z + O/X + 0-9 (60 physical keys)"
-Write-Host "Trials: $Trials (32 visits per key by default) | duration: ${DurationMs}ms | control window: ${ControlWindowMs}ms"
+Write-Host "Max trials: $Trials | target: $($TargetAccuracy * 100)% per key | minimum observations: $MinTrialsPerKey"
 Write-Host "The Python process will update the current trial live below."
 $args = @('-u', '-m', 'drosomath.malecns.keyboard_learning', '--data-dir', $dataDir,
-  '--trials', $Trials, '--duration-ms', $DurationMs,
+  '--trials', $Trials, '--min-trials-per-key', $MinTrialsPerKey, '--target-accuracy', $TargetAccuracy,
+  '--duration-ms', $DurationMs,
   '--control-window-ms', $ControlWindowMs, '--max-control-windows', $MaxControlWindows,
   '--stimulus-rate-hz', $StimulusRateHz, '--motor-population-size', $MotorPopulationSize,
   '--checkpoint-every', $CheckpointEvery, '--seed', $Seed)
@@ -31,7 +35,7 @@ try {
   & $python @args
   if ($LASTEXITCODE -ne 0) { throw "keyboard learning failed with exit code $LASTEXITCODE" }
   if (-not $NoPush) {
-    git add .\results\latest_malecns_keyboard_matching.json
+    git add .\results\latest_malecns_keyboard_matching.json .\results\latest_malecns_keyboard_matching.html
     if ($LASTEXITCODE -eq 0) {
       git diff --cached --quiet
       if ($LASTEXITCODE -ne 0) {
@@ -40,6 +44,9 @@ try {
         git push origin "HEAD:$branch"
       }
     }
+  }
+  if ($Open) {
+    Start-Process (Resolve-Path ".\results\latest_malecns_keyboard_matching.html")
   }
 } finally {
   Pop-Location

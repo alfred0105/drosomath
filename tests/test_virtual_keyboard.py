@@ -12,6 +12,16 @@ class VirtualKeyboardTests(unittest.TestCase):
         self.assertEqual(sum(prompt), 1)
         self.assertEqual(prompt[0], 1)
 
+    def test_label_schedule_is_shuffled_but_balanced(self):
+        from collections import Counter
+        from drosomath.malecns.keyboard_learning import build_label_schedule
+        from drosomath.malecns.virtual_keyboard import KEY_LABELS
+
+        schedule = build_label_schedule(len(KEY_LABELS) * 2, seed=7)
+        self.assertNotEqual(schedule[: len(KEY_LABELS)], KEY_LABELS)
+        counts = Counter(schedule)
+        self.assertEqual(set(counts.values()), {2})
+
     def test_matching_task_exposes_prompt_and_keyboard(self):
         from drosomath.malecns.virtual_keyboard import KeyboardMatchingTask
 

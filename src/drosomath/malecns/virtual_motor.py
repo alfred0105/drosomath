@@ -38,7 +38,9 @@ class FourArmMotorConfig:
 
     baseline_rate_hz: float = 5.0
     velocity_gain: float = 0.20
-    click_threshold_hz: float = 18.0
+    # With 32 neurons and a 20ms control window, 10Hz requires roughly six
+    # spikes in the channel instead of an unrealistic 12+ spike burst.
+    click_threshold_hz: float = 10.0
     click_refractory_steps: int = 3
 
     def __post_init__(self) -> None:

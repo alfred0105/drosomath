@@ -32,7 +32,9 @@ class VirtualKey:
 
     @property
     def click_radius(self) -> float:
-        return min(self.width, self.height) * 0.45
+        # Keep narrow visual keys clickable in the control simulation. The
+        # displayed key remains narrow, but the motor target has a safe hitbox.
+        return max(0.025, min(self.width, self.height) * 0.45)
 
     def as_target(self) -> VirtualTarget:
         return VirtualTarget(
