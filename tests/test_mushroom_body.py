@@ -1,22 +1,31 @@
 import unittest
 
 
-class MushroomBodyCircuitTests(unittest.TestCase):
-    def _connectome(self):
+class _StubConnectome:
+    def __init__(self):
         import numpy as np
-        from drosomath.flywire_real import FlyWireConnectome
 
-        connectome = FlyWireConnectome(
-            flywire_ids=np.asarray([100, 101, 102, 103, 104], dtype=np.int64),
-            indptr=np.asarray([0, 1, 2, 3, 3, 3], dtype=np.int64),
-            post_indices=np.asarray([1, 2, 3], dtype=np.int32),
-            signed_synapse_counts=np.asarray([5.0, 7.0, 2.0], dtype=np.float32),
-            outgoing_strength=np.asarray([5.0, 7.0, 2.0, 0.0, 0.0], dtype=np.float32),
-        )
-        connectome.metadata = {
+        self.flywire_ids = np.asarray([100, 101, 102, 103, 104], dtype=np.int64)
+        self.indptr = np.asarray([0, 1, 2, 3, 3, 3], dtype=np.int64)
+        self.post_indices = np.asarray([1, 2, 3], dtype=np.int32)
+        self.signed_synapse_counts = np.asarray([5.0, 7.0, 2.0], dtype=np.float32)
+        self.outgoing_strength = np.asarray([5.0, 7.0, 2.0, 0.0, 0.0], dtype=np.float32)
+        self.metadata = {
             "type": np.asarray(["visual", "KC", "MBON", "DAN", "other"], dtype=object),
         }
-        return connectome
+
+    @property
+    def neuron_count(self):
+        return len(self.flywire_ids)
+
+    @property
+    def edge_count(self):
+        return len(self.post_indices)
+
+
+class MushroomBodyCircuitTests(unittest.TestCase):
+    def _connectome(self):
+        return _StubConnectome()
 
     def test_roles_and_anatomical_scope(self) -> None:
         from drosomath.malecns.mushroom_body import MushroomBodyCircuit
