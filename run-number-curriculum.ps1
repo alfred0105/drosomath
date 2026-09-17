@@ -4,6 +4,7 @@ param(
     [int]$DecoderEpochs = 8,
     [int]$ValidationTrials = 8,
     [int]$CheckpointEvery = 64,
+    [int]$MaxStage = 1,
     [int]$Seed = 7,
     [switch]$Download,
     [switch]$NoDownload,
@@ -30,7 +31,8 @@ $argsList = @(
     "--validation-trials", "$ValidationTrials",
     "--checkpoint-every", "$CheckpointEvery",
     "--seed", "$Seed",
-    "--numeric-first"
+    "--numeric-first",
+    "--max-stage", "$MaxStage"
 )
 
 if ($Download -and -not $NoDownload) {
@@ -43,6 +45,7 @@ if ($Fresh) {
 Write-Host "=== DrosoMath number-concept curriculum ==="
 Write-Host "Python: $python"
 Write-Host "Stages: numerosity 1-4 -> comparison -> addition 1-3"
+Write-Host "This run stops after stage $MaxStage and can resume later."
 & $python @argsList
 if ($LASTEXITCODE -ne 0) {
     throw "Number curriculum failed with exit code $LASTEXITCODE"
