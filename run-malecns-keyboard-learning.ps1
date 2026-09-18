@@ -1,14 +1,33 @@
 param(
   [switch]$Download,
   [int]$Trials = 20000,
-  [int]$MinTrialsPerKey = 32,
+  [int]$MinTrialsPerKey = 5,
   [double]$TargetAccuracy = 0.80,
+  [double]$ClickPenalty = 1.20,
+  [double]$LowPeakClickPenaltyScale = 0.0,
+  [double]$ClickTeacherLearningRate = 0.08,
+  [double]$ClickTeacherCreditFloor = 0.05,
+  [double]$PeakRegressionPenaltyScale = 0.80,
+  [double]$ClickGateThresholdHz = 9.0,
+  [int]$ClickIntegrationWindows = 1,
+  [int]$ClickEvidenceWindows = 5,
+  [double]$ClickMarginTargetHz = 15.0,
+  [double]$ClickMarginRewardScale = 0.50,
+  [double]$DistancePenaltyScale = 1.20,
+  [double]$CorrectDistancePenaltyScale = 0.20,
+  [double]$ConsecutiveCorrectBonus = 0.25,
+  [double]$MaxConsecutiveBonus = 1.00,
   [double]$DurationMs = 100,
   [double]$ControlWindowMs = 20,
   [int]$MaxControlWindows = 30,
   [int]$StimulusRateHz = 205,
-  [int]$MotorPopulationSize = 32,
+  [int]$MotorPopulationSize = 64,
+  [ValidateSet('one_arm_fan', 'one_arm_circle', 'one_arm_circular', 'four_arm_grid')]
+  [string]$BodyMode = 'one_arm_fan',
+  [ValidateSet('click_gate', 'click_accuracy')]
+  [string]$CurriculumStage = 'click_accuracy',
   [int]$CheckpointEvery = 32,
+  [switch]$Resume,
   [int]$Seed = 7,
   [switch]$NoPush,
   [switch]$Open
@@ -19,17 +38,46 @@ $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $python = Join-Path $root '.venv\Scripts\python.exe'
 if (-not (Test-Path -LiteralPath $python)) { $python = 'python' }
 $dataDir = Join-Path $root 'data\malecns_v1'
+$liveHtmlPath = Join-Path $root 'results\latest_malecns_keyboard_matching.html'
 Write-Host "=== DrosoMath virtual keyboard matching ==="
-Write-Host "Keys: Korean jamo + English A-Z + O/X + 0-9 (60 physical keys)"
-Write-Host "Max trials: $Trials | target: $($TargetAccuracy * 100)% per key | minimum observations: $MinTrialsPerKey"
+Write-Host "Body: $BodyMode | Stage: $CurriculumStage | Korean jamo + English A-Z + O/X + 0-9 (60 physical keys)"
+if ($Trials -eq 0) { $trialText = 'unlimited' } else { $trialText = [string]$Trials }
+Write-Host "Training trials: $trialText | readiness: each key's recent 20 trials must be 20/20 correct | wrong/no click base: -$ClickPenalty"
+Write-Host "Low peak click: global punishment disabled; active excitatory click inputs get targeted teaching (rate: $ClickTeacherLearningRate)"
+Write-Host "Per-key peak regression: up to -$PeakRegressionPenaltyScale when this key falls below its previous peak; the local click teacher strengthens proportionally"
+Write-Host "Distance shaping: failure scale $DistancePenaltyScale | correct edge scale $CorrectDistancePenaltyScale"
+Write-Host "Click curriculum: arm position locked; 20ms peak click threshold: $ClickGateThresholdHz Hz"
+Write-Host "100ms click average is telemetry only ($ClickEvidenceWindows windows); strong peak clicks earn up to +$ClickMarginRewardScale at $ClickMarginTargetHz"
+Write-Host "Per-key streak bonus: +$ConsecutiveCorrectBonus per extra correct, capped at +$MaxConsecutiveBonus"
+Write-Host "Exam: randomized 60 keys x 20 = 1200 trials, learning frozen; pass only at 1200/1200"
+Write-Host "Training priority: fewest attempts first, then lowest recent accuracy"
 Write-Host "The Python process will update the current trial live below."
+if ($Open -and (Test-Path -LiteralPath $liveHtmlPath)) {
+  Write-Host "Opening live 2D dashboard: $liveHtmlPath"
+  Start-Process -FilePath $liveHtmlPath
+}
 $args = @('-u', '-m', 'drosomath.malecns.keyboard_learning', '--data-dir', $dataDir,
   '--trials', $Trials, '--min-trials-per-key', $MinTrialsPerKey, '--target-accuracy', $TargetAccuracy,
+  '--click-penalty', $ClickPenalty, '--distance-penalty-scale', $DistancePenaltyScale,
+  '--low-peak-click-penalty-scale', $LowPeakClickPenaltyScale,
+  '--click-teacher-learning-rate', $ClickTeacherLearningRate,
+  '--click-teacher-credit-floor', $ClickTeacherCreditFloor,
+  '--peak-regression-penalty-scale', $PeakRegressionPenaltyScale,
+  '--click-gate-threshold-hz', $ClickGateThresholdHz,
+  '--click-integration-windows', $ClickIntegrationWindows,
+  '--click-evidence-windows', $ClickEvidenceWindows,
+  '--click-margin-target-hz', $ClickMarginTargetHz,
+  '--click-margin-reward-scale', $ClickMarginRewardScale,
+  '--correct-distance-penalty-scale', $CorrectDistancePenaltyScale,
+  '--consecutive-correct-bonus', $ConsecutiveCorrectBonus, '--max-consecutive-bonus', $MaxConsecutiveBonus,
   '--duration-ms', $DurationMs,
   '--control-window-ms', $ControlWindowMs, '--max-control-windows', $MaxControlWindows,
   '--stimulus-rate-hz', $StimulusRateHz, '--motor-population-size', $MotorPopulationSize,
+  '--body-mode', $BodyMode,
+  '--curriculum-stage', $CurriculumStage,
   '--checkpoint-every', $CheckpointEvery, '--seed', $Seed)
 if ($Download) { $args += '--download' }
+if ($Resume) { $args += '--resume' }
 Push-Location $root
 try {
   & $python @args
@@ -44,9 +92,6 @@ try {
         git push origin "HEAD:$branch"
       }
     }
-  }
-  if ($Open) {
-    Start-Process (Resolve-Path ".\results\latest_malecns_keyboard_matching.html")
   }
 } finally {
   Pop-Location

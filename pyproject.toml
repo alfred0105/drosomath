@@ -15,6 +15,7 @@ wholebrain = ["numpy"]
 flywire = ["numpy", "pyarrow"]
 malecns = ["numpy", "pyarrow"]
 gpu = ["cupy-cuda12x[ctk]"]
+performance = ["numba"]
 
 [project.scripts]
 drosomath-demo = "drosomath.demo:main"

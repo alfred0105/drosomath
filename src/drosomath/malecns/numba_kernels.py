@@ -1,0 +1,125 @@
+"""Optional compiled kernels for the sparse MaleCNS reference simulator.
+
+The kernels preserve the CSR edge order used by the NumPy reference path.  A
+missing Numba install is deliberately harmless: callers select the existing
+NumPy implementation instead.
+"""
+
+from __future__ import annotations
+
+try:  # Optional performance dependency, not a required simulation dependency.
+    from numba import njit
+except ImportError:  # pragma: no cover - exercised on minimal installations
+    NUMBA_AVAILABLE = False
+    advance_sparse_lif = None
+    scatter_csr_rows = None
+    scatter_csr_rows_with_plasticity = None
+else:
+    NUMBA_AVAILABLE = True
+
+
+if NUMBA_AVAILABLE:
+
+    @njit(cache=True, nogil=True)
+    def scatter_csr_rows_with_plasticity(
+        fired,
+        indptr,
+        posts,
+        signed,
+        multiplier,
+        target,
+        plastic_mask,
+        usage_ema,
+        eligibility,
+        scale,
+        usage_alpha,
+        eligibility_gain,
+    ):
+        """Scatter CSR rows and update plastic traces in original edge order."""
+        for fired_offset in range(len(fired)):
+            pre = fired[fired_offset]
+            start = indptr[pre]
+            stop = indptr[pre + 1]
+            for edge in range(start, stop):
+                target[posts[edge]] += signed[edge] * multiplier[edge] * scale
+                if plastic_mask[edge]:
+                    usage_ema[edge] += usage_alpha * (1.0 - usage_ema[edge])
+                    eligibility[edge] += eligibility_gain
+
+
+    @njit(cache=True, nogil=True)
+    def scatter_csr_rows(
+        fired,
+        indptr,
+        posts,
+        signed,
+        multiplier,
+        target,
+        scale,
+    ):
+        """Scatter CSR rows when plastic trace collection is disabled."""
+        for fired_offset in range(len(fired)):
+            pre = fired[fired_offset]
+            start = indptr[pre]
+            stop = indptr[pre + 1]
+            for edge in range(start, stop):
+                target[posts[edge]] += signed[edge] * multiplier[edge] * scale
+
+
+    @njit(cache=True, nogil=True)
+    def advance_sparse_lif(
+        active,
+        due,
+        due_slot,
+        v,
+        g,
+        refractory_until,
+        stimulated,
+        fired_out,
+        step_index,
+        resting_mv,
+        threshold_mv,
+        reset_mv,
+        membrane_decay,
+        g_to_v,
+        synapse_decay,
+        poisson_drive_mv,
+        refractory_steps,
+    ):
+        """Advance the sparse LIF state without temporary indexed gathers.
+
+        The order intentionally mirrors the NumPy reference: deliver delayed
+        current, decay/integrate active cells, clamp refractory cells, inject
+        stimulus, then detect and reset spikes.
+        """
+        for offset in range(len(due)):
+            neuron = due[offset]
+            g[neuron] += due_slot[neuron]
+            due_slot[neuron] = 0.0
+
+        for offset in range(len(active)):
+            neuron = active[offset]
+            old_g = g[neuron]
+            v[neuron] = (
+                resting_mv
+                + (v[neuron] - resting_mv) * membrane_decay
+                + old_g * g_to_v
+            )
+            g[neuron] = old_g * synapse_decay
+            if step_index < refractory_until[neuron]:
+                v[neuron] = resting_mv
+                g[neuron] = 0.0
+
+        for offset in range(len(stimulated)):
+            v[stimulated[offset]] += poisson_drive_mv
+
+        fired_count = 0
+        for offset in range(len(active)):
+            neuron = active[offset]
+            if v[neuron] > threshold_mv and step_index >= refractory_until[neuron]:
+                fired_out[fired_count] = neuron
+                fired_count += 1
+                v[neuron] = reset_mv
+                g[neuron] = 0.0
+                refractory_until[neuron] = step_index + refractory_steps
+        return fired_count

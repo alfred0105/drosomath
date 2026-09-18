@@ -128,6 +128,37 @@ class SparsePlasticityState:
         eligibility[local_mask] += eligibility_gain
         return count
 
+    def record_use_indices(
+        self,
+        edge_indices,
+        *,
+        usage_alpha: float = 0.05,
+        eligibility_gain: float = 1.0,
+    ) -> int:
+        """Record use for a gathered, non-contiguous edge batch.
+
+        This is equivalent to applying :meth:`record_use_slice` to each
+        disjoint source-neuron slice, but lets the sparse simulator update one
+        vectorized batch after several neurons fire in the same timestep.
+        """
+        if not 0.0 < usage_alpha <= 1.0:
+            raise ValueError("usage_alpha must be in (0, 1]")
+        if eligibility_gain < 0.0:
+            raise ValueError("eligibility_gain must be >= 0")
+        indices = self.np.asarray(edge_indices, dtype=self.np.int64)
+        if len(indices) == 0:
+            return 0
+        if int(indices.min()) < 0 or int(indices.max()) >= self.edge_count:
+            raise IndexError("edge index out of range")
+        active = self.plastic_mask[indices]
+        if not active.any():
+            return 0
+        selected = indices[active]
+        usage = self.usage_ema[selected]
+        self.usage_ema[selected] = usage + usage_alpha * (1.0 - usage)
+        self.eligibility[selected] += eligibility_gain
+        return int(len(selected))
+
     def decay_episode(
         self,
         *,

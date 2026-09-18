@@ -33,6 +33,31 @@ class FourArmMotorTests(unittest.TestCase):
         self.assertFalse(third[0].click)
         self.assertFalse(fourth[0].click)
 
+    def test_one_arm_adapter_has_five_channels(self):
+        from drosomath.malecns.virtual_motor import OneArmMotorAdapter
+
+        adapter = OneArmMotorAdapter()
+        self.assertEqual(adapter.channel_count, 5)
+        actions = adapter.decode([5.0, 5.0, 5.0, 5.0, 20.0])
+        self.assertEqual(len(actions), 1)
+        self.assertTrue(actions[0].click)
+
+    def test_click_evidence_integrates_multiple_control_windows(self):
+        from drosomath.malecns.virtual_motor import FourArmMotorConfig, OneArmMotorAdapter
+
+        adapter = OneArmMotorAdapter(FourArmMotorConfig(
+            click_threshold_hz=9.0,
+            click_integration_windows=5,
+            click_refractory_steps=0,
+        ))
+        quiet = [5.0, 5.0, 5.0, 5.0, 0.0]
+        active = [5.0, 5.0, 5.0, 5.0, 20.0]
+        self.assertFalse(adapter.decode(active)[0].click)
+        self.assertFalse(adapter.decode(quiet)[0].click)
+        self.assertFalse(adapter.decode(active)[0].click)
+        self.assertTrue(adapter.decode(active)[0].click)
+        self.assertGreaterEqual(adapter.last_click_evidence_rates[0], 9.0)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -61,6 +61,57 @@ class MaleCNSFastStateTests(unittest.TestCase):
         self.assertLessEqual(summary["peak_active_state_neurons"], graph.neuron_count)
         self.assertGreater(summary["peak_active_state_neurons"], 0)
 
+    def test_batched_fast_output_matches_dense_delay_and_learning_state(self):
+        import numpy as np
+        from drosomath.malecns.brain import PlasticMaleCNSBrain
+        from drosomath.whole_brain import PlasticSparseFlyBrain, PlasticStateConfig
+
+        graph = self._graph()
+        cfg = PlasticStateConfig(plastic_fraction=1.0, seed=9)
+        fast = PlasticMaleCNSBrain(graph, seed=13, plasticity_config=cfg)
+        dense = PlasticSparseFlyBrain(graph, seed=13, plasticity_config=cfg)
+        fired = np.asarray([2, 0, 1], dtype=np.int32)
+
+        transferred_fast = fast._schedule_spike_outputs(fired)
+        transferred_dense = dense._schedule_spike_outputs(fired)
+
+        self.assertEqual(transferred_fast, transferred_dense)
+        for fast_slot, dense_slot in zip(fast._delay_ring, dense._delay_ring):
+            np.testing.assert_allclose(fast_slot, dense_slot, rtol=0.0, atol=1e-6)
+        np.testing.assert_allclose(
+            fast.plasticity.usage_ema,
+            dense.plasticity.usage_ema,
+            rtol=0.0,
+            atol=1e-6,
+        )
+        np.testing.assert_allclose(
+            fast.plasticity.eligibility,
+            dense.plasticity.eligibility,
+            rtol=0.0,
+            atol=1e-6,
+        )
+
+    def test_due_mask_returns_sorted_unique_targets(self):
+        import numpy as np
+        from drosomath.malecns.brain import PlasticMaleCNSBrain
+        from drosomath.whole_brain import PlasticStateConfig
+
+        brain = PlasticMaleCNSBrain(
+            self._graph(),
+            seed=3,
+            plasticity_config=PlasticStateConfig(plastic_fraction=1.0, seed=3),
+        )
+        brain._fast_delay_touched[0].extend(
+            [
+                np.asarray([3, 1, 3], dtype=np.int32),
+                np.asarray([2, 1], dtype=np.int32),
+            ]
+        )
+        np.testing.assert_array_equal(
+            brain._due_indices(0),
+            np.asarray([1, 2, 3], dtype=np.int32),
+        )
+
     def test_output_session_reuses_stimulus_index_cache(self):
         from drosomath.malecns.brain import PlasticMaleCNSBrain
         from drosomath.malecns.output_readout import OutputPopulation, PopulationReadout
@@ -80,6 +131,57 @@ class MaleCNSFastStateTests(unittest.TestCase):
         second = session._indices_for_stimulus((10, 20))
         self.assertIs(first, second)
         self.assertEqual(len(session._stimulus_index_cache), 1)
+
+    def test_fast_active_cache_uses_mask_and_stays_sorted(self):
+        import numpy as np
+        from drosomath.malecns.brain import PlasticMaleCNSBrain
+        from drosomath.whole_brain import PlasticStateConfig
+
+        graph = self._graph()
+        brain = PlasticMaleCNSBrain(
+            graph,
+            seed=3,
+            plasticity_config=PlasticStateConfig(plastic_fraction=1.0, seed=3),
+        )
+
+        first = brain._activate_indices(
+            np.asarray([5, 2, 5], dtype=np.int32),
+            np.asarray([3, 2], dtype=np.int32),
+        )
+        np.testing.assert_array_equal(first, np.asarray([2, 3, 5], dtype=np.int32))
+        self.assertTrue(bool(brain._fast_active_mask[2]))
+        self.assertTrue(bool(brain._fast_active_mask[3]))
+        self.assertTrue(bool(brain._fast_active_mask[5]))
+
+        second = brain._activate_indices(np.asarray([1, 5], dtype=np.int32))
+        np.testing.assert_array_equal(
+            second,
+            np.asarray([1, 2, 3, 5], dtype=np.int32),
+        )
+
+    def test_recent_key_mastery_requires_clean_window(self):
+        from drosomath.malecns.keyboard_learning import recent_key_mastered
+
+        self.assertFalse(recent_key_mastered([True] * 19, 20))
+        self.assertFalse(recent_key_mastered([True] * 19 + [False], 20))
+        self.assertTrue(recent_key_mastered([True] * 20, 20))
+
+    def test_evaluation_schedule_is_randomized_and_balanced(self):
+        from collections import Counter
+        import numpy as np
+        from drosomath.malecns.keyboard_learning import (
+            build_evaluation_schedule,
+        )
+
+        labels = ("A", "B", "C")
+        schedule = build_evaluation_schedule(
+            labels,
+            20,
+            np.random.default_rng(5),
+        )
+        self.assertEqual(len(schedule), 60)
+        self.assertEqual(Counter(schedule), {"A": 20, "B": 20, "C": 20})
+        self.assertNotEqual(schedule, tuple(label for label in labels for _ in range(20)))
 
 
 if __name__ == "__main__":

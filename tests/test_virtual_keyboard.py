@@ -42,6 +42,52 @@ class VirtualKeyboardTests(unittest.TestCase):
         self.assertFalse(result.done)
         self.assertIsNone(result.clicked_label)
 
+    def test_circular_keyboard_works_with_one_arm(self):
+        from drosomath.malecns.virtual_body import OneArmWorld
+        from drosomath.malecns.virtual_keyboard import FanKeyboard, KeyboardMatchingTask
+        from drosomath.malecns.virtual_motor import OneArmMotorAdapter
+
+        world = OneArmWorld()
+        task = KeyboardMatchingTask(
+            keyboard=FanKeyboard.for_arm(world.arm_configs[0]),
+            world=world,
+            motor=OneArmMotorAdapter(),
+        )
+        observation = task.reset("O")
+        self.assertEqual(len(observation["keyboard"]), 60)
+        self.assertEqual(len(observation["body"]["arms"]), 1)
+        self.assertEqual(task.motor.channel_count, 5)
+        radii = sorted(
+            ((key["x"] - 0.5) ** 2 + (key["y"] - 0.5) ** 2) ** 0.5
+            for key in observation["keyboard"]
+        )
+        radial_layers = []
+        for radius in radii:
+            if not radial_layers or abs(radius - radial_layers[-1]) > 1e-8:
+                radial_layers.append(radius)
+        self.assertEqual(len(radial_layers), 5)
+
+    def test_forward_fan_keys_are_all_reachable_without_box_overlap(self):
+        import math
+
+        from drosomath.malecns.virtual_body import OneArmWorld
+        from drosomath.malecns.virtual_keyboard import FanKeyboard
+
+        world = OneArmWorld()
+        keyboard = FanKeyboard.for_arm(world.arm_configs[0])
+        keys = list(keyboard.keys.values())
+        for key in keys:
+            world.reset()
+            world.position_arm_to(0, key.x, key.y)
+            endpoint = world.observation()["endpoints"][0]
+            self.assertLess(math.dist(endpoint, (key.x, key.y)), 1e-8)
+        closest_centers = min(
+            math.dist((first.x, first.y), (second.x, second.y))
+            for index, first in enumerate(keys)
+            for second in keys[index + 1 :]
+        )
+        self.assertGreater(closest_centers, keys[0].width)
+
 
 if __name__ == "__main__":
     unittest.main()

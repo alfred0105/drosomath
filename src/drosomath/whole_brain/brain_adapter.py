@@ -46,6 +46,12 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
             raise ValueError("plasticity edge count must match connectome edge count")
 
         self.plasticity = plasticity
+        # Anatomy is immutable for the lifetime of a brain instance.  Cache
+        # this 6M-edge absolute-strength vector instead of rebuilding it on
+        # every reward/homeostasis update.
+        self._base_abs_synapse_counts = self.np.abs(
+            connectome.signed_synapse_counts
+        ).astype(self.np.float32, copy=False)
         self.usage_alpha = usage_alpha
         self.eligibility_gain = eligibility_gain
         self.plasticity_tracking_enabled = True
@@ -316,6 +322,7 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
         usage_decay: float = 0.995,
         eligibility_decay: float = 0.90,
         clear_eligibility: bool = True,
+        include_plasticity_summary: bool = True,
     ) -> dict[str, object]:
         """Turn recent synaptic use into long-term weight/structural changes."""
         if not self.plasticity_tracking_enabled:
@@ -337,7 +344,7 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
             budget = normalizer.normalize_presynaptic(
                 self.plasticity,
                 indptr=self.connectome.indptr,
-                base_abs=self.np.abs(self.connectome.signed_synapse_counts),
+                base_abs=self._base_abs_synapse_counts,
                 presynaptic_indices=sorted(self._recent_presynaptic),
             )
 
@@ -353,7 +360,9 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
             "reward": float(reward),
             "learning": asdict(update),
             "budget": asdict(budget) if budget is not None else None,
-            "plasticity": self.plasticity.summary(),
+            # Full summary scans every edge.  Interactive training only needs
+            # per-update stats; checkpoint/final reports still request it.
+            "plasticity": self.plasticity.summary() if include_plasticity_summary else None,
             "structural_learning": structural_learning,
             "structural_rewire": structural_rewire,
             "structural_reward_events": int(self._structural_reward_events),

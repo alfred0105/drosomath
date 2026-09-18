@@ -40,6 +40,14 @@ class FourArmWorldTests(unittest.TestCase):
         self.assertLess(result.reward, 0.0)
         self.assertFalse(result.done)
 
+    def test_one_arm_world_has_three_actions(self):
+        from drosomath.malecns.virtual_body import OneArmWorld
+
+        world = OneArmWorld()
+        self.assertEqual(world.arm_count, 1)
+        self.assertEqual(world.action_size, 3)
+        self.assertEqual(len(world.observation()["arms"]), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

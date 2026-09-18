@@ -1,15 +1,23 @@
-"""Virtual keyboard and token-to-click matching task for the four-arm body."""
+"""Virtual keyboards and token-to-click tasks for virtual motor bodies."""
 
 from __future__ import annotations
 
 import argparse
 import json
+import math
 import random
 from dataclasses import dataclass
 from typing import Iterable, Sequence
 
-from .virtual_body import ArmAction, FourArmWorld, VirtualStepResult, VirtualTarget
-from .virtual_motor import FourArmMotorAdapter
+from .virtual_body import (
+    ArmAction,
+    FourArmWorld,
+    OneArmWorld,
+    VirtualArmConfig,
+    VirtualStepResult,
+    VirtualTarget,
+)
+from .virtual_motor import FourArmMotorAdapter, OneArmMotorAdapter
 
 
 KOREAN_JAMO: tuple[str, ...] = tuple("ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣ")
@@ -32,8 +40,8 @@ class VirtualKey:
 
     @property
     def click_radius(self) -> float:
-        # Keep narrow visual keys clickable in the control simulation. The
-        # displayed key remains narrow, but the motor target has a safe hitbox.
+        # Kept for compatibility with circular VirtualTarget users. Keyboard
+        # targets additionally carry the exact visual key box below.
         return max(0.025, min(self.width, self.height) * 0.45)
 
     def as_target(self) -> VirtualTarget:
@@ -43,6 +51,8 @@ class VirtualKey:
             y=self.y,
             radius=self.click_radius,
             owner_arm=self.owner_arm,
+            hitbox_width=self.width,
+            hitbox_height=self.height,
         )
 
 
@@ -106,6 +116,103 @@ class VirtualKeyboard:
         ]
 
 
+class FanKeyboard(VirtualKeyboard):
+    """Place keys in five non-overlapping reachable forward-fan layers."""
+
+    def __init__(
+        self,
+        *,
+        center_x: float = 0.50,
+        center_y: float = 0.50,
+        inner_radius: float = 0.135,
+        outer_radius: float = 0.34,
+        start_angle_deg: float = -78.0,
+        end_angle_deg: float = 78.0,
+        layers: int = 5,
+        key_size: float = 0.026,
+    ) -> None:
+        if inner_radius <= 0.0 or outer_radius <= inner_radius or key_size <= 0.0:
+            raise ValueError("fan radii and key_size must define a positive range")
+        if layers < 1 or len(KEY_LABELS) % layers:
+            raise ValueError("layers must evenly divide the key count")
+        if end_angle_deg <= start_angle_deg:
+            raise ValueError("end_angle_deg must exceed start_angle_deg")
+        keys = []
+        keys_per_layer = len(KEY_LABELS) // layers
+        start_angle = math.radians(start_angle_deg)
+        end_angle = math.radians(end_angle_deg)
+        full_circle = math.isclose(
+            end_angle - start_angle,
+            2.0 * math.pi,
+            rel_tol=0.0,
+            abs_tol=1e-6,
+        )
+        for layer in range(layers):
+            if layers == 1:
+                radial = (inner_radius + outer_radius) / 2.0
+            else:
+                radial = inner_radius + (outer_radius - inner_radius) * layer / (layers - 1)
+            for slot in range(keys_per_layer):
+                denominator = keys_per_layer if full_circle else max(1, keys_per_layer - 1)
+                fraction = slot / denominator
+                angle = start_angle + (end_angle - start_angle) * fraction
+                label = KEY_LABELS[layer * keys_per_layer + slot]
+                keys.append(
+                    VirtualKey(
+                        label=label,
+                        x=center_x + radial * math.cos(angle),
+                        y=center_y + radial * math.sin(angle),
+                        width=key_size,
+                        height=key_size,
+                        owner_arm=None,
+                    )
+                )
+        super().__init__(keys)
+
+    @classmethod
+    def for_arm(cls, arm_config: VirtualArmConfig, *, margin: float = 0.02) -> "FanKeyboard":
+        """Fit the fan just inside the arm's two-link reachable workspace."""
+        if margin <= 0.0:
+            raise ValueError("margin must be > 0")
+        max_reach = arm_config.upper_arm_length + arm_config.forearm_length - margin
+        # Leave room around the inner arc so neighboring 0.026-wide key boxes
+        # never touch, while retaining five usable radial layers.
+        min_reach = abs(arm_config.upper_arm_length - arm_config.forearm_length) + 0.095
+        if max_reach <= min_reach:
+            raise ValueError("arm workspace is too small for the fan")
+        return cls(
+            center_x=arm_config.shoulder_x,
+            center_y=arm_config.shoulder_y,
+            inner_radius=min_reach,
+            outer_radius=max_reach,
+        )
+
+
+class CircularKeyboard(FanKeyboard):
+    """Place the same layered keys around a full 360-degree annulus."""
+
+    def __init__(
+        self,
+        *,
+        center_x: float = 0.50,
+        center_y: float = 0.50,
+        inner_radius: float = 0.12,
+        outer_radius: float = 0.34,
+        layers: int = 5,
+        key_size: float = 0.026,
+    ) -> None:
+        super().__init__(
+            center_x=center_x,
+            center_y=center_y,
+            inner_radius=inner_radius,
+            outer_radius=outer_radius,
+            start_angle_deg=-180.0,
+            end_angle_deg=180.0,
+            layers=layers,
+            key_size=key_size,
+        )
+
+
 @dataclass(frozen=True, slots=True)
 class KeyboardStepResult:
     prompt: str
@@ -118,14 +225,14 @@ class KeyboardStepResult:
 
 
 class KeyboardMatchingTask:
-    """Present one token and reward any arm that clicks its matching key."""
+    """Present one token and reward an arm that clicks its matching key."""
 
     def __init__(
         self,
         *,
         keyboard: VirtualKeyboard | None = None,
-        world: FourArmWorld | None = None,
-        motor: FourArmMotorAdapter | None = None,
+        world: FourArmWorld | OneArmWorld | None = None,
+        motor: FourArmMotorAdapter | OneArmMotorAdapter | None = None,
         seed: int = 7,
     ) -> None:
         self.keyboard = keyboard or VirtualKeyboard()
