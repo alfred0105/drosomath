@@ -325,6 +325,7 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
         clear_eligibility: bool = True,
         include_plasticity_summary: bool = True,
         profile_timing: bool = False,
+        post_reward_hook=None,
         normalizer_observer=None,
     ) -> dict[str, object]:
         """Turn recent synaptic use into long-term weight/structural changes."""
@@ -356,6 +357,15 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
                 structural_rewire = self.run_structural_cycle(
                     cycle_label=f"reward_event_{self._structural_reward_events}"
                 )
+
+        # A task-specific local teacher may use current-trial eligibility, but
+        # it must run after the global reward update and before normalization,
+        # decay, and the single lifecycle clear below.
+        post_reward = (
+            post_reward_hook(self.plasticity)
+            if post_reward_hook is not None
+            else None
+        )
 
         budget = None
         if normalizer is not None and self._recent_presynaptic:
@@ -396,6 +406,7 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
             "structural_rewire": structural_rewire,
             "structural_reward_events": int(self._structural_reward_events),
             "structural": self.structural_summary(),
+            "post_reward": post_reward,
         }
         if timings is not None:
             timings["total_seconds"] = time.perf_counter() - started

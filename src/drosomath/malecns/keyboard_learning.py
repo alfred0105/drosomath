@@ -423,6 +423,13 @@ class KeyboardTrainingConfig:
     peak_regression_fixed_penalty: float = 0.80
     peak_regression_escalation: float = 0.50
     peak_regression_max_penalty: float = 2.00
+    persistent_peak_ema_alpha: float = 0.25
+    persistent_deficit_ema_alpha: float = 0.25
+    persistent_deficit_streak_gain: float = 0.15
+    persistent_deficit_max_strength: float = 2.0
+    teacher_confirmation_stability_gain: float = 0.05
+    teacher_memory_edges_per_key: int = 128
+    teacher_stability_protection: float = 0.85
     distance_penalty_scale: float = 1.20
     correct_distance_penalty_scale: float = 0.20
     consecutive_correct_bonus: float = 0.25
@@ -438,6 +445,12 @@ class KeyboardTrainingConfig:
     coverage_interval: int = 4
     hard_mining_floor: float = 0.10
     hard_mining_power: float = 2.0
+    robust_mastery_enabled: bool = False
+    robust_mastery_macro_accuracy: float = 0.95
+    robust_mastery_min_key_accuracy: float = 0.90
+    retention_probe_interval: int = 600
+    retention_degraded_accuracy: float = 0.80
+    retention_replay_bonus: float = 0.50
     duration_ms: float = 100.0
     control_window_ms: float = 20.0
     max_control_windows: int = 30
@@ -481,6 +494,18 @@ class KeyboardTrainingConfig:
             raise ValueError("peak_regression_escalation must be >= 0")
         if self.peak_regression_max_penalty < self.peak_regression_fixed_penalty:
             raise ValueError("peak_regression_max_penalty must be >= fixed penalty")
+        if not 0.0 < self.persistent_peak_ema_alpha <= 1.0:
+            raise ValueError("persistent_peak_ema_alpha must be in (0, 1]")
+        if not 0.0 < self.persistent_deficit_ema_alpha <= 1.0:
+            raise ValueError("persistent_deficit_ema_alpha must be in (0, 1]")
+        if self.persistent_deficit_streak_gain < 0.0 or self.persistent_deficit_max_strength < 0.0:
+            raise ValueError("persistent deficit strengths must be >= 0")
+        if self.teacher_confirmation_stability_gain < 0.0:
+            raise ValueError("teacher_confirmation_stability_gain must be >= 0")
+        if self.teacher_memory_edges_per_key < 1:
+            raise ValueError("teacher_memory_edges_per_key must be positive")
+        if not 0.0 <= self.teacher_stability_protection <= 1.0:
+            raise ValueError("teacher_stability_protection must be in [0, 1]")
         if self.click_gate_threshold_hz <= 5.0:
             raise ValueError("click_gate_threshold_hz must be > baseline rate (5.0Hz)")
         if self.click_integration_windows < 1:
@@ -513,6 +538,16 @@ class KeyboardTrainingConfig:
             raise ValueError("hard_mining_floor must be > 0")
         if self.hard_mining_power <= 0.0:
             raise ValueError("hard_mining_power must be > 0")
+        if not 0.5 < self.robust_mastery_macro_accuracy <= 1.0:
+            raise ValueError("robust_mastery_macro_accuracy must be in (0.5, 1]")
+        if not 0.5 < self.robust_mastery_min_key_accuracy <= 1.0:
+            raise ValueError("robust_mastery_min_key_accuracy must be in (0.5, 1]")
+        if self.retention_probe_interval < 1:
+            raise ValueError("retention_probe_interval must be positive")
+        if not 0.0 <= self.retention_degraded_accuracy <= 1.0:
+            raise ValueError("retention_degraded_accuracy must be in [0, 1]")
+        if self.retention_replay_bonus < 0.0:
+            raise ValueError("retention_replay_bonus must be >= 0")
         if not 0.5 < self.target_accuracy <= 1.0:
             raise ValueError("target_accuracy must be in (0.5, 1]")
         if self.duration_ms <= 0.0 or self.control_window_ms <= 0.0:
@@ -631,7 +666,10 @@ class KeyboardNeuralSession:
             for label, indices in self.stimulus_indices_by_label.items()
         }
         self.reward_rule = UsageRewardRule(learning_rate=config.learning_rate)
-        self.normalizer = OutgoingBudgetNormalizer(strength=config.budget_strength)
+        self.normalizer = OutgoingBudgetNormalizer(
+            strength=config.budget_strength,
+            stability_protection=config.teacher_stability_protection,
+        )
         self.steps_per_window = max(
             1,
             int(round(config.control_window_ms / self.brain.params.dt_ms)),
@@ -647,6 +685,12 @@ class KeyboardNeuralSession:
         self.correct_streak_by_label = {label: 0 for label in KEY_LABELS}
         self.previous_peak_by_label = {label: None for label in KEY_LABELS}
         self.peak_regression_streak_by_label = {label: 0 for label in KEY_LABELS}
+        self.peak_ema_by_label = {label: None for label in KEY_LABELS}
+        self.deficit_ema_by_label = {label: 0.0 for label in KEY_LABELS}
+        self.subthreshold_streak_by_label = {label: 0 for label in KEY_LABELS}
+        self.teacher_memory_edges_by_label = {
+            label: np.empty(0, dtype=np.int32) for label in KEY_LABELS
+        }
         self._pending_teacher_normalizer: dict[str, object] | None = None
 
     def _find_click_teacher_edges(self, stimulus_indices) -> object:
@@ -689,8 +733,11 @@ class KeyboardNeuralSession:
             np.isin(self.click_teacher_edge_indices, candidates, assume_unique=False)
         ]
         plastic = state.plastic_mask[candidates]
-        edges = candidates[plastic]
-        eligibility_nonzero = int(np.count_nonzero(state.eligibility[edges] > 0.0))
+        eligible = state.eligibility[candidates] > 0.0
+        active = plastic & eligible
+        plastic_edges = candidates[plastic]
+        edges = candidates[active]
+        eligibility_nonzero = int(np.count_nonzero(eligible))
         mean_before = float(state.multiplier[edges].mean()) if len(edges) else 0.0
         effective_before = float(
             np.abs(
@@ -702,13 +749,13 @@ class KeyboardNeuralSession:
         common = {
             "label": label,
             "candidate_edge_count": candidate_count,
-            "plastic_edge_count": int(len(edges)),
+            "plastic_edge_count": int(len(plastic_edges)),
             "nonzero_eligibility_edge_count": eligibility_nonzero,
+            "active_eligible_edge_count": int(len(edges)),
             "relevant_presynaptic_count": int(len(np.unique(candidate_pre))),
             "mean_multiplier_before": mean_before,
             "effective_strength_before": effective_before,
         }
-        credit = state.usage_ema[candidates] * state.eligibility[candidates]
         if deficit <= 0.0 or self.config.click_teacher_learning_rate <= 0.0 or not len(edges):
             return {
                 **common,
@@ -722,7 +769,7 @@ class KeyboardNeuralSession:
             }
         old = state.multiplier[edges].copy()
         local_credit = np.maximum(
-            credit[plastic],
+            state.usage_ema[edges] * state.eligibility[edges],
             self.config.click_teacher_credit_floor,
         )
         teaching_strength = 1.0 + regression_strength
@@ -753,6 +800,8 @@ class KeyboardNeuralSession:
             "teacher_mean_after": mean_after,
             "teacher_gain": mean_after - mean_before,
         }
+        remembered = np.unique(np.concatenate((self.teacher_memory_edges_by_label[label], edges)))
+        self.teacher_memory_edges_by_label[label] = remembered[-self.config.teacher_memory_edges_per_key:].astype(np.int32, copy=False)
         return {
             **common,
             "edge_updates": int(len(edges)),
@@ -763,6 +812,19 @@ class KeyboardNeuralSession:
             "deficit": deficit,
             "regression_strength": regression_strength,
         }
+
+    def _consolidate_confirmed_teacher_memory(self, label: str, *, confirmed: bool) -> dict[str, object]:
+        edges = self.teacher_memory_edges_by_label[label]
+        if not confirmed or len(edges) == 0 or self.config.teacher_confirmation_stability_gain <= 0.0:
+            return {"confirmed": bool(confirmed), "edge_updates": 0, "mean_stability": 0.0}
+        state = self.brain.plasticity
+        edges = edges[state.plastic_mask[edges]]
+        if not len(edges):
+            return {"confirmed": True, "edge_updates": 0, "mean_stability": 0.0}
+        stability = state.stability[edges]
+        stability += self.config.teacher_confirmation_stability_gain * (1.0 - stability)
+        self.np.clip(stability, 0.0, 1.0, out=stability)
+        return {"confirmed": True, "edge_updates": int(len(edges)), "mean_stability": float(stability.mean())}
 
     def run_trial(self, label: str, *, learn: bool = True) -> dict[str, object]:
         np = self.np
@@ -992,6 +1054,35 @@ class KeyboardNeuralSession:
             if meaningful_regression
             else 0.0
         )
+        current_deficit = min(
+            1.0,
+            max(0.0, (self.config.click_gate_threshold_hz - peak_click_rate_hz)
+                 / self.config.click_gate_threshold_hz),
+        )
+        old_peak_ema = self.peak_ema_by_label[label]
+        peak_ema = (
+            peak_click_rate_hz if old_peak_ema is None else
+            (1.0 - self.config.persistent_peak_ema_alpha) * float(old_peak_ema)
+            + self.config.persistent_peak_ema_alpha * peak_click_rate_hz
+        )
+        old_deficit_ema = self.deficit_ema_by_label[label]
+        deficit_ema = (
+            (1.0 - self.config.persistent_deficit_ema_alpha) * old_deficit_ema
+            + self.config.persistent_deficit_ema_alpha * current_deficit
+        )
+        subthreshold_streak = (
+            self.subthreshold_streak_by_label[label] + 1
+            if learn and not correct and peak_click_rate_hz < self.config.click_gate_threshold_hz
+            else 0
+        )
+        self.peak_ema_by_label[label] = peak_ema
+        self.deficit_ema_by_label[label] = deficit_ema
+        self.subthreshold_streak_by_label[label] = subthreshold_streak
+        persistence_strength = min(
+            self.config.persistent_deficit_max_strength,
+            deficit_ema + self.config.persistent_deficit_streak_gain * max(0, subthreshold_streak - 1),
+        )
+        teacher_strength = regression_strength + persistence_strength
         self.previous_peak_by_label[label] = peak_click_rate_hz
         # Failed trials are graded by endpoint distance from the target.  The
         # key hitbox diagonal is treated as zero-error space, then the
@@ -1014,6 +1105,27 @@ class KeyboardNeuralSession:
         if learn:
             learning_started = time.perf_counter() if timings is not None else 0.0
             teacher_normalizer_followup: dict[str, object] = {}
+            teacher_stats: dict[str, object] = {
+                "edge_updates": 0,
+                "mean_delta": 0.0,
+                "deficit": 0.0,
+                "regression_strength": 0.0,
+            }
+            teacher_seconds = 0.0
+
+            def apply_teacher_before_normalization(state) -> dict[str, object]:
+                nonlocal teacher_stats, teacher_seconds
+                if not (self.config.click_only and not correct):
+                    return teacher_stats
+                teacher_started = time.perf_counter() if timings is not None else 0.0
+                teacher_stats = self._apply_low_peak_click_teacher(
+                    label,
+                    peak_click_rate_hz,
+                    teacher_strength,
+                )
+                if timings is not None:
+                    teacher_seconds = time.perf_counter() - teacher_started
+                return teacher_stats
 
             def observe_normalizer(phase: str, state) -> None:
                 pending = self._pending_teacher_normalizer
@@ -1043,28 +1155,19 @@ class KeyboardNeuralSession:
                 normalizer=self.normalizer,
                 include_plasticity_summary=False,
                 profile_timing=self.config.profile_timing,
+                post_reward_hook=apply_teacher_before_normalization,
                 normalizer_observer=observe_normalizer,
             )
             if timings is not None:
                 timings["brain_learning_seconds"] = time.perf_counter() - learning_started
-                teacher_started = time.perf_counter()
-            learning["motor_teacher"] = (
-                self._apply_low_peak_click_teacher(
-                    label,
-                    peak_click_rate_hz,
-                    regression_strength,
-                )
-                if self.config.click_only and not correct
-                else {
-                    "edge_updates": 0,
-                    "mean_delta": 0.0,
-                    "deficit": 0.0,
-                    "regression_strength": 0.0,
-                }
-            )
+            learning["motor_teacher"] = teacher_stats
             learning["teacher_normalizer_followup"] = teacher_normalizer_followup
+            learning["teacher_confirmation"] = self._consolidate_confirmed_teacher_memory(
+                label,
+                confirmed=bool(correct),
+            )
             if timings is not None:
-                timings["motor_teacher_seconds"] = time.perf_counter() - teacher_started
+                timings["motor_teacher_seconds"] = teacher_seconds
         else:
             reward = 0.0
             learning = {
@@ -1118,6 +1221,10 @@ class KeyboardNeuralSession:
             "peak_regression_triggered": meaningful_regression,
             "peak_regression_streak": regression_streak,
             "peak_regression_strength": regression_strength,
+            "peak_ema_hz": peak_ema,
+            "deficit_ema": deficit_ema,
+            "subthreshold_streak": subthreshold_streak,
+            "persistence_strength": persistence_strength,
             "elapsed_seconds": time.perf_counter() - started,
             "learned": bool(learn),
             "learning": learning,
@@ -1235,6 +1342,12 @@ def run_keyboard_training(
     phase = "training"
     evaluation_ready = False
     evaluation_passed = False
+    robust_mastery_passed = False
+    retention_schedule: tuple[str, ...] = ()
+    retention_index = 0
+    retention_per_key = {label: {"attempts": 0, "correct": 0, "accuracy": 0.0} for label in KEY_LABELS}
+    retention_degraded: set[str] = set()
+    next_retention_probe = config.retention_probe_interval
     evaluation_score = 0
     evaluation_accuracy = 0.0
     click_window: list[bool] = []
@@ -1244,6 +1357,36 @@ def run_keyboard_training(
     completed = 0
     coverage_cycle = build_balanced_coverage_cycle(KEY_LABELS, rng)
     coverage_cursor = 0
+    if resume_info is not None and resume_info.get("session_state"):
+        saved = resume_info["session_state"]
+        completed = int(saved.get("completed", completed))
+        correct = int(saved.get("correct", correct))
+        training_correct = int(saved.get("training_correct", training_correct))
+        training_trials = int(saved.get("training_trials", training_trials))
+        evaluation_trials = int(saved.get("evaluation_trials", evaluation_trials))
+        phase = str(saved.get("phase", phase))
+        evaluation_index = int(saved.get("evaluation_index", evaluation_index))
+        evaluation_number = int(saved.get("evaluation_number", evaluation_number))
+        evaluation_score = int(saved.get("evaluation_score", evaluation_score))
+        evaluation_correct = int(saved.get("evaluation_correct", evaluation_correct))
+        evaluation_failures = int(saved.get("evaluation_failures", evaluation_failures))
+        evaluation_schedule = tuple(saved.get("evaluation_schedule", evaluation_schedule))
+        coverage_cycle = tuple(saved.get("coverage_cycle", coverage_cycle))
+        coverage_cursor = int(saved.get("coverage_cursor", coverage_cursor))
+        for name, target in (("per_key_trials", per_key_trials), ("per_key_correct", per_key_correct), ("retraining_trials", retraining_trials)):
+            target.update({key: int(value) for key, value in saved.get(name, {}).items()})
+        for key, values in saved.get("per_key_recent", {}).items():
+            per_key_recent[key] = [bool(value) for value in values]
+        click_window = [bool(value) for value in saved.get("click_window", click_window)]
+        if "rng_state" in saved:
+            rng.bit_generator.state = saved["rng_state"]
+        session.correct_streak_by_label.update(saved.get("correct_streak_by_label", {}))
+        session.previous_peak_by_label.update(saved.get("previous_peak_by_label", {}))
+        session.peak_regression_streak_by_label.update(saved.get("peak_regression_streak_by_label", {}))
+        session.peak_ema_by_label.update(saved.get("peak_ema_by_label", {}))
+        session.deficit_ema_by_label.update(saved.get("deficit_ema_by_label", {}))
+        session.subthreshold_streak_by_label.update(saved.get("subthreshold_streak_by_label", {}))
+        print(f"keyboard matching: restored curriculum state at trial={completed:,}", flush=True)
     per_key = summarize_per_key_stats(
         KEY_LABELS,
         per_key_trials,
@@ -1256,6 +1399,17 @@ def run_keyboard_training(
     )
 
     while config.trials <= 0 or completed < config.trials:
+        if (
+            config.click_only and phase == "training" and training_trials > 0
+            and training_trials >= next_retention_probe
+        ):
+            phase = "retention"
+            retention_schedule = build_balanced_coverage_cycle(KEY_LABELS, rng)
+            retention_index = 0
+            retention_per_key = {label: {"attempts": 0, "correct": 0, "accuracy": 0.0} for label in KEY_LABELS}
+            next_retention_probe += config.retention_probe_interval
+            print("retention probe started: balanced frozen 60-key check", flush=True)
+            continue
         if config.click_only and phase == "training":
             recent_accuracies = {
                 label: sum(per_key_recent[label][-config.click_window_size:])
@@ -1335,6 +1489,7 @@ def run_keyboard_training(
                         [
                             config.hard_mining_floor
                             + (1.0 - priority_accuracy[key]) ** config.hard_mining_power
+                            + (config.retention_replay_bonus if key in retention_degraded else 0.0)
                             for key in KEY_LABELS
                         ],
                         dtype=np.float64,
@@ -1349,6 +1504,10 @@ def run_keyboard_training(
         elif config.click_only and phase == "evaluation":
             label = evaluation_schedule[evaluation_index]
             selection_source = "evaluation"
+            learn = False
+        elif config.click_only and phase == "retention":
+            label = retention_schedule[retention_index]
+            selection_source = "retention_probe"
             learn = False
         else:
             under_minimum = [
@@ -1400,7 +1559,17 @@ def run_keyboard_training(
                     key: dict(stats) for key, stats in evaluation_per_key.items()
                 }
                 evaluation_passed = evaluation_score == evaluation_total
-                if evaluation_passed:
+                evaluation_macro_accuracy = sum(
+                    float(stats["accuracy"]) for stats in evaluation_per_key.values()
+                ) / len(KEY_LABELS)
+                evaluation_min_key_accuracy = min(
+                    float(stats["accuracy"]) for stats in evaluation_per_key.values()
+                )
+                robust_mastery_passed = (
+                    evaluation_macro_accuracy >= config.robust_mastery_macro_accuracy
+                    and evaluation_min_key_accuracy >= config.robust_mastery_min_key_accuracy
+                )
+                if evaluation_passed or (config.robust_mastery_enabled and robust_mastery_passed):
                     mastery_reached = True
                     phase = "complete"
                 else:
@@ -1412,6 +1581,22 @@ def run_keyboard_training(
                         f"{evaluation_score}/{evaluation_total}; returning to training",
                         flush=True,
                     )
+        elif row_phase == "retention":
+            stats = retention_per_key[label]
+            stats["attempts"] += 1
+            stats["correct"] += row_correct
+            stats["accuracy"] = stats["correct"] / stats["attempts"]
+            retention_index += 1
+            if retention_index == len(retention_schedule):
+                retention_degraded = {
+                    key for key, item in retention_per_key.items()
+                    if float(item["accuracy"]) < config.retention_degraded_accuracy
+                }
+                phase = "training"
+                print(
+                    f"retention probe complete: degraded={len(retention_degraded)}/{len(KEY_LABELS)}",
+                    flush=True,
+                )
         else:
             training_trials += 1
             training_correct += row_correct
@@ -1491,9 +1676,15 @@ def run_keyboard_training(
             "evaluation_total": evaluation_total,
             "evaluation_accuracy": evaluation_accuracy,
             "evaluation_passed": evaluation_passed,
+            "perfect_1200_passed": evaluation_passed,
+            "robust_mastery_passed": robust_mastery_passed,
+            "mastery_passed": mastery_reached,
             "evaluation_number": evaluation_number,
             "evaluation_failures": evaluation_failures,
             "evaluation_per_key": evaluation_per_key,
+            "retention_per_key": retention_per_key,
+            "retention_degraded_keys": sorted(retention_degraded),
+            "retention_accuracy": sum(float(item["accuracy"]) for item in retention_per_key.values()) / len(KEY_LABELS),
             "per_key": per_key,
             "route_provenance": session.route_provenance,
             "motor_channel_count": session.motor_channel_count,
@@ -1521,6 +1712,25 @@ def run_keyboard_training(
                 config=config,
                 completed_trials=trial,
                 stage="keyboard_matching",
+                session_state={
+                    "completed": completed, "correct": correct,
+                    "training_correct": training_correct, "training_trials": training_trials,
+                    "evaluation_trials": evaluation_trials, "phase": phase,
+                    "evaluation_index": evaluation_index, "evaluation_number": evaluation_number,
+                    "evaluation_score": evaluation_score, "evaluation_correct": evaluation_correct,
+                    "evaluation_failures": evaluation_failures,
+                    "evaluation_schedule": list(evaluation_schedule),
+                    "coverage_cycle": list(coverage_cycle), "coverage_cursor": coverage_cursor,
+                    "per_key_trials": per_key_trials, "per_key_correct": per_key_correct,
+                    "per_key_recent": per_key_recent, "retraining_trials": retraining_trials,
+                    "click_window": click_window, "rng_state": rng.bit_generator.state,
+                    "correct_streak_by_label": session.correct_streak_by_label,
+                    "previous_peak_by_label": session.previous_peak_by_label,
+                    "peak_regression_streak_by_label": session.peak_regression_streak_by_label,
+                    "peak_ema_by_label": session.peak_ema_by_label,
+                    "deficit_ema_by_label": session.deficit_ema_by_label,
+                    "subthreshold_streak_by_label": session.subthreshold_streak_by_label,
+                },
             )
             if config.profile_timing:
                 timing_totals["checkpoint_seconds"] = timing_totals.get("checkpoint_seconds", 0.0) + (time.perf_counter() - checkpoint_started)
@@ -1585,6 +1795,9 @@ def run_keyboard_training(
         "evaluation_total": evaluation_total,
         "evaluation_accuracy": evaluation_accuracy,
         "evaluation_passed": evaluation_passed,
+        "perfect_1200_passed": evaluation_passed,
+        "robust_mastery_passed": robust_mastery_passed,
+        "mastery_passed": mastery_reached,
         "evaluation_number": evaluation_number,
         "evaluation_failures": evaluation_failures,
         "evaluation_per_key": evaluation_per_key,

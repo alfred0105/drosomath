@@ -1,22 +1,63 @@
 {
-  "accuracy": 0.0,
+  "accuracy": 0.825,
+  "body": {
+    "arms": [
+      {
+        "elbow": [
+          0.5388369351378992,
+          0.30380700198759736
+        ],
+        "endpoint": [
+          0.6986272070667586,
+          0.2956174356436954
+        ],
+        "shoulder": [
+          0.5,
+          0.5
+        ]
+      }
+    ],
+    "done": true,
+    "elapsed_s": 0.1,
+    "endpoints": [
+      [
+        0.6986272070667586,
+        0.2956174356436954
+      ]
+    ],
+    "targets": [
+      {
+        "id": "O",
+        "owner_arm": null,
+        "radius": 0.025,
+        "x": 0.6986272070667586,
+        "y": 0.29561743564369547
+      }
+    ]
+  },
+  "body_mode": "one_arm_fan",
   "checkpoint": "checkpoints\\malecns_keyboard_matching_brain.npz",
-  "completed_trials": 1920,
+  "completed_trials": 120,
   "config": {
     "background_neurons": 6,
+    "body_mode": "one_arm_fan",
     "budget_strength": 0.25,
     "checkpoint_every": 32,
+    "click_bonus": 0.1,
+    "click_only": true,
     "control_window_ms": 20.0,
     "duration_ms": 100.0,
     "learning_rate": 0.02,
     "max_control_windows": 30,
     "min_connection_synapses": 5,
+    "min_trials_per_key": 2,
     "motor_population_size": 32,
     "plastic_fraction": 0.05,
     "seed": 7,
     "stimulus_rate_hz": 205.0,
+    "target_accuracy": 0.8,
     "token_neurons": 6,
-    "trials": 1920
+    "trials": 120
   },
   "connectome": {
     "dataset": "MaleCNS v1.0 / HHMI Janelia",
@@ -29,24 +70,872 @@
   },
   "execution_profile": {
     "backend": "numpy_cpu",
+    "body_mode": "one_arm_fan",
     "closed_loop_virtual_body": true,
     "external_decoder": false,
     "gpu_used": false
   },
   "experiment": "malecns_virtual_keyboard_matching_v1",
   "final_plasticity": {
-    "changed_edges": 96613,
+    "changed_edges": 80769,
     "edge_count": 6242118,
-    "mean_multiplier": 0.9908708930015564,
-    "mean_stability": 0.0,
-    "mean_usage_ema": 0.008493387140333652,
+    "mean_multiplier": 1.005645990371704,
+    "mean_stability": 0.0045046634040772915,
+    "mean_usage_ema": 0.00723685510456562,
     "plastic_edge_count": 311433,
     "plastic_fraction": 0.05
   },
-  "motor_channel_count": 20,
-  "purpose": "match physical Korean, English, O/X, and digit keys to virtual clicks with four-arm motor output",
+  "html": "results\\latest_malecns_keyboard_matching.html",
+  "keyboard_layout": [
+    {
+      "height": 0.026,
+      "label": "\u3131",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5370820393249937,
+      "y": 0.3858732180445816
+    },
+    {
+      "height": 0.026,
+      "label": "\u3134",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5619676953966755,
+      "y": 0.3972381163698093
+    },
+    {
+      "height": 0.026,
+      "label": "\u3137",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5836325082386352,
+      "y": 0.41394418342892436
+    },
+    {
+      "height": 0.026,
+      "label": "\u3139",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6009504239397417,
+      "y": 0.43512310190532827
+    },
+    {
+      "height": 0.026,
+      "label": "\u3141",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.613021323636743,
+      "y": 0.4596740728141484
+    },
+    {
+      "height": 0.026,
+      "label": "\u3142",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.619217808241826,
+      "y": 0.4863210308131351
+    },
+    {
+      "height": 0.026,
+      "label": "\u3145",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.619217808241826,
+      "y": 0.5136789691868648
+    },
+    {
+      "height": 0.026,
+      "label": "\u3147",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.613021323636743,
+      "y": 0.5403259271858516
+    },
+    {
+      "height": 0.026,
+      "label": "\u3148",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6009504239397417,
+      "y": 0.5648768980946717
+    },
+    {
+      "height": 0.026,
+      "label": "\u314a",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5836325082386352,
+      "y": 0.5860558165710756
+    },
+    {
+      "height": 0.026,
+      "label": "\u314b",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5619676953966755,
+      "y": 0.6027618836301907
+    },
+    {
+      "height": 0.026,
+      "label": "\u314c",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5370820393249937,
+      "y": 0.6141267819554185
+    },
+    {
+      "height": 0.026,
+      "label": "\u314d",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5540779740156158,
+      "y": 0.3335651096483482
+    },
+    {
+      "height": 0.026,
+      "label": "\u314e",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5903695557868184,
+      "y": 0.35013891970597194
+    },
+    {
+      "height": 0.026,
+      "label": "\u314f",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6219640745146764,
+      "y": 0.3745019341671814
+    },
+    {
+      "height": 0.026,
+      "label": "\u3151",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6472193682454567,
+      "y": 0.40538785694527046
+    },
+    {
+      "height": 0.026,
+      "label": "\u3153",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6648227636369168,
+      "y": 0.44119135618729977
+    },
+    {
+      "height": 0.026,
+      "label": "\u3155",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6738593036859963,
+      "y": 0.4800515032691554
+    },
+    {
+      "height": 0.026,
+      "label": "\u3157",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6738593036859963,
+      "y": 0.5199484967308446
+    },
+    {
+      "height": 0.026,
+      "label": "\u315b",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6648227636369168,
+      "y": 0.5588086438127002
+    },
+    {
+      "height": 0.026,
+      "label": "\u315c",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6472193682454567,
+      "y": 0.5946121430547295
+    },
+    {
+      "height": 0.026,
+      "label": "\u3160",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6219640745146764,
+      "y": 0.6254980658328186
+    },
+    {
+      "height": 0.026,
+      "label": "\u3161",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5903695557868184,
+      "y": 0.6498610802940281
+    },
+    {
+      "height": 0.026,
+      "label": "\u3163",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5540779740156158,
+      "y": 0.6664348903516518
+    },
+    {
+      "height": 0.026,
+      "label": "A",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5710739087062379,
+      "y": 0.2812570012521147
+    },
+    {
+      "height": 0.026,
+      "label": "B",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6187714161769613,
+      "y": 0.30303972304213456
+    },
+    {
+      "height": 0.026,
+      "label": "C",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6602956407907175,
+      "y": 0.3350596849054384
+    },
+    {
+      "height": 0.026,
+      "label": "D",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6934883125511717,
+      "y": 0.3756526119852126
+    },
+    {
+      "height": 0.026,
+      "label": "E",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7166242036370907,
+      "y": 0.4227086395604511
+    },
+    {
+      "height": 0.026,
+      "label": "F",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7285007991301665,
+      "y": 0.47378197572517566
+    },
+    {
+      "height": 0.026,
+      "label": "G",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7285007991301665,
+      "y": 0.5262180242748243
+    },
+    {
+      "height": 0.026,
+      "label": "H",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7166242036370907,
+      "y": 0.5772913604395489
+    },
+    {
+      "height": 0.026,
+      "label": "I",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6934883125511716,
+      "y": 0.6243473880147874
+    },
+    {
+      "height": 0.026,
+      "label": "J",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6602956407907175,
+      "y": 0.6649403150945616
+    },
+    {
+      "height": 0.026,
+      "label": "K",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6187714161769613,
+      "y": 0.6969602769578654
+    },
+    {
+      "height": 0.026,
+      "label": "L",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5710739087062379,
+      "y": 0.7187429987478853
+    },
+    {
+      "height": 0.026,
+      "label": "M",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.58806984339686,
+      "y": 0.22894889285588127
+    },
+    {
+      "height": 0.026,
+      "label": "N",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6471732765671041,
+      "y": 0.2559405263782972
+    },
+    {
+      "height": 0.026,
+      "label": "O",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6986272070667586,
+      "y": 0.29561743564369547
+    },
+    {
+      "height": 0.026,
+      "label": "P",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7397572568568866,
+      "y": 0.34591736702515474
+    },
+    {
+      "height": 0.026,
+      "label": "Q",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7684256436372645,
+      "y": 0.40422592293360243
+    },
+    {
+      "height": 0.026,
+      "label": "R",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7831422945743367,
+      "y": 0.4675124481811959
+    },
+    {
+      "height": 0.026,
+      "label": "S",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7831422945743367,
+      "y": 0.532487551818804
+    },
+    {
+      "height": 0.026,
+      "label": "T",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7684256436372645,
+      "y": 0.5957740770663975
+    },
+    {
+      "height": 0.026,
+      "label": "U",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7397572568568866,
+      "y": 0.6540826329748453
+    },
+    {
+      "height": 0.026,
+      "label": "V",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6986272070667586,
+      "y": 0.7043825643563046
+    },
+    {
+      "height": 0.026,
+      "label": "W",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6471732765671041,
+      "y": 0.7440594736217028
+    },
+    {
+      "height": 0.026,
+      "label": "X",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.58806984339686,
+      "y": 0.7710511071441187
+    },
+    {
+      "height": 0.026,
+      "label": "Y",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6050657780874821,
+      "y": 0.17664078445964781
+    },
+    {
+      "height": 0.026,
+      "label": "Z",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.675575136957247,
+      "y": 0.2088413297144598
+    },
+    {
+      "height": 0.026,
+      "label": "0",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7369587733427998,
+      "y": 0.25617518638195247
+    },
+    {
+      "height": 0.026,
+      "label": "1",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7860262011626016,
+      "y": 0.3161821220650969
+    },
+    {
+      "height": 0.026,
+      "label": "2",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.8202270836374383,
+      "y": 0.3857432063067538
+    },
+    {
+      "height": 0.026,
+      "label": "3",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.837783790018507,
+      "y": 0.46124292063721617
+    },
+    {
+      "height": 0.026,
+      "label": "4",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.837783790018507,
+      "y": 0.5387570793627838
+    },
+    {
+      "height": 0.026,
+      "label": "5",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.8202270836374383,
+      "y": 0.6142567936932462
+    },
+    {
+      "height": 0.026,
+      "label": "6",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7860262011626016,
+      "y": 0.6838178779349032
+    },
+    {
+      "height": 0.026,
+      "label": "7",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7369587733427998,
+      "y": 0.7438248136180476
+    },
+    {
+      "height": 0.026,
+      "label": "8",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.675575136957247,
+      "y": 0.7911586702855402
+    },
+    {
+      "height": 0.026,
+      "label": "9",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6050657780874821,
+      "y": 0.8233592155403522
+    }
+  ],
+  "mastery_reached": false,
+  "min_trials_per_key": 2,
+  "motor_channel_count": 5,
+  "per_key": {
+    "0": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "1": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "2": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "3": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "4": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "5": {
+      "accuracy": 0.5,
+      "correct": 1,
+      "mastered": false,
+      "trials": 2
+    },
+    "6": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "7": {
+      "accuracy": 0.5,
+      "correct": 1,
+      "mastered": false,
+      "trials": 2
+    },
+    "8": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "9": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "A": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "B": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "C": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "D": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "E": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "F": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "G": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "H": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "mastered": false,
+      "trials": 2
+    },
+    "I": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "J": {
+      "accuracy": 0.5,
+      "correct": 1,
+      "mastered": false,
+      "trials": 2
+    },
+    "K": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "L": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "mastered": false,
+      "trials": 2
+    },
+    "M": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "N": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "O": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "P": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "mastered": false,
+      "trials": 2
+    },
+    "Q": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "R": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "S": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "T": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "U": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "V": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "W": {
+      "accuracy": 0.5,
+      "correct": 1,
+      "mastered": false,
+      "trials": 2
+    },
+    "X": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "mastered": false,
+      "trials": 2
+    },
+    "Y": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "Z": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "\u3131": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "\u3134": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "\u3137": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "\u3139": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "\u3141": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "\u3142": {
+      "accuracy": 0.5,
+      "correct": 1,
+      "mastered": false,
+      "trials": 2
+    },
+    "\u3145": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "\u3147": {
+      "accuracy": 0.5,
+      "correct": 1,
+      "mastered": false,
+      "trials": 2
+    },
+    "\u3148": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "\u314a": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "\u314b": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "mastered": false,
+      "trials": 2
+    },
+    "\u314c": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "\u314d": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "\u314e": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "\u314f": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "\u3151": {
+      "accuracy": 0.0,
+      "correct": 0,
+      "mastered": false,
+      "trials": 2
+    },
+    "\u3153": {
+      "accuracy": 0.5,
+      "correct": 1,
+      "mastered": false,
+      "trials": 2
+    },
+    "\u3155": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "\u3157": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "\u315b": {
+      "accuracy": 0.5,
+      "correct": 1,
+      "mastered": false,
+      "trials": 2
+    },
+    "\u315c": {
+      "accuracy": 0.5,
+      "correct": 1,
+      "mastered": false,
+      "trials": 2
+    },
+    "\u3160": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "\u3161": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    },
+    "\u3163": {
+      "accuracy": 1.0,
+      "correct": 2,
+      "mastered": true,
+      "trials": 2
+    }
+  },
+  "purpose": "learn click-gated matching for Korean, English, O/X, and digit keys before arm navigation",
   "route_provenance": {
-    "output_count": 640,
+    "output_count": 160,
     "output_superclass": "descending_neuron",
     "route_direct_edge_count": 2059,
     "route_first_hop_neuron_count": 22492,
@@ -55,9 +944,11 @@
     "route_score_max": 9.658609390258789,
     "route_scored_descending_count": 1292,
     "route_second_hop_edge_count": 72460,
-    "route_selected_positive_count": 640,
+    "route_selected_positive_count": 160,
     "selection": "route_aware_2hop"
   },
+  "stopped_reason": "max_trials_reached",
+  "target_accuracy": 0.8,
   "token_encoder": {
     "background_count": 6,
     "token_group_size": 6,

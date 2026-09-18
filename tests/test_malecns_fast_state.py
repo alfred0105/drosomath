@@ -192,6 +192,49 @@ class MaleCNSFastStateTests(unittest.TestCase):
         self.assertEqual(len(cycle), len(labels))
         self.assertEqual(set(cycle), set(labels))
 
+    def test_click_teacher_requires_current_eligibility(self):
+        from types import SimpleNamespace
+        import numpy as np
+        from drosomath.malecns.keyboard_learning import KeyboardNeuralSession
+        from drosomath.whole_brain import PlasticStateConfig
+        from drosomath.whole_brain.plastic_state import SparsePlasticityState
+
+        state = SparsePlasticityState(
+            4, config=PlasticStateConfig(plastic_fraction=1.0, seed=2)
+        )
+        state.usage_ema[:] = 1.0
+        session = KeyboardNeuralSession.__new__(KeyboardNeuralSession)
+        session.np = np
+        session.config = SimpleNamespace(
+            click_gate_threshold_hz=9.0,
+            click_teacher_learning_rate=0.08,
+            click_teacher_credit_floor=0.05,
+            teacher_memory_edges_per_key=128,
+        )
+        session.click_teacher_edges_by_label = {"A": np.asarray([1, 3], dtype=np.int32)}
+        session.click_teacher_edge_indices = np.asarray([1, 3], dtype=np.int32)
+        session.click_teacher_pre_indices = np.asarray([0, 2], dtype=np.int32)
+        session._pending_teacher_normalizer = None
+        session.teacher_memory_edges_by_label = {"A": np.empty(0, dtype=np.int32)}
+        session.brain = SimpleNamespace(
+            plasticity=state,
+            connectome=SimpleNamespace(signed_synapse_counts=np.ones(4, dtype=np.float32)),
+            params=SimpleNamespace(mv_per_synapse=1.0),
+        )
+
+        before = state.multiplier.copy()
+        zero = session._apply_low_peak_click_teacher("A", 3.0, 0.0)
+        np.testing.assert_array_equal(state.multiplier, before)
+        self.assertEqual(zero["active_eligible_edge_count"], 0)
+        self.assertEqual(zero["edge_updates"], 0)
+
+        state.eligibility[1] = 1.0
+        active = session._apply_low_peak_click_teacher("A", 3.0, 0.0)
+        self.assertEqual(active["active_eligible_edge_count"], 1)
+        self.assertEqual(active["edge_updates"], 1)
+        self.assertGreater(float(state.multiplier[1]), float(before[1]))
+        self.assertEqual(float(state.multiplier[3]), float(before[3]))
+
 
 if __name__ == "__main__":
     unittest.main()

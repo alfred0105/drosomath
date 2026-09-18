@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from dataclasses import asdict, fields, is_dataclass
 from pathlib import Path
 
@@ -47,6 +48,7 @@ def save_learning_checkpoint(
     config=None,
     completed_trials: int = 0,
     stage: str = "",
+    session_state: dict[str, object] | None = None,
 ) -> dict[str, object]:
     """Persist long-term learned state without copying immutable anatomy."""
     np = brain.np
@@ -110,6 +112,10 @@ def save_learning_checkpoint(
                 "readout_frozen": np.asarray([readout.frozen], dtype=np.bool_),
             }
         )
+    if session_state is not None:
+        payload["session_state_json"] = np.asarray(
+            [json.dumps(session_state, sort_keys=True)], dtype="U65535"
+        )
 
     np.savez_compressed(path, **payload)
     return {
@@ -119,6 +125,7 @@ def save_learning_checkpoint(
         "structural_edge_count": int(structural.edge_count) if structural is not None else 0,
         "completed_trials": int(completed_trials),
         "stage": str(stage),
+        "session_state_saved": session_state is not None,
     }
 
 
@@ -207,4 +214,9 @@ def restore_learning_checkpoint(
             "completed_trials": int(data["completed_trials"][0]) if "completed_trials" in data else 0,
             "stage": str(data["stage"][0]) if "stage" in data else "",
             "readout_restored": readout_restored,
+            "session_state": (
+                json.loads(str(data["session_state_json"][0]))
+                if "session_state_json" in data
+                else None
+            ),
         }
