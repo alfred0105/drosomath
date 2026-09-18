@@ -183,6 +183,15 @@ class MaleCNSFastStateTests(unittest.TestCase):
         self.assertEqual(Counter(schedule), {"A": 20, "B": 20, "C": 20})
         self.assertNotEqual(schedule, tuple(label for label in labels for _ in range(20)))
 
+    def test_balanced_coverage_cycle_contains_each_key_once(self):
+        import numpy as np
+        from drosomath.malecns.keyboard_learning import build_balanced_coverage_cycle
+
+        labels = ("A", "B", "C", "D")
+        cycle = build_balanced_coverage_cycle(labels, np.random.default_rng(8))
+        self.assertEqual(len(cycle), len(labels))
+        self.assertEqual(set(cycle), set(labels))
+
 
 if __name__ == "__main__":
     unittest.main()

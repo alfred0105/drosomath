@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from collections import deque
 import html
 import json
 import math
@@ -98,6 +99,13 @@ def build_evaluation_schedule(
     np = __import__("numpy")
     label_indices = np.repeat(np.arange(len(labels), dtype=np.int32), window_size)
     return tuple(str(labels[int(index)]) for index in rng.permutation(label_indices))
+
+
+def build_balanced_coverage_cycle(labels, rng) -> tuple[str, ...]:
+    """Return one shuffled presentation of every key for starvation-free training."""
+    cycle = list(labels)
+    rng.shuffle(cycle)
+    return tuple(cycle)
 
 
 def summarize_per_key_stats(
@@ -409,7 +417,12 @@ class KeyboardTrainingConfig:
     low_peak_click_penalty_scale: float = 0.0
     click_teacher_learning_rate: float = 0.08
     click_teacher_credit_floor: float = 0.05
-    peak_regression_penalty_scale: float = 0.80
+    # A 20ms motor-rate sample is quantized. Ignore a one-bin fluctuation,
+    # then apply a fixed local correction for a meaningful per-key drop.
+    peak_regression_trigger_hz: float = 1.5
+    peak_regression_fixed_penalty: float = 0.80
+    peak_regression_escalation: float = 0.50
+    peak_regression_max_penalty: float = 2.00
     distance_penalty_scale: float = 1.20
     correct_distance_penalty_scale: float = 0.20
     consecutive_correct_bonus: float = 0.25
@@ -420,6 +433,11 @@ class KeyboardTrainingConfig:
     trials: int = 20_000
     min_trials_per_key: int = 5
     target_accuracy: float = 0.80
+    # Every Nth post-warmup trial is drawn from a shuffled all-key cycle.
+    # Other trials sample hard examples probabilistically, never via argmin.
+    coverage_interval: int = 4
+    hard_mining_floor: float = 0.10
+    hard_mining_power: float = 2.0
     duration_ms: float = 100.0
     control_window_ms: float = 20.0
     max_control_windows: int = 30
@@ -428,6 +446,8 @@ class KeyboardTrainingConfig:
     learning_rate: float = 0.02
     budget_strength: float = 0.25
     checkpoint_every: int = 32
+    dashboard_update_interval_seconds: float = 0.5
+    profile_timing: bool = False
     resume: bool = False
     seed: int = 7
 
@@ -453,8 +473,14 @@ class KeyboardTrainingConfig:
             raise ValueError("click_teacher_learning_rate must be >= 0")
         if self.click_teacher_credit_floor < 0.0:
             raise ValueError("click_teacher_credit_floor must be >= 0")
-        if self.peak_regression_penalty_scale < 0.0:
-            raise ValueError("peak_regression_penalty_scale must be >= 0")
+        if self.peak_regression_trigger_hz < 0.0:
+            raise ValueError("peak_regression_trigger_hz must be >= 0")
+        if self.peak_regression_fixed_penalty < 0.0:
+            raise ValueError("peak_regression_fixed_penalty must be >= 0")
+        if self.peak_regression_escalation < 0.0:
+            raise ValueError("peak_regression_escalation must be >= 0")
+        if self.peak_regression_max_penalty < self.peak_regression_fixed_penalty:
+            raise ValueError("peak_regression_max_penalty must be >= fixed penalty")
         if self.click_gate_threshold_hz <= 5.0:
             raise ValueError("click_gate_threshold_hz must be > baseline rate (5.0Hz)")
         if self.click_integration_windows < 1:
@@ -481,12 +507,20 @@ class KeyboardTrainingConfig:
             raise ValueError("trials must be >= 0 (0 means unlimited) and checkpoint_every must be positive")
         if self.min_trials_per_key < 1:
             raise ValueError("min_trials_per_key must be >= 1")
+        if self.coverage_interval < 1:
+            raise ValueError("coverage_interval must be >= 1")
+        if self.hard_mining_floor <= 0.0:
+            raise ValueError("hard_mining_floor must be > 0")
+        if self.hard_mining_power <= 0.0:
+            raise ValueError("hard_mining_power must be > 0")
         if not 0.5 < self.target_accuracy <= 1.0:
             raise ValueError("target_accuracy must be in (0.5, 1]")
         if self.duration_ms <= 0.0 or self.control_window_ms <= 0.0:
             raise ValueError("durations must be > 0")
         if self.max_control_windows < 1:
             raise ValueError("max_control_windows must be >= 1")
+        if self.dashboard_update_interval_seconds <= 0.0:
+            raise ValueError("dashboard_update_interval_seconds must be > 0")
 
 
 @dataclass(frozen=True, slots=True)
@@ -612,6 +646,8 @@ class KeyboardNeuralSession:
         self.rng = np.random.default_rng(config.seed + 82_001)
         self.correct_streak_by_label = {label: 0 for label in KEY_LABELS}
         self.previous_peak_by_label = {label: None for label in KEY_LABELS}
+        self.peak_regression_streak_by_label = {label: 0 for label in KEY_LABELS}
+        self._pending_teacher_normalizer: dict[str, object] | None = None
 
     def _find_click_teacher_edges(self, stimulus_indices) -> object:
         """Find real two-hop excitatory paths from one token to click output."""
@@ -633,7 +669,7 @@ class KeyboardNeuralSession:
         self,
         label: str,
         peak_click_rate_hz: float,
-        regression_ratio: float,
+        regression_strength: float,
     ) -> dict[str, float | int]:
         """Strengthen only active excitatory inputs into the click readout.
 
@@ -646,21 +682,50 @@ class KeyboardNeuralSession:
         np = self.np
         threshold = self.config.click_gate_threshold_hz
         deficit = min(1.0, max(0.0, (threshold - peak_click_rate_hz) / threshold))
-        if deficit <= 0.0 or self.config.click_teacher_learning_rate <= 0.0:
-            return {"edge_updates": 0, "mean_delta": 0.0, "deficit": deficit}
         state = self.brain.plasticity
         candidates = self.click_teacher_edges_by_label[label]
+        candidate_count = int(len(candidates))
+        candidate_pre = self.click_teacher_pre_indices[
+            np.isin(self.click_teacher_edge_indices, candidates, assume_unique=False)
+        ]
+        plastic = state.plastic_mask[candidates]
+        edges = candidates[plastic]
+        eligibility_nonzero = int(np.count_nonzero(state.eligibility[edges] > 0.0))
+        mean_before = float(state.multiplier[edges].mean()) if len(edges) else 0.0
+        effective_before = float(
+            np.abs(
+                self.brain.connectome.signed_synapse_counts[edges]
+                * state.multiplier[edges]
+                * self.brain.params.mv_per_synapse
+            ).sum()
+        ) if len(edges) else 0.0
+        common = {
+            "label": label,
+            "candidate_edge_count": candidate_count,
+            "plastic_edge_count": int(len(edges)),
+            "nonzero_eligibility_edge_count": eligibility_nonzero,
+            "relevant_presynaptic_count": int(len(np.unique(candidate_pre))),
+            "mean_multiplier_before": mean_before,
+            "effective_strength_before": effective_before,
+        }
         credit = state.usage_ema[candidates] * state.eligibility[candidates]
-        active = state.plastic_mask[candidates]
-        if not active.any():
-            return {"edge_updates": 0, "mean_delta": 0.0, "deficit": deficit}
-        edges = candidates[active]
+        if deficit <= 0.0 or self.config.click_teacher_learning_rate <= 0.0 or not len(edges):
+            return {
+                **common,
+                "edge_updates": 0,
+                "mean_delta": 0.0,
+                "max_delta": 0.0,
+                "mean_multiplier_after": mean_before,
+                "effective_strength_after": effective_before,
+                "deficit": deficit,
+                "regression_strength": regression_strength,
+            }
         old = state.multiplier[edges].copy()
         local_credit = np.maximum(
-            credit[active],
+            credit[plastic],
             self.config.click_teacher_credit_floor,
         )
-        teaching_strength = 1.0 + regression_ratio
+        teaching_strength = 1.0 + regression_strength
         delta = (
             self.config.click_teacher_learning_rate
             * teaching_strength
@@ -673,16 +738,39 @@ class KeyboardNeuralSession:
             state.config.max_multiplier,
         )
         actual = state.multiplier[edges] - old
+        mean_after = float(state.multiplier[edges].mean())
+        effective_after = float(
+            np.abs(
+                self.brain.connectome.signed_synapse_counts[edges]
+                * state.multiplier[edges]
+                * self.brain.params.mv_per_synapse
+            ).sum()
+        )
+        self._pending_teacher_normalizer = {
+            "label": label,
+            "edges": edges.copy(),
+            "teacher_mean_before": mean_before,
+            "teacher_mean_after": mean_after,
+            "teacher_gain": mean_after - mean_before,
+        }
         return {
+            **common,
             "edge_updates": int(len(edges)),
             "mean_delta": float(actual.mean()) if len(actual) else 0.0,
+            "max_delta": float(actual.max()) if len(actual) else 0.0,
+            "mean_multiplier_after": mean_after,
+            "effective_strength_after": effective_after,
             "deficit": deficit,
-            "regression_ratio": regression_ratio,
+            "regression_strength": regression_strength,
         }
 
     def run_trial(self, label: str, *, learn: bool = True) -> dict[str, object]:
         np = self.np
+        timings: dict[str, float] | None = {} if self.config.profile_timing else None
+        reset_started = time.perf_counter() if timings is not None else 0.0
         self.brain.reset()
+        if timings is not None:
+            timings["brain_reset_seconds"] = time.perf_counter() - reset_started
         previous_tracking = None
         if not learn:
             previous_tracking = self.brain.set_plasticity_tracking(False)
@@ -713,13 +801,19 @@ class KeyboardNeuralSession:
             if isinstance(endpoint, (list, tuple)) and len(endpoint) >= 2
         ]
         started = time.perf_counter()
+        neural_step_seconds = 0.0
+        motor_count_seconds = 0.0
         for windows in range(1, self.max_control_windows + 1):
             counts.fill(0)
             for _ in range(self.steps_per_window):
+                step_started = time.perf_counter() if timings is not None else 0.0
                 fired, _ = self.brain.step(
                     stimulus_indices=stimulus_indices,
                     stimulus_rate_hz=self.config.stimulus_rate_hz,
                 )
+                if timings is not None:
+                    neural_step_seconds += time.perf_counter() - step_started
+                    count_started = time.perf_counter()
                 if len(fired):
                     local = self.channel_lookup[fired]
                     local = local[local >= 0]
@@ -728,6 +822,8 @@ class KeyboardNeuralSession:
                             local,
                             minlength=self.motor_channel_count,
                         ).astype(np.int32, copy=False)
+                if timings is not None:
+                    motor_count_seconds += time.perf_counter() - count_started
             rates = counts.astype(np.float32) * self.rate_scale
             peak_motor_rate_hz = max(peak_motor_rate_hz, float(rates.max()))
             click_rates = rates[4::5]
@@ -868,9 +964,32 @@ class KeyboardNeuralSession:
             if previous_peak is not None
             else 0.0
         )
-        peak_regression_penalty = (
-            self.config.peak_regression_penalty_scale * peak_regression_ratio
-            if learn and self.config.click_only and not correct
+        meaningful_regression = bool(
+            learn
+            and self.config.click_only
+            and not correct
+            and previous_peak is not None
+            and peak_click_rate_hz
+            < float(previous_peak) - self.config.peak_regression_trigger_hz
+        )
+        if meaningful_regression:
+            regression_streak = self.peak_regression_streak_by_label[label] + 1
+            self.peak_regression_streak_by_label[label] = regression_streak
+            peak_regression_penalty = min(
+                self.config.peak_regression_max_penalty,
+                self.config.peak_regression_fixed_penalty
+                + self.config.peak_regression_escalation * (regression_streak - 1),
+            )
+        else:
+            # Recovery, a correct click, or a small quantization wobble clears
+            # the local correction immediately for this key only.
+            regression_streak = 0
+            self.peak_regression_streak_by_label[label] = 0
+            peak_regression_penalty = 0.0
+        regression_strength = (
+            peak_regression_penalty
+            / max(self.config.peak_regression_fixed_penalty, 1e-9)
+            if meaningful_regression
             else 0.0
         )
         self.previous_peak_by_label[label] = peak_click_rate_hz
@@ -893,26 +1012,59 @@ class KeyboardNeuralSession:
             # click teacher below so low output is pushed upward instead.
             global_learning_reward = 0.0
         if learn:
+            learning_started = time.perf_counter() if timings is not None else 0.0
+            teacher_normalizer_followup: dict[str, object] = {}
+
+            def observe_normalizer(phase: str, state) -> None:
+                pending = self._pending_teacher_normalizer
+                if pending is None:
+                    return
+                edges = pending["edges"]
+                mean = float(state.multiplier[edges].mean()) if len(edges) else 0.0
+                if phase == "before":
+                    pending["before_normalizer_mean"] = mean
+                elif phase == "after":
+                    before = float(pending.get("before_normalizer_mean", mean))
+                    after = mean
+                    teacher_normalizer_followup.update({
+                        "label": pending["label"],
+                        "teacher_multiplier_after_previous_update": float(pending["teacher_mean_after"]),
+                        "teacher_multiplier_before_next_normalization": before,
+                        "teacher_multiplier_after_next_normalization": after,
+                        "teacher_gain": float(pending["teacher_gain"]),
+                        "normalizer_loss": after - before,
+                        "net_gain": after - float(pending["teacher_mean_after"]),
+                    })
+                    self._pending_teacher_normalizer = None
+
             learning = self.brain.learn_from_reward(
                 reward=global_learning_reward,
                 rule=self.reward_rule,
                 normalizer=self.normalizer,
                 include_plasticity_summary=False,
+                profile_timing=self.config.profile_timing,
+                normalizer_observer=observe_normalizer,
             )
+            if timings is not None:
+                timings["brain_learning_seconds"] = time.perf_counter() - learning_started
+                teacher_started = time.perf_counter()
             learning["motor_teacher"] = (
                 self._apply_low_peak_click_teacher(
                     label,
                     peak_click_rate_hz,
-                    peak_regression_ratio,
+                    regression_strength,
                 )
                 if self.config.click_only and not correct
                 else {
                     "edge_updates": 0,
                     "mean_delta": 0.0,
                     "deficit": 0.0,
-                    "regression_ratio": 0.0,
+                    "regression_strength": 0.0,
                 }
             )
+            learning["teacher_normalizer_followup"] = teacher_normalizer_followup
+            if timings is not None:
+                timings["motor_teacher_seconds"] = time.perf_counter() - teacher_started
         else:
             reward = 0.0
             learning = {
@@ -935,7 +1087,7 @@ class KeyboardNeuralSession:
                     "hitbox_shape": "box",
                 }],
             }
-        return {
+        result = {
             "label": label,
             "correct": correct,
             "clicked_label": last.clicked_label if last is not None else None,
@@ -963,10 +1115,19 @@ class KeyboardNeuralSession:
             "previous_peak_click_rate_hz": previous_peak,
             "peak_regression_ratio": peak_regression_ratio,
             "peak_regression_penalty": peak_regression_penalty,
+            "peak_regression_triggered": meaningful_regression,
+            "peak_regression_streak": regression_streak,
+            "peak_regression_strength": regression_strength,
             "elapsed_seconds": time.perf_counter() - started,
             "learned": bool(learn),
             "learning": learning,
         }
+        if timings is not None:
+            timings["neural_step_seconds"] = neural_step_seconds
+            timings["motor_count_seconds"] = motor_count_seconds
+            timings["total_trial_seconds"] = time.perf_counter() - started
+            result["timing"] = timings
+        return result
 
 
 def run_keyboard_training(
@@ -1043,7 +1204,10 @@ def run_keyboard_training(
     }
     html_path.parent.mkdir(parents=True, exist_ok=True)
     html_path.write_text(build_keyboard_html(initial_payload), encoding="utf-8")
-    rows = []
+    rows = deque(maxlen=16)
+    timing_totals: dict[str, float] = {}
+    timing_samples = 0
+    last_dashboard_write = time.monotonic()
     correct = 0
     training_correct = 0
     evaluation_correct = 0
@@ -1078,6 +1242,8 @@ def run_keyboard_training(
     click_window_reached = False
     key_accuracy_reached = False
     completed = 0
+    coverage_cycle = build_balanced_coverage_cycle(KEY_LABELS, rng)
+    coverage_cursor = 0
     per_key = summarize_per_key_stats(
         KEY_LABELS,
         per_key_trials,
@@ -1135,12 +1301,14 @@ def run_keyboard_training(
                     label for label in KEY_LABELS
                     if per_key_trials[label] == minimum_trials
                 ]
+                selection_source = "warmup_coverage"
             elif evaluation_number > 0 and not retraining_ready:
                 minimum_round = min(retraining_trials.values())
                 candidates = [
                     label for label in KEY_LABELS
                     if retraining_trials[label] == minimum_round
                 ]
+                selection_source = "retraining_coverage"
             else:
                 priority_accuracy = {
                     label: min(
@@ -1151,15 +1319,36 @@ def run_keyboard_training(
                     else recent_accuracies[label]
                     for label in KEY_LABELS
                 }
-                lowest_accuracy = min(priority_accuracy.values())
-                candidates = [
-                    label for label in KEY_LABELS
-                    if priority_accuracy[label] == lowest_accuracy
-                ]
-            label = str(candidates[int(rng.integers(0, len(candidates)))])
+                # A deterministic all-key cycle prevents a chronic weak key
+                # from monopolizing training. Between coverage slots, sample
+                # by error weight rather than a hard minimum so weak keys are
+                # emphasized without starving every other key.
+                if training_trials % config.coverage_interval == 0:
+                    if coverage_cursor == len(coverage_cycle):
+                        coverage_cycle = build_balanced_coverage_cycle(KEY_LABELS, rng)
+                        coverage_cursor = 0
+                    label = coverage_cycle[coverage_cursor]
+                    coverage_cursor += 1
+                    selection_source = "balanced_coverage"
+                else:
+                    scores = np.asarray(
+                        [
+                            config.hard_mining_floor
+                            + (1.0 - priority_accuracy[key]) ** config.hard_mining_power
+                            for key in KEY_LABELS
+                        ],
+                        dtype=np.float64,
+                    )
+                    probabilities = scores / scores.sum()
+                    label = str(KEY_LABELS[int(rng.choice(len(KEY_LABELS), p=probabilities))])
+                    selection_source = "hard_mining"
+                candidates = None
+            if candidates is not None:
+                label = str(candidates[int(rng.integers(0, len(candidates)))])
             learn = True
         elif config.click_only and phase == "evaluation":
             label = evaluation_schedule[evaluation_index]
+            selection_source = "evaluation"
             learn = False
         else:
             under_minimum = [
@@ -1177,6 +1366,7 @@ def run_keyboard_training(
                     mastery_reached = True
                     break
             label = str(candidates[int(rng.integers(0, len(candidates)))])
+            selection_source = "legacy"
             learn = True
 
         completed += 1
@@ -1185,7 +1375,12 @@ def run_keyboard_training(
         row = session.run_trial(label, learn=learn)
         row["trial"] = trial
         row["phase"] = row_phase
+        row["selection_source"] = selection_source
         rows.append(row)
+        if config.profile_timing:
+            timing_samples += 1
+            for name, value in row.get("timing", {}).items():
+                timing_totals[name] = timing_totals.get(name, 0.0) + float(value)
         row_correct = int(row["correct"])
         correct += row_correct
 
@@ -1305,11 +1500,19 @@ def run_keyboard_training(
             "token_labels": list(KEY_LABELS),
             "keyboard_layout": keyboard_layout,
             "body": row.get("body", {}),
-            "recent_trials": rows[-16:],
+            "recent_trials": list(rows),
         }
-        html_path.parent.mkdir(parents=True, exist_ok=True)
-        html_path.write_text(build_keyboard_html(payload), encoding="utf-8")
-        if trial % config.checkpoint_every == 0 or trial == config.trials or mastery_reached:
+        checkpoint_due = trial % config.checkpoint_every == 0 or trial == config.trials or mastery_reached
+        dashboard_due = time.monotonic() - last_dashboard_write >= config.dashboard_update_interval_seconds
+        if dashboard_due or checkpoint_due:
+            dashboard_started = time.perf_counter() if config.profile_timing else 0.0
+            html_path.parent.mkdir(parents=True, exist_ok=True)
+            html_path.write_text(build_keyboard_html(payload), encoding="utf-8")
+            last_dashboard_write = time.monotonic()
+            if config.profile_timing:
+                timing_totals["dashboard_write_seconds"] = timing_totals.get("dashboard_write_seconds", 0.0) + (time.perf_counter() - dashboard_started)
+        if checkpoint_due:
+            checkpoint_started = time.perf_counter() if config.profile_timing else 0.0
             progress_path.parent.mkdir(parents=True, exist_ok=True)
             progress_path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
             save_learning_checkpoint(
@@ -1319,6 +1522,8 @@ def run_keyboard_training(
                 completed_trials=trial,
                 stage="keyboard_matching",
             )
+            if config.profile_timing:
+                timing_totals["checkpoint_seconds"] = timing_totals.get("checkpoint_seconds", 0.0) + (time.perf_counter() - checkpoint_started)
             if sys.stdout.isatty():
                 _finish_live_status()
                 print(
@@ -1403,6 +1608,12 @@ def run_keyboard_training(
             "external_decoder": False,
             "closed_loop_virtual_body": True,
             "body_mode": config.body_mode,
+            "timing_enabled": config.profile_timing,
+            "timing_samples": timing_samples,
+            "mean_seconds": {
+                name: value / max(1, timing_samples)
+                for name, value in timing_totals.items()
+            } if config.profile_timing else None,
         },
         "checkpoint": str(checkpoint_path),
         "html": str(html_path),
@@ -1412,7 +1623,7 @@ def run_keyboard_training(
     html_path.parent.mkdir(parents=True, exist_ok=True)
     html_path.write_text(build_keyboard_html({
         **report,
-        "recent_trials": rows[-16:],
+        "recent_trials": list(rows),
     }), encoding="utf-8")
     return report
 
@@ -1425,11 +1636,17 @@ def main() -> None:
     parser.add_argument("--trials", type=int, default=20_000)
     parser.add_argument("--min-trials-per-key", type=int, default=5)
     parser.add_argument("--target-accuracy", type=float, default=0.80)
+    parser.add_argument("--coverage-interval", type=int, default=4)
+    parser.add_argument("--hard-mining-floor", type=float, default=0.10)
+    parser.add_argument("--hard-mining-power", type=float, default=2.0)
     parser.add_argument("--click-penalty", type=float, default=1.20)
     parser.add_argument("--low-peak-click-penalty-scale", type=float, default=0.0)
     parser.add_argument("--click-teacher-learning-rate", type=float, default=0.08)
     parser.add_argument("--click-teacher-credit-floor", type=float, default=0.05)
-    parser.add_argument("--peak-regression-penalty-scale", type=float, default=0.80)
+    parser.add_argument("--peak-regression-trigger-hz", type=float, default=1.5)
+    parser.add_argument("--peak-regression-fixed-penalty", type=float, default=0.80)
+    parser.add_argument("--peak-regression-escalation", type=float, default=0.50)
+    parser.add_argument("--peak-regression-max-penalty", type=float, default=2.00)
     parser.add_argument("--click-gate-threshold-hz", type=float, default=9.0)
     parser.add_argument("--click-integration-windows", type=int, default=1)
     parser.add_argument("--click-evidence-windows", type=int, default=5)
@@ -1460,6 +1677,8 @@ def main() -> None:
         default="click_accuracy",
     )
     parser.add_argument("--checkpoint-every", type=int, default=32)
+    parser.add_argument("--dashboard-update-interval-seconds", type=float, default=0.5)
+    parser.add_argument("--profile-timing", action="store_true")
     parser.add_argument("--resume", action="store_true", help="Restore learned synapse state from the checkpoint.")
     parser.add_argument("--seed", type=int, default=7)
     args = parser.parse_args()
@@ -1470,12 +1689,18 @@ def main() -> None:
         trials=args.trials,
         min_trials_per_key=args.min_trials_per_key,
         target_accuracy=args.target_accuracy,
+        coverage_interval=args.coverage_interval,
+        hard_mining_floor=args.hard_mining_floor,
+        hard_mining_power=args.hard_mining_power,
         lock_arm_during_click_training=not args.allow_click_training_movement,
         click_penalty=args.click_penalty,
         low_peak_click_penalty_scale=args.low_peak_click_penalty_scale,
         click_teacher_learning_rate=args.click_teacher_learning_rate,
         click_teacher_credit_floor=args.click_teacher_credit_floor,
-        peak_regression_penalty_scale=args.peak_regression_penalty_scale,
+        peak_regression_trigger_hz=args.peak_regression_trigger_hz,
+        peak_regression_fixed_penalty=args.peak_regression_fixed_penalty,
+        peak_regression_escalation=args.peak_regression_escalation,
+        peak_regression_max_penalty=args.peak_regression_max_penalty,
         click_gate_threshold_hz=args.click_gate_threshold_hz,
         click_integration_windows=args.click_integration_windows,
         click_evidence_windows=args.click_evidence_windows,
@@ -1493,6 +1718,8 @@ def main() -> None:
         body_mode=args.body_mode,
         curriculum_stage=args.curriculum_stage,
         checkpoint_every=args.checkpoint_every,
+        dashboard_update_interval_seconds=args.dashboard_update_interval_seconds,
+        profile_timing=args.profile_timing,
         resume=args.resume,
         seed=args.seed,
     )

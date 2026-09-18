@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import time
 from dataclasses import asdict
 
 from drosomath.flywire_real import FlyBrainParams, FlyWireConnectome, SparseFlyBrain
@@ -323,12 +324,29 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
         eligibility_decay: float = 0.90,
         clear_eligibility: bool = True,
         include_plasticity_summary: bool = True,
+        profile_timing: bool = False,
+        normalizer_observer=None,
     ) -> dict[str, object]:
         """Turn recent synaptic use into long-term weight/structural changes."""
         if not self.plasticity_tracking_enabled:
             raise RuntimeError("cannot learn from reward while plasticity tracking is disabled")
 
-        update = rule.apply(self.plasticity, reward=reward)
+        timings: dict[str, float] | None = {} if profile_timing else None
+        started = time.perf_counter() if profile_timing else 0.0
+        recent_presynaptic = sorted(self._recent_presynaptic)
+        if clear_eligibility:
+            update = rule.apply_recent_presynaptic(
+                self.plasticity,
+                reward=reward,
+                indptr=self.connectome.indptr,
+                presynaptic_indices=recent_presynaptic,
+            )
+        else:
+            # A caller retaining eligibility may intentionally credit traces
+            # from earlier trials, so retain the complete reference scan.
+            update = rule.apply(self.plasticity, reward=reward)
+        if timings is not None:
+            timings["reward_update_seconds"] = time.perf_counter() - started
         structural_learning = None
         structural_rewire = None
         if self.structural_overlay is not None:
@@ -341,22 +359,33 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
 
         budget = None
         if normalizer is not None and self._recent_presynaptic:
+            if normalizer_observer is not None:
+                normalizer_observer("before", self.plasticity)
             budget = normalizer.normalize_presynaptic(
                 self.plasticity,
                 indptr=self.connectome.indptr,
                 base_abs=self._base_abs_synapse_counts,
-                presynaptic_indices=sorted(self._recent_presynaptic),
+                presynaptic_indices=recent_presynaptic,
             )
+            if normalizer_observer is not None:
+                normalizer_observer("after", self.plasticity)
+        if timings is not None:
+            timings["normalization_seconds"] = time.perf_counter() - started - timings["reward_update_seconds"]
 
+        decay_started = time.perf_counter() if timings is not None else 0.0
         self.plasticity.decay_episode(
             usage_decay=usage_decay,
-            eligibility_decay=eligibility_decay,
+            # The public operation below clears eligibility immediately. A
+            # preceding decay therefore cannot affect any observable state.
+            eligibility_decay=1.0 if clear_eligibility else eligibility_decay,
         )
         if clear_eligibility:
             self.plasticity.clear_eligibility()
+        if timings is not None:
+            timings["plastic_lifecycle_seconds"] = time.perf_counter() - decay_started
         self._recent_presynaptic.clear()
 
-        return {
+        result = {
             "reward": float(reward),
             "learning": asdict(update),
             "budget": asdict(budget) if budget is not None else None,
@@ -368,3 +397,7 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
             "structural_reward_events": int(self._structural_reward_events),
             "structural": self.structural_summary(),
         }
+        if timings is not None:
+            timings["total_seconds"] = time.perf_counter() - started
+            result["timing"] = timings
+        return result

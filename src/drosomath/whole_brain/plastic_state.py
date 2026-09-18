@@ -70,10 +70,33 @@ class SparsePlasticityState:
         rng = np.random.default_rng(self.config.seed)
         self._plastic_scores = rng.random(self.edge_count).astype(np.float32, copy=False)
         self.plastic_mask = self._plastic_scores < self.config.plastic_fraction
+        # Most MaleCNS runs leave 95% of edges permanently non-plastic.  Keep
+        # their compact index list so lifecycle operations do not scan the
+        # complete anatomical graph. ``_state_indices`` starts the same, then
+        # retains previously plastic edges if a curriculum later freezes them;
+        # that preserves their pending decay if they are unlocked again.
+        self._plastic_indices = np.flatnonzero(self.plastic_mask).astype(
+            np.int32, copy=False
+        )
+        self._state_indices = self._plastic_indices.copy()
 
     @property
     def plastic_edge_count(self) -> int:
-        return int(self.plastic_mask.sum())
+        return int(len(self._plastic_indices))
+
+    @property
+    def plastic_indices(self):
+        """Sorted indices of currently plastic edges.
+
+        The returned array is read-only by convention. It is rebuilt whenever
+        ``set_plastic_fraction`` changes the deterministic mask.
+        """
+        return self._plastic_indices
+
+    @property
+    def lifecycle_indices(self):
+        """Edges that may hold non-default persistent plastic state."""
+        return self._state_indices
 
     @property
     def plastic_fraction(self) -> float:
@@ -85,6 +108,15 @@ class SparsePlasticityState:
             raise ValueError("fraction must be in [0, 1]")
         before = self.plastic_edge_count
         self.plastic_mask[:] = self._plastic_scores < float(fraction)
+        self._plastic_indices = self.np.flatnonzero(self.plastic_mask).astype(
+            self.np.int32, copy=False
+        )
+        # A formerly plastic edge can retain learned/trace state while frozen.
+        # Keep it in the lifecycle set so reducing and later increasing the
+        # fraction remains equivalent to dense-array decay semantics.
+        self._state_indices = self.np.union1d(
+            self._state_indices, self._plastic_indices
+        ).astype(self.np.int32, copy=False)
         self.config = replace(self.config, plastic_fraction=float(fraction))
         after = self.plastic_edge_count
         return {
@@ -174,18 +206,27 @@ class SparsePlasticityState:
             if not 0.0 <= value <= 1.0:
                 raise ValueError(f"{name} must be in [0, 1]")
 
-        self.usage_ema *= usage_decay
-        self.eligibility *= eligibility_decay
-        self.stability *= stability_decay
+        indices = self._state_indices
+        if len(indices) == 0:
+            return
+        # Multiplication by one was a 6M-edge no-op in the default setup.
+        if usage_decay != 1.0:
+            self.usage_ema[indices] *= usage_decay
+        if eligibility_decay != 1.0:
+            self.eligibility[indices] *= eligibility_decay
+        if stability_decay != 1.0:
+            self.stability[indices] *= stability_decay
 
     def clear_eligibility(self) -> None:
-        self.eligibility.fill(0.0)
+        if len(self._state_indices):
+            self.eligibility[self._state_indices] = 0.0
 
     def reset_learning_state(self) -> None:
         self.multiplier.fill(self.config.initial_multiplier)
         self.usage_ema.fill(0.0)
         self.eligibility.fill(0.0)
         self.stability.fill(0.0)
+        self._state_indices = self._plastic_indices.copy()
 
     def summary(self) -> dict[str, float | int]:
         np = self.np

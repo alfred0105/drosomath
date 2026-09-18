@@ -3,11 +3,17 @@ param(
   [int]$Trials = 20000,
   [int]$MinTrialsPerKey = 5,
   [double]$TargetAccuracy = 0.80,
+  [int]$CoverageInterval = 4,
+  [double]$HardMiningFloor = 0.10,
+  [double]$HardMiningPower = 2.0,
   [double]$ClickPenalty = 1.20,
   [double]$LowPeakClickPenaltyScale = 0.0,
   [double]$ClickTeacherLearningRate = 0.08,
   [double]$ClickTeacherCreditFloor = 0.05,
-  [double]$PeakRegressionPenaltyScale = 0.80,
+  [double]$PeakRegressionTriggerHz = 1.5,
+  [double]$PeakRegressionFixedPenalty = 0.80,
+  [double]$PeakRegressionEscalation = 0.50,
+  [double]$PeakRegressionMaxPenalty = 2.00,
   [double]$ClickGateThresholdHz = 9.0,
   [int]$ClickIntegrationWindows = 1,
   [int]$ClickEvidenceWindows = 5,
@@ -27,6 +33,8 @@ param(
   [ValidateSet('click_gate', 'click_accuracy')]
   [string]$CurriculumStage = 'click_accuracy',
   [int]$CheckpointEvery = 32,
+  [double]$DashboardUpdateIntervalSeconds = 0.5,
+  [switch]$ProfileTiming,
   [switch]$Resume,
   [int]$Seed = 7,
   [switch]$NoPush,
@@ -44,13 +52,14 @@ Write-Host "Body: $BodyMode | Stage: $CurriculumStage | Korean jamo + English A-
 if ($Trials -eq 0) { $trialText = 'unlimited' } else { $trialText = [string]$Trials }
 Write-Host "Training trials: $trialText | readiness: each key's recent 20 trials must be 20/20 correct | wrong/no click base: -$ClickPenalty"
 Write-Host "Low peak click: global punishment disabled; active excitatory click inputs get targeted teaching (rate: $ClickTeacherLearningRate)"
-Write-Host "Per-key peak regression: up to -$PeakRegressionPenaltyScale when this key falls below its previous peak; the local click teacher strengthens proportionally"
+Write-Host "Per-key peak regression: a drop larger than $PeakRegressionTriggerHz Hz gets a fixed local teacher correction (-$PeakRegressionFixedPenalty), escalating by $PeakRegressionEscalation up to -$PeakRegressionMaxPenalty"
 Write-Host "Distance shaping: failure scale $DistancePenaltyScale | correct edge scale $CorrectDistancePenaltyScale"
 Write-Host "Click curriculum: arm position locked; 20ms peak click threshold: $ClickGateThresholdHz Hz"
 Write-Host "100ms click average is telemetry only ($ClickEvidenceWindows windows); strong peak clicks earn up to +$ClickMarginRewardScale at $ClickMarginTargetHz"
 Write-Host "Per-key streak bonus: +$ConsecutiveCorrectBonus per extra correct, capped at +$MaxConsecutiveBonus"
 Write-Host "Exam: randomized 60 keys x 20 = 1200 trials, learning frozen; pass only at 1200/1200"
-Write-Host "Training priority: fewest attempts first, then lowest recent accuracy"
+Write-Host "Training priority: balanced warmup first, then coverage plus probabilistic low-accuracy mining"
+Write-Host "Post-warmup scheduler: one shuffled all-key coverage trial every $CoverageInterval trials; remaining trials use probabilistic hard-example mining"
 Write-Host "The Python process will update the current trial live below."
 if ($Open -and (Test-Path -LiteralPath $liveHtmlPath)) {
   Write-Host "Opening live 2D dashboard: $liveHtmlPath"
@@ -58,11 +67,15 @@ if ($Open -and (Test-Path -LiteralPath $liveHtmlPath)) {
 }
 $args = @('-u', '-m', 'drosomath.malecns.keyboard_learning', '--data-dir', $dataDir,
   '--trials', $Trials, '--min-trials-per-key', $MinTrialsPerKey, '--target-accuracy', $TargetAccuracy,
+  '--coverage-interval', $CoverageInterval, '--hard-mining-floor', $HardMiningFloor, '--hard-mining-power', $HardMiningPower,
   '--click-penalty', $ClickPenalty, '--distance-penalty-scale', $DistancePenaltyScale,
   '--low-peak-click-penalty-scale', $LowPeakClickPenaltyScale,
   '--click-teacher-learning-rate', $ClickTeacherLearningRate,
   '--click-teacher-credit-floor', $ClickTeacherCreditFloor,
-  '--peak-regression-penalty-scale', $PeakRegressionPenaltyScale,
+  '--peak-regression-trigger-hz', $PeakRegressionTriggerHz,
+  '--peak-regression-fixed-penalty', $PeakRegressionFixedPenalty,
+  '--peak-regression-escalation', $PeakRegressionEscalation,
+  '--peak-regression-max-penalty', $PeakRegressionMaxPenalty,
   '--click-gate-threshold-hz', $ClickGateThresholdHz,
   '--click-integration-windows', $ClickIntegrationWindows,
   '--click-evidence-windows', $ClickEvidenceWindows,
@@ -76,6 +89,8 @@ $args = @('-u', '-m', 'drosomath.malecns.keyboard_learning', '--data-dir', $data
   '--body-mode', $BodyMode,
   '--curriculum-stage', $CurriculumStage,
   '--checkpoint-every', $CheckpointEvery, '--seed', $Seed)
+if ($ProfileTiming) { $args += '--profile-timing' }
+$args += @('--dashboard-update-interval-seconds', $DashboardUpdateIntervalSeconds)
 if ($Download) { $args += '--download' }
 if ($Resume) { $args += '--resume' }
 Push-Location $root

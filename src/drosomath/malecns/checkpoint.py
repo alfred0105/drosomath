@@ -52,11 +52,17 @@ def save_learning_checkpoint(
     np = brain.np
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    changed = np.flatnonzero(
-        (np.abs(brain.plasticity.multiplier - 1.0) > 1e-7)
-        | (brain.plasticity.stability > 0.0)
-        | (brain.plasticity.usage_ema > 1e-7)
-    ).astype(np.int32, copy=False)
+    # Only plastic or historically plastic edges can differ from the default
+    # state through the public learning API. This avoids a full 6.2M-edge scan
+    # at every periodic keyboard checkpoint while retaining frozen curriculum
+    # state required for a later unlock.
+    candidates = brain.plasticity.lifecycle_indices
+    candidate_changed = (
+        (np.abs(brain.plasticity.multiplier[candidates] - 1.0) > 1e-7)
+        | (brain.plasticity.stability[candidates] > 0.0)
+        | (brain.plasticity.usage_ema[candidates] > 1e-7)
+    )
+    changed = candidates[candidate_changed].astype(np.int32, copy=False)
 
     payload: dict[str, object] = {
         "format_version": np.asarray([3], dtype=np.int32),
