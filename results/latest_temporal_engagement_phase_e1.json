@@ -1,0 +1,381 @@
+{
+  "click_output_recruitment": {
+    "failure": {
+      "mean_peak_rate_hz": 6.572164948453608,
+      "mean_synchrony_proxy": 0.07242268041237113,
+      "mean_time_to_peak_window": {
+        "mean": 2.8969072164948453,
+        "reached_count": 97,
+        "reached_fraction": 1.0
+      },
+      "mean_total_spikes": 26.917525773195877,
+      "mean_unique_neurons": 13.24742268041237
+    },
+    "success": {
+      "mean_peak_rate_hz": 13.017209244532804,
+      "mean_synchrony_proxy": 0.12635074966865473,
+      "mean_time_to_peak_window": {
+        "mean": 2.709741550695825,
+        "reached_count": 503,
+        "reached_fraction": 1.0
+      },
+      "mean_total_spikes": 26.001988071570576,
+      "mean_unique_neurons": 16.355864811133202
+    }
+  },
+  "conclusion": {
+    "diagnostic_only": true,
+    "eligibility_duration_audit": {
+      "early_window_failure": 1166.4072164948454,
+      "early_window_success": 1722.5407725321888,
+      "per_window_failure": 2174.496907216495,
+      "per_window_success": 2639.593705293276,
+      "raw_total_failure": 10872.484536082475,
+      "raw_total_success": 8563.008583690988
+    },
+    "evidence_for_temporal_engagement_bottleneck": true,
+    "failure_eligibility_is_duration_inflated": true,
+    "failure_trials_are_longer": true,
+    "success_has_better_click_output_recruitment": true,
+    "success_has_earlier_causal_recruitment": false,
+    "success_has_stronger_early_net_influence": false
+  },
+  "overall": {
+    "accuracy": 0.8383333333333334,
+    "failure_trials": 97,
+    "success_trials": 503,
+    "temporal_trial_samples": 600
+  },
+  "pass": true,
+  "protocol": {
+    "adaptive_plastic_budget": false,
+    "connectome": "MaleCNS v1 min_connection_synapses=5",
+    "early_window_fraction": 0.25,
+    "extra_brain_steps": 0,
+    "extra_rng_calls": 0,
+    "resume": false,
+    "seed": 7,
+    "temporal_engagement_diagnostic": true,
+    "trials": 600
+  },
+  "same_key_success_vs_failure": {
+    "eligible_key_count": 33,
+    "eligible_keys": [
+      "2",
+      "4",
+      "5",
+      "7",
+      "8",
+      "B",
+      "D",
+      "G",
+      "H",
+      "K",
+      "L",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "S",
+      "U",
+      "V",
+      "W",
+      "X",
+      "ㄱ",
+      "ㅂ",
+      "ㅋ",
+      "ㅌ",
+      "ㅏ",
+      "ㅑ",
+      "ㅓ",
+      "ㅗ",
+      "ㅛ",
+      "ㅜ",
+      "ㅠ",
+      "ㅡ",
+      "ㅣ"
+    ],
+    "failure": {
+      "mean_activity_persistence": 0.17314824960131378,
+      "mean_activity_persistence_windows": 0.0,
+      "mean_click_causal_persistence": 0.2053820449338252,
+      "mean_click_output_synchrony": 0.07242268041237113,
+      "mean_early_causal_edges": 17362.644329896906,
+      "mean_early_eligibility_per_window": 1166.4072164948454,
+      "mean_early_frozen_causal_edges": 16492.91237113402,
+      "mean_early_net_route_influence": -1697.064099911562,
+      "mean_early_plastic_causal_edges": 869.7319587628866,
+      "mean_eligibility_accumulation_rate": 811.8659793814433,
+      "mean_eligibility_per_window": 2174.496907216495,
+      "mean_first_causal_window": {
+        "mean": 1.0,
+        "reached_count": 97,
+        "reached_fraction": 1.0
+      },
+      "mean_first_click_output_window": {
+        "mean": 1.0206185567010309,
+        "reached_count": 97,
+        "reached_fraction": 1.0
+      },
+      "mean_first_network_activity_window": {
+        "mean": 1.0,
+        "reached_count": 97,
+        "reached_fraction": 1.0
+      },
+      "mean_first_window_click_rate_above_25pct_threshold": {
+        "mean": 1.2783505154639174,
+        "reached_count": 97,
+        "reached_fraction": 1.0
+      },
+      "mean_first_window_click_rate_above_50pct_threshold": {
+        "mean": 2.2555555555555555,
+        "reached_count": 90,
+        "reached_fraction": 0.9278350515463918
+      },
+      "mean_first_window_click_rate_above_75pct_threshold": {
+        "mean": 2.68,
+        "reached_count": 50,
+        "reached_fraction": 0.5154639175257731
+      },
+      "mean_first_window_click_rate_above_threshold": {
+        "mean": null,
+        "reached_count": 0,
+        "reached_fraction": 0.0
+      },
+      "mean_negative_route_influence": 5468.918116115294,
+      "mean_net_route_influence_per_window": -1785.460191966578,
+      "mean_peak_click_output_rate_hz": 6.572164948453608,
+      "mean_peak_simultaneous_click_output_recruitment": 7.350515463917525,
+      "mean_positive_route_influence": 3683.4579092753306,
+      "mean_raw_total_eligibility": 10872.484536082475,
+      "mean_time_to_peak_click_rate_window": {
+        "mean": 2.8969072164948453,
+        "reached_count": 97,
+        "reached_fraction": 1.0
+      },
+      "mean_total_click_output_spikes": 26.917525773195877,
+      "mean_unique_click_output_neurons": 13.24742268041237,
+      "mean_windows_per_trial": 5.0,
+      "trial_count": 97
+    },
+    "success": {
+      "mean_activity_persistence": 0.1023743435445006,
+      "mean_activity_persistence_windows": 0.0,
+      "mean_click_causal_persistence": 0.14091450930572064,
+      "mean_click_output_synchrony": 0.11852646638054364,
+      "mean_early_causal_edges": 25732.60729613734,
+      "mean_early_eligibility_per_window": 1722.5407725321888,
+      "mean_early_frozen_causal_edges": 24449.83261802575,
+      "mean_early_net_route_influence": -1996.679749226877,
+      "mean_early_plastic_causal_edges": 1282.774678111588,
+      "mean_eligibility_accumulation_rate": 2290.3208154506437,
+      "mean_eligibility_per_window": 2639.593705293276,
+      "mean_first_causal_window": {
+        "mean": 1.0,
+        "reached_count": 233,
+        "reached_fraction": 1.0
+      },
+      "mean_first_click_output_window": {
+        "mean": 1.0600858369098713,
+        "reached_count": 233,
+        "reached_fraction": 1.0
+      },
+      "mean_first_network_activity_window": {
+        "mean": 1.0,
+        "reached_count": 233,
+        "reached_fraction": 1.0
+      },
+      "mean_first_window_click_rate_above_25pct_threshold": {
+        "mean": 1.3261802575107295,
+        "reached_count": 233,
+        "reached_fraction": 1.0
+      },
+      "mean_first_window_click_rate_above_50pct_threshold": {
+        "mean": 1.944206008583691,
+        "reached_count": 233,
+        "reached_fraction": 1.0
+      },
+      "mean_first_window_click_rate_above_75pct_threshold": {
+        "mean": 2.407725321888412,
+        "reached_count": 233,
+        "reached_fraction": 1.0
+      },
+      "mean_first_window_click_rate_above_threshold": {
+        "mean": 2.9055793991416308,
+        "reached_count": 233,
+        "reached_fraction": 1.0
+      },
+      "mean_negative_route_influence": 8387.446799924139,
+      "mean_net_route_influence_per_window": -2268.399210420426,
+      "mean_peak_click_output_rate_hz": 12.46982296137339,
+      "mean_peak_simultaneous_click_output_recruitment": 12.515021459227468,
+      "mean_positive_route_influence": 6119.047554000834,
+      "mean_raw_total_eligibility": 8563.008583690988,
+      "mean_time_to_peak_click_rate_window": {
+        "mean": 2.9055793991416308,
+        "reached_count": 233,
+        "reached_fraction": 1.0
+      },
+      "mean_total_click_output_spikes": 25.892703862660944,
+      "mean_unique_click_output_neurons": 16.283261802575108,
+      "mean_windows_per_trial": 2.9055793991416308,
+      "trial_count": 233
+    }
+  },
+  "strong_group": {
+    "labels": [
+      "ㅕ",
+      "ㅎ",
+      "ㅍ",
+      "ㅊ",
+      "ㅈ",
+      "ㅇ",
+      "ㅅ",
+      "ㅁ",
+      "ㄹ",
+      "ㄷ"
+    ],
+    "mean_activity_persistence": 0.1187701391354413,
+    "mean_activity_persistence_windows": 0.0,
+    "mean_click_causal_persistence": 0.16316708326299983,
+    "mean_click_output_synchrony": 0.127171875,
+    "mean_early_causal_edges": 27185.31,
+    "mean_early_eligibility_per_window": 1877.39,
+    "mean_early_frozen_causal_edges": 25835.28,
+    "mean_early_net_route_influence": -2114.368005523682,
+    "mean_early_plastic_causal_edges": 1350.03,
+    "mean_eligibility_accumulation_rate": 2419.3408333333336,
+    "mean_eligibility_per_window": 2648.3753333333334,
+    "mean_first_causal_window": {
+      "mean": 1.0,
+      "reached_count": 100,
+      "reached_fraction": 1.0
+    },
+    "mean_first_click_output_window": {
+      "mean": 1.0,
+      "reached_count": 100,
+      "reached_fraction": 1.0
+    },
+    "mean_first_network_activity_window": {
+      "mean": 1.0,
+      "reached_count": 100,
+      "reached_fraction": 1.0
+    },
+    "mean_first_window_click_rate_above_25pct_threshold": {
+      "mean": 1.13,
+      "reached_count": 100,
+      "reached_fraction": 1.0
+    },
+    "mean_first_window_click_rate_above_50pct_threshold": {
+      "mean": 1.83,
+      "reached_count": 100,
+      "reached_fraction": 1.0
+    },
+    "mean_first_window_click_rate_above_75pct_threshold": {
+      "mean": 2.24,
+      "reached_count": 100,
+      "reached_fraction": 1.0
+    },
+    "mean_first_window_click_rate_above_threshold": {
+      "mean": 2.64,
+      "reached_count": 100,
+      "reached_fraction": 1.0
+    },
+    "mean_negative_route_influence": 8440.259159667969,
+    "mean_net_route_influence_per_window": -2369.806471822103,
+    "mean_peak_click_output_rate_hz": 12.734375,
+    "mean_peak_simultaneous_click_output_recruitment": 12.77,
+    "mean_positive_route_influence": 6070.4527098592125,
+    "mean_raw_total_eligibility": 7936.84,
+    "mean_time_to_peak_click_rate_window": {
+      "mean": 2.64,
+      "reached_count": 100,
+      "reached_fraction": 1.0
+    },
+    "mean_total_click_output_spikes": 26.02,
+    "mean_unique_click_output_neurons": 15.78,
+    "mean_windows_per_trial": 2.64,
+    "trial_count": 100
+  },
+  "trial_length": {
+    "failure_trial_count": 97,
+    "mean_failure_windows": 5.0,
+    "mean_success_windows": 2.709741550695825,
+    "success_trial_count": 503
+  },
+  "weak_group": {
+    "labels": [
+      "5",
+      "ㅛ",
+      "8",
+      "ㅡ",
+      "ㅓ",
+      "4",
+      "7",
+      "B",
+      "G",
+      "L"
+    ],
+    "mean_activity_persistence": 0.14394028766376255,
+    "mean_activity_persistence_windows": 0.0,
+    "mean_click_causal_persistence": 0.17613971185346652,
+    "mean_click_output_synchrony": 0.09113802083333333,
+    "mean_early_causal_edges": 19137.68,
+    "mean_early_eligibility_per_window": 1275.51,
+    "mean_early_frozen_causal_edges": 18183.65,
+    "mean_early_net_route_influence": -1700.0674435710907,
+    "mean_early_plastic_causal_edges": 954.03,
+    "mean_eligibility_accumulation_rate": 1450.2241666666669,
+    "mean_eligibility_per_window": 2362.7906666666663,
+    "mean_first_causal_window": {
+      "mean": 1.0,
+      "reached_count": 100,
+      "reached_fraction": 1.0
+    },
+    "mean_first_click_output_window": {
+      "mean": 1.05,
+      "reached_count": 100,
+      "reached_fraction": 1.0
+    },
+    "mean_first_network_activity_window": {
+      "mean": 1.0,
+      "reached_count": 100,
+      "reached_fraction": 1.0
+    },
+    "mean_first_window_click_rate_above_25pct_threshold": {
+      "mean": 1.35,
+      "reached_count": 100,
+      "reached_fraction": 1.0
+    },
+    "mean_first_window_click_rate_above_50pct_threshold": {
+      "mean": 2.231578947368421,
+      "reached_count": 95,
+      "reached_fraction": 0.95
+    },
+    "mean_first_window_click_rate_above_75pct_threshold": {
+      "mean": 2.704225352112676,
+      "reached_count": 71,
+      "reached_fraction": 0.71
+    },
+    "mean_first_window_click_rate_above_threshold": {
+      "mean": 3.326530612244898,
+      "reached_count": 49,
+      "reached_fraction": 0.49
+    },
+    "mean_negative_route_influence": 6497.238951375325,
+    "mean_net_route_influence_per_window": -1884.9315551973975,
+    "mean_peak_click_output_rate_hz": 9.7109375,
+    "mean_peak_simultaneous_click_output_recruitment": 9.78,
+    "mean_positive_route_influence": 4612.307360229493,
+    "mean_raw_total_eligibility": 10274.74,
+    "mean_time_to_peak_click_rate_window": {
+      "mean": 3.15,
+      "reached_count": 100,
+      "reached_fraction": 1.0
+    },
+    "mean_total_click_output_spikes": 27.37,
+    "mean_unique_click_output_neurons": 14.97,
+    "mean_windows_per_trial": 4.18,
+    "trial_count": 100
+  }
+}

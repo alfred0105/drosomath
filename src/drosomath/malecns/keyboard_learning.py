@@ -57,6 +57,36 @@ def _finish_live_status() -> None:
         sys.stdout.flush()
 
 
+def build_temporal_window_record(
+    *,
+    window_index: int,
+    total_spikes: int,
+    fired_neurons,
+    recent_presynaptic_count: int,
+    click_output_spikes: int,
+    click_output_neurons,
+    click_rate_hz: float,
+    motor_channel_rates,
+    causal_summary: dict[str, object],
+    active_neuron_jaccard: float | None,
+    click_causal_jaccard: float | None,
+) -> dict[str, object]:
+    """Build compact, read-only telemetry for one existing control window."""
+    return {
+        "window_index": int(window_index),
+        "total_spikes": int(total_spikes),
+        "unique_fired_neurons": int(len(fired_neurons)),
+        "recent_presynaptic_count": int(recent_presynaptic_count),
+        "click_output_spikes": int(click_output_spikes),
+        "active_click_output_neurons": int(len(click_output_neurons)),
+        "click_rate_hz": float(click_rate_hz),
+        "motor_channel_rates": [float(value) for value in motor_channel_rates],
+        **causal_summary,
+        "active_neuron_jaccard": active_neuron_jaccard,
+        "click_causal_jaccard": click_causal_jaccard,
+    }
+
+
 def build_label_schedule(trials: int, *, seed: int) -> tuple[str, ...]:
     """Shuffle every cycle while keeping key exposure balanced."""
     if trials < 1:
@@ -491,6 +521,9 @@ class KeyboardTrainingConfig:
     # D.2.3 is a read-only matched probe.  It is opt-in so ordinary learning
     # runs do not spend diagnostics or alter their behavior.
     route_health_diagnostic: bool = False
+    # E.1 records already-generated control-window activity only.  It never
+    # replays the brain or participates in learning.
+    temporal_engagement_diagnostic: bool = False
     budget_strength: float = 0.25
     checkpoint_every: int = 32
     dashboard_update_interval_seconds: float = 0.5
@@ -987,6 +1020,17 @@ class KeyboardNeuralSession:
         click_output_spike_count = 0
         active_click_outputs: set[int] = set()
         counts = np.zeros(self.motor_channel_count, dtype=np.int32)
+        temporal_windows: list[dict[str, object]] = []
+        previous_window_neurons: set[int] | None = None
+        previous_window_causal_edges: set[int] | None = None
+        first_any_network_activity_window = None
+        first_click_causal_activity_window = None
+        first_click_output_spike_window = None
+        first_window_click_rate_above_25pct_threshold = None
+        first_window_click_rate_above_50pct_threshold = None
+        first_window_click_rate_above_75pct_threshold = None
+        first_window_click_rate_above_threshold = None
+        early_window_limit = max(1, int(math.ceil(self.max_control_windows * 0.25)))
         initial_body = self.task.observation().get("body", {})
         initial_endpoints = (
             initial_body.get("endpoints", [])
@@ -1003,19 +1047,25 @@ class KeyboardNeuralSession:
         motor_count_seconds = 0.0
         for windows in range(1, self.max_control_windows + 1):
             counts.fill(0)
+            window_total_spikes = 0
+            window_fired_neurons: set[int] = set()
+            window_click_spikes = 0
+            window_click_neurons: set[int] = set()
             for _ in range(self.steps_per_window):
                 step_started = time.perf_counter() if timings is not None else 0.0
                 fired, _ = self.brain.step(
                     stimulus_indices=stimulus_indices,
                     stimulus_rate_hz=self.config.stimulus_rate_hz,
                 )
+                window_total_spikes += int(len(fired))
+                window_fired_neurons.update(int(index) for index in fired)
                 if timings is not None:
                     neural_step_seconds += time.perf_counter() - step_started
                     count_started = time.perf_counter()
                 if len(fired):
                     local_click = fired[self.channel_lookup[fired] == 4]
-                    click_output_spike_count += int(len(local_click))
-                    active_click_outputs.update(int(index) for index in local_click)
+                    window_click_spikes += int(len(local_click))
+                    window_click_neurons.update(int(index) for index in local_click)
                     local = self.channel_lookup[fired]
                     local = local[local >= 0]
                     if len(local):
@@ -1028,13 +1078,80 @@ class KeyboardNeuralSession:
             rates = counts.astype(np.float32) * self.rate_scale
             peak_motor_rate_hz = max(peak_motor_rate_hz, float(rates.max()))
             click_rates = rates[4::5]
-            peak_click_rate_hz = max(peak_click_rate_hz, float(click_rates.max()))
+            window_click_rate_hz = float(click_rates.max())
+            click_output_spike_count += window_click_spikes
+            active_click_outputs.update(window_click_neurons)
+            peak_click_rate_hz = max(peak_click_rate_hz, window_click_rate_hz)
             click_evidence_history.append(float(click_rates.max()))
             del click_evidence_history[:-self.config.click_evidence_windows]
             peak_click_evidence_hz = max(
                 peak_click_evidence_hz,
                 sum(click_evidence_history) / len(click_evidence_history),
             )
+            if temporal_windows is not None and self.config.temporal_engagement_diagnostic:
+                causal_probe = self.plasticity_controller.diagnose_activity_window(
+                    self.brain,
+                    np.asarray(sorted(window_fired_neurons), dtype=np.int32),
+                    {"motor/click": self.output_context["motor/click"]},
+                )["motor/click"]
+                causal_indices = set(
+                    int(edge) for edge in causal_probe.pop("_causal_edge_indices", ())
+                )
+                if first_any_network_activity_window is None and window_total_spikes > 0:
+                    first_any_network_activity_window = windows
+                if first_click_causal_activity_window is None and causal_probe["active_click_causal_edges"] > 0:
+                    first_click_causal_activity_window = windows
+                if first_click_output_spike_window is None and window_click_spikes > 0:
+                    first_click_output_spike_window = windows
+                threshold = float(self.config.click_gate_threshold_hz)
+                threshold_events = (
+                    (0.25, "first_window_click_rate_above_25pct_threshold"),
+                    (0.50, "first_window_click_rate_above_50pct_threshold"),
+                    (0.75, "first_window_click_rate_above_75pct_threshold"),
+                    (1.00, "first_window_click_rate_above_threshold"),
+                )
+                for fraction, attribute in threshold_events:
+                    current_value = {
+                        "first_window_click_rate_above_25pct_threshold": first_window_click_rate_above_25pct_threshold,
+                        "first_window_click_rate_above_50pct_threshold": first_window_click_rate_above_50pct_threshold,
+                        "first_window_click_rate_above_75pct_threshold": first_window_click_rate_above_75pct_threshold,
+                        "first_window_click_rate_above_threshold": first_window_click_rate_above_threshold,
+                    }[attribute]
+                    if current_value is None and window_click_rate_hz >= fraction * threshold:
+                        if attribute == "first_window_click_rate_above_25pct_threshold":
+                            first_window_click_rate_above_25pct_threshold = windows
+                        elif attribute == "first_window_click_rate_above_50pct_threshold":
+                            first_window_click_rate_above_50pct_threshold = windows
+                        elif attribute == "first_window_click_rate_above_75pct_threshold":
+                            first_window_click_rate_above_75pct_threshold = windows
+                        else:
+                            first_window_click_rate_above_threshold = windows
+                active_neurons = set(window_fired_neurons)
+                active_jaccard = (
+                    len(active_neurons & previous_window_neurons)
+                    / max(1, len(active_neurons | previous_window_neurons))
+                    if previous_window_neurons is not None else None
+                )
+                causal_jaccard = (
+                    len(causal_indices & previous_window_causal_edges)
+                    / max(1, len(causal_indices | previous_window_causal_edges))
+                    if previous_window_causal_edges is not None else None
+                )
+                temporal_windows.append(build_temporal_window_record(
+                    window_index=windows,
+                    total_spikes=window_total_spikes,
+                    fired_neurons=window_fired_neurons,
+                    recent_presynaptic_count=len(self.brain._recent_presynaptic),
+                    click_output_spikes=window_click_spikes,
+                    click_output_neurons=window_click_neurons,
+                    click_rate_hz=window_click_rate_hz,
+                    motor_channel_rates=rates,
+                    causal_summary=causal_probe,
+                    active_neuron_jaccard=active_jaccard,
+                    click_causal_jaccard=causal_jaccard,
+                ))
+                previous_window_neurons = active_neurons
+                previous_window_causal_edges = causal_indices
             actions = self.task.motor.decode(rates)
             if self.config.click_only and self.config.lock_arm_during_click_training:
                 # Click-gate curriculum: the target starts under the endpoint.
@@ -1070,6 +1187,89 @@ class KeyboardNeuralSession:
 
         if previous_tracking is not None:
             self.brain.set_plasticity_tracking(previous_tracking)
+
+        temporal_engagement = None
+        if self.config.temporal_engagement_diagnostic:
+            observed_windows = len(temporal_windows)
+            early_windows = temporal_windows[:early_window_limit]
+
+            def mean_window(name, rows=None):
+                rows = temporal_windows if rows is None else rows
+                values = [float(row[name]) for row in rows]
+                return float(sum(values) / len(values)) if values else 0.0
+
+            active_jaccards = [
+                float(row["active_neuron_jaccard"])
+                for row in temporal_windows
+                if row["active_neuron_jaccard"] is not None
+            ]
+            causal_jaccards = [
+                float(row["click_causal_jaccard"])
+                for row in temporal_windows
+                if row["click_causal_jaccard"] is not None
+            ]
+            total_eligibility = [
+                float(row["total_click_route_eligibility"])
+                for row in temporal_windows
+            ]
+            peak_row = max(
+                temporal_windows,
+                key=lambda row: float(row["click_rate_hz"]),
+                default=None,
+            )
+            temporal_engagement = {
+                "window_count": observed_windows,
+                "allowed_window_count": self.max_control_windows,
+                "early_window_definition": {
+                    "type": "first_fraction_of_allowed_windows",
+                    "fraction": 0.25,
+                    "window_count": early_window_limit,
+                    "observed_count": len(early_windows),
+                },
+                "windows": temporal_windows,
+                "first_any_network_activity_window": first_any_network_activity_window,
+                "first_click_causal_activity_window": first_click_causal_activity_window,
+                "first_click_output_spike_window": first_click_output_spike_window,
+                "first_window_click_rate_above_25pct_threshold": first_window_click_rate_above_25pct_threshold,
+                "first_window_click_rate_above_50pct_threshold": first_window_click_rate_above_50pct_threshold,
+                "first_window_click_rate_above_75pct_threshold": first_window_click_rate_above_75pct_threshold,
+                "first_window_click_rate_above_threshold": first_window_click_rate_above_threshold,
+                "mean_adjacent_window_active_neuron_jaccard": float(sum(active_jaccards) / len(active_jaccards)) if active_jaccards else 0.0,
+                "mean_adjacent_window_click_causal_jaccard": float(sum(causal_jaccards) / len(causal_jaccards)) if causal_jaccards else 0.0,
+                "activity_persistence_windows": int(sum(value >= 0.5 for value in active_jaccards)),
+                "peak_unique_neurons": max((int(row["unique_fired_neurons"]) for row in temporal_windows), default=0),
+                "mean_unique_neurons_per_window": mean_window("unique_fired_neurons"),
+                "mean_windows_per_trial": float(observed_windows),
+                "early_active_click_causal_edges": mean_window("active_click_causal_edges", early_windows),
+                "early_active_plastic_click_causal_edges": mean_window("active_plastic_click_causal_edges", early_windows),
+                "early_active_frozen_click_causal_edges": mean_window("active_frozen_click_causal_edges", early_windows),
+                "early_net_click_route_influence": mean_window("net_click_route_influence", early_windows),
+                "mean_net_click_route_influence_per_window": mean_window("net_click_route_influence"),
+                "mean_positive_effect_magnitude_per_window": mean_window("positive_effect_magnitude"),
+                "mean_negative_effect_magnitude_per_window": mean_window("negative_effect_magnitude"),
+                "raw_total_click_route_eligibility": float(sum(total_eligibility)),
+                "eligibility_per_window": float(sum(total_eligibility) / max(1, observed_windows)),
+                "early_eligibility_per_window": mean_window("total_click_route_eligibility", early_windows),
+                "eligibility_accumulation_rate": float(
+                    (total_eligibility[-1] - total_eligibility[0]) / max(1, len(total_eligibility) - 1)
+                ) if total_eligibility else 0.0,
+                "mean_click_route_eligibility_per_window": mean_window("mean_click_route_eligibility"),
+                "mean_eligible_click_route_edges_per_window": mean_window("eligible_click_route_edges"),
+                "unique_click_output_neurons_recruited": len(active_click_outputs),
+                "total_click_output_spikes": click_output_spike_count,
+                "peak_click_output_rate_hz": peak_click_rate_hz,
+                "time_to_peak_click_rate_window": int(peak_row["window_index"]) if peak_row is not None else None,
+                "mean_click_output_synchrony_proxy": float(
+                    sum(
+                        float(row["active_click_output_neurons"]) / max(1, len(self.channel_groups[4]))
+                        for row in temporal_windows
+                    ) / max(1, observed_windows)
+                ),
+                "peak_simultaneous_click_output_recruitment": max(
+                    (int(row["active_click_output_neurons"]) for row in temporal_windows),
+                    default=0,
+                ),
+            }
 
         correct = bool(last is not None and last.clicked_label == label)
         movement = _movement_summary(movement_points)
@@ -1508,6 +1708,8 @@ class KeyboardNeuralSession:
             "learned": bool(learn),
             "learning": learning,
         }
+        if temporal_engagement is not None:
+            result["temporal_engagement"] = temporal_engagement
         if timings is not None:
             timings["neural_step_seconds"] = neural_step_seconds
             timings["motor_count_seconds"] = motor_count_seconds
@@ -1679,6 +1881,7 @@ def run_keyboard_training(
         }
         for label in KEY_LABELS
     }
+    temporal_engagement_trials: list[dict[str, object]] = []
     rng = np.random.default_rng(config.seed + 83_001)
     per_key_trials = {label: 0 for label in KEY_LABELS}
     per_key_correct = {label: 0 for label in KEY_LABELS}
@@ -1905,6 +2108,13 @@ def run_keyboard_training(
         rows.append(row)
         row_correct = int(row["correct"])
         row_learning = row.get("learning", {})
+        if config.temporal_engagement_diagnostic and row.get("temporal_engagement") is not None:
+            temporal_engagement_trials.append({
+                "trial": trial,
+                "label": label,
+                "correct": row_correct,
+                "temporal_engagement": row["temporal_engagement"],
+            })
         row_directional = row_learning.get("directional_modulation", {})
         row_legacy_rescue = bool(row_directional.get("legacy_rescue_used", False))
         legacy_rescue_events += int(row_legacy_rescue)
@@ -2301,6 +2511,7 @@ def run_keyboard_training(
                 for item in counterfactual_route_health_report.values()
             ),
         },
+        "temporal_engagement_trials": temporal_engagement_trials,
         "execution_profile": {
             "backend": "numpy_cpu",
             "gpu_used": False,

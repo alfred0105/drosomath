@@ -264,6 +264,60 @@ class PlasticityController:
             discover_upstream_from_candidates=True,
         )
 
+    def diagnose_activity_window(self, brain, fired_indices, output_context):
+        """Read-only causal engagement summary for one already-simulated window."""
+        np = brain.np
+        graph, state = brain.connectome, brain.plasticity
+        fired = np.unique(np.asarray(fired_indices, dtype=np.int32))
+        chunks = [
+            np.arange(int(graph.indptr[pre]), int(graph.indptr[pre + 1]), dtype=np.int32)
+            for pre in fired if 0 <= int(pre) < graph.neuron_count
+            and int(graph.indptr[pre + 1]) > int(graph.indptr[pre])
+        ]
+        candidates = np.concatenate(chunks) if chunks else np.empty(0, dtype=np.int32)
+        result = {}
+        for name, outputs in output_context.items():
+            credit = self._unique_credit(
+                np,
+                self._route_credit_edges(
+                    brain,
+                    candidates,
+                    outputs,
+                    discover_upstream_from_candidates=True,
+                ),
+            )
+            edges = credit.edges
+            influence = credit.effective_influence
+            if influence is None:
+                influence = np.ones(len(edges), dtype=np.float32)
+            effective_magnitude = (
+                credit.weights * influence * np.abs(state.multiplier[edges])
+                if len(edges) else np.empty(0, dtype=np.float32)
+            )
+            plastic = state.plastic_mask[edges] if len(edges) else np.empty(0, dtype=np.bool_)
+            eligibility = state.eligibility[edges[plastic]] if len(edges) else np.empty(0, dtype=np.float32)
+            presynaptic = self._pre_indices(np, graph, edges) if len(edges) else np.empty(0, dtype=np.int32)
+            positive = credit.path_polarities > 0.0
+            negative = credit.path_polarities < 0.0
+            result[name] = {
+                "_causal_edge_indices": edges,
+                "active_click_causal_presynaptic_neurons": int(len(np.unique(presynaptic))),
+                "active_click_causal_edges": int(len(edges)),
+                "active_plastic_click_causal_edges": int(plastic.sum()),
+                "active_frozen_click_causal_edges": int((~plastic).sum()),
+                "positive_effect_route_count": int(positive.sum()),
+                "negative_effect_route_count": int(negative.sum()),
+                "positive_effect_magnitude": float(effective_magnitude[positive].sum()),
+                "negative_effect_magnitude": float(effective_magnitude[negative].sum()),
+                "net_click_route_influence": float(
+                    (credit.path_polarities * effective_magnitude).sum()
+                ),
+                "total_click_route_eligibility": float(eligibility.sum()),
+                "mean_click_route_eligibility": float(eligibility.mean()) if len(eligibility) else 0.0,
+                "eligible_click_route_edges": int((eligibility > 0.0).sum()),
+            }
+        return result
+
     def diagnose_route_health(
         self,
         brain,
