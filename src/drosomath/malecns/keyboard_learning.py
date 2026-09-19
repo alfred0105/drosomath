@@ -109,6 +109,27 @@ def recent_key_mastered(history: list[bool], window_size: int) -> bool:
     return all(history[-window_size:])
 
 
+def calculate_success_margin_deficit(
+    *,
+    peak_click_rate_hz: float,
+    threshold_hz: float,
+    target_hz: float,
+) -> float:
+    """Return bounded output-margin deficit for a successful click.
+
+    The behavioral threshold remains the success gate.  This value only
+    describes how far a successful output is from the optional robust target;
+    outputs at or above the target receive no additional directional signal.
+    """
+    denominator = max(float(target_hz) - float(threshold_hz), 1e-9)
+    return float(
+        min(
+            1.0,
+            max(0.0, (float(target_hz) - float(peak_click_rate_hz)) / denominator),
+        )
+    )
+
+
 def _movement_summary(points: list[tuple[float, float]]) -> dict[str, object]:
     """Summarize one endpoint trajectory without treating it as a large region."""
     if not points:
@@ -183,6 +204,41 @@ def summarize_per_key_stats(
             ),
         }
     return result
+
+
+def summarize_recent_outcome_transitions(
+    per_key_recent: dict[str, list[bool]],
+) -> dict[str, object]:
+    """Summarize recent success/failure flips without using task labels for learning."""
+    per_key: dict[str, dict[str, float | int]] = {}
+    for label, history in per_key_recent.items():
+        transitions = sum(
+            int(previous != current)
+            for previous, current in zip(history, history[1:])
+        )
+        rate = transitions / max(1, len(history) - 1) if len(history) > 1 else 0.0
+        per_key[str(label)] = {
+            "attempts": int(len(history)),
+            "transition_count": int(transitions),
+            "transition_rate": float(rate),
+            "recent_accuracy": float(sum(history) / max(1, len(history))),
+        }
+    ranked = sorted(
+        per_key.items(),
+        key=lambda item: (float(item[1]["recent_accuracy"]), item[0]),
+    )
+    weak = [item for _, item in ranked[:10]]
+    return {
+        "per_key": per_key,
+        "mean_recent_outcome_transition_rate": float(
+            sum(float(item["transition_rate"]) for item in per_key.values())
+            / max(1, len(per_key))
+        ),
+        "weak_key_labels": [label for label, _ in ranked[:10]],
+        "weak_key_outcome_transition_rate": float(
+            sum(float(item["transition_rate"]) for item in weak) / max(1, len(weak))
+        ),
+    }
 
 
 def build_keyboard_html(payload: dict[str, object]) -> str:
@@ -465,6 +521,10 @@ class KeyboardTrainingConfig:
     click_evidence_windows: int = 5
     click_margin_target_hz: float = 15.0
     click_margin_reward_scale: float = 0.50
+    # Optional E.2 signal: only marginal successes receive a small generic
+    # directional correction toward the existing click-margin target.
+    success_margin_directional_learning: bool = False
+    success_margin_directional_scale: float = 0.25
     click_penalty: float = 1.20
     # Click-only failures are corrected by motor-targeted teaching plasticity;
     # do not amplify their global negative reward.
@@ -583,6 +643,8 @@ class KeyboardTrainingConfig:
             raise ValueError("click_margin_target_hz must exceed click_gate_threshold_hz")
         if self.click_margin_reward_scale < 0.0:
             raise ValueError("click_margin_reward_scale must be >= 0")
+        if self.success_margin_directional_scale < 0.0:
+            raise ValueError("success_margin_directional_scale must be >= 0")
         if self.distance_penalty_scale < 0.0:
             raise ValueError("distance_penalty_scale must be >= 0")
         if self.correct_distance_penalty_scale < 0.0:
@@ -973,12 +1035,13 @@ class KeyboardNeuralSession:
         correct: bool,
         current_deficit: float,
         click_gain: float,
+        success_margin_directional_error: float = 0.0,
     ) -> LearningSignal:
         """Translate keyboard outcome into task-independent brain feedback."""
         if self.config.click_only and correct:
             return LearningSignal(
                 reward=reward,
-                directional_error={"motor/click": 0.0},
+                directional_error={"motor/click": float(success_margin_directional_error)},
                 reinforcement={"motor/click": 1.0},
                 surprise=current_deficit,
                 success=True,
@@ -1340,6 +1403,20 @@ class KeyboardNeuralSession:
             if learn and correct
             else 0.0
         )
+        success_margin_deficit = (
+            calculate_success_margin_deficit(
+                peak_click_rate_hz=peak_click_rate_hz,
+                threshold_hz=self.config.click_gate_threshold_hz,
+                target_hz=self.config.click_margin_target_hz,
+            )
+            if correct
+            else 0.0
+        )
+        success_margin_directional_error = (
+            self.config.success_margin_directional_scale * success_margin_deficit
+            if learn and correct and self.config.success_margin_directional_learning
+            else 0.0
+        )
         low_peak_click_penalty = (
             self.config.low_peak_click_penalty_scale * min(
                 1.0,
@@ -1453,6 +1530,7 @@ class KeyboardNeuralSession:
                 correct=bool(correct),
                 current_deficit=current_deficit,
                 click_gain=homeostatic_gains.get("motor/click", 1.0),
+                success_margin_directional_error=success_margin_directional_error,
             )
             reward_credit = (
                 self.plasticity_controller.build_reward_credit(
@@ -1589,6 +1667,28 @@ class KeyboardNeuralSession:
                 "surprise": learning_signal.surprise,
             }
             learning["directional_modulation"] = directional_update
+            learning["success_margin"] = {
+                "directional_edge_updates": int(
+                    generic_update.edge_updates
+                    if success_margin_directional_error > 0.0
+                    else 0
+                ),
+                "sum_abs_delta": float(
+                    generic_update.sum_abs_delta
+                    if success_margin_directional_error > 0.0
+                    else 0.0
+                ),
+            }
+            success_margin_directional_edge_updates = int(
+                generic_update.edge_updates
+                if success_margin_directional_error > 0.0
+                else 0
+            )
+            success_margin_sum_abs_delta = float(
+                generic_update.sum_abs_delta
+                if success_margin_directional_error > 0.0
+                else 0.0
+            )
             learning["structural_need"] = structural_need
             if counterfactual_route_health:
                 learning["counterfactual_route_health"] = counterfactual_route_health
@@ -1647,6 +1747,8 @@ class KeyboardNeuralSession:
                 timings["motor_teacher_seconds"] = teacher_seconds
         else:
             reward = 0.0
+            success_margin_directional_edge_updates = 0
+            success_margin_sum_abs_delta = 0.0
             learning = {
                 "learning": {
                     "edge_updates": 0,
@@ -1693,6 +1795,11 @@ class KeyboardNeuralSession:
             "correct_streak": current_correct_streak,
             "consecutive_bonus": consecutive_bonus,
             "click_margin_bonus": click_margin_bonus,
+            "success_margin_target_hz": float(self.config.click_margin_target_hz),
+            "success_margin_deficit": float(success_margin_deficit),
+            "success_margin_directional_error": float(success_margin_directional_error),
+            "success_margin_directional_edge_updates": int(success_margin_directional_edge_updates),
+            "success_margin_sum_abs_delta": float(success_margin_sum_abs_delta),
             "low_peak_click_penalty": low_peak_click_penalty,
             "previous_peak_click_rate_hz": previous_peak,
             "peak_regression_ratio": peak_regression_ratio,
@@ -1811,6 +1918,21 @@ def run_keyboard_training(
     legacy_rescue_events = 0
     directional_generic_update_count = 0
     localized_positive_reward_updated_edge_count = 0
+    successful_trials_below_margin_target = 0
+    successful_trials_at_or_above_margin_target = 0
+    margin_update_trial_count = 0
+    margin_directional_edge_update_count = 0
+    margin_directional_sum_abs_delta = 0.0
+    success_peak_click_rate_sum = 0.0
+    success_peak_click_rate_count = 0
+    failure_peak_click_rate_sum = 0.0
+    failure_peak_click_rate_count = 0
+    success_synchrony_sum = 0.0
+    success_unique_click_neurons_sum = 0.0
+    success_temporal_count = 0
+    failure_synchrony_sum = 0.0
+    failure_unique_click_neurons_sum = 0.0
+    failure_temporal_count = 0
     route_health_by_key = {
         label: {
             "attempts": 0,
@@ -2108,6 +2230,34 @@ def run_keyboard_training(
         rows.append(row)
         row_correct = int(row["correct"])
         row_learning = row.get("learning", {})
+        peak_click_rate = float(row.get("peak_click_rate_hz", 0.0))
+        if row_correct:
+            success_peak_click_rate_sum += peak_click_rate
+            success_peak_click_rate_count += 1
+            if peak_click_rate < config.click_margin_target_hz:
+                successful_trials_below_margin_target += 1
+            else:
+                successful_trials_at_or_above_margin_target += 1
+        else:
+            failure_peak_click_rate_sum += peak_click_rate
+            failure_peak_click_rate_count += 1
+        row_margin = row_learning.get("success_margin", {})
+        if isinstance(row_margin, dict):
+            margin_updates = int(row_margin.get("directional_edge_updates", 0))
+            if margin_updates > 0:
+                margin_update_trial_count += 1
+            margin_directional_edge_update_count += margin_updates
+            margin_directional_sum_abs_delta += float(row_margin.get("sum_abs_delta", 0.0))
+        temporal = row.get("temporal_engagement")
+        if isinstance(temporal, dict):
+            if row_correct:
+                success_synchrony_sum += float(temporal.get("mean_click_output_synchrony_proxy", 0.0))
+                success_unique_click_neurons_sum += float(temporal.get("unique_click_output_neurons_recruited", 0.0))
+                success_temporal_count += 1
+            else:
+                failure_synchrony_sum += float(temporal.get("mean_click_output_synchrony_proxy", 0.0))
+                failure_unique_click_neurons_sum += float(temporal.get("unique_click_output_neurons_recruited", 0.0))
+                failure_temporal_count += 1
         if config.temporal_engagement_diagnostic and row.get("temporal_engagement") is not None:
             temporal_engagement_trials.append({
                 "trial": trial,
@@ -2484,7 +2634,33 @@ def run_keyboard_training(
         "final_plasticity": {
             **session.brain.plasticity.summary(),
             "changed_edges": int(np.count_nonzero(np.abs(session.brain.plasticity.multiplier - 1.0) > 1e-7)),
+            "multiplier_saturation_fraction": float(
+                np.count_nonzero(
+                    session.brain.plasticity.plastic_mask
+                    & (
+                        session.brain.plasticity.multiplier
+                        >= session.brain.plasticity.config.max_multiplier - 1e-6
+                    )
+                ) / max(1, session.brain.plasticity.plastic_edge_count)
+            ),
         },
+        "success_margin_summary": {
+            "enabled": bool(config.success_margin_directional_learning),
+            "target_hz": float(config.click_margin_target_hz),
+            "directional_scale": float(config.success_margin_directional_scale),
+            "successful_trials_below_margin_target": int(successful_trials_below_margin_target),
+            "successful_trials_at_or_above_margin_target": int(successful_trials_at_or_above_margin_target),
+            "margin_update_trial_count": int(margin_update_trial_count),
+            "margin_directional_edge_update_count": int(margin_directional_edge_update_count),
+            "margin_directional_sum_abs_delta": float(margin_directional_sum_abs_delta),
+            "mean_success_peak_click_rate_hz": success_peak_click_rate_sum / max(1, success_peak_click_rate_count),
+            "mean_failure_peak_click_rate_hz": failure_peak_click_rate_sum / max(1, failure_peak_click_rate_count),
+            "mean_success_click_output_synchrony": success_synchrony_sum / max(1, success_temporal_count),
+            "mean_failure_click_output_synchrony": failure_synchrony_sum / max(1, failure_temporal_count),
+            "mean_success_unique_click_output_neurons": success_unique_click_neurons_sum / max(1, success_temporal_count),
+            "mean_failure_unique_click_output_neurons": failure_unique_click_neurons_sum / max(1, failure_temporal_count),
+        },
+        "outcome_transition_summary": summarize_recent_outcome_transitions(per_key_recent),
         "adaptive_budget": {
             **session.plasticity_budget_adaptation.telemetry(),
             "adaptive_plastic_budget": bool(config.adaptive_plastic_budget),
@@ -2566,6 +2742,12 @@ def main() -> None:
     parser.add_argument("--click-evidence-windows", type=int, default=5)
     parser.add_argument("--click-margin-target-hz", type=float, default=15.0)
     parser.add_argument("--click-margin-reward-scale", type=float, default=0.50)
+    parser.add_argument(
+        "--success-margin-directional-learning",
+        action="store_true",
+        help="Enable conservative generic correction for marginal successful clicks.",
+    )
+    parser.add_argument("--success-margin-directional-scale", type=float, default=0.25)
     parser.add_argument("--distance-penalty-scale", type=float, default=1.20)
     parser.add_argument("--correct-distance-penalty-scale", type=float, default=0.20)
     parser.add_argument(
@@ -2634,6 +2816,8 @@ def main() -> None:
         click_evidence_windows=args.click_evidence_windows,
         click_margin_target_hz=args.click_margin_target_hz,
         click_margin_reward_scale=args.click_margin_reward_scale,
+        success_margin_directional_learning=args.success_margin_directional_learning,
+        success_margin_directional_scale=args.success_margin_directional_scale,
         distance_penalty_scale=args.distance_penalty_scale,
         correct_distance_penalty_scale=args.correct_distance_penalty_scale,
         consecutive_correct_bonus=args.consecutive_correct_bonus,
