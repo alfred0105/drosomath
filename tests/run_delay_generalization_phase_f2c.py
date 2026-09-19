@@ -359,6 +359,8 @@ def run(*, data_dir: Path = DATA_DIR, output_path: Path = ARTIFACT):
     reset_accuracy = _mean_by_delay(runs, "reset", "accuracy")
     intact_margin = _mean_by_delay(runs, "intact", "target_minus_best_competitor_margin_hz")
     reset_margin = _mean_by_delay(runs, "reset", "target_minus_best_competitor_margin_hz")
+    intact_target_rank = _mean_by_delay(runs, "intact", "mean_target_rank")
+    reset_target_rank = _mean_by_delay(runs, "reset", "mean_target_rank")
     memory_gap = {
         str(delay): {
             "accuracy": float(intact_accuracy[str(delay)] - reset_accuracy[str(delay)]),
@@ -420,6 +422,7 @@ def run(*, data_dir: Path = DATA_DIR, output_path: Path = ARTIFACT):
             "accuracy_curve": {"intact": intact_accuracy, "reset": reset_accuracy},
             "memory_gap_curve": memory_gap,
             "margin_curve_hz": {"intact": intact_margin, "reset": reset_margin},
+            "target_rank_curve": {"intact": intact_target_rank, "reset": reset_target_rank},
             "normalized_retention": normalized,
             "state_decay_curve": state_decay,
             "memory_horizon_ms": horizon,
