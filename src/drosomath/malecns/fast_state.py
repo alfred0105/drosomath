@@ -337,17 +337,16 @@ class FastSparseStateMixin:
         if not chunks:
             return np.empty(0, dtype=np.int32)
         raw = chunks[0] if len(chunks) == 1 else np.concatenate(chunks)
-        # This mask is local to the current due slot. It removes duplicate
-        # post-neurons without hashing the whole array through np.unique.
-        fresh = raw[~self._fast_due_mask[raw]]
-        self._fast_due_mask[raw] = True
+        # A due slot is a fresh batch: duplicates only need to be removed
+        # within this batch.  Sorting the batch once and comparing adjacent
+        # values is equivalent to the old np.unique path, but avoids a full
+        # neuron-sized boolean mask write/read for every due slot.
+        fresh = np.sort(raw) if len(raw) > 1 else raw
         if len(fresh) > 1:
-            fresh = np.sort(fresh)
             keep = np.empty(len(fresh), dtype=np.bool_)
             keep[0] = True
             keep[1:] = fresh[1:] != fresh[:-1]
             fresh = fresh[keep]
-        self._fast_due_mask[raw] = False
         chunks.clear()
         return fresh.astype(np.int32, copy=False)
 

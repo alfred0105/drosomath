@@ -85,6 +85,13 @@ from .sequence_memory import (
     TwoCueSequenceSession,
     balanced_pair_schedule,
 )
+from .contextual_prediction import (
+    CONTEXTUAL_GRAMMAR,
+    ContextualPredictionConfig,
+    ContextualPredictionLearningSession,
+    ContextualPredictionSession,
+    ContextualPredictionTrial,
+)
 
 __all__ = [
     "BrainOutputTrialResult",
@@ -154,6 +161,11 @@ __all__ = [
     "SequenceTrialResult",
     "TwoCueSequenceSession",
     "balanced_pair_schedule",
+    "CONTEXTUAL_GRAMMAR",
+    "ContextualPredictionConfig",
+    "ContextualPredictionLearningSession",
+    "ContextualPredictionSession",
+    "ContextualPredictionTrial",
     "download_malecns",
     "load_malecns_v1",
     "missing_files",
