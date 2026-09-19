@@ -111,6 +111,15 @@ class FastSparseStateMixin:
             NUMBA_AVAILABLE
             and requested_numba not in {"0", "false", "off", "no"}
         )
+        # Optional P.3 audit hook.  It is None in all normal runs, so timing
+        # cannot alter model state or consume RNG values.
+        self._neural_timing_profiler = None
+
+    def configure_neural_timing(self, profiler=None):
+        """Attach an explicit neural-step profiler and return the previous one."""
+        previous = self._neural_timing_profiler
+        self._neural_timing_profiler = profiler
+        return previous
 
     def reset(self) -> None:
         super().reset()
@@ -391,78 +400,76 @@ class FastSparseStateMixin:
     def step(self, *, stimulus_indices=None, stimulus_rate_hz: float = 0.0):
         np = self.np
         p = self.params
-        ring_index = self.step_index % len(self._delay_ring)
-        due_slot = self._delay_ring[ring_index]
-        due = self._due_indices(ring_index)
-        active = self._activate_indices(due, stimulus_indices)
+        profiler = self._neural_timing_profiler
+        if profiler is None:
+            ring_index = self.step_index % len(self._delay_ring)
+            due_slot = self._delay_ring[ring_index]
+            due = self._due_indices(ring_index)
+            active = self._activate_indices(due, stimulus_indices)
+        else:
+            with profiler.section("delay_ring_handling_seconds"):
+                ring_index = self.step_index % len(self._delay_ring)
+                due_slot = self._delay_ring[ring_index]
+                due = self._due_indices(ring_index)
+                active = self._activate_indices(due, stimulus_indices)
 
         stimulated = np.empty(0, dtype=np.int32)
-        if (
-            stimulus_indices is not None
-            and len(stimulus_indices)
-            and stimulus_rate_hz > 0.0
-        ):
-            probability = min(1.0, stimulus_rate_hz * p.dt_ms / 1000.0)
-            stimulated = stimulus_indices[
-                self.rng.random(len(stimulus_indices)) < probability
-            ]
-        if self._numba_enabled:
-            fired_count = advance_sparse_lif(
-                active,
-                due,
-                due_slot,
-                self.v,
-                self.g,
-                self.refractory_until,
-                stimulated,
-                self._fast_fired,
-                self.step_index,
-                np.float32(p.resting_mv),
-                np.float32(p.threshold_mv),
-                np.float32(p.reset_mv),
-                np.float32(self._membrane_decay),
-                np.float32(self._g_to_v),
-                np.float32(self._synapse_decay),
-                np.float32(p.mv_per_synapse * p.poisson_drive_scale),
-                self.refractory_steps,
-            )
-            fired = self._fast_fired[:fired_count]
+        if profiler is None:
+            if (
+                stimulus_indices is not None
+                and len(stimulus_indices)
+                and stimulus_rate_hz > 0.0
+            ):
+                probability = min(1.0, stimulus_rate_hz * p.dt_ms / 1000.0)
+                stimulated = stimulus_indices[
+                    self.rng.random(len(stimulus_indices)) < probability
+                ]
         else:
-            if len(due):
-                self.g[due] += due_slot[due]
-                due_slot[due] = 0.0
-
-            if len(active):
-                # Integer-array indexing already returns a detached gather; an
-                # additional ``.copy()`` only adds one temporary allocation.
-                old_g = self.g[active]
-                y = self.v[active] - p.resting_mv
-                self.v[active] = (
-                    p.resting_mv
-                    + y * self._membrane_decay
-                    + old_g * self._g_to_v
+            with profiler.section("stimulus_injection_seconds"):
+                if (
+                    stimulus_indices is not None
+                    and len(stimulus_indices)
+                    and stimulus_rate_hz > 0.0
+                ):
+                    probability = min(1.0, stimulus_rate_hz * p.dt_ms / 1000.0)
+                    stimulated = stimulus_indices[
+                        self.rng.random(len(stimulus_indices)) < probability
+                    ]
+        if profiler is None:
+            if self._numba_enabled:
+                fired_count = advance_sparse_lif(
+                    active, due, due_slot, self.v, self.g, self.refractory_until,
+                    stimulated, self._fast_fired, self.step_index,
+                    np.float32(p.resting_mv), np.float32(p.threshold_mv),
+                    np.float32(p.reset_mv), np.float32(self._membrane_decay),
+                    np.float32(self._g_to_v), np.float32(self._synapse_decay),
+                    np.float32(p.mv_per_synapse * p.poisson_drive_scale),
+                    self.refractory_steps,
                 )
-                self.g[active] = old_g * self._synapse_decay
-
-                refractory = self.step_index < self.refractory_until[active]
-                if refractory.any():
-                    blocked = active[refractory]
-                    self.v[blocked] = p.resting_mv
-                    self.g[blocked] = 0.0
-
-            if len(stimulated):
-                self.v[stimulated] += p.mv_per_synapse * p.poisson_drive_scale
-
-            if len(active):
-                local_fire = (
-                    (self.v[active] > p.threshold_mv)
-                    & (self.step_index >= self.refractory_until[active])
-                )
-                fired = active[local_fire].astype(np.int32, copy=False)
+                fired = self._fast_fired[:fired_count]
             else:
-                fired = np.empty(0, dtype=np.int32)
+                fired = self._advance_python(active, due, due_slot, stimulated, p)
+        else:
+            with profiler.section("active_neuron_state_update_seconds"):
+                if self._numba_enabled:
+                    fired_count = advance_sparse_lif(
+                        active, due, due_slot, self.v, self.g, self.refractory_until,
+                        stimulated, self._fast_fired, self.step_index,
+                        np.float32(p.resting_mv), np.float32(p.threshold_mv),
+                        np.float32(p.reset_mv), np.float32(self._membrane_decay),
+                        np.float32(self._g_to_v), np.float32(self._synapse_decay),
+                        np.float32(p.mv_per_synapse * p.poisson_drive_scale),
+                        self.refractory_steps,
+                    )
+                    fired = self._fast_fired[:fired_count]
+                else:
+                    fired = self._advance_python(active, due, due_slot, stimulated, p)
 
-        transferred = self._schedule_spike_outputs(fired)
+        if profiler is None:
+            transferred = self._schedule_spike_outputs(fired)
+        else:
+            with profiler.section("synaptic_scheduling_seconds"):
+                transferred = self._schedule_spike_outputs(fired)
 
         if len(fired) and not self._numba_enabled:
             self.v[fired] = p.reset_mv
@@ -476,3 +483,31 @@ class FastSparseStateMixin:
             self._fast_peak_active = int(len(active))
         self.step_index += 1
         return fired, transferred
+
+    def _advance_python(self, active, due, due_slot, stimulated, p):
+        """Reference sparse LIF branch used by the optional timing wrapper."""
+        np = self.np
+        if len(due):
+            self.g[due] += due_slot[due]
+            due_slot[due] = 0.0
+        if len(active):
+            old_g = self.g[active]
+            y = self.v[active] - p.resting_mv
+            self.v[active] = p.resting_mv + y * self._membrane_decay + old_g * self._g_to_v
+            self.g[active] = old_g * self._synapse_decay
+            refractory = self.step_index < self.refractory_until[active]
+            if refractory.any():
+                blocked = active[refractory]
+                self.v[blocked] = p.resting_mv
+                self.g[blocked] = 0.0
+        if len(stimulated):
+            self.v[stimulated] += p.mv_per_synapse * p.poisson_drive_scale
+        if len(active):
+            local_fire = (
+                (self.v[active] > p.threshold_mv)
+                & (self.step_index >= self.refractory_until[active])
+            )
+            fired = active[local_fire].astype(np.int32, copy=False)
+        else:
+            fired = np.empty(0, dtype=np.int32)
+        return fired

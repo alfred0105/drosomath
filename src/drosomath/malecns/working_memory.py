@@ -141,7 +141,14 @@ class DelayedCueSession:
     go_ms = 20.0
     stimulus_rate_hz = 205.0
 
-    def __init__(self, brain, interface: WorkingMemoryInterface, *, learning_enabled: bool = False):
+    def __init__(
+        self,
+        brain,
+        interface: WorkingMemoryInterface,
+        *,
+        learning_enabled: bool = False,
+        delay_ms: float | None = None,
+    ):
         if brain.connectome is not interface.connectome:
             raise ValueError("brain and working-memory interface must match")
         if learning_enabled:
@@ -149,13 +156,18 @@ class DelayedCueSession:
         self.brain = brain
         self.interface = interface
         self.learning_enabled = False
+        self.delay_ms = self.__class__.delay_ms if delay_ms is None else float(delay_ms)
+        if self.delay_ms < 0.0:
+            raise ValueError("delay_ms must be >= 0")
         self._output_lookup = np.full(brain.connectome.neuron_count, -1, dtype=np.int8)
         for index, symbol in enumerate(SYMBOLS):
             self._output_lookup[interface.output_populations[symbol]] = index
 
     def _run_phase(self, stimulus_indices, duration_ms: float, stimulus_rate_hz: float):
-        steps = max(1, int(math.ceil(duration_ms / self.brain.params.dt_ms)))
         counts = np.zeros(len(SYMBOLS), dtype=np.int32)
+        if duration_ms <= 0.0:
+            return {symbol: 0.0 for symbol in SYMBOLS}, 0, 0
+        steps = int(math.ceil(duration_ms / self.brain.params.dt_ms))
         total_spikes = 0
         for _ in range(steps):
             fired, _ = self.brain.step(
@@ -216,9 +228,7 @@ class DelayedCueSession:
             )
             if phase_observer is not None:
                 phase_observer("cue", self.brain)
-            delay_rates, delay_output_spikes, _ = self._run_phase(
-                None, self.delay_ms, 0.0
-            )
+            delay_rates, delay_output_spikes, _ = self._run_phase(None, self.delay_ms, 0.0)
             if phase_observer is not None:
                 phase_observer("delay", self.brain)
             active, fingerprint, membrane_norm, conductance_norm = self._capture_pre_go_state()
