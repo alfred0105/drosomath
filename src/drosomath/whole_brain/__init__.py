@@ -25,7 +25,12 @@ from .plasticity_budget_adaptation import (
 from .plasticity_need import PlasticityNeedConfig, PlasticityNeedRecord, PlasticityNeedTracker
 from .structural_overlay import LearnedStructuralOverlay, StructuralOverlayConfig
 from .usage_learning import LearningUpdateStats, RewardCredit, UsageRewardRule
-from .directional_modulation import DirectionalModulationConfig, DirectionalUpdate, PlasticityController
+from .directional_modulation import (
+    DirectionalModulationConfig,
+    DirectionalRouteHealth,
+    DirectionalUpdate,
+    PlasticityController,
+)
 
 __all__ = [
     "AdaptiveReplayConfig",
@@ -54,6 +59,7 @@ __all__ = [
     "StructuralOverlayConfig",
     "UsageRewardRule",
     "DirectionalModulationConfig",
+    "DirectionalRouteHealth",
     "DirectionalUpdate",
     "PlasticityController",
 ]

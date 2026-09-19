@@ -1262,6 +1262,7 @@ class KeyboardNeuralSession:
             directional_update: dict[str, object] = {"edge_updates": 0, "channel_updates": {}}
             generic_update = None
             structural_need: dict[str, object] = {}
+            route_health: dict[str, object] = {}
             teacher_stats: dict[str, object] = {
                 "edge_updates": 0,
                 "mean_delta": 0.0,
@@ -1271,7 +1272,14 @@ class KeyboardNeuralSession:
             teacher_seconds = 0.0
 
             def apply_teacher_before_normalization(state) -> dict[str, object]:
-                nonlocal teacher_stats, teacher_seconds, directional_update, generic_update, structural_need
+                nonlocal teacher_stats, teacher_seconds, directional_update, generic_update, structural_need, route_health
+                if not learning_signal.success and learning_signal.nonzero_directions():
+                    route_health = {
+                        name: asdict(health)
+                        for name, health in self.plasticity_controller.diagnose_route_health(
+                            self.brain, learning_signal, self.output_context
+                        ).items()
+                    }
                 generic = self.plasticity_controller.apply_learning_signal(
                     self.brain, learning_signal, self.output_context
                 )
@@ -1280,6 +1288,7 @@ class KeyboardNeuralSession:
                     "edge_updates": generic.edge_updates,
                     "channel_updates": generic.channel_updates,
                     "mean_abs_delta": generic.mean_abs_delta,
+                    "sum_abs_delta": generic.sum_abs_delta,
                     "hop_counts": generic.hop_counts,
                     "excitatory_updates": generic.excitatory_updates,
                     "inhibitory_updates": generic.inhibitory_updates,
@@ -1362,6 +1371,12 @@ class KeyboardNeuralSession:
             }
             learning["directional_modulation"] = directional_update
             learning["structural_need"] = structural_need
+            if route_health:
+                for health in route_health.values():
+                    health["actual_directional_edge_updates"] = int(generic_update.edge_updates)
+                    health["mean_abs_delta"] = float(generic_update.mean_abs_delta)
+                    health["sum_abs_delta"] = float(generic_update.sum_abs_delta)
+                learning["route_health"] = route_health
             reward_learning = learning.get("learning", {})
             learning["reward_locality"] = {
                 "positive_reward": float(max(0.0, global_learning_reward)),
@@ -1573,6 +1588,26 @@ def run_keyboard_training(
     legacy_rescue_events = 0
     directional_generic_update_count = 0
     localized_positive_reward_updated_edge_count = 0
+    route_health_by_key = {
+        label: {
+            "attempts": 0,
+            "failures": 0,
+            "zero_update_failures": 0,
+            "status_counts": {},
+            "sums": {
+                "active_plastic_edges": 0.0,
+                "total_eligibility": 0.0,
+                "total_route_credit": 0.0,
+                "estimated_available_adjustment": 0.0,
+                "useful_frozen_edges": 0.0,
+                "estimated_frozen_capacity": 0.0,
+                "frozen_to_plastic_capacity_ratio": 0.0,
+                "saturated_fraction": 0.0,
+                "sum_abs_delta": 0.0,
+            },
+        }
+        for label in KEY_LABELS
+    }
     rng = np.random.default_rng(config.seed + 83_001)
     per_key_trials = {label: 0 for label in KEY_LABELS}
     per_key_correct = {label: 0 for label in KEY_LABELS}
@@ -1797,6 +1832,7 @@ def run_keyboard_training(
         row["phase"] = row_phase
         row["selection_source"] = selection_source
         rows.append(row)
+        row_correct = int(row["correct"])
         row_learning = row.get("learning", {})
         row_directional = row_learning.get("directional_modulation", {})
         row_legacy_rescue = bool(row_directional.get("legacy_rescue_used", False))
@@ -1805,11 +1841,19 @@ def run_keyboard_training(
         localized_positive_reward_updated_edge_count += int(
             row_learning.get("reward_locality", {}).get("actual_credited_reward_updated_edges", 0)
         )
+        for health in row_learning.get("route_health", {}).values():
+            bucket = route_health_by_key[label]
+            bucket["attempts"] += 1
+            bucket["failures"] += int(row_correct == 0)
+            bucket["zero_update_failures"] += int(health.get("actual_directional_edge_updates", 0) == 0)
+            status = str(health.get("route_health_status", "UNKNOWN"))
+            bucket["status_counts"][status] = bucket["status_counts"].get(status, 0) + 1
+            for name in bucket["sums"]:
+                bucket["sums"][name] += float(health.get(name, 0.0))
         if config.profile_timing:
             timing_samples += 1
             for name, value in row.get("timing", {}).items():
                 timing_totals[name] = timing_totals.get(name, 0.0) + float(value)
-        row_correct = int(row["correct"])
         correct += row_correct
 
         if row_phase == "evaluation":
@@ -2035,6 +2079,26 @@ def run_keyboard_training(
     _finish_live_status()
 
     np = session.np
+    route_health_report = {}
+    route_health_status_counts: dict[str, int] = {}
+    zero_update_failure_count = 0
+    route_health_failure_count = 0
+    for label, bucket in route_health_by_key.items():
+        attempts = int(bucket["attempts"])
+        route_health_failure_count += attempts
+        zero_update_failure_count += int(bucket["zero_update_failures"])
+        for status, count in bucket["status_counts"].items():
+            route_health_status_counts[status] = route_health_status_counts.get(status, 0) + int(count)
+        route_health_report[label] = {
+            "attempts": attempts,
+            "failures": int(bucket["failures"]),
+            "zero_update_failures": int(bucket["zero_update_failures"]),
+            "status_counts": dict(bucket["status_counts"]),
+            **{
+                f"mean_{name}": total / max(1, attempts)
+                for name, total in bucket["sums"].items()
+            },
+        }
     report = {
         "experiment": "malecns_virtual_keyboard_matching_v1",
         "purpose": "learn click-gated matching for Korean, English, O/X, and digit keys before arm navigation",
@@ -2104,6 +2168,12 @@ def run_keyboard_training(
             "plastic_budget_start": int(plastic_budget_start),
             "plastic_budget_end": int(session.brain.plasticity.plastic_edge_count),
             "budget_delta": int(session.brain.plasticity.plastic_edge_count - plastic_budget_start),
+        },
+        "route_health_by_key": route_health_report,
+        "route_health_summary": {
+            "failed_directional_trial_count": route_health_failure_count,
+            "zero_update_failure_count": zero_update_failure_count,
+            "route_health_status_counts": route_health_status_counts,
         },
         "execution_profile": {
             "backend": "numpy_cpu",

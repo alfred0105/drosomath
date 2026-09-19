@@ -43,6 +43,34 @@ class DirectionalUpdate:
     unique_edge_updates: int
     reinforced_channels: tuple[str, ...]
     ambiguous_path_edges_skipped: int
+    sum_abs_delta: float = 0.0
+
+
+@dataclass(frozen=True, slots=True)
+class DirectionalRouteHealth:
+    """Read-only capacity diagnostics for one directional output channel."""
+
+    channel: str
+    requested_error_magnitude: float
+    active_plastic_edges: int
+    aligned_plastic_edges: int
+    opposing_plastic_edges: int
+    total_eligibility: float
+    total_route_credit: float
+    increase_headroom_edges: int
+    decrease_headroom_edges: int
+    saturated_edges: int
+    unsaturated_useful_edges: int
+    saturated_useful_edges: int
+    estimated_available_adjustment: float
+    useful_frozen_edges: int
+    useful_frozen_one_hop: int
+    useful_frozen_two_hop: int
+    estimated_frozen_capacity: float
+    frozen_to_plastic_capacity_ratio: float
+    saturated_fraction: float
+    ambiguous_path_edges_skipped: int
+    route_health_status: str
 
 
 class PlasticityController:
@@ -163,6 +191,112 @@ class PlasticityController:
             discover_upstream_from_candidates=True,
         )
 
+    def diagnose_route_health(self, brain, signal: LearningSignal, output_context):
+        """Return read-only capacity diagnostics for nonzero directions.
+
+        This method deliberately performs no state mutation. It uses the same
+        bounded causal credit selection as directional learning, but compares
+        active plastic routes with active frozen anatomical alternatives.
+        """
+        np = brain.np
+        state = brain.plasticity
+        active_edges = self._active_edges(brain)
+        diagnostics: dict[str, DirectionalRouteHealth] = {}
+        for name, direction in signal.nonzero_directions().items():
+            outputs = output_context.get(name)
+            if outputs is None:
+                continue
+            magnitude = abs(float(direction))
+            plastic_credit = self._credit_edges(brain, active_edges, outputs)
+            frozen_credit = self.structural_credit_edges(brain, outputs)
+
+            def measure(credit, *, frozen: bool):
+                if not len(credit.edges):
+                    return {
+                        "useful": np.empty(0, dtype=np.int32),
+                        "required": np.empty(0, dtype=np.float32),
+                        "headroom": np.empty(0, dtype=np.float32),
+                        "capacity": 0.0,
+                    }
+                edges = credit.edges
+                required = np.sign(float(direction) * credit.path_polarities)
+                current = state.multiplier[edges]
+                increase = required > 0.0
+                decrease = required < 0.0
+                headroom = np.where(
+                    increase,
+                    state.config.max_multiplier - current,
+                    np.where(decrease, current - state.config.min_multiplier, 0.0),
+                ).astype(np.float32, copy=False)
+                useful = np.flatnonzero((required != 0.0) & (headroom > 1e-7)).astype(np.int32, copy=False)
+                capacity_weights = credit.weights[useful] * headroom[useful] * magnitude
+                if frozen:
+                    capacity = float(capacity_weights.sum())
+                else:
+                    capacity = float(
+                        (state.eligibility[edges[useful]] * capacity_weights).sum()
+                    )
+                return {
+                    "useful": useful,
+                    "required": required,
+                    "headroom": headroom,
+                    "capacity": capacity,
+                }
+
+            plastic = measure(plastic_credit, frozen=False)
+            frozen = measure(frozen_credit, frozen=True)
+            plastic_edges = plastic_credit.edges
+            required = plastic["required"]
+            headroom = plastic["headroom"]
+            useful = plastic["useful"]
+            saturated = (required != 0.0) & (headroom <= 1e-7)
+            aligned = plastic_credit.path_polarities > 0.0
+            opposing = plastic_credit.path_polarities < 0.0
+            frozen_useful = frozen["useful"]
+            frozen_hops = frozen_credit.hops[frozen_useful] if len(frozen_useful) else np.empty(0, dtype=np.int8)
+            plastic_capacity = float(plastic["capacity"])
+            frozen_capacity = float(frozen["capacity"])
+            ratio = frozen_capacity / max(plastic_capacity, 1e-9)
+            if not len(plastic_edges):
+                status = "FROZEN_ALTERNATIVES_AVAILABLE" if len(frozen_useful) else "NO_PLASTIC_ROUTE"
+            elif len(saturated) and int(saturated.sum()) == len(plastic_edges):
+                status = "PLASTIC_ROUTE_SATURATED"
+            elif frozen_capacity > plastic_capacity and len(frozen_useful):
+                status = "FROZEN_ALTERNATIVES_AVAILABLE"
+            elif not len(useful):
+                status = "LOW_PLASTIC_CAPACITY"
+            else:
+                status = "PLASTIC_CAPACITY_ADEQUATE"
+            diagnostics[name] = DirectionalRouteHealth(
+                channel=name,
+                requested_error_magnitude=magnitude,
+                active_plastic_edges=int(len(plastic_edges)),
+                aligned_plastic_edges=int(aligned.sum()),
+                opposing_plastic_edges=int(opposing.sum()),
+                total_eligibility=float(state.eligibility[plastic_edges].sum()) if len(plastic_edges) else 0.0,
+                total_route_credit=float(
+                    (state.eligibility[plastic_edges] * plastic_credit.weights).sum()
+                ) if len(plastic_edges) else 0.0,
+                increase_headroom_edges=int(((required > 0.0) & (headroom > 1e-7)).sum()),
+                decrease_headroom_edges=int(((required < 0.0) & (headroom > 1e-7)).sum()),
+                saturated_edges=int(saturated.sum()),
+                unsaturated_useful_edges=int(len(useful)),
+                saturated_useful_edges=int(saturated.sum()),
+                estimated_available_adjustment=plastic_capacity,
+                useful_frozen_edges=int(len(frozen_useful)),
+                useful_frozen_one_hop=int((frozen_hops == 1).sum()),
+                useful_frozen_two_hop=int((frozen_hops == 2).sum()),
+                estimated_frozen_capacity=frozen_capacity,
+                frozen_to_plastic_capacity_ratio=float(ratio),
+                saturated_fraction=float(saturated.sum() / max(1, len(plastic_edges))),
+                ambiguous_path_edges_skipped=int(
+                    plastic_credit.ambiguous_path_edges_skipped
+                    + frozen_credit.ambiguous_path_edges_skipped
+                ),
+                route_health_status=status,
+            )
+        return diagnostics
+
     @staticmethod
     def _join_credit(np, parts, ambiguous):
         nonempty = [part for part in parts if len(part[0])]
@@ -279,4 +413,5 @@ class PlasticityController:
         return DirectionalUpdate(
             total, per_channel, sum_abs / total if total else 0.0, updated, hops,
             excitatory, inhibitory, consolidated, int(len(updated)), tuple(reinforced), ambiguous,
+            sum_abs,
         )
