@@ -57,6 +57,12 @@ from .symbol_learning import (
     summarize_results,
     symbol_output_context,
 )
+from .symbol_credit_interference import (
+    SymbolCreditInterferenceAudit,
+    classify_primary_hypotheses,
+    cross_target_positive_overlap,
+    jaccard,
+)
 
 __all__ = [
     "BrainOutputTrialResult",
@@ -106,6 +112,10 @@ __all__ = [
     "build_symbol_learning_signal",
     "summarize_results",
     "symbol_output_context",
+    "SymbolCreditInterferenceAudit",
+    "classify_primary_hypotheses",
+    "cross_target_positive_overlap",
+    "jaccard",
     "download_malecns",
     "load_malecns_v1",
     "missing_files",

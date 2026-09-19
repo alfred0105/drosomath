@@ -163,7 +163,15 @@ def _empty_directional() -> dict[str, object]:
 class SymbolLearningSession:
     """Run generic F.1B trials on one independently seeded brain."""
 
-    def __init__(self, brain, interface, *, config: SymbolLearningConfig | None = None):
+    def __init__(
+        self,
+        brain,
+        interface,
+        *,
+        config: SymbolLearningConfig | None = None,
+        directional_telemetry_observer=None,
+        route_health_observer=None,
+    ):
         self.brain = brain
         self.interface = interface
         self.config = config or SymbolLearningConfig()
@@ -181,6 +189,8 @@ class SymbolLearningSession:
         self._channel_edges_seen: dict[str, set[int]] = {
             channel: set() for channel in CHANNELS
         }
+        self.directional_telemetry_observer = directional_telemetry_observer
+        self.route_health_observer = route_health_observer
 
     @property
     def plastic_budget_start(self) -> int:
@@ -231,8 +241,42 @@ class SymbolLearningSession:
             generic_holder: dict[str, object] = {"update": None}
 
             def apply_directional(_state):
+                if self.route_health_observer is not None and signal.nonzero_directions():
+                    self.route_health_observer(
+                        brain=self.brain,
+                        signal=signal,
+                        output_context=self.output_context,
+                        target=target,
+                        decision=decision,
+                    )
+                observer = self.directional_telemetry_observer
+                callback = None
+                if observer is not None:
+                    def callback(
+                        channel,
+                        edge_indices,
+                        hops,
+                        actual_deltas,
+                        eligibility,
+                        path_polarities,
+                        requested_direction,
+                    ):
+                        observer(
+                            target=target,
+                            decision=decision,
+                            channel=channel,
+                            edge_indices=edge_indices,
+                            hops=hops,
+                            actual_deltas=actual_deltas,
+                            eligibility=eligibility,
+                            path_polarities=path_polarities,
+                            requested_direction=requested_direction,
+                        )
                 update = self.controller.apply_learning_signal(
-                    self.brain, signal, self.output_context
+                    self.brain,
+                    signal,
+                    self.output_context,
+                    telemetry_observer=callback,
                 )
                 generic_holder["update"] = update
                 return None

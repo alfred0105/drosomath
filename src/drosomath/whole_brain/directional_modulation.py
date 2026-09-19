@@ -574,7 +574,14 @@ class PlasticityController:
             opposing, ambiguous,
         )
 
-    def apply_learning_signal(self, brain, signal: LearningSignal, output_context) -> DirectionalUpdate:
+    def apply_learning_signal(
+        self,
+        brain,
+        signal: LearningSignal,
+        output_context,
+        *,
+        telemetry_observer=None,
+    ) -> DirectionalUpdate:
         np = brain.np
         state = brain.plasticity
         active_edges = self._active_edges(brain)
@@ -603,6 +610,16 @@ class PlasticityController:
             credit = credit_for(name)
             if credit is None or not len(credit.edges):
                 per_channel[name] = 0
+                if telemetry_observer is not None:
+                    telemetry_observer(
+                        name,
+                        np.empty(0, dtype=np.int32),
+                        np.empty(0, dtype=np.int8),
+                        np.empty(0, dtype=np.float32),
+                        np.empty(0, dtype=np.float32),
+                        np.empty(0, dtype=np.float32),
+                        float(direction),
+                    )
                 continue
             edges = credit.edges
             factor = np.maximum(self.config.minimum_learning_factor, 1.0 - self.config.stability_protection * state.stability[edges])
@@ -624,6 +641,16 @@ class PlasticityController:
                 int(hop): int((credit.hops == hop).sum())
                 for hop in np.unique(credit.hops)
             }
+            if telemetry_observer is not None:
+                telemetry_observer(
+                    name,
+                    edges.copy(),
+                    credit.hops.copy(),
+                    actual.copy(),
+                    state.eligibility[edges].copy(),
+                    credit.path_polarities.copy(),
+                    float(direction),
+                )
             anatomical_sign = np.sign(brain.connectome.signed_synapse_counts[edges])
             excitatory += int((anatomical_sign > 0).sum())
             inhibitory += int((anatomical_sign < 0).sum())
