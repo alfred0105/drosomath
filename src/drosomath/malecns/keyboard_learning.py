@@ -1202,6 +1202,7 @@ class KeyboardNeuralSession:
                     "motor/click": current_deficit * homeostatic_gains.get("motor/click", 1.0) if self.config.click_only and not correct else 0.0,
                 },
                 surprise=current_deficit,
+                success=bool(correct),
             )
             teacher_normalizer_followup: dict[str, object] = {}
             directional_update: dict[str, object] = {"edge_updates": 0, "channel_updates": {}}
@@ -1222,6 +1223,10 @@ class KeyboardNeuralSession:
                     "edge_updates": generic.edge_updates,
                     "channel_updates": generic.channel_updates,
                     "mean_abs_delta": generic.mean_abs_delta,
+                    "hop_counts": generic.hop_counts,
+                    "excitatory_updates": generic.excitatory_updates,
+                    "inhibitory_updates": generic.inhibitory_updates,
+                    "consolidated_edges": generic.consolidated_edges,
                 }
                 if not self.config.click_only:
                     return teacher_stats
