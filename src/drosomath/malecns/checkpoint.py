@@ -113,8 +113,9 @@ def save_learning_checkpoint(
             }
         )
     if session_state is not None:
+        session_json = json.dumps(session_state, sort_keys=True)
         payload["session_state_json"] = np.asarray(
-            [json.dumps(session_state, sort_keys=True)], dtype="U65535"
+            [session_json], dtype=f"U{max(1, len(session_json))}"
         )
 
     np.savez_compressed(path, **payload)

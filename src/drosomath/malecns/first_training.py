@@ -177,6 +177,8 @@ def choose_route_aware_output_population(
         "route_scored_descending_count": int(len(scored)),
         "route_selected_positive_count": int(np.count_nonzero(route_score[selected] > 0.0)),
         "route_score_max": float(route_score[selected].max()) if len(selected) else 0.0,
+        # Kept in rank order for task-specific channel allocation diagnostics.
+        "selected_route_scores": [float(value) for value in route_score[selected]],
         "output_superclass": "descending_neuron",
         "output_count": int(len(output.body_ids)),
     }

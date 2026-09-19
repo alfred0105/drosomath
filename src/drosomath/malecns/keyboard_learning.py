@@ -328,6 +328,19 @@ def build_keyboard_html(payload: dict[str, object]) -> str:
         if click_only
         else f"목표 {target_accuracy:.0%}"
     )
+    route_live = payload.get("route_diagnostics_live", {})
+    route_live = route_live if isinstance(route_live, dict) else {}
+    route_status = str(route_live.get("status", "idle"))
+    route_stage = str(route_live.get("stage", "대기"))
+    route_completed = int(route_live.get("completed", 0))
+    route_total = int(route_live.get("total", 0))
+    route_label = str(route_live.get("label") or "-")
+    route_card = (
+        "<div class='card'>경로 진단 (실시간)"
+        f"<div class='value'>{html.escape(route_stage)}</div>"
+        f"<small>{html.escape(route_status)} · {route_completed}/{route_total} · 키 {html.escape(route_label)}</small></div>"
+        if route_live else ""
+    )
     return f"""<!doctype html>
 <html lang='ko'><head><meta charset='utf-8'><meta http-equiv='refresh' content='5'>
 <title>DrosoMath Virtual Keyboard Matching</title>
@@ -377,6 +390,7 @@ table{{width:100%;border-collapse:collapse;margin-top:14px}}th,td{{padding:7px;b
 <div class='card'>키별 peak 하락 처벌<div class='value'>-{latest_regression_penalty:.2f}</div><small>같은 키의 직전 peak보다 낮을 때 국소 교습 강화</small></div>
 <div class='card'>시냅스 업데이트<div class='value'>{latest_updates:,}</div><small>최근 trial reward 적용량</small></div>
 <div class='card'>클릭 교습 시냅스<div class='value'>{latest_teacher_updates:,}</div><small>저 peak 실패 때 click 출력으로만 강화</small></div>
+{route_card}
 </div>
 <p><progress value='{progress:.3f}' max='100'></progress></p>
 <h2>2D 가상 초파리 몸체</h2>
@@ -449,6 +463,9 @@ class KeyboardTrainingConfig:
     robust_mastery_macro_accuracy: float = 0.95
     robust_mastery_min_key_accuracy: float = 0.90
     retention_probe_interval: int = 600
+    # Retention is a diagnostic measurement.  A single Poisson-driven response
+    # is not evidence that a label was forgotten.
+    retention_trials_per_key: int = 5
     retention_degraded_accuracy: float = 0.80
     retention_replay_bonus: float = 0.50
     duration_ms: float = 100.0
@@ -544,6 +561,8 @@ class KeyboardTrainingConfig:
             raise ValueError("robust_mastery_min_key_accuracy must be in (0.5, 1]")
         if self.retention_probe_interval < 1:
             raise ValueError("retention_probe_interval must be positive")
+        if self.retention_trials_per_key < 1:
+            raise ValueError("retention_trials_per_key must be positive")
         if not 0.0 <= self.retention_degraded_accuracy <= 1.0:
             raise ValueError("retention_degraded_accuracy must be in [0, 1]")
         if self.retention_replay_bonus < 0.0:
@@ -629,12 +648,27 @@ class KeyboardNeuralSession:
             output_population_size=self.motor_channel_count * config.motor_population_size,
             max_hops=2,
         )
+        # ``output.indices`` is descending route-score order.  Contiguous
+        # slicing previously handed the click channel (index 4) only the
+        # lowest-ranked 64 neurons.  Interleave ranks so every motor channel,
+        # including click, receives the same score range.
         self.channel_groups = tuple(
-            np.asarray(self.output.indices[i : i + config.motor_population_size], dtype=np.int32)
-            for i in range(0, len(self.output.indices), config.motor_population_size)
+            np.asarray(self.output.indices[channel::self.motor_channel_count], dtype=np.int32)
+            for channel in range(self.motor_channel_count)
         )
         if len(self.channel_groups) != self.motor_channel_count:
             raise ValueError("route-aware output did not produce 20 motor populations")
+        selected_scores = np.asarray(self.route_provenance.get("selected_route_scores", []), dtype=np.float32)
+        self.route_provenance["channel_allocation"] = "rank_round_robin"
+        self.route_provenance["per_channel_route_scores"] = [
+            {
+                "channel": channel,
+                "mean": float(selected_scores[channel::self.motor_channel_count].mean()),
+                "minimum": float(selected_scores[channel::self.motor_channel_count].min()),
+                "maximum": float(selected_scores[channel::self.motor_channel_count].max()),
+            }
+            for channel in range(self.motor_channel_count)
+        ]
         self.channel_lookup = np.full(connectome.neuron_count, -1, dtype=np.int16)
         for channel, group in enumerate(self.channel_groups):
             self.channel_lookup[group] = channel
@@ -737,6 +771,32 @@ class KeyboardNeuralSession:
         active = plastic & eligible
         plastic_edges = candidates[plastic]
         edges = candidates[active]
+        teacher_mode = "DIRECT_CLICK_EDGE"
+        # A dead final click edge must not turn a real active upstream route
+        # into an unlearnable label.  Walk exactly one real, excitatory hop
+        # from recently firing neurons into the click-input presynaptic set.
+        # This never invents anatomy or changes inhibitory signs.
+        if not len(edges) and len(candidate_pre) and hasattr(self.brain.connectome, "neuron_count"):
+            click_input = np.zeros(self.brain.connectome.neuron_count, dtype=np.bool_)
+            click_input[np.unique(candidate_pre)] = True
+            upstream_chunks = []
+            indptr = self.brain.connectome.indptr
+            posts = self.brain.connectome.post_indices
+            signed = self.brain.connectome.signed_synapse_counts
+            for pre in sorted(self.brain._recent_presynaptic):
+                start, stop = int(indptr[pre]), int(indptr[pre + 1])
+                local = np.arange(start, stop, dtype=np.int32)
+                valid = (
+                    click_input[posts[start:stop]]
+                    & (signed[start:stop] > 0.0)
+                    & state.plastic_mask[local]
+                    & (state.eligibility[local] > 0.0)
+                )
+                if np.any(valid):
+                    upstream_chunks.append(local[valid])
+            if upstream_chunks:
+                edges = np.unique(np.concatenate(upstream_chunks)).astype(np.int32, copy=False)
+                teacher_mode = "UPSTREAM_ROUTE_FALLBACK"
         eligibility_nonzero = int(np.count_nonzero(eligible))
         mean_before = float(state.multiplier[edges].mean()) if len(edges) else 0.0
         effective_before = float(
@@ -751,8 +811,14 @@ class KeyboardNeuralSession:
             "candidate_edge_count": candidate_count,
             "plastic_edge_count": int(len(plastic_edges)),
             "nonzero_eligibility_edge_count": eligibility_nonzero,
+            "usage_nonzero_edge_count": int(np.count_nonzero(state.usage_ema[candidates] > 0.0)),
+            "total_eligibility": float(state.eligibility[candidates].sum()),
+            "total_credit": float((state.usage_ema[candidates] * state.eligibility[candidates]).sum()),
             "active_eligible_edge_count": int(len(edges)),
             "relevant_presynaptic_count": int(len(np.unique(candidate_pre))),
+            "active_presynaptic_count": int(len(np.unique(candidate_pre[active]))),
+            "teacher_update_mode": teacher_mode,
+            "upstream_fallback_edge_count": int(len(edges)) if teacher_mode == "UPSTREAM_ROUTE_FALLBACK" else 0,
             "mean_multiplier_before": mean_before,
             "effective_strength_before": effective_before,
         }
@@ -800,8 +866,12 @@ class KeyboardNeuralSession:
             "teacher_mean_after": mean_after,
             "teacher_gain": mean_after - mean_before,
         }
-        remembered = np.unique(np.concatenate((self.teacher_memory_edges_by_label[label], edges)))
-        self.teacher_memory_edges_by_label[label] = remembered[-self.config.teacher_memory_edges_per_key:].astype(np.int32, copy=False)
+        # An ordered recency buffer, not ``np.unique`` (which sorts by edge ID).
+        remembered = [int(edge) for edge in self.teacher_memory_edges_by_label[label] if int(edge) not in set(map(int, edges))]
+        remembered.extend(int(edge) for edge in edges)
+        self.teacher_memory_edges_by_label[label] = np.asarray(
+            remembered[-self.config.teacher_memory_edges_per_key:], dtype=np.int32
+        )
         return {
             **common,
             "edge_updates": int(len(edges)),
@@ -850,6 +920,8 @@ class KeyboardNeuralSession:
         peak_click_evidence_hz = 0.0
         click_evidence_history: list[float] = [0.0] * self.config.click_evidence_windows
         click_attempted_arms: set[int] = set()
+        click_output_spike_count = 0
+        active_click_outputs: set[int] = set()
         counts = np.zeros(self.motor_channel_count, dtype=np.int32)
         initial_body = self.task.observation().get("body", {})
         initial_endpoints = (
@@ -877,6 +949,9 @@ class KeyboardNeuralSession:
                     neural_step_seconds += time.perf_counter() - step_started
                     count_started = time.perf_counter()
                 if len(fired):
+                    local_click = fired[self.channel_lookup[fired] == 4]
+                    click_output_spike_count += int(len(local_click))
+                    active_click_outputs.update(int(index) for index in local_click)
                     local = self.channel_lookup[fired]
                     local = local[local >= 0]
                     if len(local):
@@ -1115,7 +1190,7 @@ class KeyboardNeuralSession:
 
             def apply_teacher_before_normalization(state) -> dict[str, object]:
                 nonlocal teacher_stats, teacher_seconds
-                if not (self.config.click_only and not correct):
+                if not self.config.click_only:
                     return teacher_stats
                 teacher_started = time.perf_counter() if timings is not None else 0.0
                 teacher_stats = self._apply_low_peak_click_teacher(
@@ -1145,7 +1220,10 @@ class KeyboardNeuralSession:
                         "teacher_multiplier_after_next_normalization": after,
                         "teacher_gain": float(pending["teacher_gain"]),
                         "normalizer_loss": after - before,
-                        "net_gain": after - float(pending["teacher_mean_after"]),
+                        # ``after - teacher_after`` is normalization loss, not
+                        # total net learning. Keep both quantities explicit.
+                        "true_net_gain": after - float(pending["teacher_mean_before"]),
+                        "net_gain": after - float(pending["teacher_mean_before"]),
                     })
                     self._pending_teacher_normalizer = None
 
@@ -1162,6 +1240,24 @@ class KeyboardNeuralSession:
                 timings["brain_learning_seconds"] = time.perf_counter() - learning_started
             learning["motor_teacher"] = teacher_stats
             learning["teacher_normalizer_followup"] = teacher_normalizer_followup
+            learning["active_route"] = {
+                "candidate_teacher_edges": int(teacher_stats.get("candidate_edge_count", 0)),
+                "plastic_teacher_edges": int(teacher_stats.get("plastic_edge_count", 0)),
+                "active_eligible_teacher_edges": int(teacher_stats.get("active_eligible_edge_count", 0)),
+                "active_teacher_presynaptic_neurons": int(teacher_stats.get("active_presynaptic_count", 0)),
+                "teacher_edges_usage_nonzero": int(teacher_stats.get("usage_nonzero_edge_count", 0)),
+                "total_teacher_eligibility": float(teacher_stats.get("total_eligibility", 0.0)),
+                "total_teacher_credit": float(teacher_stats.get("total_credit", 0.0)),
+                "effective_teacher_strength": float(teacher_stats.get("effective_strength_after", teacher_stats.get("effective_strength_before", 0.0))),
+                "threshold_margin_hz": float(peak_click_rate_hz - self.config.click_gate_threshold_hz),
+                "active_teacher_fraction": float(teacher_stats.get("active_eligible_edge_count", 0)) / max(1, int(teacher_stats.get("plastic_edge_count", 0))),
+                "status": (
+                    "NO_ANATOMICAL_ROUTE" if int(teacher_stats.get("candidate_edge_count", 0)) == 0 else
+                    "NO_ACTIVE_PLASTIC_ROUTE" if int(teacher_stats.get("plastic_edge_count", 0)) > 0 and int(teacher_stats.get("active_eligible_edge_count", 0)) == 0 and int(teacher_stats.get("upstream_fallback_edge_count", 0)) == 0 else
+                    "SATURATED_BUT_WEAK" if float(teacher_stats.get("mean_multiplier_before", 0.0)) >= self.brain.plasticity.config.max_multiplier - 1e-3 and peak_click_rate_hz < self.config.click_gate_threshold_hz else
+                    "WEAK_ACTIVE" if peak_click_rate_hz < self.config.click_gate_threshold_hz else "HEALTHY"
+                ),
+            }
             learning["teacher_confirmation"] = self._consolidate_confirmed_teacher_memory(
                 label,
                 confirmed=bool(correct),
@@ -1203,6 +1299,8 @@ class KeyboardNeuralSession:
             "peak_click_rate_hz": peak_click_rate_hz,
             "peak_click_evidence_hz": peak_click_evidence_hz,
             "click_attempted_arms": sorted(click_attempted_arms),
+            "click_population_spike_count": click_output_spike_count,
+            "active_click_output_neuron_count": int(len(active_click_outputs)),
             "click_threshold_hz": self.task.motor.config.click_threshold_hz,
             "min_target_distance": min_target_distance,
             "distance_ratio": distance_ratio,
@@ -1386,6 +1484,9 @@ def run_keyboard_training(
         session.peak_ema_by_label.update(saved.get("peak_ema_by_label", {}))
         session.deficit_ema_by_label.update(saved.get("deficit_ema_by_label", {}))
         session.subthreshold_streak_by_label.update(saved.get("subthreshold_streak_by_label", {}))
+        for label, edges in saved.get("teacher_memory_edges_by_label", {}).items():
+            if label in session.teacher_memory_edges_by_label:
+                session.teacher_memory_edges_by_label[label] = np.asarray(edges, dtype=np.int32)
         print(f"keyboard matching: restored curriculum state at trial={completed:,}", flush=True)
     per_key = summarize_per_key_stats(
         KEY_LABELS,
@@ -1404,11 +1505,17 @@ def run_keyboard_training(
             and training_trials >= next_retention_probe
         ):
             phase = "retention"
-            retention_schedule = build_balanced_coverage_cycle(KEY_LABELS, rng)
             retention_index = 0
             retention_per_key = {label: {"attempts": 0, "correct": 0, "accuracy": 0.0} for label in KEY_LABELS}
             next_retention_probe += config.retention_probe_interval
-            print("retention probe started: balanced frozen 60-key check", flush=True)
+            retention_schedule = build_evaluation_schedule(
+                KEY_LABELS, config.retention_trials_per_key, rng
+            )
+            print(
+                "retention probe started: balanced frozen "
+                f"{len(retention_schedule)}-trial check ({config.retention_trials_per_key}/key)",
+                flush=True,
+            )
             continue
         if config.click_only and phase == "training":
             recent_accuracies = {
@@ -1685,6 +1792,9 @@ def run_keyboard_training(
             "retention_per_key": retention_per_key,
             "retention_degraded_keys": sorted(retention_degraded),
             "retention_accuracy": sum(float(item["accuracy"]) for item in retention_per_key.values()) / len(KEY_LABELS),
+            "macro_recent_accuracy": sum(float(item["recent_accuracy"]) for item in per_key.values()) / len(KEY_LABELS),
+            "median_recent_accuracy": float(np.median([float(item["recent_accuracy"]) for item in per_key.values()])),
+            "minimum_recent_accuracy": min(float(item["recent_accuracy"]) for item in per_key.values()),
             "per_key": per_key,
             "route_provenance": session.route_provenance,
             "motor_channel_count": session.motor_channel_count,
@@ -1730,6 +1840,7 @@ def run_keyboard_training(
                     "peak_ema_by_label": session.peak_ema_by_label,
                     "deficit_ema_by_label": session.deficit_ema_by_label,
                     "subthreshold_streak_by_label": session.subthreshold_streak_by_label,
+                    "teacher_memory_edges_by_label": {label: edges.tolist() for label, edges in session.teacher_memory_edges_by_label.items()},
                 },
             )
             if config.profile_timing:
@@ -1801,6 +1912,11 @@ def run_keyboard_training(
         "evaluation_number": evaluation_number,
         "evaluation_failures": evaluation_failures,
         "evaluation_per_key": evaluation_per_key,
+        "retention_per_key": retention_per_key,
+        "retention_accuracy": sum(float(item["accuracy"]) for item in retention_per_key.values()) / len(KEY_LABELS),
+        "macro_recent_accuracy": sum(float(item["recent_accuracy"]) for item in per_key.values()) / len(KEY_LABELS),
+        "median_recent_accuracy": float(np.median([float(item["recent_accuracy"]) for item in per_key.values()])),
+        "minimum_recent_accuracy": min(float(item["recent_accuracy"]) for item in per_key.values()),
         "curriculum_stage": config.curriculum_stage,
         "next_stage": "arm_navigation" if mastery_reached else config.curriculum_stage,
         "stopped_reason": (
@@ -1844,6 +1960,10 @@ def run_keyboard_training(
 def main() -> None:
     parser = argparse.ArgumentParser(description="Train MaleCNS to match tokens to a virtual keyboard.")
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
+    parser.add_argument("--result", type=Path, default=DEFAULT_RESULT)
+    parser.add_argument("--progress", type=Path, default=DEFAULT_PROGRESS)
+    parser.add_argument("--checkpoint", type=Path, default=DEFAULT_CHECKPOINT)
+    parser.add_argument("--html", type=Path, default=DEFAULT_HTML)
     parser.add_argument("--download", action="store_true")
     parser.add_argument("--min-syn", type=int, default=5)
     parser.add_argument("--trials", type=int, default=20_000)
@@ -1890,6 +2010,14 @@ def main() -> None:
         default="click_accuracy",
     )
     parser.add_argument("--checkpoint-every", type=int, default=32)
+    parser.add_argument("--retention-trials-per-key", type=int, default=5)
+    parser.add_argument("--diagnose-routes", action="store_true", help="Write read-only anatomical/active route diagnostics.")
+    parser.add_argument("--diagnose-background", action="store_true", help="Include frozen background-only and token-only probes.")
+    parser.add_argument("--diagnose-interference", action="store_true", help="Measure one-trial cross-label interference in a restored sandbox.")
+    parser.add_argument("--diagnostic-key-count", type=int, default=5)
+    parser.add_argument("--diagnostic-full-matrix", action="store_true")
+    parser.add_argument("--diagnostic-output", type=Path, default=Path("results/latest_keyboard_route_diagnostics.json"))
+    parser.add_argument("--diagnostic-html", type=Path, default=Path("results/latest_keyboard_route_diagnostics.html"))
     parser.add_argument("--dashboard-update-interval-seconds", type=float, default=0.5)
     parser.add_argument("--profile-timing", action="store_true")
     parser.add_argument("--resume", action="store_true", help="Restore learned synapse state from the checkpoint.")
@@ -1931,6 +2059,7 @@ def main() -> None:
         body_mode=args.body_mode,
         curriculum_stage=args.curriculum_stage,
         checkpoint_every=args.checkpoint_every,
+        retention_trials_per_key=args.retention_trials_per_key,
         dashboard_update_interval_seconds=args.dashboard_update_interval_seconds,
         profile_timing=args.profile_timing,
         resume=args.resume,
@@ -1947,9 +2076,60 @@ def main() -> None:
         f"edges={connectome.edge_count}; backend=numpy_cpu; gpu_used=False",
         flush=True,
     )
+    if args.diagnose_routes or args.diagnose_background or args.diagnose_interference:
+        from .keyboard_diagnostics import build_keyboard_route_diagnostics_html, run_keyboard_route_diagnostics
+
+        session = KeyboardNeuralSession(connectome, config=config)
+        if not args.resume:
+            raise ValueError("diagnostics require --resume so they inspect the saved learned state")
+        restore_learning_checkpoint(args.checkpoint, brain=session.brain)
+        progress = json.loads(args.progress.read_text(encoding="utf-8"))
+        def write_diagnostic_progress(live_progress: dict[str, object]) -> None:
+            partial = live_progress.get("report")
+            if not isinstance(partial, dict):
+                partial = {
+                    "summary": {"state_integrity": "checking"},
+                    "weak_labels": [], "strong_labels": [],
+                    "weak_vs_strong": {"weak": [], "strong": []},
+                    "background_token_probes": {},
+                    "retention_analysis": {}, "path_overlap_matrix": {},
+                }
+            partial = {**partial, "live_progress": live_progress}
+            args.diagnostic_output.parent.mkdir(parents=True, exist_ok=True)
+            args.diagnostic_output.write_text(json.dumps(partial, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
+            args.diagnostic_html.parent.mkdir(parents=True, exist_ok=True)
+            args.diagnostic_html.write_text(build_keyboard_route_diagnostics_html(partial), encoding="utf-8")
+            # Keep the existing virtual-body/keyboard dashboard intact and add
+            # one live diagnostic card to it instead of replacing it.
+            dashboard_payload = {
+                **progress,
+                "route_diagnostics_live": live_progress,
+            }
+            args.html.parent.mkdir(parents=True, exist_ok=True)
+            args.html.write_text(build_keyboard_html(dashboard_payload), encoding="utf-8")
+        report = run_keyboard_route_diagnostics(
+            session,
+            per_key=progress["per_key"],
+            diagnostic_key_count=args.diagnostic_key_count,
+            include_background=args.diagnose_background,
+            include_interference=args.diagnose_interference,
+            full_matrix=args.diagnostic_full_matrix,
+            retention_trials_per_key=args.retention_trials_per_key,
+            on_progress=write_diagnostic_progress,
+        )
+        args.diagnostic_output.parent.mkdir(parents=True, exist_ok=True)
+        args.diagnostic_output.write_text(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
+        args.diagnostic_html.parent.mkdir(parents=True, exist_ok=True)
+        args.diagnostic_html.write_text(build_keyboard_route_diagnostics_html(report), encoding="utf-8")
+        print(json.dumps({"diagnostic_output": str(args.diagnostic_output), "diagnostic_html": str(args.diagnostic_html), "weak_labels": report["weak_labels"], "strong_labels": report["strong_labels"]}, ensure_ascii=False, indent=2))
+        return
     report = run_keyboard_training(
         connectome,
         config=config,
+        result_path=args.result,
+        progress_path=args.progress,
+        checkpoint_path=args.checkpoint,
+        html_path=args.html,
     )
     print(json.dumps({
         "completed_trials": report["completed_trials"],
