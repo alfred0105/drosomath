@@ -28,6 +28,7 @@ class CreditEdges:
     path_polarities: object
     weights: object
     ambiguous_path_edges_skipped: int = 0
+    effective_influence: object = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -71,6 +72,24 @@ class DirectionalRouteHealth:
     saturated_fraction: float
     ambiguous_path_edges_skipped: int
     route_health_status: str
+    diagnostic_mode: str = "actual_failure"
+    active_plastic_candidate_edges: int = 0
+    active_frozen_candidate_edges: int = 0
+    useful_plastic_edges: int = 0
+    plastic_structural_opportunity: float = 0.0
+    frozen_structural_opportunity: float = 0.0
+    frozen_to_plastic_structural_opportunity_ratio: float = 0.0
+    realized_plastic_capacity: float = 0.0
+    plastic_engagement_efficiency: float = 0.0
+    plastic_multiplier_headroom: float = 0.0
+    frozen_multiplier_headroom: float = 0.0
+    useful_plastic_route_fraction: float = 0.0
+    useful_frozen_route_fraction: float = 0.0
+    mean_effective_route_influence: float = 0.0
+    frozen_raw_candidate_edges: int = 0
+    frozen_unique_candidate_edges: int = 0
+    frozen_direct_candidate_edges: int = 0
+    frozen_two_hop_candidate_edges: int = 0
 
 
 class PlasticityController:
@@ -94,9 +113,47 @@ class PlasticityController:
         edges = np.concatenate(chunks) if chunks else np.empty(0, dtype=np.int32)
         return edges[state.plastic_mask[edges] & (state.eligibility[edges] > 0.0)]
 
+    def _active_anatomical_edges(self, brain, *, plastic: bool):
+        """Return active anatomical edges for structural, allocation-matched probes."""
+        np = brain.np
+        graph, state = brain.connectome, brain.plasticity
+        rows = sorted(int(pre) for pre in brain._recent_presynaptic)
+        chunks = [
+            np.arange(int(graph.indptr[pre]), int(graph.indptr[pre + 1]), dtype=np.int32)
+            for pre in rows if int(graph.indptr[pre + 1]) > int(graph.indptr[pre])
+        ]
+        anatomical = np.concatenate(chunks) if chunks else np.empty(0, dtype=np.int32)
+        if not len(anatomical):
+            return anatomical
+        mask = state.plastic_mask[anatomical]
+        return anatomical[mask if plastic else ~mask]
+
+    @staticmethod
+    def _bounded_influence(values):
+        """Normalize effective anatomical influence to [0, 1) for telemetry."""
+        return abs(values) / (1.0 + abs(values))
+
     @staticmethod
     def _pre_indices(np, graph, edges):
         return np.searchsorted(graph.indptr, edges, side="right").astype(np.int32) - 1
+
+    @staticmethod
+    def _unique_credit(np, credit: CreditEdges) -> CreditEdges:
+        """Collapse repeated route records without changing the anatomical edge set."""
+        if len(credit.edges) <= 1:
+            return credit
+        unique, first = np.unique(credit.edges, return_index=True)
+        influence = credit.effective_influence
+        if influence is None:
+            influence = np.ones(len(credit.edges), dtype=np.float32)
+        return CreditEdges(
+            unique.astype(np.int32, copy=False),
+            credit.hops[first],
+            credit.path_polarities[first],
+            credit.weights[first],
+            credit.ambiguous_path_edges_skipped,
+            influence[first],
+        )
 
     def _credit_edges(self, brain, active_edges, outputs) -> CreditEdges:
         """Select one/two-hop active routes and their net effect on outputs."""
@@ -109,14 +166,26 @@ class PlasticityController:
         graph, state = brain.connectome, brain.plasticity
         empty = np.empty(0, dtype=np.int32)
         if not len(candidate_edges):
-            return CreditEdges(empty, empty, empty, np.empty(0, dtype=np.float32))
+            return CreditEdges(
+                empty, empty, empty, np.empty(0, dtype=np.float32),
+                effective_influence=np.empty(0, dtype=np.float32),
+            )
         output_mask = np.zeros(graph.neuron_count, dtype=np.bool_)
         output_mask[np.asarray(outputs, dtype=np.int32)] = True
         direct = candidate_edges[output_mask[graph.post_indices[candidate_edges]]]
         direct_sign = np.sign(graph.signed_synapse_counts[direct])
         direct_keep = direct_sign != 0.0
         direct, direct_sign = direct[direct_keep], direct_sign[direct_keep]
-        parts = [(direct, np.ones(len(direct), dtype=np.int8), direct_sign, np.ones(len(direct), dtype=np.float32))]
+        direct_influence = self._bounded_influence(
+            graph.signed_synapse_counts[direct]
+        ).astype(np.float32, copy=False)
+        parts = [(
+            direct,
+            np.ones(len(direct), dtype=np.int8),
+            direct_sign,
+            np.ones(len(direct), dtype=np.float32),
+            direct_influence,
+        )]
         ambiguous = 0
         if self.config.max_credit_hops < 2:
             return self._join_credit(np, parts, ambiguous)
@@ -159,12 +228,16 @@ class PlasticityController:
             polarity = np.sign(graph.signed_synapse_counts[upstream]) * downstream_sign[keep]
             valid = polarity != 0.0
             ambiguous += int((~valid).sum())
+            upstream_influence = self._bounded_influence(
+                graph.signed_synapse_counts[upstream]
+            ) * self._bounded_influence(effects[keep])
             upstream, polarity = upstream[valid], polarity[valid]
             parts.append((
                 upstream,
                 np.full(len(upstream), 2, dtype=np.int8),
                 polarity,
                 np.full(len(upstream), self.config.credit_decay_per_hop, dtype=np.float32),
+                upstream_influence[valid].astype(np.float32, copy=False),
             ))
         return self._join_credit(np, parts, ambiguous)
 
@@ -191,7 +264,14 @@ class PlasticityController:
             discover_upstream_from_candidates=True,
         )
 
-    def diagnose_route_health(self, brain, signal: LearningSignal, output_context):
+    def diagnose_route_health(
+        self,
+        brain,
+        signal: LearningSignal,
+        output_context,
+        *,
+        standardized: bool = False,
+    ):
         """Return read-only capacity diagnostics for nonzero directions.
 
         This method deliberately performs no state mutation. It uses the same
@@ -200,15 +280,33 @@ class PlasticityController:
         """
         np = brain.np
         state = brain.plasticity
-        active_edges = self._active_edges(brain)
+        active_edges = (
+            self._active_anatomical_edges(brain, plastic=True)
+            if standardized else self._active_edges(brain)
+        )
+        frozen_candidates = self._active_anatomical_edges(brain, plastic=False)
         diagnostics: dict[str, DirectionalRouteHealth] = {}
+
         for name, direction in signal.nonzero_directions().items():
             outputs = output_context.get(name)
             if outputs is None:
                 continue
             magnitude = abs(float(direction))
-            plastic_credit = self._credit_edges(brain, active_edges, outputs)
-            frozen_credit = self.structural_credit_edges(brain, outputs)
+            plastic_credit = self._route_credit_edges(
+                brain,
+                active_edges,
+                outputs,
+                discover_upstream_from_candidates=standardized,
+            )
+            frozen_credit = self._route_credit_edges(
+                brain,
+                frozen_candidates,
+                outputs,
+                discover_upstream_from_candidates=True,
+            )
+            raw_frozen_route_edges = int(len(frozen_credit.edges))
+            plastic_credit = self._unique_credit(np, plastic_credit)
+            frozen_credit = self._unique_credit(np, frozen_credit)
 
             def measure(credit, *, frozen: bool):
                 if not len(credit.edges):
@@ -216,7 +314,8 @@ class PlasticityController:
                         "useful": np.empty(0, dtype=np.int32),
                         "required": np.empty(0, dtype=np.float32),
                         "headroom": np.empty(0, dtype=np.float32),
-                        "capacity": 0.0,
+                        "structural": 0.0,
+                        "realized": 0.0,
                     }
                 edges = credit.edges
                 required = np.sign(float(direction) * credit.path_polarities)
@@ -228,19 +327,28 @@ class PlasticityController:
                     state.config.max_multiplier - current,
                     np.where(decrease, current - state.config.min_multiplier, 0.0),
                 ).astype(np.float32, copy=False)
-                useful = np.flatnonzero((required != 0.0) & (headroom > 1e-7)).astype(np.int32, copy=False)
-                capacity_weights = credit.weights[useful] * headroom[useful] * magnitude
-                if frozen:
-                    capacity = float(capacity_weights.sum())
-                else:
-                    capacity = float(
-                        (state.eligibility[edges[useful]] * capacity_weights).sum()
-                    )
+                useful = np.flatnonzero(
+                    (required != 0.0) & (headroom > 1e-7)
+                ).astype(np.int32, copy=False)
+                influence = credit.effective_influence
+                if influence is None:
+                    influence = np.ones(len(edges), dtype=np.float32)
+                structural_weights = (
+                    credit.weights[useful]
+                    * headroom[useful]
+                    * influence[useful]
+                    * magnitude
+                )
+                structural = float(structural_weights.sum())
+                realized = float(
+                    (state.eligibility[edges[useful]] * structural_weights).sum()
+                ) if not frozen else 0.0
                 return {
                     "useful": useful,
                     "required": required,
                     "headroom": headroom,
-                    "capacity": capacity,
+                    "structural": structural,
+                    "realized": realized,
                 }
 
             plastic = measure(plastic_credit, frozen=False)
@@ -253,20 +361,33 @@ class PlasticityController:
             aligned = plastic_credit.path_polarities > 0.0
             opposing = plastic_credit.path_polarities < 0.0
             frozen_useful = frozen["useful"]
-            frozen_hops = frozen_credit.hops[frozen_useful] if len(frozen_useful) else np.empty(0, dtype=np.int8)
-            plastic_capacity = float(plastic["capacity"])
-            frozen_capacity = float(frozen["capacity"])
-            ratio = frozen_capacity / max(plastic_capacity, 1e-9)
+            frozen_hops = (
+                frozen_credit.hops[frozen_useful]
+                if len(frozen_useful) else np.empty(0, dtype=np.int8)
+            )
+            plastic_structural = float(plastic["structural"])
+            frozen_structural = float(frozen["structural"])
+            realized_plastic = float(plastic["realized"])
+            structural_ratio = frozen_structural / max(plastic_structural, 1e-9)
+            realized_ratio = frozen_structural / max(realized_plastic, 1e-9)
             if not len(plastic_edges):
                 status = "FROZEN_ALTERNATIVES_AVAILABLE" if len(frozen_useful) else "NO_PLASTIC_ROUTE"
             elif len(saturated) and int(saturated.sum()) == len(plastic_edges):
                 status = "PLASTIC_ROUTE_SATURATED"
-            elif frozen_capacity > plastic_capacity and len(frozen_useful):
+            elif frozen_structural > plastic_structural and len(frozen_useful):
                 status = "FROZEN_ALTERNATIVES_AVAILABLE"
             elif not len(useful):
                 status = "LOW_PLASTIC_CAPACITY"
             else:
                 status = "PLASTIC_CAPACITY_ADEQUATE"
+
+            influence_parts = []
+            if len(useful) and plastic_credit.effective_influence is not None:
+                influence_parts.append(plastic_credit.effective_influence[useful])
+            if len(frozen_useful) and frozen_credit.effective_influence is not None:
+                influence_parts.append(frozen_credit.effective_influence[frozen_useful])
+            mean_influence = float(np.mean(np.concatenate(influence_parts))) if influence_parts else 0.0
+
             diagnostics[name] = DirectionalRouteHealth(
                 channel=name,
                 requested_error_magnitude=magnitude,
@@ -282,18 +403,48 @@ class PlasticityController:
                 saturated_edges=int(saturated.sum()),
                 unsaturated_useful_edges=int(len(useful)),
                 saturated_useful_edges=int(saturated.sum()),
-                estimated_available_adjustment=plastic_capacity,
+                estimated_available_adjustment=realized_plastic,
                 useful_frozen_edges=int(len(frozen_useful)),
                 useful_frozen_one_hop=int((frozen_hops == 1).sum()),
                 useful_frozen_two_hop=int((frozen_hops == 2).sum()),
-                estimated_frozen_capacity=frozen_capacity,
-                frozen_to_plastic_capacity_ratio=float(ratio),
+                estimated_frozen_capacity=frozen_structural,
+                frozen_to_plastic_capacity_ratio=float(realized_ratio),
                 saturated_fraction=float(saturated.sum() / max(1, len(plastic_edges))),
                 ambiguous_path_edges_skipped=int(
                     plastic_credit.ambiguous_path_edges_skipped
                     + frozen_credit.ambiguous_path_edges_skipped
                 ),
                 route_health_status=status,
+                diagnostic_mode="counterfactual_unit" if standardized else "actual_failure",
+                active_plastic_candidate_edges=int(len(active_edges)),
+                active_frozen_candidate_edges=int(len(frozen_candidates)),
+                useful_plastic_edges=int(len(useful)),
+                plastic_structural_opportunity=plastic_structural,
+                frozen_structural_opportunity=frozen_structural,
+                frozen_to_plastic_structural_opportunity_ratio=float(structural_ratio),
+                realized_plastic_capacity=realized_plastic,
+                plastic_engagement_efficiency=float(
+                    realized_plastic / max(plastic_structural, 1e-9)
+                ),
+                plastic_multiplier_headroom=float(
+                    (headroom[useful] * plastic_credit.weights[useful]).sum()
+                    if len(useful) else 0.0
+                ),
+                frozen_multiplier_headroom=float(
+                    (frozen["headroom"][frozen_useful] * frozen_credit.weights[frozen_useful]).sum()
+                    if len(frozen_useful) else 0.0
+                ),
+                useful_plastic_route_fraction=float(
+                    len(useful) / max(1, len(active_edges))
+                ),
+                useful_frozen_route_fraction=float(
+                    len(frozen_useful) / max(1, len(frozen_candidates))
+                ),
+                mean_effective_route_influence=mean_influence,
+                frozen_raw_candidate_edges=raw_frozen_route_edges,
+                frozen_unique_candidate_edges=int(len(frozen_credit.edges)),
+                frozen_direct_candidate_edges=int((frozen_credit.hops == 1).sum()),
+                frozen_two_hop_candidate_edges=int((frozen_credit.hops == 2).sum()),
             )
         return diagnostics
 
@@ -302,13 +453,17 @@ class PlasticityController:
         nonempty = [part for part in parts if len(part[0])]
         if not nonempty:
             empty = np.empty(0, dtype=np.int32)
-            return CreditEdges(empty, empty, empty, np.empty(0, dtype=np.float32), ambiguous)
+            return CreditEdges(
+                empty, empty, empty, np.empty(0, dtype=np.float32), ambiguous,
+                np.empty(0, dtype=np.float32),
+            )
         return CreditEdges(
             np.concatenate([part[0] for part in nonempty]),
             np.concatenate([part[1] for part in nonempty]),
             np.concatenate([part[2] for part in nonempty]),
             np.concatenate([part[3] for part in nonempty]),
             ambiguous,
+            np.concatenate([part[4] for part in nonempty]),
         )
 
     def build_reward_credit(self, brain, signal: LearningSignal, output_context) -> RewardCredit:

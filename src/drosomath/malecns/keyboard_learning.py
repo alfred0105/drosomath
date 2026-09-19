@@ -488,6 +488,9 @@ class KeyboardTrainingConfig:
     # in their learning policy unless explicitly enabled.
     adaptive_plastic_budget: bool = False
     adaptive_budget_max_promotions_per_event: int = 1
+    # D.2.3 is a read-only matched probe.  It is opt-in so ordinary learning
+    # runs do not spend diagnostics or alter their behavior.
+    route_health_diagnostic: bool = False
     budget_strength: float = 0.25
     checkpoint_every: int = 32
     dashboard_update_interval_seconds: float = 0.5
@@ -1263,6 +1266,7 @@ class KeyboardNeuralSession:
             generic_update = None
             structural_need: dict[str, object] = {}
             route_health: dict[str, object] = {}
+            counterfactual_route_health: dict[str, object] = {}
             teacher_stats: dict[str, object] = {
                 "edge_updates": 0,
                 "mean_delta": 0.0,
@@ -1272,7 +1276,22 @@ class KeyboardNeuralSession:
             teacher_seconds = 0.0
 
             def apply_teacher_before_normalization(state) -> dict[str, object]:
-                nonlocal teacher_stats, teacher_seconds, directional_update, generic_update, structural_need, route_health
+                nonlocal teacher_stats, teacher_seconds, directional_update, generic_update, structural_need, route_health, counterfactual_route_health
+                if self.config.route_health_diagnostic:
+                    counterfactual_probe = LearningSignal(
+                        reward=0.0,
+                        directional_error={"motor/click": 1.0},
+                        success=None,
+                    )
+                    counterfactual_route_health = {
+                        name: asdict(health)
+                        for name, health in self.plasticity_controller.diagnose_route_health(
+                            self.brain,
+                            counterfactual_probe,
+                            self.output_context,
+                            standardized=True,
+                        ).items()
+                    }
                 if not learning_signal.success and learning_signal.nonzero_directions():
                     route_health = {
                         name: asdict(health)
@@ -1371,6 +1390,8 @@ class KeyboardNeuralSession:
             }
             learning["directional_modulation"] = directional_update
             learning["structural_need"] = structural_need
+            if counterfactual_route_health:
+                learning["counterfactual_route_health"] = counterfactual_route_health
             if route_health:
                 for health in route_health.values():
                     health["actual_directional_edge_updates"] = int(generic_update.edge_updates)
@@ -1604,7 +1625,57 @@ def run_keyboard_training(
                 "frozen_to_plastic_capacity_ratio": 0.0,
                 "saturated_fraction": 0.0,
                 "sum_abs_delta": 0.0,
+                "active_plastic_candidate_edges": 0.0,
+                "active_frozen_candidate_edges": 0.0,
+                "useful_plastic_edges": 0.0,
+                "plastic_structural_opportunity": 0.0,
+                "frozen_structural_opportunity": 0.0,
+                "frozen_to_plastic_structural_opportunity_ratio": 0.0,
+                "realized_plastic_capacity": 0.0,
+                "plastic_engagement_efficiency": 0.0,
+                "plastic_multiplier_headroom": 0.0,
+                "frozen_multiplier_headroom": 0.0,
+                "useful_plastic_route_fraction": 0.0,
+                "useful_frozen_route_fraction": 0.0,
+                "mean_effective_route_influence": 0.0,
+                "frozen_raw_candidate_edges": 0.0,
+                "frozen_unique_candidate_edges": 0.0,
+                "frozen_direct_candidate_edges": 0.0,
+                "frozen_two_hop_candidate_edges": 0.0,
             },
+        }
+        for label in KEY_LABELS
+    }
+    counterfactual_metric_names = (
+        "active_plastic_candidate_edges",
+        "active_frozen_candidate_edges",
+        "useful_plastic_edges",
+        "useful_frozen_edges",
+        "plastic_structural_opportunity",
+        "frozen_structural_opportunity",
+        "frozen_to_plastic_structural_opportunity_ratio",
+        "realized_plastic_capacity",
+        "plastic_engagement_efficiency",
+        "saturated_fraction",
+        "plastic_multiplier_headroom",
+        "frozen_multiplier_headroom",
+        "useful_plastic_route_fraction",
+        "useful_frozen_route_fraction",
+        "mean_effective_route_influence",
+        "frozen_raw_candidate_edges",
+        "frozen_unique_candidate_edges",
+        "frozen_direct_candidate_edges",
+        "frozen_two_hop_candidate_edges",
+    )
+    counterfactual_route_health_by_key = {
+        label: {
+            "attempts": 0,
+            "successes": 0,
+            "failures": 0,
+            "sums": {name: 0.0 for name in counterfactual_metric_names},
+            "success_sums": {name: 0.0 for name in counterfactual_metric_names},
+            "failure_sums": {name: 0.0 for name in counterfactual_metric_names},
+            "status_counts": {},
         }
         for label in KEY_LABELS
     }
@@ -1850,6 +1921,18 @@ def run_keyboard_training(
             bucket["status_counts"][status] = bucket["status_counts"].get(status, 0) + 1
             for name in bucket["sums"]:
                 bucket["sums"][name] += float(health.get(name, 0.0))
+        for health in row_learning.get("counterfactual_route_health", {}).values():
+            bucket = counterfactual_route_health_by_key[label]
+            bucket["attempts"] += 1
+            bucket["successes"] += row_correct
+            bucket["failures"] += int(not row_correct)
+            target_sums = bucket["success_sums"] if row_correct else bucket["failure_sums"]
+            for name in counterfactual_metric_names:
+                value = float(health.get(name, 0.0))
+                bucket["sums"][name] += value
+                target_sums[name] += value
+            status = str(health.get("route_health_status", "UNKNOWN"))
+            bucket["status_counts"][status] = bucket["status_counts"].get(status, 0) + 1
         if config.profile_timing:
             timing_samples += 1
             for name, value in row.get("timing", {}).items():
@@ -2099,6 +2182,39 @@ def run_keyboard_training(
                 for name, total in bucket["sums"].items()
             },
         }
+    counterfactual_route_health_report = {}
+    counterfactual_trial_count = 0
+    counterfactual_success_count = 0
+    counterfactual_failure_count = 0
+    for label, bucket in counterfactual_route_health_by_key.items():
+        attempts = int(bucket["attempts"])
+        successes = int(bucket["successes"])
+        failures = int(bucket["failures"])
+        counterfactual_trial_count += attempts
+        counterfactual_success_count += successes
+        counterfactual_failure_count += failures
+
+        def means(values, count):
+            return {
+                f"mean_{name}": float(total) / max(1, count)
+                for name, total in values.items()
+            }
+
+        counterfactual_route_health_report[label] = {
+            "attempts": attempts,
+            "successes": successes,
+            "failures": failures,
+            "status_counts": dict(bucket["status_counts"]),
+            **means(bucket["sums"], attempts),
+            "success": {
+                "attempts": successes,
+                **means(bucket["success_sums"], successes),
+            },
+            "failure": {
+                "attempts": failures,
+                **means(bucket["failure_sums"], failures),
+            },
+        }
     report = {
         "experiment": "malecns_virtual_keyboard_matching_v1",
         "purpose": "learn click-gated matching for Korean, English, O/X, and digit keys before arm navigation",
@@ -2170,10 +2286,20 @@ def run_keyboard_training(
             "budget_delta": int(session.brain.plasticity.plastic_edge_count - plastic_budget_start),
         },
         "route_health_by_key": route_health_report,
+        "counterfactual_route_health_by_key": counterfactual_route_health_report,
         "route_health_summary": {
             "failed_directional_trial_count": route_health_failure_count,
             "zero_update_failure_count": zero_update_failure_count,
             "route_health_status_counts": route_health_status_counts,
+        },
+        "counterfactual_route_health_summary": {
+            "trial_count": counterfactual_trial_count,
+            "success_count": counterfactual_success_count,
+            "failure_count": counterfactual_failure_count,
+            "keys_with_samples": sum(
+                int(item["attempts"] > 0)
+                for item in counterfactual_route_health_report.values()
+            ),
         },
         "execution_profile": {
             "backend": "numpy_cpu",
