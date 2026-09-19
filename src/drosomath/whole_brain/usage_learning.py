@@ -12,6 +12,8 @@ class RewardCredit:
     aligned_one_hop_edges: int = 0
     aligned_two_hop_edges: int = 0
     unaligned_edges_skipped: int = 0
+    opposing_path_edges_skipped: int = 0
+    ambiguous_path_edges_skipped: int = 0
 
     def __post_init__(self) -> None:
         if len(self.edge_indices) != len(self.weights):
@@ -22,6 +24,10 @@ class RewardCredit:
     @property
     def mean_weight(self) -> float:
         return float(self.weights.mean()) if len(self.weights) else 0.0
+
+    @property
+    def selected_credit_edges(self) -> int:
+        return int(len(self.edge_indices))
 
 
 @dataclass(frozen=True, slots=True)
@@ -38,6 +44,13 @@ class LearningUpdateStats:
     uncredited_edges_updated: int = 0
     reward_credit_fraction: float = 0.0
     mean_reward_credit_weight: float = 0.0
+    selected_credit_edges: int = 0
+    actual_credited_reward_updated_edges: int = 0
+    opposing_path_edges_skipped: int = 0
+    ambiguous_path_edges_skipped: int = 0
+    reward_credit_selection_fraction: float = 0.0
+    reward_update_fraction: float = 0.0
+    uncredited_reward_updated_edges: int = 0
 
 
 @dataclass(frozen=True, slots=True)
@@ -100,18 +113,27 @@ class UsageRewardRule:
             state.stability[active_indices] *= max(0.0, 1.0 - self.stability_loss * abs(reward))
         return int(active.sum()), float(np.abs(actual).sum()), float(np.abs(actual).max())
 
-    def _stats(self, state, *, reward, updates, sum_abs, max_abs, credit, eligible):
-        credited = int(len(credit.edge_indices)) if credit is not None and reward > 0.0 else 0
+    def _stats(self, state, *, reward, updates, actual_credited, sum_abs, max_abs, credit, eligible):
+        positive = reward > 0.0
+        selected = int(len(credit.edge_indices)) if credit is not None and positive else 0
+        uncredited = max(0, updates - actual_credited) if positive else 0
         return LearningUpdateStats(
             updates, sum_abs / updates if updates else 0.0, max_abs,
-            eligible if credit is not None and reward > 0.0 else 0,
-            credited, updates,
-            credit.aligned_one_hop_edges if credit is not None and reward > 0.0 else 0,
-            credit.aligned_two_hop_edges if credit is not None and reward > 0.0 else 0,
-            credit.unaligned_edges_skipped if credit is not None and reward > 0.0 else 0,
-            max(0, updates - credited),
-            credited / max(1, eligible) if credit is not None and reward > 0.0 else 0.0,
-            credit.mean_weight if credit is not None and reward > 0.0 else 0.0,
+            eligible if positive else 0,
+            selected, updates,
+            credit.aligned_one_hop_edges if credit is not None and positive else 0,
+            credit.aligned_two_hop_edges if credit is not None and positive else 0,
+            credit.unaligned_edges_skipped if credit is not None and positive else 0,
+            uncredited,
+            selected / max(1, eligible) if positive else 0.0,
+            credit.mean_weight if credit is not None and positive else 0.0,
+            selected,
+            actual_credited if positive else 0,
+            credit.opposing_path_edges_skipped if credit is not None and positive else 0,
+            credit.ambiguous_path_edges_skipped if credit is not None and positive else 0,
+            selected / max(1, eligible) if positive else 0.0,
+            updates / max(1, eligible) if positive else 0.0,
+            uncredited,
         )
 
     def apply(self, state: SparsePlasticityState, *, reward: float, reward_credit: RewardCredit | None = None) -> LearningUpdateStats:
@@ -119,15 +141,17 @@ class UsageRewardRule:
         if reward == 0.0 or self.learning_rate == 0.0 or state.edge_count == 0:
             return LearningUpdateStats(0, 0.0, 0.0)
         np = state.np
-        updates = 0; sum_abs = 0.0; max_abs = 0.0; eligible = 0
+        updates = 0; actual_credited = 0; sum_abs = 0.0; max_abs = 0.0; eligible = 0
         localized = reward > 0.0 and reward_credit is not None
         if localized:
             indices = np.asarray(reward_credit.edge_indices, dtype=np.int64)
-            eligible = int((state.plastic_mask & (state.usage_ema * state.eligibility > self.min_credit)).sum())
             count, abs_delta, max_delta = self._apply_indices(
                 state, indices, reward=reward, route_weights=reward_credit.weights, apply_stability=False,
             )
-            updates += count; sum_abs += abs_delta; max_abs = max(max_abs, max_delta)
+            actual_credited += count; updates += count; sum_abs += abs_delta; max_abs = max(max_abs, max_delta)
+            for start in range(0, state.edge_count, self.chunk_size):
+                stop = min(state.edge_count, start + self.chunk_size)
+                eligible += int((state.plastic_mask[start:stop] & (state.usage_ema[start:stop] * state.eligibility[start:stop] > self.min_credit)).sum())
             if self.uncredited_positive_reward_weight > 0.0:
                 route_indices = np.asarray(indices, dtype=np.int64)
                 for start in range(0, state.edge_count, self.chunk_size):
@@ -146,10 +170,12 @@ class UsageRewardRule:
         else:
             for start in range(0, state.edge_count, self.chunk_size):
                 stop = min(state.edge_count, start + self.chunk_size)
+                if reward > 0.0:
+                    eligible += int((state.plastic_mask[start:stop] & (state.usage_ema[start:stop] * state.eligibility[start:stop] > self.min_credit)).sum())
                 indices = np.arange(start, stop, dtype=np.int64)
                 count, abs_delta, max_delta = self._apply_indices(state, indices, reward=reward)
                 updates += count; sum_abs += abs_delta; max_abs = max(max_abs, max_delta)
-        return self._stats(state, reward=reward, updates=updates, sum_abs=sum_abs, max_abs=max_abs, credit=reward_credit if localized else None, eligible=eligible)
+        return self._stats(state, reward=reward, updates=updates, actual_credited=actual_credited, sum_abs=sum_abs, max_abs=max_abs, credit=reward_credit if localized else None, eligible=eligible)
 
     def apply_recent_presynaptic(
         self,
@@ -174,13 +200,15 @@ class UsageRewardRule:
             raise IndexError("presynaptic index out of range")
         route_indices = np.asarray(reward_credit.edge_indices, dtype=np.int64) if reward_credit is not None and reward > 0.0 else None
         route_values = np.asarray(reward_credit.weights, dtype=np.float32) if route_indices is not None else None
-        updates = 0; sum_abs = 0.0; max_abs = 0.0; eligible = 0
+        updates = 0; actual_credited = 0; sum_abs = 0.0; max_abs = 0.0; eligible = 0
         for pre in pres:
             start, stop = int(pointers[pre]), int(pointers[pre + 1])
             if start == stop:
                 continue
             if route_indices is None:
                 indices = np.arange(start, stop, dtype=np.int64)
+                if reward > 0.0:
+                    eligible += int((state.plastic_mask[start:stop] & (state.usage_ema[start:stop] * state.eligibility[start:stop] > self.min_credit)).sum())
                 count, abs_delta, max_delta = self._apply_indices(state, indices, reward=reward)
             else:
                 lo = int(np.searchsorted(route_indices, start, side="left"))
@@ -189,6 +217,7 @@ class UsageRewardRule:
                 weights = route_values[lo:hi]
                 eligible += int((state.plastic_mask[start:stop] & (state.usage_ema[start:stop] * state.eligibility[start:stop] > self.min_credit)).sum())
                 count, abs_delta, max_delta = self._apply_indices(state, indices, reward=reward, route_weights=weights, apply_stability=False)
+                actual_credited += count
                 if self.uncredited_positive_reward_weight > 0.0:
                     uncredited = np.arange(start, stop, dtype=np.int64)
                     keep = ~np.isin(uncredited, indices, assume_unique=True)
@@ -198,4 +227,4 @@ class UsageRewardRule:
                     )
                     count += count2; abs_delta += abs_delta2; max_delta = max(max_delta, max_delta2)
             updates += count; sum_abs += abs_delta; max_abs = max(max_abs, max_delta)
-        return self._stats(state, reward=reward, updates=updates, sum_abs=sum_abs, max_abs=max_abs, credit=reward_credit if route_indices is not None else None, eligible=eligible)
+        return self._stats(state, reward=reward, updates=updates, actual_credited=actual_credited, sum_abs=sum_abs, max_abs=max_abs, credit=reward_credit if route_indices is not None else None, eligible=eligible)

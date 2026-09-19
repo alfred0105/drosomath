@@ -146,13 +146,13 @@ class PlasticityController:
         active_edges = self._active_edges(brain)
         edge_parts = []
         weight_parts = []
-        aligned_one = aligned_two = unaligned = 0
+        aligned_one = aligned_two = opposing = ambiguous = 0
         for name, magnitude in signal.positive_reinforcements().items():
             outputs = output_context.get(name)
             if outputs is None:
                 continue
             credit = self._credit_edges(brain, active_edges, outputs)
-            unaligned += credit.ambiguous_path_edges_skipped
+            ambiguous += credit.ambiguous_path_edges_skipped
             for hop in (1, 2):
                 hop_mask = credit.hops == hop
                 aligned = hop_mask & (credit.path_polarities > 0.0)
@@ -160,7 +160,7 @@ class PlasticityController:
                     aligned_one += int(aligned.sum())
                 else:
                     aligned_two += int(aligned.sum())
-                unaligned += int((hop_mask & (credit.path_polarities < 0.0)).sum())
+                opposing += int((hop_mask & (credit.path_polarities < 0.0)).sum())
             aligned = credit.path_polarities > 0.0
             if aligned.any():
                 edge_parts.append(credit.edges[aligned])
@@ -170,14 +170,19 @@ class PlasticityController:
         if not edge_parts:
             return RewardCredit(
                 np.empty(0, dtype=np.int32), np.empty(0, dtype=np.float32),
-                aligned_one, aligned_two, unaligned,
+                aligned_one, aligned_two, opposing + ambiguous,
+                opposing, ambiguous,
             )
         edges = np.concatenate(edge_parts).astype(np.int32, copy=False)
         weights = np.concatenate(weight_parts).astype(np.float32, copy=False)
         unique, inverse = np.unique(edges, return_inverse=True)
         combined = np.zeros(len(unique), dtype=np.float32)
         np.add.at(combined, inverse, weights)
-        return RewardCredit(unique.astype(np.int32, copy=False), combined, aligned_one, aligned_two, unaligned)
+        return RewardCredit(
+            unique.astype(np.int32, copy=False), combined,
+            aligned_one, aligned_two, opposing + ambiguous,
+            opposing, ambiguous,
+        )
 
     def apply_learning_signal(self, brain, signal: LearningSignal, output_context) -> DirectionalUpdate:
         np = brain.np
@@ -225,7 +230,10 @@ class PlasticityController:
                 continue
             # Reinforcement stabilizes causal routes; success alone does not
             # directly perturb their learned multipliers.
-            edges = np.unique(credit.edges)
+            aligned = credit.path_polarities > 0.0
+            if not aligned.any():
+                continue
+            edges = np.unique(credit.edges[aligned])
             state.stability[edges] += self.config.consolidation_gain * (1.0 - state.stability[edges])
             np.clip(state.stability[edges], 0.0, 1.0, out=state.stability[edges])
             consolidated += int(len(edges)); reinforced.append(name)

@@ -142,6 +142,44 @@ class IntegrationRewardLocalityTests(unittest.TestCase):
         self.assertAlmostEqual(float(b.plasticity.stability[0]), 0.01, places=6)
         self.assertEqual(update.consolidated_edges, 1)
 
+    def test_positive_reinforcement_only_consolidates_positive_paths(self):
+        b = brain([(0, 1, 1), (1, 2, -1)])
+        controller = PlasticityController()
+        signal = LearningSignal(1.0, reinforcement={"motor/click": 1.0}, success=True)
+        before = b.plasticity.stability.copy()
+        update = controller.apply_learning_signal(b, signal, {"motor/click": np.array([2])})
+        np.testing.assert_array_equal(b.plasticity.stability, before)
+        self.assertEqual(update.consolidated_edges, 0)
+
+    def test_ambiguous_path_is_not_consolidated(self):
+        b = brain([(0, 1, 1), (1, 2, 1), (1, 2, -1)])
+        controller = PlasticityController()
+        signal = LearningSignal(1.0, reinforcement={"motor/click": 1.0}, success=True)
+        before = b.plasticity.stability.copy()
+        controller.apply_learning_signal(b, signal, {"motor/click": np.array([2])})
+        self.assertEqual(float(b.plasticity.stability[0]), float(before[0]))
+        self.assertGreater(float(b.plasticity.stability[1]), float(before[1]))
+
+    def test_selected_and_actual_reward_updates_are_distinct(self):
+        b = brain([(0, 2, 1), (0, 1, 1)])
+        b.plasticity.usage_ema[0] = 0.0
+        credit = RewardCredit(np.array([0, 1]), np.array([1.0, 1.0]))
+        stats = UsageRewardRule().apply_recent_presynaptic(
+            b.plasticity, reward=1.0, indptr=b.connectome.indptr,
+            presynaptic_indices=[0], reward_credit=credit,
+        )
+        self.assertEqual(stats.selected_credit_edges, 2)
+        self.assertEqual(stats.actual_credited_reward_updated_edges, 1)
+        self.assertEqual(stats.actual_reward_updated_edges, 1)
+        self.assertEqual(stats.uncredited_reward_updated_edges, 0)
+
+    def test_reward_telemetry_distinguishes_opposing_and_ambiguous_paths(self):
+        b = brain([(0, 1, 1), (1, 2, -1), (2, 2, 1)])
+        signal = LearningSignal(1.0, reinforcement={"motor/click": 1.0}, success=True)
+        credit = PlasticityController().build_reward_credit(b, signal, {"motor/click": np.array([2])})
+        self.assertGreaterEqual(credit.opposing_path_edges_skipped, 1)
+        self.assertEqual(credit.ambiguous_path_edges_skipped, 0)
+
     def test_generic_reward_module_has_no_keyboard_import(self):
         from drosomath.whole_brain import usage_learning
         self.assertNotIn("keyboard", inspect.getsource(usage_learning).lower())
@@ -150,6 +188,10 @@ class IntegrationRewardLocalityTests(unittest.TestCase):
         b = brain([(0, 2, 1)])
         stats = UsageRewardRule().apply_recent_presynaptic(b.plasticity, reward=1.0, indptr=b.connectome.indptr, presynaptic_indices=[0])
         self.assertEqual(stats.edge_updates, 1)
+
+    def test_controlled_validation_is_deterministic(self):
+        from tests.validate_reward_locality_phase_c1 import run
+        self.assertEqual(run(), run())
 
 
 if __name__ == "__main__":
