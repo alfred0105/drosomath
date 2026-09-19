@@ -67,7 +67,7 @@ def save_learning_checkpoint(
     changed = candidates[candidate_changed].astype(np.int32, copy=False)
 
     payload: dict[str, object] = {
-        "format_version": np.asarray([3], dtype=np.int32),
+        "format_version": np.asarray([4], dtype=np.int32),
         "neuron_count": np.asarray([brain.connectome.neuron_count], dtype=np.int64),
         "edge_count": np.asarray([brain.connectome.edge_count], dtype=np.int64),
         "min_connection_synapses": np.asarray(
@@ -81,6 +81,8 @@ def save_learning_checkpoint(
             [float(brain.plasticity.config.plastic_fraction)], dtype=np.float32
         ),
         "plastic_seed": np.asarray([int(brain.plasticity.config.seed)], dtype=np.int64),
+        "dynamic__promoted_edges": brain.plasticity.allocation_overrides()["promoted_edges"],
+        "dynamic__retired_edges": brain.plasticity.allocation_overrides()["retired_edges"],
         "completed_trials": np.asarray([int(completed_trials)], dtype=np.int64),
         "stage": np.asarray([str(stage)], dtype="U64"),
     }
@@ -121,7 +123,7 @@ def save_learning_checkpoint(
     np.savez_compressed(path, **payload)
     return {
         "path": str(path),
-        "format_version": 3,
+        "format_version": 4,
         "changed_edge_count": int(len(changed)),
         "structural_edge_count": int(structural.edge_count) if structural is not None else 0,
         "completed_trials": int(completed_trials),
@@ -185,6 +187,12 @@ def restore_learning_checkpoint(
         if len(changed) and (int(changed.min()) < 0 or int(changed.max()) >= edge_count):
             raise ValueError("checkpoint contains out-of-range edge indices")
 
+        dynamic_restored = False
+        if "dynamic__promoted_edges" in data and "dynamic__retired_edges" in data:
+            brain.plasticity.restore_allocation_overrides(
+                data["dynamic__promoted_edges"], data["dynamic__retired_edges"]
+            )
+            dynamic_restored = True
         brain.plasticity.multiplier[changed] = data["multipliers"]
         brain.plasticity.stability[changed] = data["stability"]
         if "usage_ema" in data:
@@ -215,6 +223,7 @@ def restore_learning_checkpoint(
             "completed_trials": int(data["completed_trials"][0]) if "completed_trials" in data else 0,
             "stage": str(data["stage"][0]) if "stage" in data else "",
             "readout_restored": readout_restored,
+            "dynamic_allocation_restored": dynamic_restored,
             "session_state": (
                 json.loads(str(data["session_state_json"][0]))
                 if "session_state_json" in data

@@ -17,6 +17,7 @@ from .memory_consolidation import (
     ReplayScheduler,
 )
 from .plastic_state import PlasticStateConfig, SparsePlasticityState
+from .plasticity_budget import PlasticityBudgetConfig, PlasticityBudgetManager
 from .structural_overlay import LearnedStructuralOverlay, StructuralOverlayConfig
 from .usage_learning import LearningUpdateStats, RewardCredit, UsageRewardRule
 from .directional_modulation import DirectionalModulationConfig, DirectionalUpdate, PlasticityController
@@ -34,6 +35,8 @@ __all__ = [
     "OutgoingBudgetNormalizer",
     "PlasticSparseFlyBrain",
     "PlasticStateConfig",
+    "PlasticityBudgetConfig",
+    "PlasticityBudgetManager",
     "ProtectedRewardRule",
     "ReplayConfig",
     "ReplayScheduler",

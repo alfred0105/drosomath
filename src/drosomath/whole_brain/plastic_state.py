@@ -79,6 +79,8 @@ class SparsePlasticityState:
             np.int32, copy=False
         )
         self._state_indices = self._plastic_indices.copy()
+        self._promoted_overrides = np.empty(0, dtype=np.int32)
+        self._retired_overrides = np.empty(0, dtype=np.int32)
 
     @property
     def plastic_edge_count(self) -> int:
@@ -117,6 +119,7 @@ class SparsePlasticityState:
         self._state_indices = self.np.union1d(
             self._state_indices, self._plastic_indices
         ).astype(self.np.int32, copy=False)
+        self._apply_allocation_overrides()
         self.config = replace(self.config, plastic_fraction=float(fraction))
         after = self.plastic_edge_count
         return {
@@ -124,6 +127,144 @@ class SparsePlasticityState:
             "before_edges": before,
             "after_edges": after,
             "newly_unlocked_edges": max(0, after - before),
+        }
+
+    def _apply_allocation_overrides(self) -> None:
+        """Rebuild the compact current allocation without touching learned arrays."""
+        if len(self._retired_overrides):
+            self.plastic_mask[self._retired_overrides] = False
+        if len(self._promoted_overrides):
+            self.plastic_mask[self._promoted_overrides] = True
+        self._plastic_indices = self.np.flatnonzero(self.plastic_mask).astype(
+            self.np.int32, copy=False
+        )
+        self._state_indices = self.np.union1d(
+            self._state_indices, self._plastic_indices
+        ).astype(self.np.int32, copy=False)
+
+    def _validate_edge_indices(self, indices, *, name: str):
+        values = self.np.asarray(indices, dtype=self.np.int64)
+        if values.ndim != 1:
+            raise ValueError(f"{name} must be a one-dimensional index sequence")
+        if len(values) and (int(values.min()) < 0 or int(values.max()) >= self.edge_count):
+            raise IndexError(f"{name} contains an out-of-range edge index")
+        if len(values) != len(self.np.unique(values)):
+            raise ValueError(f"{name} contains duplicate edge indices")
+        return values.astype(self.np.int32, copy=False)
+
+    def _check_retirement_safety(self, indices, *, protected_stability: float, allow_protected: bool) -> None:
+        if not allow_protected and len(indices) and bool(
+            (self.stability[indices] >= float(protected_stability)).any()
+        ):
+            raise ValueError("protected stable edge cannot be retired")
+
+    def exchange_plastic_edges(
+        self,
+        promote_indices,
+        retire_indices,
+        *,
+        protected_stability: float = 0.75,
+        allow_protected: bool = False,
+    ) -> dict[str, object]:
+        """Atomically exchange equal-sized plastic status on existing edges."""
+        promote = self._validate_edge_indices(promote_indices, name="promote_indices")
+        retire = self._validate_edge_indices(retire_indices, name="retire_indices")
+        if len(promote) != len(retire):
+            raise ValueError("budget-preserving exchange requires equal promotion and retirement counts")
+        if len(promote) and len(self.np.intersect1d(promote, retire)):
+            raise ValueError("an edge cannot be promoted and retired in one exchange")
+        if len(promote) and bool(self.plastic_mask[promote].any()):
+            raise ValueError("promoted edge is already plastic")
+        if len(retire) and bool((~self.plastic_mask[retire]).any()):
+            raise ValueError("retired edge is already non-plastic")
+        self._check_retirement_safety(
+            retire,
+            protected_stability=protected_stability,
+            allow_protected=allow_protected,
+        )
+        before = self.plastic_edge_count
+        if len(retire):
+            self.plastic_mask[retire] = False
+        if len(promote):
+            self.plastic_mask[promote] = True
+        self._retired_overrides = self.np.union1d(self._retired_overrides, retire).astype(self.np.int32, copy=False)
+        self._promoted_overrides = self.np.union1d(self._promoted_overrides, promote).astype(self.np.int32, copy=False)
+        if len(retire):
+            self._promoted_overrides = self.np.setdiff1d(self._promoted_overrides, retire).astype(self.np.int32, copy=False)
+        if len(promote):
+            self._retired_overrides = self.np.setdiff1d(self._retired_overrides, promote).astype(self.np.int32, copy=False)
+        self._plastic_indices = self.np.flatnonzero(self.plastic_mask).astype(self.np.int32, copy=False)
+        self._state_indices = self.np.union1d(self._state_indices, self._plastic_indices).astype(self.np.int32, copy=False)
+        after = self.plastic_edge_count
+        return {
+            "plastic_edges_before": before,
+            "plastic_edges_after": after,
+            "promoted_edges": promote.copy(),
+            "retired_edges": retire.copy(),
+            "budget_delta": after - before,
+        }
+
+    def promote_edges(self, indices):
+        """Explicit non-budget-preserving promotion for low-level setup/debug."""
+        values = self._validate_edge_indices(indices, name="indices")
+        if len(values) and bool(self.plastic_mask[values].any()):
+            raise ValueError("promoted edge is already plastic")
+        before = self.plastic_edge_count
+        self.plastic_mask[values] = True
+        self._promoted_overrides = self.np.union1d(self._promoted_overrides, values).astype(self.np.int32, copy=False)
+        self._retired_overrides = self.np.setdiff1d(self._retired_overrides, values).astype(self.np.int32, copy=False)
+        self._plastic_indices = self.np.flatnonzero(self.plastic_mask).astype(self.np.int32, copy=False)
+        self._state_indices = self.np.union1d(self._state_indices, self._plastic_indices).astype(self.np.int32, copy=False)
+        return {
+            "plastic_edges_before": before,
+            "plastic_edges_after": self.plastic_edge_count,
+            "promoted_edges": values.copy(),
+            "retired_edges": self.np.empty(0, dtype=self.np.int32),
+            "budget_delta": self.plastic_edge_count - before,
+        }
+
+    def retire_edges(self, indices, *, protected_stability: float = 0.75, allow_protected: bool = False):
+        """Explicit non-budget-preserving retirement; anatomy remains active."""
+        values = self._validate_edge_indices(indices, name="indices")
+        if len(values) and bool((~self.plastic_mask[values]).any()):
+            raise ValueError("retired edge is already non-plastic")
+        self._check_retirement_safety(values, protected_stability=protected_stability, allow_protected=allow_protected)
+        before = self.plastic_edge_count
+        self.plastic_mask[values] = False
+        self._retired_overrides = self.np.union1d(self._retired_overrides, values).astype(self.np.int32, copy=False)
+        self._promoted_overrides = self.np.setdiff1d(self._promoted_overrides, values).astype(self.np.int32, copy=False)
+        self._plastic_indices = self.np.flatnonzero(self.plastic_mask).astype(self.np.int32, copy=False)
+        self._state_indices = self.np.union1d(self._state_indices, self._plastic_indices).astype(self.np.int32, copy=False)
+        return {
+            "plastic_edges_before": before,
+            "plastic_edges_after": self.plastic_edge_count,
+            "promoted_edges": self.np.empty(0, dtype=self.np.int32),
+            "retired_edges": values.copy(),
+            "budget_delta": self.plastic_edge_count - before,
+        }
+
+    def allocation_overrides(self) -> dict[str, object]:
+        """Return sparse dynamic allocation overrides for checkpointing."""
+        return {
+            "promoted_edges": self._promoted_overrides.copy(),
+            "retired_edges": self._retired_overrides.copy(),
+        }
+
+    def restore_allocation_overrides(self, promoted_edges, retired_edges) -> dict[str, int]:
+        """Restore sparse overrides on top of this state's deterministic base mask."""
+        promoted = self._validate_edge_indices(promoted_edges, name="promoted_edges")
+        retired = self._validate_edge_indices(retired_edges, name="retired_edges")
+        if len(promoted) and len(retired) and len(self.np.intersect1d(promoted, retired)):
+            raise ValueError("checkpoint allocation overrides overlap")
+        base = self._plastic_scores < self.config.plastic_fraction
+        self.plastic_mask[:] = base
+        self._promoted_overrides = promoted.copy()
+        self._retired_overrides = retired.copy()
+        self._apply_allocation_overrides()
+        return {
+            "promoted_edges": int(len(promoted)),
+            "retired_edges": int(len(retired)),
+            "plastic_edges": self.plastic_edge_count,
         }
 
     def effective_signed_slice(self, base_signed, start: int, stop: int):
@@ -226,7 +367,10 @@ class SparsePlasticityState:
         self.usage_ema.fill(0.0)
         self.eligibility.fill(0.0)
         self.stability.fill(0.0)
-        self._state_indices = self._plastic_indices.copy()
+        self._state_indices = self.np.union1d(
+            self._plastic_indices,
+            self.np.concatenate((self._promoted_overrides, self._retired_overrides)),
+        ).astype(self.np.int32, copy=False)
 
     def summary(self) -> dict[str, float | int]:
         np = self.np
