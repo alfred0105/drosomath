@@ -1,0 +1,96 @@
+{
+  "allocation": {
+    "output_pairwise_overlap": {
+      "A|B": 0.0,
+      "A|C": 0.0,
+      "A|D": 0.0,
+      "B|C": 0.0,
+      "B|D": 0.0,
+      "C|D": 0.0
+    },
+    "output_population_size": 32,
+    "selection_basis": "real graph viability: nonzero outgoing sensory and nonzero indegree output",
+    "sensory_output_overlap": 0,
+    "sensory_pairwise_overlap": {
+      "A|B": 0.0,
+      "A|C": 0.0,
+      "A|D": 0.0,
+      "B|C": 0.0,
+      "B|D": 0.0,
+      "C|D": 0.0
+    },
+    "sensory_population_size": 32
+  },
+  "conclusion": {
+    "ready_for_supervised_symbol_learning_phase_f1b": true,
+    "symbol_decision_surface_ready": true,
+    "symbol_input_interface_ready": true
+  },
+  "invariants": {
+    "brain_rng_unchanged_by_allocation": true,
+    "disjoint_output_populations": true,
+    "disjoint_sensory_output": true,
+    "disjoint_sensory_populations": true,
+    "persistent_learning_state_unchanged": true,
+    "real_neurons_only": true
+  },
+  "pass": true,
+  "per_symbol": {
+    "A": {
+      "decision_counts": {
+        "NO_DECISION": 3
+      },
+      "mean_network_spikes": 51.333333333333336,
+      "mean_output_spikes": 0.0,
+      "no_decision_count": 3,
+      "output_population_size": 32,
+      "sensory_population_size": 32
+    },
+    "B": {
+      "decision_counts": {
+        "NO_DECISION": 3
+      },
+      "mean_network_spikes": 53.333333333333336,
+      "mean_output_spikes": 0.0,
+      "no_decision_count": 3,
+      "output_population_size": 32,
+      "sensory_population_size": 32
+    },
+    "C": {
+      "decision_counts": {
+        "NO_DECISION": 3
+      },
+      "mean_network_spikes": 49.333333333333336,
+      "mean_output_spikes": 0.0,
+      "no_decision_count": 3,
+      "output_population_size": 32,
+      "sensory_population_size": 32
+    },
+    "D": {
+      "decision_counts": {
+        "NO_DECISION": 3
+      },
+      "mean_network_spikes": 48.666666666666664,
+      "mean_output_spikes": 0.0,
+      "no_decision_count": 3,
+      "output_population_size": 32,
+      "sensory_population_size": 32
+    }
+  },
+  "protocol": {
+    "connectome": "MaleCNS v1.0, min_connection_synapses=5",
+    "duration_ms": 10.0,
+    "external_trainable_decoder": false,
+    "learning_enabled": false,
+    "phase": "F.1A",
+    "repeats_per_symbol": 3,
+    "seed": 7,
+    "stimulus_rate_hz": 205.0,
+    "symbols": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ]
+  }
+}

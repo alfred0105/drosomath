@@ -20,6 +20,16 @@ from .output_session import (
     OutputObservation,
     OutputSessionConfig,
 )
+from .symbol_interface import (
+    DistributedSymbolEncoder,
+    NO_DECISION,
+    SYMBOLS,
+    SymbolDecisionSurface,
+    SymbolInterface,
+    SymbolInterfaceConfig,
+    SymbolPresentationResult,
+    SymbolSession,
+)
 
 __all__ = [
     "BrainOutputTrialResult",
@@ -40,6 +50,14 @@ __all__ = [
     "PlasticMaleCNSBrain",
     "PopulationReadout",
     "ReadoutTrainResult",
+    "DistributedSymbolEncoder",
+    "NO_DECISION",
+    "SYMBOLS",
+    "SymbolDecisionSurface",
+    "SymbolInterface",
+    "SymbolInterfaceConfig",
+    "SymbolPresentationResult",
+    "SymbolSession",
     "download_malecns",
     "load_malecns_v1",
     "missing_files",
