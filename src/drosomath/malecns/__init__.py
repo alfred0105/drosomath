@@ -47,6 +47,16 @@ from .dynamic_surface import (
     select_dynamic_generic_candidates,
     viability_histogram,
 )
+from .symbol_learning import (
+    CHANNELS,
+    SymbolLearningConfig,
+    SymbolLearningSession,
+    SymbolTrialResult,
+    balanced_symbol_schedule,
+    build_symbol_learning_signal,
+    summarize_results,
+    symbol_output_context,
+)
 
 __all__ = [
     "BrainOutputTrialResult",
@@ -88,6 +98,14 @@ __all__ = [
     "partition_dynamic_generic_candidates",
     "select_dynamic_generic_candidates",
     "viability_histogram",
+    "CHANNELS",
+    "SymbolLearningConfig",
+    "SymbolLearningSession",
+    "SymbolTrialResult",
+    "balanced_symbol_schedule",
+    "build_symbol_learning_signal",
+    "summarize_results",
+    "symbol_output_context",
     "download_malecns",
     "load_malecns_v1",
     "missing_files",
