@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from contextlib import nullcontext as _nullcontext
+from types import MappingProxyType
 
 from drosomath.learning_signal import LearningSignal
 from drosomath.whole_brain.usage_learning import RewardCredit
@@ -39,6 +41,33 @@ class CreditEdges:
     weights: object
     ambiguous_path_edges_skipped: int = 0
     effective_influence: object = None
+
+
+@dataclass(frozen=True, slots=True)
+class OutputRouteIndex:
+    """Immutable topology index for one generic output population.
+
+    Learned multipliers are intentionally absent.  They are read from the
+    live plastic state whenever a route is scored.
+    """
+
+    output_indices: object
+    output_mask: object
+    downstream_intermediates: object
+    downstream_edges_by_intermediate: object
+
+    @property
+    def nbytes(self) -> int:
+        total = sum(
+            int(getattr(value, "nbytes", 0))
+            for value in (
+                self.output_indices,
+                self.output_mask,
+                self.downstream_intermediates,
+            )
+        )
+        total += sum(int(getattr(value, "nbytes", 0)) for value in self.downstream_edges_by_intermediate.values())
+        return int(total)
 
 
 @dataclass(frozen=True, slots=True)
@@ -118,8 +147,54 @@ class PlasticityController:
     task label, teacher edge set, or environment-specific data enters here.
     """
 
-    def __init__(self, config: DirectionalModulationConfig | None = None) -> None:
+    def __init__(
+        self,
+        config: DirectionalModulationConfig | None = None,
+        *,
+        route_cache_enabled: bool = True,
+    ) -> None:
         self.config = config or DirectionalModulationConfig()
+        self.route_cache_enabled = bool(route_cache_enabled)
+        self._output_route_cache: dict[tuple[int, tuple[int, ...]], OutputRouteIndex] = {}
+
+    def _output_route_index(self, brain, outputs) -> OutputRouteIndex:
+        """Build/read immutable output topology without caching learned state."""
+        np = brain.np
+        graph = brain.connectome
+        values = np.asarray(outputs, dtype=np.int32)
+        key = (id(graph), tuple(int(value) for value in values))
+        cached = self._output_route_cache.get(key)
+        if cached is not None:
+            return cached
+        output_indices = values.copy()
+        output_mask = np.zeros(graph.neuron_count, dtype=np.bool_)
+        output_mask[output_indices] = True
+        all_edges = np.arange(len(graph.post_indices), dtype=np.int32)
+        selected = all_edges[output_mask[graph.post_indices]]
+        presynaptic = self._pre_indices(np, graph, selected)
+        downstream_edges: dict[int, object] = {}
+        if len(selected):
+            unique_pre, starts = np.unique(presynaptic, return_index=True)
+            stops = np.concatenate((starts[1:], np.asarray([len(selected)], dtype=np.int64)))
+            for pre, start, stop in zip(unique_pre, starts, stops):
+                downstream_edges[int(pre)] = selected[int(start):int(stop)].copy()
+        output_indices.setflags(write=False)
+        output_mask.setflags(write=False)
+        downstream_intermediates = np.asarray(sorted(downstream_edges), dtype=np.int32)
+        downstream_intermediates.setflags(write=False)
+        for edges in downstream_edges.values():
+            edges.setflags(write=False)
+        index = OutputRouteIndex(
+            output_indices,
+            output_mask,
+            downstream_intermediates,
+            MappingProxyType(downstream_edges),
+        )
+        self._output_route_cache[key] = index
+        return index
+
+    def route_cache_bytes(self) -> int:
+        return int(sum(index.nbytes for index in self._output_route_cache.values()))
 
     def _active_edges(self, brain):
         np = brain.np
@@ -179,7 +254,8 @@ class PlasticityController:
         return self._route_credit_edges(brain, active_edges, outputs)
 
     def _route_credit_edges(self, brain, candidate_edges, outputs, *,
-                            discover_upstream_from_candidates: bool = False) -> CreditEdges:
+                            discover_upstream_from_candidates: bool = False,
+                            timing_profiler=None) -> CreditEdges:
         """Shared bounded route analysis for plastic and frozen candidates."""
         np = brain.np
         graph, state = brain.connectome, brain.plasticity
@@ -189,8 +265,14 @@ class PlasticityController:
                 empty, empty, empty, np.empty(0, dtype=np.float32),
                 effective_influence=np.empty(0, dtype=np.float32),
             )
-        output_mask = np.zeros(graph.neuron_count, dtype=np.bool_)
-        output_mask[np.asarray(outputs, dtype=np.int32)] = True
+        route_index = self._output_route_index(brain, outputs) if self.route_cache_enabled else None
+        output_mask = (
+            route_index.output_mask
+            if route_index is not None
+            else np.zeros(graph.neuron_count, dtype=np.bool_)
+        )
+        if route_index is None:
+            output_mask[np.asarray(outputs, dtype=np.int32)] = True
         direct = candidate_edges[output_mask[graph.post_indices[candidate_edges]]]
         direct_sign = np.sign(graph.signed_synapse_counts[direct])
         direct_keep = direct_sign != 0.0
@@ -209,55 +291,63 @@ class PlasticityController:
         if self.config.max_credit_hops < 2:
             return self._join_credit(np, parts, ambiguous)
 
-        if discover_upstream_from_candidates:
-            intermediates = np.unique(
-                graph.post_indices[candidate_edges][
-                    ~output_mask[graph.post_indices[candidate_edges]]
-                ]
-            )
+        if timing_profiler is not None:
+            timing_context = timing_profiler.section("prospective_downstream_effect_seconds")
         else:
-            if not len(direct):
+            timing_context = _nullcontext()
+        with timing_context:
+            if discover_upstream_from_candidates:
+                intermediates = np.unique(
+                    graph.post_indices[candidate_edges][
+                        ~output_mask[graph.post_indices[candidate_edges]]
+                    ]
+                )
+            else:
+                if not len(direct):
+                    return self._join_credit(np, parts, ambiguous)
+                intermediates = np.unique(self._pre_indices(np, graph, direct))
+            intermediate_mask = np.zeros(graph.neuron_count, dtype=np.bool_)
+            intermediate_mask[intermediates] = True
+            upstream = candidate_edges[
+                intermediate_mask[graph.post_indices[candidate_edges]]
+                & ~output_mask[graph.post_indices[candidate_edges]]
+            ]
+            if not len(upstream):
                 return self._join_credit(np, parts, ambiguous)
-            intermediates = np.unique(self._pre_indices(np, graph, direct))
-        intermediate_mask = np.zeros(graph.neuron_count, dtype=np.bool_)
-        intermediate_mask[intermediates] = True
-        upstream = candidate_edges[
-            intermediate_mask[graph.post_indices[candidate_edges]]
-            & ~output_mask[graph.post_indices[candidate_edges]]
-        ]
-        if not len(upstream):
-            return self._join_credit(np, parts, ambiguous)
-        upstream_post = graph.post_indices[upstream]
-        downstream_effect = {}
-        for intermediate in np.unique(upstream_post):
-            start, stop = int(graph.indptr[intermediate]), int(graph.indptr[intermediate + 1])
-            outgoing = np.arange(start, stop, dtype=np.int32)
-            outgoing = outgoing[output_mask[graph.post_indices[outgoing]]]
-            # Net anatomical signed influence, scaled by current learned
-            # strength; never pick an arbitrary first outgoing edge.
-            downstream_effect[int(intermediate)] = float(
-                (graph.signed_synapse_counts[outgoing] * state.multiplier[outgoing]).sum()
-            ) if len(outgoing) else 0.0
-        effects = np.asarray([downstream_effect[int(post)] for post in upstream_post], dtype=np.float32)
-        downstream_sign = np.sign(effects)
-        keep = np.abs(effects) > self.config.minimum_downstream_effect
-        ambiguous = int((~keep).sum())
-        upstream = upstream[keep]
-        if len(upstream):
-            polarity = np.sign(graph.signed_synapse_counts[upstream]) * downstream_sign[keep]
-            valid = polarity != 0.0
-            ambiguous += int((~valid).sum())
-            upstream_influence = self._bounded_influence(
-                graph.signed_synapse_counts[upstream]
-            ) * self._bounded_influence(effects[keep])
-            upstream, polarity = upstream[valid], polarity[valid]
-            parts.append((
-                upstream,
-                np.full(len(upstream), 2, dtype=np.int8),
-                polarity,
-                np.full(len(upstream), self.config.credit_decay_per_hop, dtype=np.float32),
-                upstream_influence[valid].astype(np.float32, copy=False),
-            ))
+            upstream_post = graph.post_indices[upstream]
+            downstream_effect = {}
+            for intermediate in np.unique(upstream_post):
+                if route_index is not None:
+                    outgoing = route_index.downstream_edges_by_intermediate.get(int(intermediate), np.empty(0, dtype=np.int32))
+                else:
+                    start, stop = int(graph.indptr[intermediate]), int(graph.indptr[intermediate + 1])
+                    outgoing = np.arange(start, stop, dtype=np.int32)
+                    outgoing = outgoing[output_mask[graph.post_indices[outgoing]]]
+                # Net anatomical signed influence, scaled by current learned
+                # strength; never pick an arbitrary first outgoing edge.
+                downstream_effect[int(intermediate)] = float(
+                    (graph.signed_synapse_counts[outgoing] * state.multiplier[outgoing]).sum()
+                ) if len(outgoing) else 0.0
+            effects = np.asarray([downstream_effect[int(post)] for post in upstream_post], dtype=np.float32)
+            downstream_sign = np.sign(effects)
+            keep = np.abs(effects) > self.config.minimum_downstream_effect
+            ambiguous = int((~keep).sum())
+            upstream = upstream[keep]
+            if len(upstream):
+                polarity = np.sign(graph.signed_synapse_counts[upstream]) * downstream_sign[keep]
+                valid = polarity != 0.0
+                ambiguous += int((~valid).sum())
+                upstream_influence = self._bounded_influence(
+                    graph.signed_synapse_counts[upstream]
+                ) * self._bounded_influence(effects[keep])
+                upstream, polarity = upstream[valid], polarity[valid]
+                parts.append((
+                    upstream,
+                    np.full(len(upstream), 2, dtype=np.int8),
+                    polarity,
+                    np.full(len(upstream), self.config.credit_decay_per_hop, dtype=np.float32),
+                    upstream_influence[valid].astype(np.float32, copy=False),
+                ))
         return self._join_credit(np, parts, ambiguous)
 
     def structural_credit_edges(self, brain, outputs) -> CreditEdges:
@@ -592,10 +682,15 @@ class PlasticityController:
         *,
         telemetry_observer=None,
         attribution_observer=None,
+        timing_profiler=None,
     ) -> DirectionalUpdate:
         np = brain.np
         state = brain.plasticity
-        active_edges = self._active_edges(brain)
+        if timing_profiler is not None:
+            with timing_profiler.section("active_edge_collection_seconds"):
+                active_edges = self._active_edges(brain)
+        else:
+            active_edges = self._active_edges(brain)
         total, sum_abs = 0, 0.0
         per_channel: dict[str, int] = {}
         changed_all = []
@@ -614,15 +709,25 @@ class PlasticityController:
             nonlocal ambiguous
             if name not in directional_credits:
                 outputs = output_context.get(name)
-                directional_credits[name] = (
-                    self._route_credit_edges(
-                        brain,
-                        active_edges,
-                        outputs,
-                        discover_upstream_from_candidates=prospective,
-                    )
-                    if outputs is not None else None
-                )
+                if outputs is not None:
+                    if timing_profiler is not None:
+                        with timing_profiler.section("directional_credit_selection_seconds"):
+                            directional_credits[name] = self._route_credit_edges(
+                                brain,
+                                active_edges,
+                                outputs,
+                                discover_upstream_from_candidates=prospective,
+                                timing_profiler=timing_profiler,
+                            )
+                    else:
+                        directional_credits[name] = self._route_credit_edges(
+                            brain,
+                            active_edges,
+                            outputs,
+                            discover_upstream_from_candidates=prospective,
+                        )
+                else:
+                    directional_credits[name] = None
                 if directional_credits[name] is not None:
                     ambiguous += directional_credits[name].ambiguous_path_edges_skipped
             return directional_credits[name]
@@ -679,9 +784,15 @@ class PlasticityController:
             edges = credit.edges
             factor = np.maximum(self.config.minimum_learning_factor, 1.0 - self.config.stability_protection * state.stability[edges])
             delta = self.config.learning_rate * float(direction) * credit.path_polarities * state.eligibility[edges] * factor * credit.weights
-            old = state.multiplier[edges].copy()
-            state.multiplier[edges] = np.clip(old + delta, state.config.min_multiplier, state.config.max_multiplier)
-            actual = state.multiplier[edges] - old
+            if timing_profiler is not None:
+                with timing_profiler.section("multiplier_update_seconds"):
+                    old = state.multiplier[edges].copy()
+                    state.multiplier[edges] = np.clip(old + delta, state.config.min_multiplier, state.config.max_multiplier)
+                    actual = state.multiplier[edges] - old
+            else:
+                old = state.multiplier[edges].copy()
+                state.multiplier[edges] = np.clip(old + delta, state.config.min_multiplier, state.config.max_multiplier)
+                actual = state.multiplier[edges] - old
             count = int(len(edges)); total += count; per_channel[name] = count
             channel_sum_abs_delta[name] = float(np.abs(actual).sum())
             changed_edges = np.unique(edges[np.abs(actual) > 0.0])

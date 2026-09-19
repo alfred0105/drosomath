@@ -29,8 +29,10 @@ from .directional_modulation import (
     DirectionalModulationConfig,
     DirectionalRouteHealth,
     DirectionalUpdate,
+    OutputRouteIndex,
     PlasticityController,
 )
+from .performance import TimingProfiler
 
 __all__ = [
     "AdaptiveReplayConfig",
@@ -61,5 +63,7 @@ __all__ = [
     "DirectionalModulationConfig",
     "DirectionalRouteHealth",
     "DirectionalUpdate",
+    "OutputRouteIndex",
     "PlasticityController",
+    "TimingProfiler",
 ]

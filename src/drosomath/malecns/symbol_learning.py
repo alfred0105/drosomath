@@ -9,6 +9,7 @@ named ``symbol/<letter>`` and real output-neuron populations.
 from __future__ import annotations
 
 import math
+from contextlib import contextmanager
 from collections import Counter
 from dataclasses import asdict, dataclass, field
 from typing import Mapping, Sequence
@@ -22,6 +23,7 @@ from drosomath.whole_brain import (
     OutgoingBudgetNormalizer,
     PlasticityController,
     UsageRewardRule,
+    TimingProfiler,
 )
 
 
@@ -44,6 +46,7 @@ class SymbolLearningConfig:
     plastic_fraction: float = 0.05
     adaptive_plastic_budget: bool = False
     two_hop_credit_mode: str = "active_chain"
+    profile_timing: bool = False
 
     def __post_init__(self) -> None:
         if self.duration_ms <= 0.0 or self.stimulus_rate_hz < 0.0:
@@ -178,6 +181,8 @@ class SymbolLearningSession:
         directional_telemetry_observer=None,
         directional_attribution_observer=None,
         route_health_observer=None,
+        timing_profiler=None,
+        route_cache_enabled: bool = True,
     ):
         self.brain = brain
         self.interface = interface
@@ -187,7 +192,8 @@ class SymbolLearningSession:
             DirectionalModulationConfig(
                 learning_rate=self.config.directional_learning_rate,
                 two_hop_credit_mode=self.config.two_hop_credit_mode,
-            )
+            ),
+            route_cache_enabled=route_cache_enabled,
         )
         self.reward_rule = UsageRewardRule(learning_rate=self.config.reward_learning_rate)
         self.normalizer = OutgoingBudgetNormalizer(strength=self.config.budget_strength)
@@ -202,6 +208,9 @@ class SymbolLearningSession:
         self.directional_telemetry_observer = directional_telemetry_observer
         self.directional_attribution_observer = directional_attribution_observer
         self.route_health_observer = route_health_observer
+        self.timing_profiler = timing_profiler or (
+            TimingProfiler(enabled=True) if self.config.profile_timing else None
+        )
 
     @property
     def plastic_budget_start(self) -> int:
@@ -211,19 +220,20 @@ class SymbolLearningSession:
         steps = max(1, int(math.ceil(self.config.duration_ms / self.brain.params.dt_ms)))
         counts = np.zeros(len(SYMBOLS), dtype=np.int32)
         active: set[int] = set()
-        self.brain.reset()
-        sensory = self.interface.encoder.indices_for(target)
-        for step_index in range(steps):
-            fired, _ = self.brain.step(
-                stimulus_indices=sensory,
-                stimulus_rate_hz=self.config.stimulus_rate_hz,
-            )
-            if len(fired):
-                active.update(int(index) for index in fired)
-                local = self._output_lookup[fired]
-                local = local[local >= 0]
-                if len(local):
-                    np.add.at(counts, local, 1)
+        with self.timing_profiler.section("network_simulation_seconds") if self.timing_profiler else _nullcontext():
+            self.brain.reset()
+            sensory = self.interface.encoder.indices_for(target)
+            for step_index in range(steps):
+                fired, _ = self.brain.step(
+                    stimulus_indices=sensory,
+                    stimulus_rate_hz=self.config.stimulus_rate_hz,
+                )
+                if len(fired):
+                    active.update(int(index) for index in fired)
+                    local = self._output_lookup[fired]
+                    local = local[local >= 0]
+                    if len(local):
+                        np.add.at(counts, local, 1)
         seconds = self.config.duration_ms / 1000.0
         rates = {symbol: float(counts[i]) / seconds for i, symbol in enumerate(SYMBOLS)}
         decision = self.interface.decision_surface.decide(
@@ -244,11 +254,12 @@ class SymbolLearningSession:
             signal = build_symbol_learning_signal(
                 target=target, decision=decision, output_rates_hz=rates
             )
-            reward_credit = (
-                self.controller.build_reward_credit(self.brain, signal, self.output_context)
-                if signal.reward > 0.0 and signal.positive_reinforcements()
-                else None
-            )
+            with self.timing_profiler.section("reward_credit_seconds") if self.timing_profiler else _nullcontext():
+                reward_credit = (
+                    self.controller.build_reward_credit(self.brain, signal, self.output_context)
+                    if signal.reward > 0.0 and signal.positive_reinforcements()
+                    else None
+                )
             generic_holder: dict[str, object] = {"update": None}
 
             def apply_directional(_state):
@@ -299,6 +310,7 @@ class SymbolLearningSession:
                     self.output_context,
                     telemetry_observer=callback,
                     attribution_observer=attribution_callback,
+                    timing_profiler=self.timing_profiler,
                 )
                 generic_holder["update"] = update
                 return None
@@ -310,9 +322,13 @@ class SymbolLearningSession:
                 include_plasticity_summary=False,
                 post_reward_hook=apply_directional,
                 reward_credit=reward_credit,
+                profile_timing=self.timing_profiler is not None,
             )
+            if self.timing_profiler:
+                self.timing_profiler.absorb(reward_report.get("timing"))
             update = generic_holder["update"]
-            directional = asdict(update) if update is not None else _empty_directional()
+            with self.timing_profiler.section("learning_telemetry_packaging_seconds") if self.timing_profiler else _nullcontext():
+                directional = asdict(update) if update is not None else _empty_directional()
             if update is not None:
                 for channel, edges in update.channel_edge_indices.items():
                     if channel in self._channel_edges_seen:
@@ -349,12 +365,13 @@ class SymbolLearningSession:
         }
 
     def evaluate_trial(self, target: str) -> SymbolTrialResult:
-        observation = SymbolSession(self.brain, self.interface).present(
-            symbol=target,
-            duration_ms=self.config.duration_ms,
-            stimulus_rate_hz=self.config.stimulus_rate_hz,
-            learn=False,
-        )
+        with self.timing_profiler.section("evaluation_seconds") if self.timing_profiler else _nullcontext():
+            observation = SymbolSession(self.brain, self.interface).present(
+                symbol=target,
+                duration_ms=self.config.duration_ms,
+                stimulus_rate_hz=self.config.stimulus_rate_hz,
+                learn=False,
+            )
         signal = build_symbol_learning_signal(
             target=target,
             decision=observation.decision,
@@ -376,8 +393,9 @@ class SymbolLearningSession:
         schedule = balanced_symbol_schedule(
             cycles=cycles, seed=seed + self.config.schedule_seed_offset
         )
-        for target in schedule:
-            self.train_trial(target)
+        with self.timing_profiler.section("total_training_seconds") if self.timing_profiler else _nullcontext():
+            for target in schedule:
+                self.train_trial(target)
         return list(self.trial_results)
 
     def evaluate(self, *, seed: int) -> list[SymbolTrialResult]:
@@ -496,3 +514,8 @@ __all__ = [
     "summarize_results",
     "symbol_output_context",
 ]
+
+
+@contextmanager
+def _nullcontext():
+    yield

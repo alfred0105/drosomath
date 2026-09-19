@@ -17,6 +17,7 @@ from drosomath.whole_brain.directional_modulation import (
     DirectionalModulationConfig,
     PlasticityController,
 )
+from drosomath.whole_brain.performance import TimingProfiler
 
 
 def make_graph():
@@ -323,6 +324,81 @@ class ProspectiveTwoHopPhaseF1B3Test(unittest.TestCase):
         row = audit.report()["symbol/A"]["positive"]
         self.assertEqual(row["direction_requests"], 1)
         self.assertEqual(row["zero_update_count"], 1)
+
+    def test_cached_credit_matches_uncached_credit_exactly(self):
+        cached_brain = make_brain()
+        uncached_brain = make_brain()
+        config = DirectionalModulationConfig(two_hop_credit_mode="prospective_anatomical")
+        cached = PlasticityController(config, route_cache_enabled=True)
+        uncached = PlasticityController(config, route_cache_enabled=False)
+        left = cached._route_credit_edges(
+            cached_brain, np.asarray([0], dtype=np.int32), [4],
+            discover_upstream_from_candidates=True,
+        )
+        right = uncached._route_credit_edges(
+            uncached_brain, np.asarray([0], dtype=np.int32), [4],
+            discover_upstream_from_candidates=True,
+        )
+        np.testing.assert_array_equal(left.edges, right.edges)
+        np.testing.assert_array_equal(left.hops, right.hops)
+        np.testing.assert_array_equal(left.path_polarities, right.path_polarities)
+        np.testing.assert_array_equal(left.weights, right.weights)
+        np.testing.assert_array_equal(left.effective_influence, right.effective_influence)
+
+    def test_route_cache_is_topology_only_and_multipliers_remain_dynamic(self):
+        brain = make_brain()
+        controller = PlasticityController(
+            DirectionalModulationConfig(two_hop_credit_mode="prospective_anatomical")
+        )
+        before = controller._route_credit_edges(
+            brain, np.asarray([0], dtype=np.int32), [4],
+            discover_upstream_from_candidates=True,
+        )
+        topology = controller._output_route_index(brain, [4])
+        self.assertGreater(topology.nbytes, 0)
+        self.assertFalse(topology.output_mask.flags.writeable)
+        brain.plasticity.multiplier[1] = 1.6
+        after = controller._route_credit_edges(
+            brain, np.asarray([0], dtype=np.int32), [4],
+            discover_upstream_from_candidates=True,
+        )
+        np.testing.assert_array_equal(before.edges, after.edges)
+        self.assertNotEqual(float(before.effective_influence[0]), float(after.effective_influence[0]))
+
+    def test_cache_construction_does_not_mutate_brain_state(self):
+        brain = make_brain()
+        snapshot = {
+            "multiplier": brain.plasticity.multiplier.copy(),
+            "stability": brain.plasticity.stability.copy(),
+            "eligibility": brain.plasticity.eligibility.copy(),
+            "recent": set(brain._recent_presynaptic),
+        }
+        controller = PlasticityController()
+        controller._output_route_index(brain, [4])
+        np.testing.assert_array_equal(brain.plasticity.multiplier, snapshot["multiplier"])
+        np.testing.assert_array_equal(brain.plasticity.stability, snapshot["stability"])
+        np.testing.assert_array_equal(brain.plasticity.eligibility, snapshot["eligibility"])
+        self.assertEqual(brain._recent_presynaptic, snapshot["recent"])
+
+    def test_timing_profiler_does_not_change_learning_state(self):
+        left = make_brain()
+        right = make_brain()
+        config = DirectionalModulationConfig(two_hop_credit_mode="prospective_anatomical")
+        signal = LearningSignal(reward=0.0, directional_error={"out": 1.0})
+        PlasticityController(config).apply_learning_signal(left, signal, output_context())
+        profiler = TimingProfiler()
+        PlasticityController(config).apply_learning_signal(
+            right, signal, output_context(), timing_profiler=profiler
+        )
+        np.testing.assert_array_equal(left.plasticity.multiplier, right.plasticity.multiplier)
+        np.testing.assert_array_equal(left.plasticity.stability, right.plasticity.stability)
+        np.testing.assert_array_equal(left.plasticity.eligibility, right.plasticity.eligibility)
+        self.assertTrue(profiler.report()["enabled"])
+
+    def test_timing_profiler_is_rng_free(self):
+        profiler = TimingProfiler()
+        profiler.add("example", 0.25)
+        self.assertEqual(profiler.report()["seconds"]["example"], 0.25)
 
 
 if __name__ == "__main__":
