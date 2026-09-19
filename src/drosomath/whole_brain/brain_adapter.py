@@ -327,6 +327,7 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
         profile_timing: bool = False,
         post_reward_hook=None,
         normalizer_observer=None,
+        reward_credit=None,
     ) -> dict[str, object]:
         """Turn recent synaptic use into long-term weight/structural changes."""
         if not self.plasticity_tracking_enabled:
@@ -341,11 +342,12 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
                 reward=reward,
                 indptr=self.connectome.indptr,
                 presynaptic_indices=recent_presynaptic,
+                reward_credit=reward_credit,
             )
         else:
             # A caller retaining eligibility may intentionally credit traces
             # from earlier trials, so retain the complete reference scan.
-            update = rule.apply(self.plasticity, reward=reward)
+            update = rule.apply(self.plasticity, reward=reward, reward_credit=reward_credit)
         if timings is not None:
             timings["reward_update_seconds"] = time.perf_counter() - started
         structural_learning = None

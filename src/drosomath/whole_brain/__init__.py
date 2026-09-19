@@ -18,7 +18,7 @@ from .memory_consolidation import (
 )
 from .plastic_state import PlasticStateConfig, SparsePlasticityState
 from .structural_overlay import LearnedStructuralOverlay, StructuralOverlayConfig
-from .usage_learning import LearningUpdateStats, UsageRewardRule
+from .usage_learning import LearningUpdateStats, RewardCredit, UsageRewardRule
 from .directional_modulation import DirectionalModulationConfig, DirectionalUpdate, PlasticityController
 
 __all__ = [
@@ -29,6 +29,7 @@ __all__ = [
     "ConsolidationConfig",
     "LearnedStructuralOverlay",
     "LearningUpdateStats",
+    "RewardCredit",
     "MemoryConsolidator",
     "OutgoingBudgetNormalizer",
     "PlasticSparseFlyBrain",

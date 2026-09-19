@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from drosomath.learning_signal import LearningSignal
+from drosomath.whole_brain.usage_learning import RewardCredit
 
 
 @dataclass(frozen=True, slots=True)
@@ -138,6 +139,45 @@ class PlasticityController:
             np.concatenate([part[3] for part in nonempty]),
             ambiguous,
         )
+
+    def build_reward_credit(self, brain, signal: LearningSignal, output_context) -> RewardCredit:
+        """Build sparse positive credit from the same bounded causal routes."""
+        np = brain.np
+        active_edges = self._active_edges(brain)
+        edge_parts = []
+        weight_parts = []
+        aligned_one = aligned_two = unaligned = 0
+        for name, magnitude in signal.positive_reinforcements().items():
+            outputs = output_context.get(name)
+            if outputs is None:
+                continue
+            credit = self._credit_edges(brain, active_edges, outputs)
+            unaligned += credit.ambiguous_path_edges_skipped
+            for hop in (1, 2):
+                hop_mask = credit.hops == hop
+                aligned = hop_mask & (credit.path_polarities > 0.0)
+                if hop == 1:
+                    aligned_one += int(aligned.sum())
+                else:
+                    aligned_two += int(aligned.sum())
+                unaligned += int((hop_mask & (credit.path_polarities < 0.0)).sum())
+            aligned = credit.path_polarities > 0.0
+            if aligned.any():
+                edge_parts.append(credit.edges[aligned])
+                weight_parts.append(
+                    credit.weights[aligned] * abs(float(magnitude))
+                )
+        if not edge_parts:
+            return RewardCredit(
+                np.empty(0, dtype=np.int32), np.empty(0, dtype=np.float32),
+                aligned_one, aligned_two, unaligned,
+            )
+        edges = np.concatenate(edge_parts).astype(np.int32, copy=False)
+        weights = np.concatenate(weight_parts).astype(np.float32, copy=False)
+        unique, inverse = np.unique(edges, return_inverse=True)
+        combined = np.zeros(len(unique), dtype=np.float32)
+        np.add.at(combined, inverse, weights)
+        return RewardCredit(unique.astype(np.int32, copy=False), combined, aligned_one, aligned_two, unaligned)
 
     def apply_learning_signal(self, brain, signal: LearningSignal, output_context) -> DirectionalUpdate:
         np = brain.np

@@ -1229,6 +1229,13 @@ class KeyboardNeuralSession:
                 current_deficit=current_deficit,
                 click_gain=homeostatic_gains.get("motor/click", 1.0),
             )
+            reward_credit = (
+                self.plasticity_controller.build_reward_credit(
+                    self.brain, learning_signal, self.output_context,
+                )
+                if global_learning_reward > 0.0 and learning_signal.positive_reinforcements()
+                else None
+            )
             teacher_normalizer_followup: dict[str, object] = {}
             directional_update: dict[str, object] = {"edge_updates": 0, "channel_updates": {}}
             teacher_stats: dict[str, object] = {
@@ -1308,6 +1315,7 @@ class KeyboardNeuralSession:
                 profile_timing=self.config.profile_timing,
                 post_reward_hook=apply_teacher_before_normalization,
                 normalizer_observer=observe_normalizer,
+                reward_credit=reward_credit,
             )
             if timings is not None:
                 timings["brain_learning_seconds"] = time.perf_counter() - learning_started
@@ -1320,6 +1328,19 @@ class KeyboardNeuralSession:
                 "surprise": learning_signal.surprise,
             }
             learning["directional_modulation"] = directional_update
+            reward_learning = learning.get("learning", {})
+            learning["reward_locality"] = {
+                "positive_reward": float(max(0.0, global_learning_reward)),
+                "eligible_reward_edges_before_localization": int(reward_learning.get("eligible_reward_edges_before_localization", 0)),
+                "credited_reward_edges": int(reward_learning.get("credited_reward_edges", 0)),
+                "actual_reward_updated_edges": int(reward_learning.get("actual_reward_updated_edges", reward_learning.get("edge_updates", 0))),
+                "aligned_one_hop_edges": int(reward_learning.get("aligned_one_hop_edges", 0)),
+                "aligned_two_hop_edges": int(reward_learning.get("aligned_two_hop_edges", 0)),
+                "unaligned_edges_skipped": int(reward_learning.get("unaligned_edges_skipped", 0)),
+                "uncredited_edges_updated": int(reward_learning.get("uncredited_edges_updated", 0)),
+                "reward_credit_fraction": float(reward_learning.get("reward_credit_fraction", 0.0)),
+                "mean_reward_credit_weight": float(reward_learning.get("mean_reward_credit_weight", 0.0)),
+            }
             learning["homeostasis"] = {"channel_rates": {name: float(final_rates[index]) for index, name in enumerate(channel_names)}, "gains": homeostatic_gains, "ema": dict(self.channel_homeostasis.ema)}
             learning["teacher_normalizer_followup"] = teacher_normalizer_followup
             learning["active_route"] = {
