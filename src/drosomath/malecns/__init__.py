@@ -64,6 +64,14 @@ from .symbol_credit_interference import (
     jaccard,
 )
 from .prospective_twohop import ProspectiveTwoHopAudit
+from .working_memory import (
+    GO_ALLOCATION_SEED,
+    GO_SYMBOL,
+    DelayedCueSession,
+    DelayedCueTrialResult,
+    WorkingMemoryInterface,
+    pairwise_set_jaccard,
+)
 
 __all__ = [
     "BrainOutputTrialResult",
@@ -118,6 +126,12 @@ __all__ = [
     "cross_target_positive_overlap",
     "jaccard",
     "ProspectiveTwoHopAudit",
+    "GO_ALLOCATION_SEED",
+    "GO_SYMBOL",
+    "DelayedCueSession",
+    "DelayedCueTrialResult",
+    "WorkingMemoryInterface",
+    "pairwise_set_jaccard",
     "download_malecns",
     "load_malecns_v1",
     "missing_files",

@@ -336,6 +336,7 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
         timings: dict[str, float] | None = {} if profile_timing else None
         started = time.perf_counter() if profile_timing else 0.0
         recent_presynaptic = sorted(self._recent_presynaptic)
+        reward_started = time.perf_counter() if timings is not None else 0.0
         if clear_eligibility:
             update = rule.apply_recent_presynaptic(
                 self.plasticity,
@@ -349,7 +350,7 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
             # from earlier trials, so retain the complete reference scan.
             update = rule.apply(self.plasticity, reward=reward, reward_credit=reward_credit)
         if timings is not None:
-            timings["reward_update_seconds"] = time.perf_counter() - started
+            timings["reward_update_seconds"] = time.perf_counter() - reward_started
         structural_learning = None
         structural_rewire = None
         if self.structural_overlay is not None:
@@ -363,16 +364,20 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
         # A task-specific local teacher may use current-trial eligibility, but
         # it must run after the global reward update and before normalization,
         # decay, and the single lifecycle clear below.
+        post_started = time.perf_counter() if timings is not None else 0.0
         post_reward = (
             post_reward_hook(self.plasticity)
             if post_reward_hook is not None
             else None
         )
+        if timings is not None:
+            timings["post_reward_directional_seconds"] = time.perf_counter() - post_started
 
         budget = None
         if normalizer is not None and self._recent_presynaptic:
             if normalizer_observer is not None:
                 normalizer_observer("before", self.plasticity)
+            normalizer_started = time.perf_counter() if timings is not None else 0.0
             budget = normalizer.normalize_presynaptic(
                 self.plasticity,
                 indptr=self.connectome.indptr,
@@ -381,8 +386,8 @@ class PlasticSparseFlyBrain(SparseFlyBrain):
             )
             if normalizer_observer is not None:
                 normalizer_observer("after", self.plasticity)
-        if timings is not None:
-            timings["normalization_seconds"] = time.perf_counter() - started - timings["reward_update_seconds"]
+            if timings is not None:
+                timings["normalizer_seconds"] = time.perf_counter() - normalizer_started
 
         decay_started = time.perf_counter() if timings is not None else 0.0
         self.plasticity.decay_episode(
