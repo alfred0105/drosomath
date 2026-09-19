@@ -154,6 +154,9 @@ def _empty_directional() -> dict[str, object]:
         "ambiguous_path_edges_skipped": 0,
         "updated_edge_indices": (),
         "updated_edge_hops": {},
+        "channel_sum_abs_delta": {},
+        "channel_unique_edge_updates": {},
+        "channel_hop_counts": {},
     }
 
 
@@ -175,6 +178,9 @@ class SymbolLearningSession:
             self._output_lookup[interface.output_populations[symbol]] = index
         self._initial_budget = int(brain.plasticity.plastic_edge_count)
         self.trial_results: list[SymbolTrialResult] = []
+        self._channel_edges_seen: dict[str, set[int]] = {
+            channel: set() for channel in CHANNELS
+        }
 
     @property
     def plastic_budget_start(self) -> int:
@@ -241,6 +247,13 @@ class SymbolLearningSession:
             )
             update = generic_holder["update"]
             directional = asdict(update) if update is not None else _empty_directional()
+            if update is not None:
+                for channel, edges in update.channel_edge_indices.items():
+                    if channel in self._channel_edges_seen:
+                        self._channel_edges_seen[channel].update(int(edge) for edge in edges)
+            # Per-channel edge IDs are needed only for in-memory cumulative
+            # telemetry; do not retain them in every trial result.
+            directional.pop("channel_edge_indices", None)
             # Edge arrays are diagnostic only; keep the normal result compact.
             directional["updated_edge_indices"] = tuple(
                 int(edge) for edge in directional.get("updated_edge_indices", ())
@@ -261,6 +274,13 @@ class SymbolLearningSession:
             return result
         finally:
             self.brain.set_plasticity_tracking(previous_tracking)
+
+    def channel_unique_edges(self) -> dict[str, int]:
+        """Return cumulative distinct generic-channel edge counts."""
+        return {
+            channel: int(len(edges))
+            for channel, edges in self._channel_edges_seen.items()
+        }
 
     def evaluate_trial(self, target: str) -> SymbolTrialResult:
         observation = SymbolSession(self.brain, self.interface).present(

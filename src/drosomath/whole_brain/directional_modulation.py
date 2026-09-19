@@ -48,6 +48,12 @@ class DirectionalUpdate:
     # Read-only telemetry for bounded diagnostic consumers.  This does not
     # participate in learning or checkpoint state.
     updated_edge_hops: dict[int, int] = field(default_factory=dict)
+    # Read-only per-channel telemetry.  These fields do not participate in
+    # route selection or state updates.
+    channel_sum_abs_delta: dict[str, float] = field(default_factory=dict)
+    channel_unique_edge_updates: dict[str, int] = field(default_factory=dict)
+    channel_hop_counts: dict[str, dict[int, int]] = field(default_factory=dict)
+    channel_edge_indices: dict[str, tuple[int, ...]] = field(default_factory=dict)
 
 
 @dataclass(frozen=True, slots=True)
@@ -579,6 +585,10 @@ class PlasticityController:
         hops: dict[int, int] = {}
         excitatory = inhibitory = consolidated = ambiguous = 0
         credits = {}
+        channel_sum_abs_delta: dict[str, float] = {}
+        channel_unique_edge_updates: dict[str, int] = {}
+        channel_hop_counts: dict[str, dict[int, int]] = {}
+        channel_edge_indices: dict[str, tuple[int, ...]] = {}
 
         def credit_for(name):
             nonlocal ambiguous
@@ -601,11 +611,19 @@ class PlasticityController:
             state.multiplier[edges] = np.clip(old + delta, state.config.min_multiplier, state.config.max_multiplier)
             actual = state.multiplier[edges] - old
             count = int(len(edges)); total += count; per_channel[name] = count
-            sum_abs += float(np.abs(actual).sum()); changed_all.append(edges)
+            channel_sum_abs_delta[name] = float(np.abs(actual).sum())
+            changed_edges = np.unique(edges[np.abs(actual) > 0.0])
+            channel_unique_edge_updates[name] = int(len(changed_edges))
+            channel_edge_indices[name] = tuple(int(edge) for edge in changed_edges)
+            sum_abs += channel_sum_abs_delta[name]; changed_all.append(edges)
             for edge, hop in zip(edges, credit.hops):
                 updated_edge_hops[int(edge)] = int(hop)
             for hop in np.unique(credit.hops):
                 hops[int(hop)] = hops.get(int(hop), 0) + int((credit.hops == hop).sum())
+            channel_hop_counts[name] = {
+                int(hop): int((credit.hops == hop).sum())
+                for hop in np.unique(credit.hops)
+            }
             anatomical_sign = np.sign(brain.connectome.signed_synapse_counts[edges])
             excitatory += int((anatomical_sign > 0).sum())
             inhibitory += int((anatomical_sign < 0).sum())
@@ -630,4 +648,8 @@ class PlasticityController:
             total, per_channel, sum_abs / total if total else 0.0, updated, hops,
             excitatory, inhibitory, consolidated, int(len(updated)), tuple(reinforced), ambiguous,
             sum_abs, updated_edge_hops,
+            channel_sum_abs_delta,
+            channel_unique_edge_updates,
+            channel_hop_counts,
+            channel_edge_indices,
         )
