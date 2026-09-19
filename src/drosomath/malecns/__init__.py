@@ -29,6 +29,9 @@ from .symbol_interface import (
     SymbolInterfaceConfig,
     SymbolPresentationResult,
     SymbolSession,
+    audit_symbol_reachability,
+    symbol_decision_surface_ready,
+    symbol_f1b_ready,
 )
 
 __all__ = [
@@ -58,6 +61,9 @@ __all__ = [
     "SymbolInterfaceConfig",
     "SymbolPresentationResult",
     "SymbolSession",
+    "audit_symbol_reachability",
+    "symbol_decision_surface_ready",
+    "symbol_f1b_ready",
     "download_malecns",
     "load_malecns_v1",
     "missing_files",

@@ -22,8 +22,8 @@
     "sensory_population_size": 32
   },
   "conclusion": {
-    "ready_for_supervised_symbol_learning_phase_f1b": true,
-    "symbol_decision_surface_ready": true,
+    "ready_for_supervised_symbol_learning_phase_f1b": false,
+    "symbol_decision_surface_ready": false,
     "symbol_input_interface_ready": true
   },
   "invariants": {
@@ -92,5 +92,10 @@
       "C",
       "D"
     ]
+  },
+  "readiness": {
+    "ready_for_supervised_symbol_learning_phase_f1b": false,
+    "symbol_decision_surface_ready": false,
+    "symbol_input_interface_ready": true
   }
 }

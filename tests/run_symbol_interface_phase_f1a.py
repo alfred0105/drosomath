@@ -123,6 +123,14 @@ def run(*, data_dir: Path, output_path: Path, repeats: int = 3) -> dict[str, obj
     network_activity_present = all(
         per_symbol[symbol]["mean_network_spikes"] > 0.0 for symbol in SYMBOLS
     )
+    symbol_input_ready = bool(
+        real_neurons_only
+        and len(np.unique(sensory_union)) == len(sensory_union)
+        and network_activity_present
+    )
+    decision_surface_ready = all(
+        per_symbol[symbol]["mean_output_spikes"] > 0.0 for symbol in SYMBOLS
+    )
     result = {
         "protocol": {
             "phase": "F.1A",
@@ -144,6 +152,13 @@ def run(*, data_dir: Path, output_path: Path, repeats: int = 3) -> dict[str, obj
             "selection_basis": "real graph viability: nonzero outgoing sensory and nonzero indegree output",
         },
         "per_symbol": per_symbol,
+        "readiness": {
+            "symbol_input_interface_ready": symbol_input_ready,
+            "symbol_decision_surface_ready": decision_surface_ready,
+            "ready_for_supervised_symbol_learning_phase_f1b": bool(
+                symbol_input_ready and decision_surface_ready
+            ),
+        },
         "invariants": {
             "real_neurons_only": real_neurons_only,
             "disjoint_output_populations": len(np.unique(output_union)) == len(output_union),
@@ -153,12 +168,11 @@ def run(*, data_dir: Path, output_path: Path, repeats: int = 3) -> dict[str, obj
             "persistent_learning_state_unchanged": persistent_unchanged,
         },
         "conclusion": {
-            "symbol_input_interface_ready": bool(real_neurons_only and len(np.unique(sensory_union)) == len(sensory_union)),
-            "symbol_decision_surface_ready": bool(
-                len(np.unique(output_union)) == len(output_union)
-                and not np.intersect1d(sensory_union, output_union).size
+            "symbol_input_interface_ready": symbol_input_ready,
+            "symbol_decision_surface_ready": decision_surface_ready,
+            "ready_for_supervised_symbol_learning_phase_f1b": bool(
+                symbol_input_ready and decision_surface_ready
             ),
-            "ready_for_supervised_symbol_learning_phase_f1b": True,
         },
     }
     result["pass"] = bool(

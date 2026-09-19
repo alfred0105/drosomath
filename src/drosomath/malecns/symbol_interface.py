@@ -204,6 +204,79 @@ class SymbolDecisionSurface:
         return _pairwise_jaccard(self._indices)
 
 
+def _reachable_frontier(connectome, frontier: np.ndarray, visited: np.ndarray) -> np.ndarray:
+    """Expand one CSR graph hop without changing the connectome."""
+    if len(frontier) == 0:
+        return np.empty(0, dtype=np.int32)
+    indptr = np.asarray(connectome.indptr)
+    posts = np.asarray(connectome.post_indices, dtype=np.int32)
+    starts = indptr[frontier]
+    stops = indptr[frontier + 1]
+    lengths = (stops - starts).astype(np.int64, copy=False)
+    total = int(lengths.sum())
+    if total == 0:
+        return np.empty(0, dtype=np.int32)
+    offsets = np.arange(total, dtype=np.int64)
+    block_offsets = np.repeat(np.cumsum(lengths, dtype=np.int64) - lengths, lengths)
+    edge_indices = np.repeat(starts, lengths) + offsets - block_offsets
+    candidates = np.unique(posts[edge_indices])
+    fresh = candidates[~visited[candidates]]
+    if len(fresh):
+        visited[fresh] = True
+    return fresh.astype(np.int32, copy=False)
+
+
+def audit_symbol_reachability(connectome, interface: SymbolInterface, *, max_hops: int = 3) -> dict[str, dict[str, dict[str, object]]]:
+    """Measure bounded sensory-to-output reachability on immutable anatomy.
+
+    Counts are cumulative reachable output neurons (within one, two, or three
+    hops), so duplicate paths never duplicate a neuron.  The function only
+    reads CSR topology and interface populations; it does not access a brain,
+    plasticity state, labels, or a random generator.
+    """
+    if max_hops < 1:
+        raise ValueError("max_hops must be >= 1")
+    n = int(getattr(connectome, "neuron_count", len(_as_neuron_ids(connectome))))
+    outputs = interface.output_populations
+    result: dict[str, dict[str, dict[str, object]]] = {}
+    for input_symbol in SYMBOLS:
+        visited = np.zeros(n, dtype=np.bool_)
+        frontier = interface.encoder.indices_for(input_symbol)
+        visited[frontier] = True
+        first_hops = {
+            symbol: np.zeros(len(indices), dtype=np.int8)
+            for symbol, indices in outputs.items()
+        }
+        cumulative_counts = {symbol: [0] * max_hops for symbol in SYMBOLS}
+        for hop in range(1, max_hops + 1):
+            frontier = _reachable_frontier(connectome, frontier, visited)
+            for output_symbol, indices in outputs.items():
+                newly_reached = (first_hops[output_symbol] == 0) & np.isin(indices, frontier)
+                first_hops[output_symbol][newly_reached] = hop
+                cumulative_counts[output_symbol][hop - 1] = int(
+                    np.count_nonzero(first_hops[output_symbol] > 0)
+                )
+        result[input_symbol] = {}
+        for output_symbol, indices in outputs.items():
+            counts = cumulative_counts[output_symbol]
+            hops = first_hops[output_symbol]
+            reachable_hops = hops[hops > 0]
+            result[input_symbol][output_symbol] = {
+                "hop1_output_neurons": counts[0],
+                "hop2_output_neurons": counts[1] if max_hops >= 2 else counts[0],
+                "hop3_output_neurons": counts[2] if max_hops >= 3 else counts[-1],
+                "shortest_reachable_hop": int(reachable_hops.min()) if len(reachable_hops) else None,
+                "reachable_output_fraction_at_1hop": float(counts[0] / len(indices)),
+                "reachable_output_fraction_at_2hop": float(
+                    (counts[1] if max_hops >= 2 else counts[0]) / len(indices)
+                ),
+                "reachable_output_fraction_at_3hop": float(
+                    (counts[2] if max_hops >= 3 else counts[-1]) / len(indices)
+                ),
+            }
+    return result
+
+
 @dataclass(frozen=True, slots=True)
 class SymbolPresentationResult:
     input_symbol: str
@@ -211,6 +284,7 @@ class SymbolPresentationResult:
     decision: str
     total_output_spikes: int
     network_activity: dict[str, int]
+    first_output_spike_ms: float | None = None
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -219,7 +293,23 @@ class SymbolPresentationResult:
             "decision": self.decision,
             "total_output_spikes": int(self.total_output_spikes),
             "network_activity": dict(self.network_activity),
+            "first_output_spike_ms": self.first_output_spike_ms,
         }
+
+
+def symbol_decision_surface_ready(
+    observations: Mapping[str, list[SymbolPresentationResult]],
+) -> bool:
+    """Require measurable output activity for every input symbol."""
+    return all(
+        any(int(observation.total_output_spikes) > 0 for observation in observations.get(symbol, ()))
+        for symbol in SYMBOLS
+    )
+
+
+def symbol_f1b_ready(*, sensory_interface_ready: bool, decision_surface_ready: bool) -> bool:
+    """F.1B may start only after both observational surfaces are usable."""
+    return bool(sensory_interface_ready and decision_surface_ready)
 
 
 class SymbolInterface:
@@ -337,12 +427,13 @@ class SymbolSession:
         counts = np.zeros(len(SYMBOLS), dtype=np.int32)
         active_neurons: set[int] = set()
         network_spikes = 0
+        first_output_spike_ms: float | None = None
         snapshot = _snapshot_persistent_state(self.brain)
         previous_tracking = self.brain.set_plasticity_tracking(False)
         try:
             self.brain.reset()
             sensory_indices = self.interface.encoder.indices_for(symbol)
-            for _ in range(steps):
+            for step_index in range(steps):
                 fired, _ = self.brain.step(
                     stimulus_indices=sensory_indices,
                     stimulus_rate_hz=rate,
@@ -354,6 +445,8 @@ class SymbolSession:
                     local = local[local >= 0]
                     if len(local):
                         np.add.at(counts, local, 1)
+                        if first_output_spike_ms is None:
+                            first_output_spike_ms = float(step_index * self.brain.params.dt_ms)
         finally:
             self.brain.set_plasticity_tracking(previous_tracking)
             _restore_persistent_state(self.brain, snapshot)
@@ -377,6 +470,7 @@ class SymbolSession:
                 "unique_neurons": int(len(active_neurons)),
                 "steps": int(steps),
             },
+            first_output_spike_ms=first_output_spike_ms,
         )
 
 
@@ -389,4 +483,7 @@ __all__ = [
     "SymbolInterfaceConfig",
     "SymbolPresentationResult",
     "SymbolSession",
+    "audit_symbol_reachability",
+    "symbol_decision_surface_ready",
+    "symbol_f1b_ready",
 ]
