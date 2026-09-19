@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from drosomath.learning_signal import LearningSignal
 from drosomath.whole_brain.usage_learning import RewardCredit
@@ -45,6 +45,9 @@ class DirectionalUpdate:
     reinforced_channels: tuple[str, ...]
     ambiguous_path_edges_skipped: int
     sum_abs_delta: float = 0.0
+    # Read-only telemetry for bounded diagnostic consumers.  This does not
+    # participate in learning or checkpoint state.
+    updated_edge_hops: dict[int, int] = field(default_factory=dict)
 
 
 @dataclass(frozen=True, slots=True)
@@ -301,6 +304,7 @@ class PlasticityController:
             negative = credit.path_polarities < 0.0
             result[name] = {
                 "_causal_edge_indices": edges,
+                "_causal_edge_hops": credit.hops,
                 "active_click_causal_presynaptic_neurons": int(len(np.unique(presynaptic))),
                 "active_click_causal_edges": int(len(edges)),
                 "active_plastic_click_causal_edges": int(plastic.sum()),
@@ -571,6 +575,7 @@ class PlasticityController:
         total, sum_abs = 0, 0.0
         per_channel: dict[str, int] = {}
         changed_all = []
+        updated_edge_hops: dict[int, int] = {}
         hops: dict[int, int] = {}
         excitatory = inhibitory = consolidated = ambiguous = 0
         credits = {}
@@ -597,6 +602,8 @@ class PlasticityController:
             actual = state.multiplier[edges] - old
             count = int(len(edges)); total += count; per_channel[name] = count
             sum_abs += float(np.abs(actual).sum()); changed_all.append(edges)
+            for edge, hop in zip(edges, credit.hops):
+                updated_edge_hops[int(edge)] = int(hop)
             for hop in np.unique(credit.hops):
                 hops[int(hop)] = hops.get(int(hop), 0) + int((credit.hops == hop).sum())
             anatomical_sign = np.sign(brain.connectome.signed_synapse_counts[edges])
@@ -622,5 +629,5 @@ class PlasticityController:
         return DirectionalUpdate(
             total, per_channel, sum_abs / total if total else 0.0, updated, hops,
             excitatory, inhibitory, consolidated, int(len(updated)), tuple(reinforced), ambiguous,
-            sum_abs,
+            sum_abs, updated_edge_hops,
         )

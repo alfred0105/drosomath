@@ -12,6 +12,8 @@ import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+import numpy as np
+
 from drosomath.flywire_real import FlyBrainParams
 from drosomath.learning_signal import LearningSignal
 from drosomath.whole_brain import (
@@ -84,6 +86,131 @@ def build_temporal_window_record(
         **causal_summary,
         "active_neuron_jaccard": active_neuron_jaccard,
         "click_causal_jaccard": click_causal_jaccard,
+    }
+
+
+def _safe_overlap_fraction(left: set[int], right: set[int]) -> float:
+    """Return overlap over the left set, with empty-set results defined as 0."""
+    return float(len(left & right) / len(left)) if left else 0.0
+
+
+def _safe_jaccard(left: set[int], right: set[int]) -> float:
+    """Return Jaccard overlap; no observed edges is reported as 0."""
+    union = left | right
+    return float(len(left & right) / len(union)) if union else 0.0
+
+
+def build_credit_targeting_trial_summary(
+    *,
+    window_records: list[dict[str, object]],
+    updated_edge_indices,
+    updated_edge_hops: dict[int, int] | None = None,
+    early_window_limit: int,
+) -> dict[str, object]:
+    """Summarize temporary causal/update overlap without retaining edge IDs."""
+    windows = sorted(window_records, key=lambda item: int(item["window_index"]))
+    all_edges = {
+        int(edge)
+        for record in windows
+        for edge in record.get("causal_edges", ())
+    }
+    early_records = windows[: max(0, int(early_window_limit))]
+    early_edges = {
+        int(edge)
+        for record in early_records
+        for edge in record.get("causal_edges", ())
+    }
+    peak_record = max(
+        windows,
+        key=lambda item: (float(item.get("click_rate_hz", 0.0)), -int(item["window_index"])),
+        default=None,
+    )
+    peak_edges = (
+        {int(edge) for edge in peak_record.get("causal_edges", ())}
+        if peak_record is not None else set()
+    )
+    final_record = windows[-1] if windows else None
+    final_edges = (
+        {int(edge) for edge in final_record.get("causal_edges", ())}
+        if final_record is not None else set()
+    )
+    updated = {int(edge) for edge in updated_edge_indices}
+    hop_map = {int(edge): int(hop) for edge, hop in (updated_edge_hops or {}).items()}
+    return {
+        "updated_edge_count": int(len(updated)),
+        "fraction_updated_in_any_trial_causal_set": _safe_overlap_fraction(updated, all_edges),
+        "fraction_updated_in_early_causal_set": _safe_overlap_fraction(updated, early_edges),
+        "fraction_updated_in_peak_window_causal_set": _safe_overlap_fraction(updated, peak_edges),
+        "fraction_updated_in_final_window_causal_set": _safe_overlap_fraction(updated, final_edges),
+        "fraction_peak_causal_edges_updated": _safe_overlap_fraction(peak_edges, updated),
+        "updated_direct_1hop_fraction": float(
+            sum(int(hop_map.get(edge) == 1) for edge in updated) / len(updated)
+        ) if updated else 0.0,
+        "updated_2hop_fraction": float(
+            sum(int(hop_map.get(edge) == 2) for edge in updated) / len(updated)
+        ) if updated else 0.0,
+        "peak_final_causal_jaccard": _safe_jaccard(peak_edges, final_edges),
+        "peak_window_index": int(peak_record["window_index"]) if peak_record is not None else None,
+        "final_window_index": int(final_record["window_index"]) if final_record is not None else None,
+    }
+
+
+def summarize_key_edge_sharing(updated_edges_by_key: dict[str, set[int]]) -> dict[str, object]:
+    """Summarize cross-key sharing of temporary margin-update edge sets."""
+    keys = sorted(updated_edges_by_key)
+    pairwise = []
+    for index, left_key in enumerate(keys):
+        for right_key in keys[index + 1 :]:
+            pairwise.append(_safe_jaccard(updated_edges_by_key[left_key], updated_edges_by_key[right_key]))
+    usage: dict[int, int] = {}
+    for edges in updated_edges_by_key.values():
+        for edge in edges:
+            usage[edge] = usage.get(edge, 0) + 1
+    total = max(1, len(usage))
+    return {
+        "key_count": len(keys),
+        "mean_pairwise_updated_edge_overlap": float(sum(pairwise) / len(pairwise)) if pairwise else 0.0,
+        "median_pairwise_updated_edge_overlap": float(np.median(pairwise)) if pairwise else 0.0,
+        "maximum_pairwise_updated_edge_overlap": float(max(pairwise)) if pairwise else 0.0,
+        "unique_margin_updated_edge_count": int(len(usage)),
+        "fraction_updated_edges_used_by_at_least_2_keys": float(sum(count >= 2 for count in usage.values()) / total),
+        "fraction_updated_edges_used_by_at_least_5_keys": float(sum(count >= 5 for count in usage.values()) / total),
+    }
+
+
+def pair_next_same_key_occurrences(records: list[dict[str, object]], *, eligible_field: str) -> list[dict[str, float | int]]:
+    """Pair eligible successes with the next chronological occurrence of that key."""
+    pairs = []
+    for index, current in enumerate(records):
+        if not current.get(eligible_field, False):
+            continue
+        next_row = next(
+            (
+                candidate
+                for candidate in records[index + 1 :]
+                if candidate.get("label") == current.get("label")
+            ),
+            None,
+        )
+        if next_row is None:
+            continue
+        pairs.append({
+            "next_same_key_peak_delta": float(next_row.get("peak_click_rate_hz", 0.0)) - float(current.get("peak_click_rate_hz", 0.0)),
+            "next_same_key_success_change": int(bool(next_row.get("correct"))) - int(bool(current.get("correct"))),
+        })
+    return pairs
+
+
+def summarize_next_same_key_pairs(pairs: list[dict[str, float | int]]) -> dict[str, object]:
+    deltas = [float(pair["next_same_key_peak_delta"]) for pair in pairs]
+    success_changes = [int(pair["next_same_key_success_change"]) for pair in pairs]
+    return {
+        "pair_count": len(pairs),
+        "mean_next_same_key_peak_delta": float(np.mean(deltas)) if deltas else 0.0,
+        "median_next_same_key_peak_delta": float(np.median(deltas)) if deltas else 0.0,
+        "mean_next_same_key_success_change": float(np.mean(success_changes)) if success_changes else 0.0,
+        "success_improvement_count": int(sum(value > 0 for value in success_changes)),
+        "success_decline_count": int(sum(value < 0 for value in success_changes)),
     }
 
 
@@ -584,6 +711,9 @@ class KeyboardTrainingConfig:
     # E.1 records already-generated control-window activity only.  It never
     # replays the brain or participates in learning.
     temporal_engagement_diagnostic: bool = False
+    # E.3A compares temporary causal edge sets with generic update edges;
+    # it is strictly diagnostic and keeps no edge-ID lists in final reports.
+    credit_targeting_diagnostic: bool = False
     budget_strength: float = 0.25
     checkpoint_every: int = 32
     dashboard_update_interval_seconds: float = 0.5
@@ -1084,6 +1214,7 @@ class KeyboardNeuralSession:
         active_click_outputs: set[int] = set()
         counts = np.zeros(self.motor_channel_count, dtype=np.int32)
         temporal_windows: list[dict[str, object]] = []
+        credit_targeting_windows: list[dict[str, object]] = []
         previous_window_neurons: set[int] | None = None
         previous_window_causal_edges: set[int] | None = None
         first_any_network_activity_window = None
@@ -1157,9 +1288,24 @@ class KeyboardNeuralSession:
                     np.asarray(sorted(window_fired_neurons), dtype=np.int32),
                     {"motor/click": self.output_context["motor/click"]},
                 )["motor/click"]
-                causal_indices = set(
+                causal_edge_array = tuple(
                     int(edge) for edge in causal_probe.pop("_causal_edge_indices", ())
                 )
+                causal_indices = set(causal_edge_array)
+                causal_hops = {
+                    int(edge): int(hop)
+                    for edge, hop in zip(
+                        causal_edge_array,
+                        causal_probe.pop("_causal_edge_hops", ()),
+                    )
+                }
+                if self.config.credit_targeting_diagnostic:
+                    credit_targeting_windows.append({
+                        "window_index": int(windows),
+                        "click_rate_hz": float(window_click_rate_hz),
+                        "causal_edges": tuple(sorted(causal_indices)),
+                        "causal_hops": causal_hops,
+                    })
                 if first_any_network_activity_window is None and window_total_spikes > 0:
                     first_any_network_activity_window = windows
                 if first_click_causal_activity_window is None and causal_probe["active_click_causal_edges"] > 0:
@@ -1769,6 +1915,21 @@ class KeyboardNeuralSession:
                     "hitbox_shape": "box",
                 }],
             }
+        credit_targeting_internal = None
+        if self.config.credit_targeting_diagnostic:
+            credit_targeting_internal = {
+                "window_records": credit_targeting_windows,
+                "updated_edge_indices": (
+                    np.asarray(generic_update.updated_edge_indices, dtype=np.int32)
+                    if learn and generic_update is not None
+                    else np.empty(0, dtype=np.int32)
+                ),
+                "updated_edge_hops": (
+                    dict(generic_update.updated_edge_hops)
+                    if learn and generic_update is not None
+                    else {}
+                ),
+            }
         result = {
             "label": label,
             "correct": correct,
@@ -1817,6 +1978,8 @@ class KeyboardNeuralSession:
         }
         if temporal_engagement is not None:
             result["temporal_engagement"] = temporal_engagement
+        if credit_targeting_internal is not None:
+            result["_credit_targeting_internal"] = credit_targeting_internal
         if timings is not None:
             timings["neural_step_seconds"] = neural_step_seconds
             timings["motor_count_seconds"] = motor_count_seconds
@@ -2004,6 +2167,8 @@ def run_keyboard_training(
         for label in KEY_LABELS
     }
     temporal_engagement_trials: list[dict[str, object]] = []
+    credit_targeting_records: list[dict[str, object]] = []
+    credit_targeting_edges_by_key = {label: set() for label in KEY_LABELS}
     rng = np.random.default_rng(config.seed + 83_001)
     per_key_trials = {label: 0 for label in KEY_LABELS}
     per_key_correct = {label: 0 for label in KEY_LABELS}
@@ -2227,6 +2392,36 @@ def run_keyboard_training(
         row["trial"] = trial
         row["phase"] = row_phase
         row["selection_source"] = selection_source
+        credit_internal = row.pop("_credit_targeting_internal", None)
+        if isinstance(credit_internal, dict):
+            credit_summary = build_credit_targeting_trial_summary(
+                window_records=list(credit_internal.get("window_records", [])),
+                updated_edge_indices=credit_internal.get("updated_edge_indices", ()),
+                updated_edge_hops=credit_internal.get("updated_edge_hops", {}),
+                early_window_limit=max(1, int(math.ceil(session.max_control_windows * 0.25))),
+            )
+            row["credit_targeting"] = credit_summary
+            margin_update = bool(
+                row.get("correct")
+                and float(row.get("success_margin_directional_error", 0.0)) > 0.0
+            )
+            if margin_update:
+                credit_targeting_edges_by_key[label].update(
+                    int(edge)
+                    for edge in credit_internal.get("updated_edge_indices", ())
+                )
+            credit_targeting_records.append({
+                "trial": int(trial),
+                "label": label,
+                "correct": bool(row.get("correct")),
+                "peak_click_rate_hz": float(row.get("peak_click_rate_hz", 0.0)),
+                "below_margin_success": bool(
+                    row.get("correct")
+                    and float(row.get("peak_click_rate_hz", 0.0)) < config.click_margin_target_hz
+                ),
+                "margin_update": margin_update,
+                "credit_targeting": credit_summary,
+            })
         rows.append(row)
         row_correct = int(row["correct"])
         row_learning = row.get("learning", {})
@@ -2688,6 +2883,10 @@ def run_keyboard_training(
             ),
         },
         "temporal_engagement_trials": temporal_engagement_trials,
+        "credit_targeting_trials": credit_targeting_records,
+        "credit_targeting_key_edge_sharing": summarize_key_edge_sharing(
+            credit_targeting_edges_by_key
+        ) if config.credit_targeting_diagnostic else {},
         "execution_profile": {
             "backend": "numpy_cpu",
             "gpu_used": False,
@@ -2781,6 +2980,7 @@ def main() -> None:
     parser.add_argument("--checkpoint-every", type=int, default=32)
     parser.add_argument("--retention-trials-per-key", type=int, default=5)
     parser.add_argument("--diagnose-routes", action="store_true", help="Write read-only anatomical/active route diagnostics.")
+    parser.add_argument("--diagnose-credit-targeting", action="store_true", help="Audit generic directional update targeting without changing learning.")
     parser.add_argument("--diagnose-background", action="store_true", help="Include frozen background-only and token-only probes.")
     parser.add_argument("--diagnose-interference", action="store_true", help="Measure one-trial cross-label interference in a restored sandbox.")
     parser.add_argument("--diagnostic-key-count", type=int, default=5)
@@ -2829,6 +3029,7 @@ def main() -> None:
         motor_population_size=args.motor_population_size,
         adaptive_plastic_budget=args.adaptive_plastic_budget,
         adaptive_budget_max_promotions_per_event=args.adaptive_budget_max_promotions_per_event,
+        credit_targeting_diagnostic=args.diagnose_credit_targeting,
         body_mode=args.body_mode,
         curriculum_stage=args.curriculum_stage,
         checkpoint_every=args.checkpoint_every,
