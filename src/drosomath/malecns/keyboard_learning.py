@@ -908,6 +908,33 @@ class KeyboardNeuralSession:
         self.np.clip(stability, 0.0, 1.0, out=stability)
         return {"confirmed": True, "edge_updates": int(len(edges)), "mean_stability": float(stability.mean())}
 
+    def _learning_signal_for_trial(
+        self,
+        *,
+        reward: float,
+        correct: bool,
+        current_deficit: float,
+        click_gain: float,
+    ) -> LearningSignal:
+        """Translate keyboard outcome into task-independent brain feedback."""
+        if self.config.click_only and correct:
+            return LearningSignal(
+                reward=reward,
+                directional_error={"motor/click": 0.0},
+                reinforcement={"motor/click": 1.0},
+                surprise=current_deficit,
+                success=True,
+            )
+        return LearningSignal(
+            reward=reward,
+            directional_error={
+                "motor/click": current_deficit * click_gain if self.config.click_only else 0.0,
+            },
+            reinforcement={},
+            surprise=current_deficit,
+            success=correct,
+        )
+
     def run_trial(self, label: str, *, learn: bool = True) -> dict[str, object]:
         np = self.np
         timings: dict[str, float] | None = {} if self.config.profile_timing else None
@@ -1196,13 +1223,11 @@ class KeyboardNeuralSession:
             global_learning_reward = 0.0
         if learn:
             learning_started = time.perf_counter() if timings is not None else 0.0
-            learning_signal = LearningSignal(
+            learning_signal = self._learning_signal_for_trial(
                 reward=float(global_learning_reward),
-                directional_error={
-                    "motor/click": current_deficit * homeostatic_gains.get("motor/click", 1.0) if self.config.click_only and not correct else 0.0,
-                },
-                surprise=current_deficit,
-                success=bool(correct),
+                correct=bool(correct),
+                current_deficit=current_deficit,
+                click_gain=homeostatic_gains.get("motor/click", 1.0),
             )
             teacher_normalizer_followup: dict[str, object] = {}
             directional_update: dict[str, object] = {"edge_updates": 0, "channel_updates": {}}
@@ -1227,19 +1252,25 @@ class KeyboardNeuralSession:
                     "excitatory_updates": generic.excitatory_updates,
                     "inhibitory_updates": generic.inhibitory_updates,
                     "consolidated_edges": generic.consolidated_edges,
+                    "unique_edge_updates": generic.unique_edge_updates,
+                    "reinforced_channels": list(generic.reinforced_channels),
+                    "ambiguous_path_edges_skipped": generic.ambiguous_path_edges_skipped,
+                    "legacy_rescue_used": False,
                 }
                 if not self.config.click_only:
                     return teacher_stats
                 # Legacy label-route teacher is rescue only: use it when the
                 # generic output-direction path had no eligible edge.
-                if generic.edge_updates > 0:
+                if generic.edge_updates > 0 or learning_signal.success or not learning_signal.nonzero_directions():
                     return teacher_stats
                 teacher_started = time.perf_counter() if timings is not None else 0.0
+                directional_update["legacy_rescue_used"] = True
                 teacher_stats = self._apply_low_peak_click_teacher(
                     label,
                     peak_click_rate_hz,
                     teacher_strength,
                 )
+                directional_update["legacy_rescue_used"] = bool(teacher_stats.get("edge_updates", 0))
                 if timings is not None:
                     teacher_seconds = time.perf_counter() - teacher_started
                 return teacher_stats
@@ -1284,6 +1315,7 @@ class KeyboardNeuralSession:
             learning["learning_signal"] = {
                 "reward": learning_signal.reward,
                 "directional_error": dict(learning_signal.directional_error),
+                "reinforcement": dict(learning_signal.reinforcement),
                 "novelty": learning_signal.novelty,
                 "surprise": learning_signal.surprise,
             }
@@ -1308,10 +1340,11 @@ class KeyboardNeuralSession:
                     "WEAK_ACTIVE" if peak_click_rate_hz < self.config.click_gate_threshold_hz else "HEALTHY"
                 ),
             }
-            learning["teacher_confirmation"] = self._consolidate_confirmed_teacher_memory(
-                label,
-                confirmed=bool(correct),
-            )
+            # Successful consolidation is generic above.  Legacy label memory
+            # remains a failed-route rescue and is not reinforced on success.
+            learning["teacher_confirmation"] = {
+                "confirmed": bool(correct), "edge_updates": 0, "mean_stability": 0.0,
+            }
             if timings is not None:
                 timings["motor_teacher_seconds"] = teacher_seconds
         else:
