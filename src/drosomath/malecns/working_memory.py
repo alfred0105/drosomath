@@ -11,11 +11,9 @@ from dataclasses import dataclass
 import hashlib
 import math
 from itertools import combinations
-from typing import Mapping
-
 import numpy as np
 
-from .symbol_interface import NO_DECISION, SYMBOLS, SymbolInterface
+from .symbol_interface import SYMBOLS, SymbolInterface
 from .symbol_learning import build_symbol_learning_signal
 
 
@@ -146,9 +144,11 @@ class DelayedCueSession:
     def __init__(self, brain, interface: WorkingMemoryInterface, *, learning_enabled: bool = False):
         if brain.connectome is not interface.connectome:
             raise ValueError("brain and working-memory interface must match")
+        if learning_enabled:
+            raise NotImplementedError("F.2A is learning-disabled; defer learning to F.2B")
         self.brain = brain
         self.interface = interface
-        self.learning_enabled = bool(learning_enabled)
+        self.learning_enabled = False
         self._output_lookup = np.full(brain.connectome.neuron_count, -1, dtype=np.int8)
         for index, symbol in enumerate(SYMBOLS):
             self._output_lookup[interface.output_populations[symbol]] = index

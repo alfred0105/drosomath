@@ -209,6 +209,10 @@ class WorkingMemoryFoundationTest(unittest.TestCase):
         brain.learn_from_reward = lambda *args, **kwargs: self.fail("learning was called")
         DelayedCueSession(brain, self.wm, learning_enabled=False).run_trial("A")
 
+    def test_learning_enabled_is_rejected_until_f2b(self):
+        with self.assertRaisesRegex(NotImplementedError, "learning-disabled"):
+            DelayedCueSession(StubBrain(self.connectome, self.interface), self.wm, learning_enabled=True)
+
     def test_learning_signal_is_only_prepared_for_future_phase(self):
         brain = StubBrain(self.connectome, self.interface)
         session = DelayedCueSession(brain, self.wm)
