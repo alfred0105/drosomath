@@ -12,6 +12,34 @@ class BudgetNormalizationStats:
     mean_scale: float
 
 
+@dataclass(slots=True)
+class ChannelHomeostasis:
+    """Slow task-independent output-rate controller.
+
+    It observes named output channels only; no task labels enter this state.
+    The returned gain is bounded and intended to scale directional modulation,
+    not to overwrite reward learning.
+    """
+
+    target_rate_hz: float = 9.0
+    alpha: float = 0.01
+    strength: float = 0.05
+    ema: dict[str, float] | None = None
+
+    def __post_init__(self) -> None:
+        self.ema = {} if self.ema is None else dict(self.ema)
+
+    def observe(self, channel_rates: dict[str, float]) -> dict[str, float]:
+        gains = {}
+        for name, rate in channel_rates.items():
+            previous = self.ema.get(name, float(rate))
+            value = (1.0 - self.alpha) * previous + self.alpha * float(rate)
+            self.ema[name] = value
+            error = (self.target_rate_hz - value) / max(self.target_rate_hz, 1e-6)
+            gains[name] = max(0.8, min(1.2, 1.0 + self.strength * error))
+        return gains
+
+
 @dataclass(frozen=True, slots=True)
 class OutgoingBudgetNormalizer:
     """Keep strengthened pathways from consuming unlimited outgoing strength.

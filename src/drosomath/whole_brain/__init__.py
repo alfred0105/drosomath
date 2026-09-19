@@ -6,7 +6,7 @@ networks but is not appropriate for millions of MaleCNS edges.
 """
 
 from .brain_adapter import PlasticSparseFlyBrain
-from .homeostasis import BudgetNormalizationStats, OutgoingBudgetNormalizer
+from .homeostasis import BudgetNormalizationStats, ChannelHomeostasis, OutgoingBudgetNormalizer
 from .memory_consolidation import (
     AdaptiveReplayConfig,
     AdaptiveReplayScheduler,
@@ -19,11 +19,13 @@ from .memory_consolidation import (
 from .plastic_state import PlasticStateConfig, SparsePlasticityState
 from .structural_overlay import LearnedStructuralOverlay, StructuralOverlayConfig
 from .usage_learning import LearningUpdateStats, UsageRewardRule
+from .directional_modulation import DirectionalModulationConfig, DirectionalUpdate, PlasticityController
 
 __all__ = [
     "AdaptiveReplayConfig",
     "AdaptiveReplayScheduler",
     "BudgetNormalizationStats",
+    "ChannelHomeostasis",
     "ConsolidationConfig",
     "LearnedStructuralOverlay",
     "LearningUpdateStats",
@@ -37,4 +39,7 @@ __all__ = [
     "SparsePlasticityState",
     "StructuralOverlayConfig",
     "UsageRewardRule",
+    "DirectionalModulationConfig",
+    "DirectionalUpdate",
+    "PlasticityController",
 ]

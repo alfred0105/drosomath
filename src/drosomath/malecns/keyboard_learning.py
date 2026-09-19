@@ -13,7 +13,8 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from drosomath.flywire_real import FlyBrainParams
-from drosomath.whole_brain import OutgoingBudgetNormalizer, PlasticStateConfig, UsageRewardRule
+from drosomath.learning_signal import LearningSignal
+from drosomath.whole_brain import ChannelHomeostasis, DirectionalModulationConfig, OutgoingBudgetNormalizer, PlasticStateConfig, PlasticityController, UsageRewardRule
 
 from .brain import PlasticMaleCNSBrain
 from .checkpoint import restore_learning_checkpoint, save_learning_checkpoint
@@ -681,6 +682,17 @@ class KeyboardNeuralSession:
                 seed=config.seed,
             ),
         )
+        self.output_context = {
+            name: self.channel_groups[index]
+            for index, name in enumerate((
+                "motor/shoulder_positive", "motor/shoulder_negative",
+                "motor/elbow_positive", "motor/elbow_negative", "motor/click",
+            ))
+        }
+        self.plasticity_controller = PlasticityController(
+            DirectionalModulationConfig(learning_rate=config.learning_rate)
+        )
+        self.channel_homeostasis = ChannelHomeostasis(target_rate_hz=config.click_gate_threshold_hz)
         click_output = self.channel_groups[4]
         self.click_teacher_edge_indices = np.flatnonzero(
             np.isin(connectome.post_indices, click_output, assume_unique=False)
@@ -1134,6 +1146,11 @@ class KeyboardNeuralSession:
             max(0.0, (self.config.click_gate_threshold_hz - peak_click_rate_hz)
                  / self.config.click_gate_threshold_hz),
         )
+        channel_names = tuple(self.output_context)
+        final_rates = rates if "rates" in locals() else np.zeros(self.motor_channel_count, dtype=np.float32)
+        homeostatic_gains = self.channel_homeostasis.observe({
+            name: float(final_rates[index]) for index, name in enumerate(channel_names)
+        })
         old_peak_ema = self.peak_ema_by_label[label]
         peak_ema = (
             peak_click_rate_hz if old_peak_ema is None else
@@ -1179,7 +1196,15 @@ class KeyboardNeuralSession:
             global_learning_reward = 0.0
         if learn:
             learning_started = time.perf_counter() if timings is not None else 0.0
+            learning_signal = LearningSignal(
+                reward=float(global_learning_reward),
+                directional_error={
+                    "motor/click": current_deficit * homeostatic_gains.get("motor/click", 1.0) if self.config.click_only and not correct else 0.0,
+                },
+                surprise=current_deficit,
+            )
             teacher_normalizer_followup: dict[str, object] = {}
+            directional_update: dict[str, object] = {"edge_updates": 0, "channel_updates": {}}
             teacher_stats: dict[str, object] = {
                 "edge_updates": 0,
                 "mean_delta": 0.0,
@@ -1189,8 +1214,20 @@ class KeyboardNeuralSession:
             teacher_seconds = 0.0
 
             def apply_teacher_before_normalization(state) -> dict[str, object]:
-                nonlocal teacher_stats, teacher_seconds
+                nonlocal teacher_stats, teacher_seconds, directional_update
+                generic = self.plasticity_controller.apply_learning_signal(
+                    self.brain, learning_signal, self.output_context
+                )
+                directional_update = {
+                    "edge_updates": generic.edge_updates,
+                    "channel_updates": generic.channel_updates,
+                    "mean_abs_delta": generic.mean_abs_delta,
+                }
                 if not self.config.click_only:
+                    return teacher_stats
+                # Legacy label-route teacher is rescue only: use it when the
+                # generic output-direction path had no eligible edge.
+                if generic.edge_updates > 0:
                     return teacher_stats
                 teacher_started = time.perf_counter() if timings is not None else 0.0
                 teacher_stats = self._apply_low_peak_click_teacher(
@@ -1239,6 +1276,14 @@ class KeyboardNeuralSession:
             if timings is not None:
                 timings["brain_learning_seconds"] = time.perf_counter() - learning_started
             learning["motor_teacher"] = teacher_stats
+            learning["learning_signal"] = {
+                "reward": learning_signal.reward,
+                "directional_error": dict(learning_signal.directional_error),
+                "novelty": learning_signal.novelty,
+                "surprise": learning_signal.surprise,
+            }
+            learning["directional_modulation"] = directional_update
+            learning["homeostasis"] = {"channel_rates": {name: float(final_rates[index]) for index, name in enumerate(channel_names)}, "gains": homeostatic_gains, "ema": dict(self.channel_homeostasis.ema)}
             learning["teacher_normalizer_followup"] = teacher_normalizer_followup
             learning["active_route"] = {
                 "candidate_teacher_edges": int(teacher_stats.get("candidate_edge_count", 0)),
@@ -1484,6 +1529,7 @@ def run_keyboard_training(
         session.peak_ema_by_label.update(saved.get("peak_ema_by_label", {}))
         session.deficit_ema_by_label.update(saved.get("deficit_ema_by_label", {}))
         session.subthreshold_streak_by_label.update(saved.get("subthreshold_streak_by_label", {}))
+        session.channel_homeostasis.ema.update(saved.get("channel_homeostasis_ema", {}))
         for label, edges in saved.get("teacher_memory_edges_by_label", {}).items():
             if label in session.teacher_memory_edges_by_label:
                 session.teacher_memory_edges_by_label[label] = np.asarray(edges, dtype=np.int32)
@@ -1841,6 +1887,7 @@ def run_keyboard_training(
                     "deficit_ema_by_label": session.deficit_ema_by_label,
                     "subthreshold_streak_by_label": session.subthreshold_streak_by_label,
                     "teacher_memory_edges_by_label": {label: edges.tolist() for label, edges in session.teacher_memory_edges_by_label.items()},
+                    "channel_homeostasis_ema": session.channel_homeostasis.ema,
                 },
             )
             if config.profile_timing:
