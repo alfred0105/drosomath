@@ -214,6 +214,8 @@ def restore_learning_checkpoint(
         }
         if need_tracker is not None and all(key in data for key in need_keys.values()):
             payload = {name: data[key] for name, key in need_keys.items()}
+            if "need__recent_observations" in data:
+                payload["recent_observations"] = data["need__recent_observations"]
             payload["event_count"] = data["need__event_count"] if "need__event_count" in data else [0]
             need_tracker.restore_from_checkpoint(payload)
             need_restored = True

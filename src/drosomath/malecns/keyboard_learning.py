@@ -1569,6 +1569,10 @@ def run_keyboard_training(
     evaluation_trials = 0
     started = time.perf_counter()
     np = session.np
+    plastic_budget_start = session.brain.plasticity.plastic_edge_count
+    legacy_rescue_events = 0
+    directional_generic_update_count = 0
+    localized_positive_reward_updated_edge_count = 0
     rng = np.random.default_rng(config.seed + 83_001)
     per_key_trials = {label: 0 for label in KEY_LABELS}
     per_key_correct = {label: 0 for label in KEY_LABELS}
@@ -1793,6 +1797,14 @@ def run_keyboard_training(
         row["phase"] = row_phase
         row["selection_source"] = selection_source
         rows.append(row)
+        row_learning = row.get("learning", {})
+        row_directional = row_learning.get("directional_modulation", {})
+        row_legacy_rescue = bool(row_directional.get("legacy_rescue_used", False))
+        legacy_rescue_events += int(row_legacy_rescue)
+        directional_generic_update_count += int(row_directional.get("edge_updates", 0))
+        localized_positive_reward_updated_edge_count += int(
+            row_learning.get("reward_locality", {}).get("actual_credited_reward_updated_edges", 0)
+        )
         if config.profile_timing:
             timing_samples += 1
             for name, value in row.get("timing", {}).items():
@@ -2082,6 +2094,16 @@ def run_keyboard_training(
         "final_plasticity": {
             **session.brain.plasticity.summary(),
             "changed_edges": int(np.count_nonzero(np.abs(session.brain.plasticity.multiplier - 1.0) > 1e-7)),
+        },
+        "adaptive_budget": {
+            **session.plasticity_budget_adaptation.telemetry(),
+            "adaptive_plastic_budget": bool(config.adaptive_plastic_budget),
+            "legacy_rescue_events": int(legacy_rescue_events),
+            "directional_generic_update_count": int(directional_generic_update_count),
+            "localized_positive_reward_updated_edge_count": int(localized_positive_reward_updated_edge_count),
+            "plastic_budget_start": int(plastic_budget_start),
+            "plastic_budget_end": int(session.brain.plasticity.plastic_edge_count),
+            "budget_delta": int(session.brain.plasticity.plastic_edge_count - plastic_budget_start),
         },
         "execution_profile": {
             "backend": "numpy_cpu",

@@ -83,6 +83,34 @@ class PlasticityNeedTrackerTests(unittest.TestCase):
         self.assertEqual(int(tracker.ready_candidates()[0][0]), 4)
         self.assertEqual(tracker.records()[0].observation_count, 3)
 
+    def test_observation_gap_resets_recent_readiness(self):
+        tracker = PlasticityNeedTracker(PlasticityNeedConfig(minimum_observations=3, max_observation_gap=1))
+        tracker.advance(); tracker.observe([4], [1.0])
+        tracker.advance(); tracker.observe([4], [1.0])
+        tracker.advance(); tracker.advance(); tracker.observe([4], [1.0])
+        self.assertEqual(tracker.records()[0].observation_count, 1)
+        self.assertEqual(len(tracker.ready_candidates()[0]), 0)
+
+    def test_success_resets_recent_readiness(self):
+        tracker = PlasticityNeedTracker(PlasticityNeedConfig(minimum_observations=3))
+        for _ in range(2):
+            tracker.advance(); tracker.observe([4], [1.0])
+        tracker.advance(success=True)
+        tracker.advance(); tracker.observe([4], [1.0])
+        self.assertEqual(tracker.records()[0].observation_count, 1)
+
+    def test_old_checkpoint_observations_are_conservative(self):
+        tracker = PlasticityNeedTracker(PlasticityNeedConfig(minimum_observations=3))
+        tracker.restore_from_checkpoint({
+            "edge_indices": np.asarray([4], dtype=np.int32),
+            "scores": np.asarray([5.0], dtype=np.float32),
+            "observations": np.asarray([99], dtype=np.int32),
+            "last_seen": np.asarray([99], dtype=np.int64),
+            "event_count": np.asarray([99], dtype=np.int64),
+        })
+        self.assertEqual(tracker.records()[0].observation_count, 0)
+        self.assertEqual(len(tracker.ready_candidates()[0]), 0)
+
     def test_need_decays_when_not_reinforced(self):
         tracker = PlasticityNeedTracker(PlasticityNeedConfig(need_decay=0.5))
         tracker.advance(); tracker.observe([4], [1.0])

@@ -12,6 +12,7 @@ class PlasticityNeedConfig:
     need_decay: float = 0.90
     success_decay: float = 0.25
     minimum_observations: int = 3
+    max_observation_gap: int = 1
     promotion_threshold: float = 1.0
     max_tracked_candidates: int = 4096
     prune_threshold: float = 1e-6
@@ -40,6 +41,8 @@ class PlasticityNeedTracker:
             raise ValueError("success_decay must be in [0, 1]")
         if self.config.minimum_observations < 1:
             raise ValueError("minimum_observations must be >= 1")
+        if self.config.max_observation_gap < 1:
+            raise ValueError("max_observation_gap must be >= 1")
         if self.config.max_tracked_candidates < 1:
             raise ValueError("max_tracked_candidates must be >= 1")
         self._records: dict[int, PlasticityNeedRecord] = {}
@@ -60,8 +63,13 @@ class PlasticityNeedTracker:
         for edge, record in self._records.items():
             score = record.need_score * factor
             if score > self.config.prune_threshold:
+                recent_count = record.observation_count
+                if self.event_count - record.last_seen_event > self.config.max_observation_gap:
+                    recent_count = 0
+                if success:
+                    recent_count = 0
                 updated[edge] = PlasticityNeedRecord(
-                    edge, score, record.observation_count, record.last_seen_event
+                    edge, score, recent_count, record.last_seen_event
                 )
         self._records = updated
 
@@ -81,10 +89,13 @@ class PlasticityNeedTracker:
                 grouped[edge] = grouped.get(edge, 0.0) + weight
         for edge in sorted(grouped):
             old = self._records.get(edge)
+            prior_count = 0
+            if old is not None and self.event_count - old.last_seen_event <= self.config.max_observation_gap:
+                prior_count = old.observation_count
             self._records[edge] = PlasticityNeedRecord(
                 edge,
                 (old.need_score if old else 0.0) + grouped[edge],
-                (old.observation_count if old else 0) + 1,
+                prior_count + 1,
                 self.event_count,
             )
         self._trim()
@@ -118,6 +129,7 @@ class PlasticityNeedTracker:
             "edge_indices": np.asarray([r.edge_index for r in records], dtype=np.int32),
             "scores": np.asarray([r.need_score for r in records], dtype=np.float32),
             "observations": np.asarray([r.observation_count for r in records], dtype=np.int32),
+            "recent_observations": np.asarray([r.observation_count for r in records], dtype=np.int32),
             "last_seen": np.asarray([r.last_seen_event for r in records], dtype=np.int64),
             "event_count": np.asarray([self.event_count], dtype=np.int64),
         }
@@ -129,11 +141,16 @@ class PlasticityNeedTracker:
         last_seen = payload["last_seen"]
         if not (len(edges) == len(scores) == len(observations) == len(last_seen)):
             raise ValueError("inconsistent plasticity-need checkpoint lengths")
+        # D.2 checkpoints only had lifetime observation counts. Loading those
+        # as fresh evidence would re-enable stale promotions, so old state is
+        # deliberately conservative: preserve score but restart readiness.
+        recent_key = "recent_observations" if "recent_observations" in payload else None
+        recent_values = payload[recent_key] if recent_key is not None else [0] * len(edges)
         self._records = {
             int(edge): PlasticityNeedRecord(
-                int(edge), float(score), int(observation), int(seen)
+                int(edge), float(score), int(recent), int(seen)
             )
-            for edge, score, observation, seen in zip(edges, scores, observations, last_seen)
+            for edge, score, observation, recent, seen in zip(edges, scores, observations, recent_values, last_seen)
             if float(score) > self.config.prune_threshold
         }
         self.event_count = int(payload.get("event_count", [0])[0])
