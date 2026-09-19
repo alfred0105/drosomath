@@ -77,6 +77,14 @@ from .working_memory_learning import (
     WorkingMemoryLearningConfig,
     WorkingMemoryLearningTrial,
 )
+from .sequence_memory import (
+    ORDERED_PAIRS,
+    SequenceLearningSession,
+    SequenceMemoryConfig,
+    SequenceTrialResult,
+    TwoCueSequenceSession,
+    balanced_pair_schedule,
+)
 
 __all__ = [
     "BrainOutputTrialResult",
@@ -140,6 +148,12 @@ __all__ = [
     "DelayedCueLearningSession",
     "WorkingMemoryLearningConfig",
     "WorkingMemoryLearningTrial",
+    "ORDERED_PAIRS",
+    "SequenceLearningSession",
+    "SequenceMemoryConfig",
+    "SequenceTrialResult",
+    "TwoCueSequenceSession",
+    "balanced_pair_schedule",
     "download_malecns",
     "load_malecns_v1",
     "missing_files",

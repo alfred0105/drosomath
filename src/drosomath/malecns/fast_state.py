@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import math
 import os
+import time
 
 from drosomath.whole_brain.structural_overlay import LearnedStructuralOverlay
 
@@ -407,11 +408,17 @@ class FastSparseStateMixin:
             due = self._due_indices(ring_index)
             active = self._activate_indices(due, stimulus_indices)
         else:
-            with profiler.section("delay_ring_handling_seconds"):
+            delay_started = time.perf_counter()
+            with profiler.section("due_index_collection_seconds"):
                 ring_index = self.step_index % len(self._delay_ring)
                 due_slot = self._delay_ring[ring_index]
                 due = self._due_indices(ring_index)
+            with profiler.section("active_set_merge_seconds"):
                 active = self._activate_indices(due, stimulus_indices)
+            # Compatibility aggregate.  It is intentionally not included in
+            # P.4's disjoint subcomponent sum because it is the sum of the two
+            # sections above, not an additional interval.
+            profiler.add("delay_ring_handling_seconds", time.perf_counter() - delay_started)
 
         stimulated = np.empty(0, dtype=np.int32)
         if profiler is None:
