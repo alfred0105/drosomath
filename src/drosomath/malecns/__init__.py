@@ -72,6 +72,11 @@ from .working_memory import (
     WorkingMemoryInterface,
     pairwise_set_jaccard,
 )
+from .working_memory_learning import (
+    DelayedCueLearningSession,
+    WorkingMemoryLearningConfig,
+    WorkingMemoryLearningTrial,
+)
 
 __all__ = [
     "BrainOutputTrialResult",
@@ -132,6 +137,9 @@ __all__ = [
     "DelayedCueTrialResult",
     "WorkingMemoryInterface",
     "pairwise_set_jaccard",
+    "DelayedCueLearningSession",
+    "WorkingMemoryLearningConfig",
+    "WorkingMemoryLearningTrial",
     "download_malecns",
     "load_malecns_v1",
     "missing_files",

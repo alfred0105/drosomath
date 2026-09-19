@@ -204,6 +204,7 @@ class DelayedCueSession:
         reset_before_go: bool = False,
         track_eligibility: bool = False,
         retain_tracking: bool = False,
+        phase_observer=None,
     ) -> DelayedCueTrialResult:
         if cue not in SYMBOLS:
             raise KeyError(f"unknown cue {cue!r}")
@@ -213,9 +214,13 @@ class DelayedCueSession:
             cue_rates, cue_output_spikes, _ = self._run_phase(
                 self.interface.population_for_input(cue), self.cue_ms, self.stimulus_rate_hz
             )
+            if phase_observer is not None:
+                phase_observer("cue", self.brain)
             delay_rates, delay_output_spikes, _ = self._run_phase(
                 None, self.delay_ms, 0.0
             )
+            if phase_observer is not None:
+                phase_observer("delay", self.brain)
             active, fingerprint, membrane_norm, conductance_norm = self._capture_pre_go_state()
             post_reset_count = len(active)
             post_reset_fingerprint = fingerprint
@@ -226,6 +231,8 @@ class DelayedCueSession:
             go_rates, go_output_spikes, _ = self._run_phase(
                 self.interface.population_for_input(GO_SYMBOL), self.go_ms, self.stimulus_rate_hz
             )
+            if phase_observer is not None:
+                phase_observer("go", self.brain)
             decision = self.interface.symbol_interface.decision_surface.decide(
                 go_rates, total_output_spikes=go_output_spikes
             )
