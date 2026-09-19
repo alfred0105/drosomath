@@ -51,6 +51,7 @@ class SymbolInterfaceConfig:
     default_duration_ms: float = 20.0
     default_stimulus_rate_hz: float = 205.0
     plastic_fraction: float = 0.05
+    output_selection: str = "random_indegree"
 
     def __post_init__(self) -> None:
         if tuple(self.symbols) != SYMBOLS:
@@ -67,6 +68,10 @@ class SymbolInterfaceConfig:
             raise ValueError("default_stimulus_rate_hz must be >= 0")
         if not 0.0 <= self.plastic_fraction <= 1.0:
             raise ValueError("plastic_fraction must be in [0, 1]")
+        if self.output_selection not in {"random_indegree", "dynamic_generic"}:
+            raise ValueError(
+                "output_selection must be 'random_indegree' or 'dynamic_generic'"
+            )
 
 
 class DistributedSymbolEncoder:
@@ -161,6 +166,42 @@ class SymbolDecisionSurface:
             values.setflags(write=False)
             self._indices[symbol] = values
             cursor += self.config.output_population_size
+
+    @classmethod
+    def from_fixed_populations(
+        cls,
+        connectome,
+        config: SymbolInterfaceConfig,
+        populations: Mapping[str, np.ndarray],
+        *,
+        source: str = "fixed",
+    ) -> "SymbolDecisionSurface":
+        """Build a frozen direct readout from already selected real neurons."""
+        obj = cls.__new__(cls)
+        obj.config = config
+        obj.connectome = connectome
+        obj._body_ids = _as_neuron_ids(connectome)
+        n = int(getattr(connectome, "neuron_count", len(obj._body_ids)))
+        if set(populations) != set(SYMBOLS):
+            raise ValueError("fixed output populations must contain exactly A, B, C, D")
+        obj._indices = {}
+        all_indices: list[np.ndarray] = []
+        for symbol in SYMBOLS:
+            values = np.asarray(populations[symbol], dtype=np.int32)
+            if values.ndim != 1 or len(values) != config.output_population_size:
+                raise ValueError("fixed output populations must have equal configured size")
+            if len(np.unique(values)) != len(values):
+                raise ValueError("fixed output populations contain duplicate neurons")
+            if len(values) and (int(values.min()) < 0 or int(values.max()) >= n):
+                raise IndexError("fixed output population contains an invalid neuron index")
+            obj._indices[symbol] = values.copy()
+            obj._indices[symbol].setflags(write=False)
+            all_indices.append(values)
+        merged = np.concatenate(all_indices)
+        if len(np.unique(merged)) != len(merged):
+            raise ValueError("fixed output populations must be mutually disjoint")
+        obj.source = source
+        return obj
 
     @property
     def symbols(self) -> tuple[str, ...]:
@@ -319,11 +360,40 @@ class SymbolInterface:
     def __init__(self, connectome, config: SymbolInterfaceConfig | None = None):
         self.config = config or SymbolInterfaceConfig()
         self.encoder = DistributedSymbolEncoder(connectome, self.config)
+        if self.config.output_selection != "random_indegree":
+            raise ValueError(
+                "dynamic_generic requires SymbolInterface.with_output_populations()"
+            )
         self.decision_surface = SymbolDecisionSurface(
             connectome,
             self.config,
             excluded_indices=np.concatenate(tuple(self.encoder.populations.values())),
         )
+
+    @classmethod
+    def with_output_populations(
+        cls,
+        connectome,
+        config: SymbolInterfaceConfig,
+        output_populations: Mapping[str, np.ndarray],
+        *,
+        source: str = "fixed",
+    ) -> "SymbolInterface":
+        """Construct an interface with a frozen, externally selected surface."""
+        obj = cls.__new__(cls)
+        obj.config = config
+        obj.encoder = DistributedSymbolEncoder(connectome, config)
+        sensory = np.concatenate(tuple(obj.encoder.populations.values()))
+        output = np.concatenate(tuple(np.asarray(output_populations[symbol]) for symbol in SYMBOLS))
+        if len(np.intersect1d(sensory, output)):
+            raise ValueError("fixed output populations overlap sensory populations")
+        obj.decision_surface = SymbolDecisionSurface.from_fixed_populations(
+            connectome,
+            config,
+            output_populations,
+            source=source,
+        )
+        return obj
 
     @property
     def sensory_populations(self) -> dict[str, np.ndarray]:
@@ -332,6 +402,10 @@ class SymbolInterface:
     @property
     def output_populations(self) -> dict[str, np.ndarray]:
         return self.decision_surface.populations
+
+    @property
+    def output_selection(self) -> str:
+        return getattr(self.decision_surface, "source", "random_indegree")
 
     def allocation_summary(self) -> dict[str, object]:
         sensory = self.sensory_populations

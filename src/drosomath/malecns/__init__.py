@@ -39,6 +39,14 @@ from .symbol_dynamics_audit import (
     classify_output_observability,
     count_candidate_dynamic_pool,
 )
+from .dynamic_surface import (
+    DynamicCandidateFeatures,
+    build_dynamic_generic_interface,
+    collect_dynamic_candidate_features,
+    partition_dynamic_generic_candidates,
+    select_dynamic_generic_candidates,
+    viability_histogram,
+)
 
 __all__ = [
     "BrainOutputTrialResult",
@@ -74,6 +82,12 @@ __all__ = [
     "burst_outlier_symbols",
     "classify_output_observability",
     "count_candidate_dynamic_pool",
+    "DynamicCandidateFeatures",
+    "build_dynamic_generic_interface",
+    "collect_dynamic_candidate_features",
+    "partition_dynamic_generic_candidates",
+    "select_dynamic_generic_candidates",
+    "viability_histogram",
     "download_malecns",
     "load_malecns_v1",
     "missing_files",
