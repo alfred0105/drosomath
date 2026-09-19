@@ -1,0 +1,5803 @@
+{
+  "accuracy": 0.455439082278481,
+  "body": {
+    "arms": [
+      {
+        "elbow": [
+          0.5761620399131743,
+          0.315069354415597
+        ],
+        "endpoint": [
+          0.7352088061545344,
+          0.33250856736131656
+        ],
+        "shoulder": [
+          0.5,
+          0.5
+        ]
+      }
+    ],
+    "done": true,
+    "elapsed_s": 0.25,
+    "endpoints": [
+      [
+        0.7352088061545344,
+        0.33250856736131656
+      ]
+    ],
+    "targets": [
+      {
+        "hitbox_height": 0.026,
+        "hitbox_shape": "box",
+        "hitbox_width": 0.026,
+        "id": "P",
+        "owner_arm": null,
+        "radius": 0.025,
+        "x": 0.7352088061545344,
+        "y": 0.33250856736131656
+      }
+    ]
+  },
+  "click_window": [
+    true,
+    true,
+    false,
+    false,
+    true,
+    true,
+    true,
+    false,
+    true,
+    true,
+    true,
+    true,
+    false,
+    true,
+    false,
+    false,
+    true,
+    false,
+    false,
+    true
+  ],
+  "click_window_reached": false,
+  "click_window_size": 20,
+  "completed_trials": 50560,
+  "config": {
+    "background_neurons": 6,
+    "body_mode": "one_arm_fan",
+    "budget_strength": 0.25,
+    "checkpoint_every": 32,
+    "click_evidence_windows": 5,
+    "click_gate_threshold_hz": 9.0,
+    "click_integration_windows": 1,
+    "click_margin_reward_scale": 0.5,
+    "click_margin_target_hz": 15.0,
+    "click_only": true,
+    "click_penalty": 1.2,
+    "click_teacher_credit_floor": 0.05,
+    "click_teacher_learning_rate": 0.08,
+    "click_window_size": 20,
+    "consecutive_correct_bonus": 0.25,
+    "control_window_ms": 20.0,
+    "correct_distance_penalty_scale": 0.2,
+    "coverage_interval": 4,
+    "curriculum_stage": "click_accuracy",
+    "dashboard_update_interval_seconds": 0.5,
+    "distance_penalty_scale": 1.2,
+    "duration_ms": 100.0,
+    "hard_mining_floor": 0.1,
+    "hard_mining_power": 2.0,
+    "learning_rate": 0.02,
+    "lock_arm_during_click_training": true,
+    "low_peak_click_penalty_scale": 0.0,
+    "max_consecutive_bonus": 1.0,
+    "max_control_windows": 30,
+    "min_connection_synapses": 5,
+    "min_trials_per_key": 5,
+    "motor_population_size": 64,
+    "peak_regression_escalation": 0.5,
+    "peak_regression_fixed_penalty": 0.8,
+    "peak_regression_max_penalty": 2.0,
+    "peak_regression_trigger_hz": 1.5,
+    "persistent_deficit_ema_alpha": 0.25,
+    "persistent_deficit_max_strength": 2.0,
+    "persistent_deficit_streak_gain": 0.15,
+    "persistent_peak_ema_alpha": 0.25,
+    "plastic_fraction": 0.05,
+    "profile_timing": true,
+    "resume": true,
+    "retention_degraded_accuracy": 0.8,
+    "retention_probe_interval": 600,
+    "retention_replay_bonus": 0.5,
+    "robust_mastery_enabled": false,
+    "robust_mastery_macro_accuracy": 0.95,
+    "robust_mastery_min_key_accuracy": 0.9,
+    "seed": 7,
+    "stimulus_rate_hz": 205.0,
+    "target_accuracy": 0.8,
+    "teacher_confirmation_stability_gain": 0.05,
+    "teacher_memory_edges_per_key": 128,
+    "teacher_stability_protection": 0.85,
+    "token_neurons": 6,
+    "trials": 0
+  },
+  "evaluation_accuracy": 0.0,
+  "evaluation_correct": 0,
+  "evaluation_failures": 0,
+  "evaluation_number": 0,
+  "evaluation_passed": false,
+  "evaluation_per_key": {
+    "0": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "1": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "2": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "3": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "4": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "5": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "6": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "7": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "8": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "9": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "A": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "B": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "C": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "D": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "E": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "F": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "G": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "H": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "I": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "J": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "K": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "L": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "M": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "N": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "O": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "P": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "Q": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "R": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "S": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "T": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "U": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "V": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "W": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "X": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "Y": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "Z": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3131": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3134": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3137": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3139": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3141": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3142": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3145": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3147": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3148": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u314a": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u314b": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u314c": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u314d": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u314e": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u314f": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3151": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3153": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3155": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3157": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u315b": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u315c": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3160": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3161": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3163": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    }
+  },
+  "evaluation_ready": false,
+  "evaluation_total": 1200,
+  "evaluation_trials": 0,
+  "experiment": "malecns_virtual_keyboard_matching_v1",
+  "key_accuracy_reached": false,
+  "keyboard_layout": [
+    {
+      "height": 0.026,
+      "label": "\u3131",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5280680782603975,
+      "y": 0.36795007390093626
+    },
+    {
+      "height": 0.026,
+      "label": "\u3134",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5595648486678348,
+      "y": 0.3788512121266666
+    },
+    {
+      "height": 0.026,
+      "label": "\u3137",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5874309205765658,
+      "y": 0.39713681840845944
+    },
+    {
+      "height": 0.026,
+      "label": "\u3139",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6099677535267953,
+      "y": 0.42169231720788825
+    },
+    {
+      "height": 0.026,
+      "label": "\u3141",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6258016439435461,
+      "y": 0.45102095977766343
+    },
+    {
+      "height": 0.026,
+      "label": "\u3142",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6339674574656889,
+      "y": 0.4833350565503862
+    },
+    {
+      "height": 0.026,
+      "label": "\u3145",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6339674574656889,
+      "y": 0.5166649434496138
+    },
+    {
+      "height": 0.026,
+      "label": "\u3147",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6258016439435461,
+      "y": 0.5489790402223366
+    },
+    {
+      "height": 0.026,
+      "label": "\u3148",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6099677535267953,
+      "y": 0.5783076827921118
+    },
+    {
+      "height": 0.026,
+      "label": "\u314a",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5874309205765658,
+      "y": 0.6028631815915406
+    },
+    {
+      "height": 0.026,
+      "label": "\u314b",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5595648486678348,
+      "y": 0.6211487878733334
+    },
+    {
+      "height": 0.026,
+      "label": "\u314c",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5280680782603975,
+      "y": 0.6320499260990637
+    },
+    {
+      "height": 0.026,
+      "label": "\u314d",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5387235524148077,
+      "y": 0.3178200093633287
+    },
+    {
+      "height": 0.026,
+      "label": "\u314e",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.58217743010655,
+      "y": 0.3328595426562345
+    },
+    {
+      "height": 0.026,
+      "label": "\u314f",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.620622288573225,
+      "y": 0.35808690687833755
+    },
+    {
+      "height": 0.026,
+      "label": "\u3151",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.651714771069375,
+      "y": 0.39196440059236437
+    },
+    {
+      "height": 0.026,
+      "label": "\u3153",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.673559675440633,
+      "y": 0.4324270648784431
+    },
+    {
+      "height": 0.026,
+      "label": "\u3155",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6848254737258116,
+      "y": 0.4770085502408106
+    },
+    {
+      "height": 0.026,
+      "label": "\u3157",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6848254737258116,
+      "y": 0.5229914497591893
+    },
+    {
+      "height": 0.026,
+      "label": "\u315b",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.673559675440633,
+      "y": 0.5675729351215568
+    },
+    {
+      "height": 0.026,
+      "label": "\u315c",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.651714771069375,
+      "y": 0.6080355994076356
+    },
+    {
+      "height": 0.026,
+      "label": "\u3160",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.620622288573225,
+      "y": 0.6419130931216624
+    },
+    {
+      "height": 0.026,
+      "label": "\u3161",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.58217743010655,
+      "y": 0.6671404573437655
+    },
+    {
+      "height": 0.026,
+      "label": "\u3163",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5387235524148077,
+      "y": 0.6821799906366712
+    },
+    {
+      "height": 0.026,
+      "label": "A",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5493790265692179,
+      "y": 0.26768994482572117
+    },
+    {
+      "height": 0.026,
+      "label": "B",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6047900115452651,
+      "y": 0.2868678731858024
+    },
+    {
+      "height": 0.026,
+      "label": "C",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6538136565698842,
+      "y": 0.31903699534821567
+    },
+    {
+      "height": 0.026,
+      "label": "D",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6934617886119547,
+      "y": 0.36223648397684044
+    },
+    {
+      "height": 0.026,
+      "label": "E",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7213177069377199,
+      "y": 0.41383316997922276
+    },
+    {
+      "height": 0.026,
+      "label": "F",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7356834899859342,
+      "y": 0.470682043931235
+    },
+    {
+      "height": 0.026,
+      "label": "G",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7356834899859342,
+      "y": 0.529317956068765
+    },
+    {
+      "height": 0.026,
+      "label": "H",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7213177069377199,
+      "y": 0.5861668300207772
+    },
+    {
+      "height": 0.026,
+      "label": "I",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6934617886119547,
+      "y": 0.6377635160231596
+    },
+    {
+      "height": 0.026,
+      "label": "J",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6538136565698842,
+      "y": 0.6809630046517843
+    },
+    {
+      "height": 0.026,
+      "label": "K",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6047900115452651,
+      "y": 0.7131321268141976
+    },
+    {
+      "height": 0.026,
+      "label": "L",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5493790265692179,
+      "y": 0.7323100551742788
+    },
+    {
+      "height": 0.026,
+      "label": "M",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.560034500723628,
+      "y": 0.21755988028811368
+    },
+    {
+      "height": 0.026,
+      "label": "N",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6274025929839802,
+      "y": 0.24087620371537033
+    },
+    {
+      "height": 0.026,
+      "label": "O",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6870050245665434,
+      "y": 0.27998708381809384
+    },
+    {
+      "height": 0.026,
+      "label": "P",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7352088061545344,
+      "y": 0.33250856736131656
+    },
+    {
+      "height": 0.026,
+      "label": "Q",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7690757384348068,
+      "y": 0.39523927508000245
+    },
+    {
+      "height": 0.026,
+      "label": "R",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7865415062460568,
+      "y": 0.4643555376216594
+    },
+    {
+      "height": 0.026,
+      "label": "S",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7865415062460568,
+      "y": 0.5356444623783405
+    },
+    {
+      "height": 0.026,
+      "label": "T",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7690757384348068,
+      "y": 0.6047607249199975
+    },
+    {
+      "height": 0.026,
+      "label": "U",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7352088061545344,
+      "y": 0.6674914326386834
+    },
+    {
+      "height": 0.026,
+      "label": "V",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6870050245665433,
+      "y": 0.7200129161819062
+    },
+    {
+      "height": 0.026,
+      "label": "W",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6274025929839802,
+      "y": 0.7591237962846297
+    },
+    {
+      "height": 0.026,
+      "label": "X",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.560034500723628,
+      "y": 0.7824401197118863
+    },
+    {
+      "height": 0.026,
+      "label": "Y",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5706899748780382,
+      "y": 0.16742981575050614
+    },
+    {
+      "height": 0.026,
+      "label": "Z",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6500151744226953,
+      "y": 0.19488453424493818
+    },
+    {
+      "height": 0.026,
+      "label": "0",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7201963925632027,
+      "y": 0.24093717228797196
+    },
+    {
+      "height": 0.026,
+      "label": "1",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7769558236971141,
+      "y": 0.30278065074579263
+    },
+    {
+      "height": 0.026,
+      "label": "2",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.8168337699318937,
+      "y": 0.3766453801807821
+    },
+    {
+      "height": 0.026,
+      "label": "3",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.8373995225061794,
+      "y": 0.4580290313120838
+    },
+    {
+      "height": 0.026,
+      "label": "4",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.8373995225061794,
+      "y": 0.5419709686879162
+    },
+    {
+      "height": 0.026,
+      "label": "5",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.8168337699318937,
+      "y": 0.6233546198192179
+    },
+    {
+      "height": 0.026,
+      "label": "6",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7769558236971141,
+      "y": 0.6972193492542074
+    },
+    {
+      "height": 0.026,
+      "label": "7",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7201963925632026,
+      "y": 0.7590628277120282
+    },
+    {
+      "height": 0.026,
+      "label": "8",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6500151744226953,
+      "y": 0.8051154657550619
+    },
+    {
+      "height": 0.026,
+      "label": "9",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5706899748780382,
+      "y": 0.8325701842494939
+    }
+  ],
+  "mastery_passed": false,
+  "mastery_reached": false,
+  "min_trials_per_key": 5,
+  "motor_channel_count": 5,
+  "per_key": {
+    "0": {
+      "accuracy": 0.8857142857142857,
+      "correct": 341,
+      "mastered": false,
+      "recent_accuracy": 0.9,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "recent_correct": 18,
+      "trials": 385
+    },
+    "1": {
+      "accuracy": 0.7780269058295964,
+      "correct": 347,
+      "mastered": false,
+      "recent_accuracy": 0.65,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 13,
+      "trials": 446
+    },
+    "2": {
+      "accuracy": 0.5260736196319018,
+      "correct": 343,
+      "mastered": false,
+      "recent_accuracy": 0.85,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 17,
+      "trials": 652
+    },
+    "3": {
+      "accuracy": 0.39362912400455063,
+      "correct": 346,
+      "mastered": false,
+      "recent_accuracy": 0.3,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true
+      ],
+      "recent_correct": 6,
+      "trials": 879
+    },
+    "4": {
+      "accuracy": 0.2858490566037736,
+      "correct": 303,
+      "mastered": false,
+      "recent_accuracy": 0.35,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "recent_correct": 7,
+      "trials": 1060
+    },
+    "5": {
+      "accuracy": 0.1900414937759336,
+      "correct": 229,
+      "mastered": false,
+      "recent_accuracy": 0.15,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "recent_correct": 3,
+      "trials": 1205
+    },
+    "6": {
+      "accuracy": 0.9556213017751479,
+      "correct": 323,
+      "mastered": true,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 20,
+      "trials": 338
+    },
+    "7": {
+      "accuracy": 0.23754152823920266,
+      "correct": 286,
+      "mastered": false,
+      "recent_accuracy": 0.15,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true
+      ],
+      "recent_correct": 3,
+      "trials": 1204
+    },
+    "8": {
+      "accuracy": 0.391304347826087,
+      "correct": 369,
+      "mastered": false,
+      "recent_accuracy": 0.45,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        false
+      ],
+      "recent_correct": 9,
+      "trials": 943
+    },
+    "9": {
+      "accuracy": 0.5691176470588235,
+      "correct": 387,
+      "mastered": false,
+      "recent_accuracy": 0.5,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 680
+    },
+    "A": {
+      "accuracy": 0.41353383458646614,
+      "correct": 385,
+      "mastered": false,
+      "recent_accuracy": 0.45,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        true
+      ],
+      "recent_correct": 9,
+      "trials": 931
+    },
+    "B": {
+      "accuracy": 0.3732620320855615,
+      "correct": 349,
+      "mastered": false,
+      "recent_accuracy": 0.55,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 11,
+      "trials": 935
+    },
+    "C": {
+      "accuracy": 0.44533029612756264,
+      "correct": 391,
+      "mastered": false,
+      "recent_accuracy": 0.4,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "recent_correct": 8,
+      "trials": 878
+    },
+    "D": {
+      "accuracy": 0.6797020484171322,
+      "correct": 365,
+      "mastered": false,
+      "recent_accuracy": 0.65,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false
+      ],
+      "recent_correct": 13,
+      "trials": 537
+    },
+    "E": {
+      "accuracy": 0.6155234657039711,
+      "correct": 341,
+      "mastered": false,
+      "recent_accuracy": 0.65,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true
+      ],
+      "recent_correct": 13,
+      "trials": 554
+    },
+    "F": {
+      "accuracy": 0.5899513776337115,
+      "correct": 364,
+      "mastered": false,
+      "recent_accuracy": 0.55,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        false,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 11,
+      "trials": 617
+    },
+    "G": {
+      "accuracy": 0.5113636363636364,
+      "correct": 405,
+      "mastered": false,
+      "recent_accuracy": 0.55,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "recent_correct": 11,
+      "trials": 792
+    },
+    "H": {
+      "accuracy": 0.5552407932011332,
+      "correct": 392,
+      "mastered": false,
+      "recent_accuracy": 0.5,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 706
+    },
+    "I": {
+      "accuracy": 0.8291571753986332,
+      "correct": 364,
+      "mastered": false,
+      "recent_accuracy": 0.8,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false
+      ],
+      "recent_correct": 16,
+      "trials": 439
+    },
+    "J": {
+      "accuracy": 0.9824561403508771,
+      "correct": 280,
+      "mastered": false,
+      "recent_accuracy": 0.95,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "recent_correct": 19,
+      "trials": 285
+    },
+    "K": {
+      "accuracy": 0.4025695931477516,
+      "correct": 376,
+      "mastered": false,
+      "recent_accuracy": 0.4,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        true,
+        false
+      ],
+      "recent_correct": 8,
+      "trials": 934
+    },
+    "L": {
+      "accuracy": 0.21724709784411278,
+      "correct": 262,
+      "mastered": false,
+      "recent_accuracy": 0.15,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "recent_correct": 3,
+      "trials": 1206
+    },
+    "M": {
+      "accuracy": 0.7325349301397206,
+      "correct": 367,
+      "mastered": false,
+      "recent_accuracy": 0.7,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 14,
+      "trials": 501
+    },
+    "N": {
+      "accuracy": 0.5877061469265368,
+      "correct": 392,
+      "mastered": false,
+      "recent_accuracy": 0.6,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        false,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "recent_correct": 12,
+      "trials": 667
+    },
+    "O": {
+      "accuracy": 0.4604767879548306,
+      "correct": 367,
+      "mastered": false,
+      "recent_accuracy": 0.5,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false
+      ],
+      "recent_correct": 10,
+      "trials": 797
+    },
+    "P": {
+      "accuracy": 0.32236205227492737,
+      "correct": 333,
+      "mastered": false,
+      "recent_accuracy": 0.35,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true
+      ],
+      "recent_correct": 7,
+      "trials": 1033
+    },
+    "Q": {
+      "accuracy": 0.7211155378486056,
+      "correct": 362,
+      "mastered": false,
+      "recent_accuracy": 0.7,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false
+      ],
+      "recent_correct": 14,
+      "trials": 502
+    },
+    "R": {
+      "accuracy": 0.9478260869565217,
+      "correct": 327,
+      "mastered": false,
+      "recent_accuracy": 0.9,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 18,
+      "trials": 345
+    },
+    "S": {
+      "accuracy": 0.22703180212014135,
+      "correct": 257,
+      "mastered": false,
+      "recent_accuracy": 0.25,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "recent_correct": 5,
+      "trials": 1132
+    },
+    "T": {
+      "accuracy": 0.7494646680942184,
+      "correct": 350,
+      "mastered": false,
+      "recent_accuracy": 0.65,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false
+      ],
+      "recent_correct": 13,
+      "trials": 467
+    },
+    "U": {
+      "accuracy": 0.6094420600858369,
+      "correct": 426,
+      "mastered": false,
+      "recent_accuracy": 0.55,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "recent_correct": 11,
+      "trials": 699
+    },
+    "V": {
+      "accuracy": 0.575,
+      "correct": 391,
+      "mastered": false,
+      "recent_accuracy": 0.65,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "recent_correct": 13,
+      "trials": 680
+    },
+    "W": {
+      "accuracy": 0.6057866184448463,
+      "correct": 335,
+      "mastered": false,
+      "recent_accuracy": 0.7,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 14,
+      "trials": 553
+    },
+    "X": {
+      "accuracy": 0.33664349553128103,
+      "correct": 339,
+      "mastered": false,
+      "recent_accuracy": 0.25,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "recent_correct": 5,
+      "trials": 1007
+    },
+    "Y": {
+      "accuracy": 0.8431372549019608,
+      "correct": 344,
+      "mastered": false,
+      "recent_accuracy": 0.8,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false
+      ],
+      "recent_correct": 16,
+      "trials": 408
+    },
+    "Z": {
+      "accuracy": 0.48214285714285715,
+      "correct": 378,
+      "mastered": false,
+      "recent_accuracy": 0.65,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false
+      ],
+      "recent_correct": 13,
+      "trials": 784
+    },
+    "\u3131": {
+      "accuracy": 0.41488162344983087,
+      "correct": 368,
+      "mastered": false,
+      "recent_accuracy": 0.2,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true
+      ],
+      "recent_correct": 4,
+      "trials": 887
+    },
+    "\u3134": {
+      "accuracy": 0.710204081632653,
+      "correct": 348,
+      "mastered": false,
+      "recent_accuracy": 0.7,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 14,
+      "trials": 490
+    },
+    "\u3137": {
+      "accuracy": 0.6424682395644283,
+      "correct": 354,
+      "mastered": false,
+      "recent_accuracy": 0.6,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false
+      ],
+      "recent_correct": 12,
+      "trials": 551
+    },
+    "\u3139": {
+      "accuracy": 0.7907488986784141,
+      "correct": 359,
+      "mastered": false,
+      "recent_accuracy": 0.85,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "recent_correct": 17,
+      "trials": 454
+    },
+    "\u3141": {
+      "accuracy": 0.624048706240487,
+      "correct": 410,
+      "mastered": false,
+      "recent_accuracy": 0.75,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ],
+      "recent_correct": 15,
+      "trials": 657
+    },
+    "\u3142": {
+      "accuracy": 0.6852589641434262,
+      "correct": 344,
+      "mastered": false,
+      "recent_accuracy": 0.65,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ],
+      "recent_correct": 13,
+      "trials": 502
+    },
+    "\u3145": {
+      "accuracy": 0.34615384615384615,
+      "correct": 342,
+      "mastered": false,
+      "recent_accuracy": 0.25,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false
+      ],
+      "recent_correct": 5,
+      "trials": 988
+    },
+    "\u3147": {
+      "accuracy": 0.5555555555555556,
+      "correct": 390,
+      "mastered": false,
+      "recent_accuracy": 0.45,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "recent_correct": 9,
+      "trials": 702
+    },
+    "\u3148": {
+      "accuracy": 0.37808807733619765,
+      "correct": 352,
+      "mastered": false,
+      "recent_accuracy": 0.25,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "recent_correct": 5,
+      "trials": 931
+    },
+    "\u314a": {
+      "accuracy": 0.9023136246786633,
+      "correct": 351,
+      "mastered": false,
+      "recent_accuracy": 0.95,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 19,
+      "trials": 389
+    },
+    "\u314b": {
+      "accuracy": 0.4431960049937578,
+      "correct": 355,
+      "mastered": false,
+      "recent_accuracy": 0.45,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        true,
+        false,
+        true,
+        true
+      ],
+      "recent_correct": 9,
+      "trials": 801
+    },
+    "\u314c": {
+      "accuracy": 0.23209876543209876,
+      "correct": 282,
+      "mastered": false,
+      "recent_accuracy": 0.15,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false
+      ],
+      "recent_correct": 3,
+      "trials": 1215
+    },
+    "\u314d": {
+      "accuracy": 0.3366238894373149,
+      "correct": 341,
+      "mastered": false,
+      "recent_accuracy": 0.35,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "recent_correct": 7,
+      "trials": 1013
+    },
+    "\u314e": {
+      "accuracy": 0.5155844155844156,
+      "correct": 397,
+      "mastered": false,
+      "recent_accuracy": 0.65,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true,
+        false
+      ],
+      "recent_correct": 13,
+      "trials": 770
+    },
+    "\u314f": {
+      "accuracy": 0.532608695652174,
+      "correct": 392,
+      "mastered": false,
+      "recent_accuracy": 0.5,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 736
+    },
+    "\u3151": {
+      "accuracy": 0.40276179516685845,
+      "correct": 350,
+      "mastered": false,
+      "recent_accuracy": 0.3,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "recent_correct": 6,
+      "trials": 869
+    },
+    "\u3153": {
+      "accuracy": 0.2211910286156226,
+      "correct": 286,
+      "mastered": false,
+      "recent_accuracy": 0.2,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "recent_correct": 4,
+      "trials": 1293
+    },
+    "\u3155": {
+      "accuracy": 0.7806451612903226,
+      "correct": 363,
+      "mastered": false,
+      "recent_accuracy": 0.65,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true
+      ],
+      "recent_correct": 13,
+      "trials": 465
+    },
+    "\u3157": {
+      "accuracy": 0.433252427184466,
+      "correct": 357,
+      "mastered": false,
+      "recent_accuracy": 0.25,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true
+      ],
+      "recent_correct": 5,
+      "trials": 824
+    },
+    "\u315b": {
+      "accuracy": 0.5764192139737991,
+      "correct": 396,
+      "mastered": false,
+      "recent_accuracy": 0.55,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "recent_correct": 11,
+      "trials": 687
+    },
+    "\u315c": {
+      "accuracy": 0.22450728363324765,
+      "correct": 262,
+      "mastered": false,
+      "recent_accuracy": 0.4,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "recent_correct": 8,
+      "trials": 1167
+    },
+    "\u3160": {
+      "accuracy": 0.23476702508960573,
+      "correct": 262,
+      "mastered": false,
+      "recent_accuracy": 0.25,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false
+      ],
+      "recent_correct": 5,
+      "trials": 1116
+    },
+    "\u3161": {
+      "accuracy": 0.05659163987138264,
+      "correct": 88,
+      "mastered": false,
+      "recent_accuracy": 0.0,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "recent_correct": 0,
+      "trials": 1555
+    },
+    "\u3163": {
+      "accuracy": 0.5270805812417437,
+      "correct": 399,
+      "mastered": false,
+      "recent_accuracy": 0.35,
+      "recent_attempts": 20,
+      "recent_clicks": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "recent_correct": 7,
+      "trials": 757
+    }
+  },
+  "perfect_1200_passed": false,
+  "phase": "training",
+  "recent_trials": [
+    {
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6122034034819924,
+              0.33443914639306427
+            ],
+            "endpoint": [
+              0.6848254737258116,
+              0.4770085502408107
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.1,
+        "endpoints": [
+          [
+            0.6848254737258116,
+            0.4770085502408107
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "\u3155",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.6848254737258116,
+            "y": 0.4770085502408106
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.2265625,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "\u3155",
+      "consecutive_bonus": 0.0,
+      "correct": true,
+      "correct_distance_penalty": 6.038817148783751e-16,
+      "correct_distance_ratio": 3.019408574391875e-15,
+      "correct_streak": 1,
+      "deficit_ema": 0.02724492327586218,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.14439629999105819,
+      "global_learning_reward": 1.2265624999999993,
+      "label": "\u3155",
+      "learned": true,
+      "learning": {
+        "budget": {
+          "edges_scaled": 23216,
+          "mean_scale": 0.9797858363680071,
+          "neurons_touched": 2572
+        },
+        "learning": {
+          "edge_updates": 23216,
+          "max_abs_delta": 0.09511995315551758,
+          "mean_abs_delta": 0.01935557098346772
+        },
+        "motor_teacher": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "plasticity": null,
+        "post_reward": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "reward": 1.2265624999999993,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 11,
+          "mean_stability": 0.999999463558197
+        },
+        "teacher_normalizer_followup": {},
+        "timing": {
+          "normalization_seconds": 0.028597199998330325,
+          "plastic_lifecycle_seconds": 0.0048420999955851585,
+          "reward_update_seconds": 0.05166229998576455,
+          "total_seconds": 0.08516630000667647
+        }
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 5.551115123125783e-17,
+      "movement": {
+        "center": [
+          0.6848254737258116,
+          0.4770085502408106
+        ],
+        "endpoint": [
+          0.6848254737258116,
+          0.4770085502408107
+        ],
+        "max": [
+          0.6848254737258116,
+          0.4770085502408107
+        ],
+        "min": [
+          0.6848254737258116,
+          0.4770085502408107
+        ],
+        "samples": 3,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 2.5,
+      "peak_click_rate_hz": 11.71875,
+      "peak_ema_hz": 9.949335301617994,
+      "peak_motor_rate_hz": 25.0,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.02724492327586218,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 8.59375,
+      "reward": 1.2265624999999993,
+      "selection_source": "balanced_coverage",
+      "subthreshold_streak": 0,
+      "timing": {
+        "brain_learning_seconds": 0.08519479999085888,
+        "brain_reset_seconds": 0.00035360001493245363,
+        "motor_count_seconds": 0.0010375000420026481,
+        "motor_teacher_seconds": 0.0,
+        "neural_step_seconds": 0.05773389994283207,
+        "total_trial_seconds": 0.14439709999714978
+      },
+      "trial": 50545,
+      "windows": 2
+    },
+    {
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6568355401774497,
+              0.37589273455092337
+            ],
+            "endpoint": [
+              0.8168337699318937,
+              0.3766453801807821
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.25,
+        "endpoints": [
+          [
+            0.8168337699318937,
+            0.3766453801807821
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "2",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.8168337699318937,
+            "y": 0.3766453801807821
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.5,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "2",
+      "consecutive_bonus": 1.0,
+      "correct": true,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 10,
+      "deficit_ema": 0.0061765883731014675,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.5368254999921191,
+      "global_learning_reward": 2.5,
+      "label": "2",
+      "learned": true,
+      "learning": {
+        "budget": {
+          "edges_scaled": 47493,
+          "mean_scale": 0.9765767802897154,
+          "neurons_touched": 9013
+        },
+        "learning": {
+          "edge_updates": 47493,
+          "max_abs_delta": 0.24300718307495117,
+          "mean_abs_delta": 0.023185467623646233
+        },
+        "motor_teacher": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "plasticity": null,
+        "post_reward": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "reward": 2.5,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 11,
+          "mean_stability": 0.9662982821464539
+        },
+        "teacher_normalizer_followup": {},
+        "timing": {
+          "normalization_seconds": 0.1010387999995146,
+          "plastic_lifecycle_seconds": 0.005303300014929846,
+          "reward_update_seconds": 0.18319950002478436,
+          "total_seconds": 0.2896949000132736
+        }
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.8168337699318937,
+          0.3766453801807821
+        ],
+        "endpoint": [
+          0.8168337699318937,
+          0.3766453801807821
+        ],
+        "max": [
+          0.8168337699318937,
+          0.3766453801807821
+        ],
+        "min": [
+          0.8168337699318937,
+          0.3766453801807821
+        ],
+        "samples": 6,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 5.46875,
+      "peak_click_rate_hz": 17.96875,
+      "peak_ema_hz": 13.784050362444685,
+      "peak_motor_rate_hz": 46.875,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.0061765883731014675,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 15.625,
+      "reward": 2.5,
+      "selection_source": "hard_mining",
+      "subthreshold_streak": 0,
+      "timing": {
+        "brain_learning_seconds": 0.289792200026568,
+        "brain_reset_seconds": 0.0005549999768845737,
+        "motor_count_seconds": 0.0035153004864696413,
+        "motor_teacher_seconds": 0.0,
+        "neural_step_seconds": 0.24257769956602715,
+        "total_trial_seconds": 0.5368262999982107
+      },
+      "trial": 50546,
+      "windows": 5
+    },
+    {
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6811571687842638,
+              0.41525284548688524
+            ],
+            "endpoint": [
+              0.7865415062460568,
+              0.5356444623783405
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.2,
+        "endpoints": [
+          [
+            0.7865415062460568,
+            0.5356444623783405
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "S",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.7865415062460568,
+            "y": 0.5356444623783405
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.03125,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "S",
+      "consecutive_bonus": 0.0,
+      "correct": true,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 1,
+      "deficit_ema": 0.22020770492793107,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.2643857999937609,
+      "global_learning_reward": 1.03125,
+      "label": "S",
+      "learned": true,
+      "learning": {
+        "budget": {
+          "edges_scaled": 36017,
+          "mean_scale": 0.9779244046181099,
+          "neurons_touched": 4907
+        },
+        "learning": {
+          "edge_updates": 36017,
+          "max_abs_delta": 0.15031719207763672,
+          "mean_abs_delta": 0.01288795051838962
+        },
+        "motor_teacher": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "plasticity": null,
+        "post_reward": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "reward": 1.03125,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 16,
+          "mean_stability": 0.9540376663208008
+        },
+        "teacher_normalizer_followup": {},
+        "timing": {
+          "normalization_seconds": 0.05860020002000965,
+          "plastic_lifecycle_seconds": 0.0045365999976638705,
+          "reward_update_seconds": 0.0872183000028599,
+          "total_seconds": 0.1504793000058271
+        }
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.7865415062460568,
+          0.5356444623783405
+        ],
+        "endpoint": [
+          0.7865415062460568,
+          0.5356444623783405
+        ],
+        "max": [
+          0.7865415062460568,
+          0.5356444623783405
+        ],
+        "min": [
+          0.7865415062460568,
+          0.5356444623783405
+        ],
+        "samples": 5,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 3.90625,
+      "peak_click_rate_hz": 9.375,
+      "peak_ema_hz": 7.176532960190766,
+      "peak_motor_rate_hz": 17.96875,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.22020770492793107,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 3.90625,
+      "reward": 1.03125,
+      "selection_source": "hard_mining",
+      "subthreshold_streak": 0,
+      "timing": {
+        "brain_learning_seconds": 0.15052270001615398,
+        "brain_reset_seconds": 0.0004900000058114529,
+        "motor_count_seconds": 0.0017210996011272073,
+        "motor_teacher_seconds": 0.0,
+        "neural_step_seconds": 0.11150320037268102,
+        "total_trial_seconds": 0.26438670000061393
+      },
+      "trial": 50547,
+      "windows": 4
+    },
+    {
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.5316289764914843,
+              0.3025168162954093
+            ],
+            "endpoint": [
+              0.6500151744226952,
+              0.19488453424493818
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": false,
+        "elapsed_s": 0.25,
+        "endpoints": [
+          [
+            0.6500151744226952,
+            0.19488453424493818
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "Z",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.6500151744226953,
+            "y": 0.19488453424493818
+          }
+        ]
+      },
+      "click_attempted_arms": [],
+      "click_margin_bonus": 0.0,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": null,
+      "clicked_label": null,
+      "consecutive_bonus": 0.0,
+      "correct": false,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 6.03881714878375e-15,
+      "correct_streak": 0,
+      "deficit_ema": 0.096097114502493,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.16869140000198968,
+      "global_learning_reward": 0.0,
+      "label": "Z",
+      "learned": true,
+      "learning": {
+        "budget": {
+          "edges_scaled": 27080,
+          "mean_scale": 0.978926335156899,
+          "neurons_touched": 3309
+        },
+        "learning": {
+          "edge_updates": 0,
+          "max_abs_delta": 0.0,
+          "mean_abs_delta": 0.0
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 4,
+          "candidate_edge_count": 401,
+          "deficit": 0.3055555555555556,
+          "edge_updates": 4,
+          "effective_strength_after": 26.399999618530273,
+          "effective_strength_before": 26.28241729736328,
+          "label": "Z",
+          "max_delta": 0.02028679847717285,
+          "mean_delta": 0.013020217418670654,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 2.9869799613952637,
+          "nonzero_eligibility_edge_count": 4,
+          "plastic_edge_count": 22,
+          "regression_strength": 1.096097114502493,
+          "relevant_presynaptic_count": 222
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 4,
+          "candidate_edge_count": 401,
+          "deficit": 0.3055555555555556,
+          "edge_updates": 4,
+          "effective_strength_after": 26.399999618530273,
+          "effective_strength_before": 26.28241729736328,
+          "label": "Z",
+          "max_delta": 0.02028679847717285,
+          "mean_delta": 0.013020217418670654,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 2.9869799613952637,
+          "nonzero_eligibility_edge_count": 4,
+          "plastic_edge_count": 22,
+          "regression_strength": 1.096097114502493,
+          "relevant_presynaptic_count": 222
+        },
+        "reward": 0.0,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": false,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {
+          "label": "Z",
+          "net_gain": -0.010545015335083008,
+          "normalizer_loss": -0.010545015335083008,
+          "teacher_gain": 0.013020038604736328,
+          "teacher_multiplier_after_next_normalization": 2.989454984664917,
+          "teacher_multiplier_after_previous_update": 3.0,
+          "teacher_multiplier_before_next_normalization": 3.0
+        },
+        "timing": {
+          "normalization_seconds": 0.03811419999692589,
+          "plastic_lifecycle_seconds": 0.004815899999812245,
+          "reward_update_seconds": 0.00021129997912794352,
+          "total_seconds": 0.04321119998348877
+        }
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 1.1102230246251565e-16,
+      "movement": {
+        "center": [
+          0.6500151744226952,
+          0.1948845342449382
+        ],
+        "endpoint": [
+          0.6500151744226952,
+          0.19488453424493818
+        ],
+        "max": [
+          0.6500151744226952,
+          0.19488453424493818
+        ],
+        "min": [
+          0.6500151744226952,
+          0.19488453424493818
+        ],
+        "samples": 6,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 3.125,
+      "peak_click_rate_hz": 6.25,
+      "peak_ema_hz": 9.042683786233836,
+      "peak_motor_rate_hz": 10.9375,
+      "peak_regression_penalty": 0.8,
+      "peak_regression_ratio": 0.38461538461538464,
+      "peak_regression_streak": 1,
+      "peak_regression_strength": 1.0,
+      "peak_regression_triggered": true,
+      "persistence_strength": 0.096097114502493,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 10.15625,
+      "reward": -2.0,
+      "selection_source": "hard_mining",
+      "subthreshold_streak": 1,
+      "timing": {
+        "brain_learning_seconds": 0.04324820000329055,
+        "brain_reset_seconds": 0.00045479999971576035,
+        "motor_count_seconds": 0.0019523000810295343,
+        "motor_teacher_seconds": 0.00028450001263991,
+        "neural_step_seconds": 0.12276959986775182,
+        "total_trial_seconds": 0.1686926999827847
+      },
+      "trial": 50548,
+      "windows": 5
+    },
+    {
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.4310662471129765,
+              0.31225512600097227
+            ],
+            "endpoint": [
+              0.560034500723628,
+              0.21755988028811363
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.25,
+        "endpoints": [
+          [
+            0.560034500723628,
+            0.21755988028811363
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "M",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.560034500723628,
+            "y": 0.21755988028811368
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.5,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "M",
+      "consecutive_bonus": 0.75,
+      "correct": true,
+      "correct_distance_penalty": 6.038817148783751e-16,
+      "correct_distance_ratio": 3.019408574391875e-15,
+      "correct_streak": 4,
+      "deficit_ema": 0.011008406190426728,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.47647919997689314,
+      "global_learning_reward": 2.2499999999999996,
+      "label": "M",
+      "learned": true,
+      "learning": {
+        "budget": {
+          "edges_scaled": 45957,
+          "mean_scale": 0.9764676281863911,
+          "neurons_touched": 8440
+        },
+        "learning": {
+          "edge_updates": 45957,
+          "max_abs_delta": 0.4723241329193115,
+          "mean_abs_delta": 0.025064696190596213
+        },
+        "motor_teacher": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "plasticity": null,
+        "post_reward": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "reward": 2.2499999999999996,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 21,
+          "mean_stability": 0.9990276098251343
+        },
+        "teacher_normalizer_followup": {},
+        "timing": {
+          "normalization_seconds": 0.09910570000647567,
+          "plastic_lifecycle_seconds": 0.005642300006002188,
+          "reward_update_seconds": 0.15616889999364503,
+          "total_seconds": 0.2610920000006445
+        }
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 5.551115123125783e-17,
+      "movement": {
+        "center": [
+          0.560034500723628,
+          0.21755988028811366
+        ],
+        "endpoint": [
+          0.560034500723628,
+          0.21755988028811363
+        ],
+        "max": [
+          0.560034500723628,
+          0.21755988028811363
+        ],
+        "min": [
+          0.560034500723628,
+          0.21755988028811363
+        ],
+        "samples": 6,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 7.5,
+      "peak_click_rate_hz": 17.1875,
+      "peak_ema_hz": 11.898904127097577,
+      "peak_motor_rate_hz": 31.25,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.011008406190426728,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 11.71875,
+      "reward": 2.2499999999999996,
+      "selection_source": "balanced_coverage",
+      "subthreshold_streak": 0,
+      "timing": {
+        "brain_learning_seconds": 0.26121209998382255,
+        "brain_reset_seconds": 0.00039430000470019877,
+        "motor_count_seconds": 0.003162599605275318,
+        "motor_teacher_seconds": 0.0,
+        "neural_step_seconds": 0.21124180022161454,
+        "total_trial_seconds": 0.47647999998298474
+      },
+      "trial": 50549,
+      "windows": 5
+    },
+    {
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6614181155123511,
+              0.6180855282599917
+            ],
+            "endpoint": [
+              0.5493790265692179,
+              0.7323100551742788
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.1,
+        "endpoints": [
+          [
+            0.5493790265692179,
+            0.7323100551742788
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "L",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.5493790265692179,
+            "y": 0.7323100551742788
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.03125,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "L",
+      "consecutive_bonus": 0.0,
+      "correct": true,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 1,
+      "deficit_ema": 0.18258961603153762,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.08483110001543537,
+      "global_learning_reward": 1.03125,
+      "label": "L",
+      "learned": true,
+      "learning": {
+        "budget": {
+          "edges_scaled": 13398,
+          "mean_scale": 0.9799987513945804,
+          "neurons_touched": 1284
+        },
+        "learning": {
+          "edge_updates": 13398,
+          "max_abs_delta": 0.13473224639892578,
+          "mean_abs_delta": 0.01322552687660191
+        },
+        "motor_teacher": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "plasticity": null,
+        "post_reward": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "reward": 1.03125,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 16,
+          "mean_stability": 0.8988387584686279
+        },
+        "teacher_normalizer_followup": {},
+        "timing": {
+          "normalization_seconds": 0.016156099998624995,
+          "plastic_lifecycle_seconds": 0.004915199999231845,
+          "reward_update_seconds": 0.025131999980658293,
+          "total_seconds": 0.04626019997522235
+        }
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.5493790265692179,
+          0.7323100551742788
+        ],
+        "endpoint": [
+          0.5493790265692179,
+          0.7323100551742788
+        ],
+        "max": [
+          0.5493790265692179,
+          0.7323100551742788
+        ],
+        "min": [
+          0.5493790265692179,
+          0.7323100551742788
+        ],
+        "samples": 3,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 2.1875,
+      "peak_click_rate_hz": 9.375,
+      "peak_ema_hz": 7.4737233460896295,
+      "peak_motor_rate_hz": 10.9375,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.18258961603153762,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 8.59375,
+      "reward": 1.03125,
+      "selection_source": "hard_mining",
+      "subthreshold_streak": 0,
+      "timing": {
+        "brain_learning_seconds": 0.0462847999879159,
+        "brain_reset_seconds": 0.0004945999826304615,
+        "motor_count_seconds": 0.0007528000278398395,
+        "motor_teacher_seconds": 0.0,
+        "neural_step_seconds": 0.037443699955474585,
+        "total_trial_seconds": 0.08483200002228841
+      },
+      "trial": 50550,
+      "windows": 2
+    },
+    {
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.5547789938839988,
+              0.3076480781768562
+            ],
+            "endpoint": [
+              0.6258016439435461,
+              0.45102095977766343
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.2,
+        "endpoints": [
+          [
+            0.6258016439435461,
+            0.45102095977766343
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "\u3141",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.6258016439435461,
+            "y": 0.45102095977766343
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.03125,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "\u3141",
+      "consecutive_bonus": 0.0,
+      "correct": true,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 1,
+      "deficit_ema": 0.018121777976020766,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.20825419999891892,
+      "global_learning_reward": 1.03125,
+      "label": "\u3141",
+      "learned": true,
+      "learning": {
+        "budget": {
+          "edges_scaled": 26959,
+          "mean_scale": 0.9784664056837165,
+          "neurons_touched": 3293
+        },
+        "learning": {
+          "edge_updates": 26959,
+          "max_abs_delta": 0.13498425483703613,
+          "mean_abs_delta": 0.01243373703331351
+        },
+        "motor_teacher": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "plasticity": null,
+        "post_reward": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "reward": 1.03125,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 14,
+          "mean_stability": 0.9985542893409729
+        },
+        "teacher_normalizer_followup": {},
+        "timing": {
+          "normalization_seconds": 0.03671899999608286,
+          "plastic_lifecycle_seconds": 0.005090599996037781,
+          "reward_update_seconds": 0.05925780002144165,
+          "total_seconds": 0.10118910000892356
+        }
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.6258016439435461,
+          0.45102095977766343
+        ],
+        "endpoint": [
+          0.6258016439435461,
+          0.45102095977766343
+        ],
+        "max": [
+          0.6258016439435461,
+          0.45102095977766343
+        ],
+        "min": [
+          0.6258016439435461,
+          0.45102095977766343
+        ],
+        "samples": 5,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 4.0625,
+      "peak_click_rate_hz": 9.375,
+      "peak_ema_hz": 9.413436731397223,
+      "peak_motor_rate_hz": 11.71875,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.018121777976020766,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 8.59375,
+      "reward": 1.03125,
+      "selection_source": "hard_mining",
+      "subthreshold_streak": 0,
+      "timing": {
+        "brain_learning_seconds": 0.10130949999438599,
+        "brain_reset_seconds": 0.0003271999885328114,
+        "motor_count_seconds": 0.0016871000698301941,
+        "motor_teacher_seconds": 0.0,
+        "neural_step_seconds": 0.10458669983199798,
+        "total_trial_seconds": 0.2082556000095792
+      },
+      "trial": 50551,
+      "windows": 4
+    },
+    {
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6685773481594421,
+              0.6076182033279233
+            ],
+            "endpoint": [
+              0.7201963925632026,
+              0.7590628277120282
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.2,
+        "endpoints": [
+          [
+            0.7201963925632026,
+            0.7590628277120282
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "7",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.7201963925632026,
+            "y": 0.7590628277120282
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.03125,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "7",
+      "consecutive_bonus": 0.25,
+      "correct": true,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 2,
+      "deficit_ema": 0.27337202526094695,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.26618150001741014,
+      "global_learning_reward": 1.28125,
+      "label": "7",
+      "learned": true,
+      "learning": {
+        "budget": {
+          "edges_scaled": 31744,
+          "mean_scale": 0.9786191335097326,
+          "neurons_touched": 3950
+        },
+        "learning": {
+          "edge_updates": 31744,
+          "max_abs_delta": 0.09714865684509277,
+          "mean_abs_delta": 0.013821785447127637
+        },
+        "motor_teacher": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "plasticity": null,
+        "post_reward": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "reward": 1.28125,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 12,
+          "mean_stability": 0.9188531041145325
+        },
+        "teacher_normalizer_followup": {},
+        "timing": {
+          "normalization_seconds": 0.0446343999938108,
+          "plastic_lifecycle_seconds": 0.005648899998050183,
+          "reward_update_seconds": 0.07016090000979602,
+          "total_seconds": 0.12052560001029633
+        }
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.7201963925632026,
+          0.7590628277120282
+        ],
+        "endpoint": [
+          0.7201963925632026,
+          0.7590628277120282
+        ],
+        "max": [
+          0.7201963925632026,
+          0.7590628277120282
+        ],
+        "min": [
+          0.7201963925632026,
+          0.7590628277120282
+        ],
+        "samples": 5,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 4.21875,
+      "peak_click_rate_hz": 9.375,
+      "peak_ema_hz": 7.619620277292041,
+      "peak_motor_rate_hz": 17.1875,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.3333333333333333,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.27337202526094695,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 14.0625,
+      "reward": 1.28125,
+      "selection_source": "hard_mining",
+      "subthreshold_streak": 0,
+      "timing": {
+        "brain_learning_seconds": 0.12057060000370257,
+        "brain_reset_seconds": 0.00041710000368766487,
+        "motor_count_seconds": 0.0024971998936962336,
+        "motor_teacher_seconds": 0.0,
+        "neural_step_seconds": 0.1424434002256021,
+        "total_trial_seconds": 0.2661822999943979
+      },
+      "trial": 50552,
+      "windows": 4
+    },
+    {
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.48228169670937404,
+              0.3007863917085447
+            ],
+            "endpoint": [
+              0.5706899748780382,
+              0.16742981575050614
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": false,
+        "elapsed_s": 0.25,
+        "endpoints": [
+          [
+            0.5706899748780382,
+            0.16742981575050614
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "Y",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.5706899748780382,
+            "y": 0.16742981575050614
+          }
+        ]
+      },
+      "click_attempted_arms": [],
+      "click_margin_bonus": 0.0,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": null,
+      "clicked_label": null,
+      "consecutive_bonus": 0.0,
+      "correct": false,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 0,
+      "deficit_ema": 0.026199783512303093,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.255019700009143,
+      "global_learning_reward": 0.0,
+      "label": "Y",
+      "learned": true,
+      "learning": {
+        "budget": {
+          "edges_scaled": 35378,
+          "mean_scale": 0.9794823251546627,
+          "neurons_touched": 4892
+        },
+        "learning": {
+          "edge_updates": 0,
+          "max_abs_delta": 0.0,
+          "mean_abs_delta": 0.0
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 5,
+          "candidate_edge_count": 245,
+          "deficit": 0.04513888888888889,
+          "edge_updates": 5,
+          "effective_strength_after": 36.262393951416016,
+          "effective_strength_before": 36.1859245300293,
+          "label": "Y",
+          "max_delta": 0.015924930572509766,
+          "mean_delta": 0.007330941967666149,
+          "mean_multiplier_after": 2.996778726577759,
+          "mean_multiplier_before": 2.989447832107544,
+          "nonzero_eligibility_edge_count": 5,
+          "plastic_edge_count": 14,
+          "regression_strength": 1.0261997835123031,
+          "relevant_presynaptic_count": 146
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 5,
+          "candidate_edge_count": 245,
+          "deficit": 0.04513888888888889,
+          "edge_updates": 5,
+          "effective_strength_after": 36.262393951416016,
+          "effective_strength_before": 36.1859245300293,
+          "label": "Y",
+          "max_delta": 0.015924930572509766,
+          "mean_delta": 0.007330941967666149,
+          "mean_multiplier_after": 2.996778726577759,
+          "mean_multiplier_before": 2.989447832107544,
+          "nonzero_eligibility_edge_count": 5,
+          "plastic_edge_count": 14,
+          "regression_strength": 1.0261997835123031,
+          "relevant_presynaptic_count": 146
+        },
+        "reward": 0.0,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": false,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {
+          "label": "Y",
+          "net_gain": -0.010477542877197266,
+          "normalizer_loss": -0.010477542877197266,
+          "teacher_gain": 0.007330894470214844,
+          "teacher_multiplier_after_next_normalization": 2.9863011837005615,
+          "teacher_multiplier_after_previous_update": 2.996778726577759,
+          "teacher_multiplier_before_next_normalization": 2.996778726577759
+        },
+        "timing": {
+          "normalization_seconds": 0.05346819999977015,
+          "plastic_lifecycle_seconds": 0.004661899991333485,
+          "reward_update_seconds": 0.0002586999908089638,
+          "total_seconds": 0.05852180000510998
+        }
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.5706899748780382,
+          0.16742981575050617
+        ],
+        "endpoint": [
+          0.5706899748780382,
+          0.16742981575050614
+        ],
+        "max": [
+          0.5706899748780382,
+          0.16742981575050614
+        ],
+        "min": [
+          0.5706899748780382,
+          0.16742981575050614
+        ],
+        "samples": 6,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 6.25,
+      "peak_click_rate_hz": 8.59375,
+      "peak_ema_hz": 9.549924945941216,
+      "peak_motor_rate_hz": 21.875,
+      "peak_regression_penalty": 0.8,
+      "peak_regression_ratio": 0.15384615384615385,
+      "peak_regression_streak": 1,
+      "peak_regression_strength": 1.0,
+      "peak_regression_triggered": true,
+      "persistence_strength": 0.026199783512303093,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 10.15625,
+      "reward": -2.0,
+      "selection_source": "balanced_coverage",
+      "subthreshold_streak": 1,
+      "timing": {
+        "brain_learning_seconds": 0.05857550000655465,
+        "brain_reset_seconds": 0.00047279999125748873,
+        "motor_count_seconds": 0.0030514997197315097,
+        "motor_teacher_seconds": 0.00026550001348368824,
+        "neural_step_seconds": 0.19257910040323623,
+        "total_trial_seconds": 0.25502049998613074
+      },
+      "trial": 50553,
+      "windows": 5
+    },
+    {
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6493461622152203,
+              0.36697472483928073
+            ],
+            "endpoint": [
+              0.6848254737258115,
+              0.5229914497591893
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.25,
+        "endpoints": [
+          [
+            0.6848254737258115,
+            0.5229914497591893
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "\u3157",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.6848254737258116,
+            "y": 0.5229914497591893
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.03125,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "\u3157",
+      "consecutive_bonus": 0.0,
+      "correct": true,
+      "correct_distance_penalty": 1.2077634297567501e-15,
+      "correct_distance_ratio": 6.03881714878375e-15,
+      "correct_streak": 1,
+      "deficit_ema": 0.35710119641667293,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.3269803999864962,
+      "global_learning_reward": 1.031249999999999,
+      "label": "\u3157",
+      "learned": true,
+      "learning": {
+        "budget": {
+          "edges_scaled": 36997,
+          "mean_scale": 0.9755824321257517,
+          "neurons_touched": 6434
+        },
+        "learning": {
+          "edge_updates": 36997,
+          "max_abs_delta": 0.07713198661804199,
+          "mean_abs_delta": 0.0156926763964095
+        },
+        "motor_teacher": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "plasticity": null,
+        "post_reward": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "reward": 1.031249999999999,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 10,
+          "mean_stability": 0.9999996423721313
+        },
+        "teacher_normalizer_followup": {},
+        "timing": {
+          "normalization_seconds": 0.06944530000328086,
+          "plastic_lifecycle_seconds": 0.004928500013193116,
+          "reward_update_seconds": 0.11635889997705817,
+          "total_seconds": 0.19093279997468926
+        }
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 1.1102230246251565e-16,
+      "movement": {
+        "center": [
+          0.6848254737258115,
+          0.5229914497591893
+        ],
+        "endpoint": [
+          0.6848254737258115,
+          0.5229914497591893
+        ],
+        "max": [
+          0.6848254737258115,
+          0.5229914497591893
+        ],
+        "min": [
+          0.6848254737258115,
+          0.5229914497591893
+        ],
+        "samples": 6,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 3.28125,
+      "peak_click_rate_hz": 9.375,
+      "peak_ema_hz": 6.207978759422,
+      "peak_motor_rate_hz": 28.125,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.35710119641667293,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 0.78125,
+      "reward": 1.031249999999999,
+      "selection_source": "hard_mining",
+      "subthreshold_streak": 0,
+      "timing": {
+        "brain_learning_seconds": 0.19104649999644607,
+        "brain_reset_seconds": 0.00045510000200010836,
+        "motor_count_seconds": 0.002209999947808683,
+        "motor_teacher_seconds": 0.0,
+        "neural_step_seconds": 0.13291770010255277,
+        "total_trial_seconds": 0.32698169999639504
+      },
+      "trial": 50554,
+      "windows": 5
+    },
+    {
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6994654121681055,
+              0.5146133277732272
+            ],
+            "endpoint": [
+              0.8168337699318937,
+              0.6233546198192179
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": false,
+        "elapsed_s": 0.25,
+        "endpoints": [
+          [
+            0.8168337699318937,
+            0.6233546198192179
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "5",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.8168337699318937,
+            "y": 0.6233546198192179
+          }
+        ]
+      },
+      "click_attempted_arms": [],
+      "click_margin_bonus": 0.0,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": null,
+      "clicked_label": null,
+      "consecutive_bonus": 0.0,
+      "correct": false,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 0,
+      "deficit_ema": 0.3846147482358884,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.10834469998371787,
+      "global_learning_reward": 0.0,
+      "label": "5",
+      "learned": true,
+      "learning": {
+        "budget": {
+          "edges_scaled": 13444,
+          "mean_scale": 0.9790701966369083,
+          "neurons_touched": 1395
+        },
+        "learning": {
+          "edge_updates": 0,
+          "max_abs_delta": 0.0,
+          "mean_abs_delta": 0.0
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 0,
+          "candidate_edge_count": 328,
+          "deficit": 0.4791666666666667,
+          "edge_updates": 0,
+          "effective_strength_after": 0.0,
+          "effective_strength_before": 0.0,
+          "label": "5",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 0.0,
+          "mean_multiplier_before": 0.0,
+          "nonzero_eligibility_edge_count": 0,
+          "plastic_edge_count": 21,
+          "regression_strength": 2.1346147482358884,
+          "relevant_presynaptic_count": 202
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 0,
+          "candidate_edge_count": 328,
+          "deficit": 0.4791666666666667,
+          "edge_updates": 0,
+          "effective_strength_after": 0.0,
+          "effective_strength_before": 0.0,
+          "label": "5",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 0.0,
+          "mean_multiplier_before": 0.0,
+          "nonzero_eligibility_edge_count": 0,
+          "plastic_edge_count": 21,
+          "regression_strength": 2.1346147482358884,
+          "relevant_presynaptic_count": 202
+        },
+        "reward": 0.0,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": false,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {},
+        "timing": {
+          "normalization_seconds": 0.015528999996604398,
+          "plastic_lifecycle_seconds": 0.005926200014073402,
+          "reward_update_seconds": 9.799998952075839e-05,
+          "total_seconds": 0.021624599990900606
+        }
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.8168337699318937,
+          0.6233546198192179
+        ],
+        "endpoint": [
+          0.8168337699318937,
+          0.6233546198192179
+        ],
+        "max": [
+          0.8168337699318937,
+          0.6233546198192179
+        ],
+        "min": [
+          0.8168337699318937,
+          0.6233546198192179
+        ],
+        "samples": 6,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 1.71875,
+      "peak_click_rate_hz": 4.6875,
+      "peak_ema_hz": 5.596898570027829,
+      "peak_motor_rate_hz": 7.03125,
+      "peak_regression_penalty": 0.8,
+      "peak_regression_ratio": 0.3472222222222222,
+      "peak_regression_streak": 1,
+      "peak_regression_strength": 1.0,
+      "peak_regression_triggered": true,
+      "persistence_strength": 1.1346147482358884,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 7.8125,
+      "reward": -2.0,
+      "selection_source": "hard_mining",
+      "subthreshold_streak": 6,
+      "timing": {
+        "brain_learning_seconds": 0.021648900001309812,
+        "brain_reset_seconds": 0.0004907000111415982,
+        "motor_count_seconds": 0.0014542998687829822,
+        "motor_teacher_seconds": 0.00018890001229010522,
+        "neural_step_seconds": 0.08464180020382628,
+        "total_trial_seconds": 0.10834569999133237
+      },
+      "trial": 50555,
+      "windows": 5
+    },
+    {
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6854295223880494,
+              0.5749392569147832
+            ],
+            "endpoint": [
+              0.6047900115452651,
+              0.7131321268141976
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": false,
+        "elapsed_s": 0.25,
+        "endpoints": [
+          [
+            0.6047900115452651,
+            0.7131321268141976
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "K",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.6047900115452651,
+            "y": 0.7131321268141976
+          }
+        ]
+      },
+      "click_attempted_arms": [],
+      "click_margin_bonus": 0.0,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": null,
+      "clicked_label": null,
+      "consecutive_bonus": 0.0,
+      "correct": false,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 0,
+      "deficit_ema": 0.12269834044316033,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.16652080000494607,
+      "global_learning_reward": 0.0,
+      "label": "K",
+      "learned": true,
+      "learning": {
+        "budget": {
+          "edges_scaled": 29928,
+          "mean_scale": 0.9789455168955755,
+          "neurons_touched": 3872
+        },
+        "learning": {
+          "edge_updates": 0,
+          "max_abs_delta": 0.0,
+          "mean_abs_delta": 0.0
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 5,
+          "candidate_edge_count": 332,
+          "deficit": 0.3055555555555556,
+          "edge_updates": 5,
+          "effective_strength_after": 53.625,
+          "effective_strength_before": 53.40908432006836,
+          "label": "K",
+          "max_delta": 0.02626347541809082,
+          "mean_delta": 0.014224338345229626,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 2.9857754707336426,
+          "nonzero_eligibility_edge_count": 5,
+          "plastic_edge_count": 18,
+          "regression_strength": 1.1226983404431603,
+          "relevant_presynaptic_count": 200
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 5,
+          "candidate_edge_count": 332,
+          "deficit": 0.3055555555555556,
+          "edge_updates": 5,
+          "effective_strength_after": 53.625,
+          "effective_strength_before": 53.40908432006836,
+          "label": "K",
+          "max_delta": 0.02626347541809082,
+          "mean_delta": 0.014224338345229626,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 2.9857754707336426,
+          "nonzero_eligibility_edge_count": 5,
+          "plastic_edge_count": 18,
+          "regression_strength": 1.1226983404431603,
+          "relevant_presynaptic_count": 200
+        },
+        "reward": 0.0,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": false,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {
+          "label": "K",
+          "net_gain": -0.010072708129882812,
+          "normalizer_loss": -0.010072708129882812,
+          "teacher_gain": 0.014224529266357422,
+          "teacher_multiplier_after_next_normalization": 2.989927291870117,
+          "teacher_multiplier_after_previous_update": 3.0,
+          "teacher_multiplier_before_next_normalization": 3.0
+        },
+        "timing": {
+          "normalization_seconds": 0.040906099980929866,
+          "plastic_lifecycle_seconds": 0.0048393000033684075,
+          "reward_update_seconds": 0.0002426000137347728,
+          "total_seconds": 0.04605890001403168
+        }
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.6047900115452651,
+          0.7131321268141976
+        ],
+        "endpoint": [
+          0.6047900115452651,
+          0.7131321268141976
+        ],
+        "max": [
+          0.6047900115452651,
+          0.7131321268141976
+        ],
+        "min": [
+          0.6047900115452651,
+          0.7131321268141976
+        ],
+        "samples": 6,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 2.5,
+      "peak_click_rate_hz": 6.25,
+      "peak_ema_hz": 8.935817998554276,
+      "peak_motor_rate_hz": 18.75,
+      "peak_regression_penalty": 0.8,
+      "peak_regression_ratio": 0.42857142857142855,
+      "peak_regression_streak": 1,
+      "peak_regression_strength": 1.0,
+      "peak_regression_triggered": true,
+      "persistence_strength": 0.12269834044316033,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 10.9375,
+      "reward": -2.0,
+      "selection_source": "hard_mining",
+      "subthreshold_streak": 1,
+      "timing": {
+        "brain_learning_seconds": 0.04610450001200661,
+        "brain_reset_seconds": 0.000447600003099069,
+        "motor_count_seconds": 0.0020431000157259405,
+        "motor_teacher_seconds": 0.00025099999038502574,
+        "neural_step_seconds": 0.11774990009143949,
+        "total_trial_seconds": 0.16652199998497963
+      },
+      "trial": 50556,
+      "windows": 5
+    },
+    {
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6898060722859422,
+              0.5630369330106066
+            ],
+            "endpoint": [
+              0.7769558236971141,
+              0.6972193492542074
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.25,
+        "endpoints": [
+          [
+            0.7769558236971141,
+            0.6972193492542074
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "6",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.7769558236971141,
+            "y": 0.6972193492542074
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.2265625,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "6",
+      "consecutive_bonus": 1.0,
+      "correct": true,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 33,
+      "deficit_ema": 1.4281747304102583e-07,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.5298229000181891,
+      "global_learning_reward": 2.2265625,
+      "label": "6",
+      "learned": true,
+      "learning": {
+        "budget": {
+          "edges_scaled": 52762,
+          "mean_scale": 0.976841562544173,
+          "neurons_touched": 9718
+        },
+        "learning": {
+          "edge_updates": 52762,
+          "max_abs_delta": 0.5429058074951172,
+          "mean_abs_delta": 0.02750072045763829
+        },
+        "motor_teacher": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "plasticity": null,
+        "post_reward": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "reward": 2.2265625,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 12,
+          "mean_stability": 0.999999463558197
+        },
+        "teacher_normalizer_followup": {},
+        "timing": {
+          "normalization_seconds": 0.10986219998449087,
+          "plastic_lifecycle_seconds": 0.0053561000095214695,
+          "reward_update_seconds": 0.17281550000188872,
+          "total_seconds": 0.28819859999930486
+        }
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.7769558236971141,
+          0.6972193492542074
+        ],
+        "endpoint": [
+          0.7769558236971141,
+          0.6972193492542074
+        ],
+        "max": [
+          0.7769558236971141,
+          0.6972193492542074
+        ],
+        "min": [
+          0.7769558236971141,
+          0.6972193492542074
+        ],
+        "samples": 6,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 7.96875,
+      "peak_click_rate_hz": 11.71875,
+      "peak_ema_hz": 11.486453319548666,
+      "peak_motor_rate_hz": 39.84375,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 1.4281747304102583e-07,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 10.15625,
+      "reward": 2.2265625,
+      "selection_source": "balanced_coverage",
+      "subthreshold_streak": 0,
+      "timing": {
+        "brain_learning_seconds": 0.2883029999793507,
+        "brain_reset_seconds": 0.00037200000951997936,
+        "motor_count_seconds": 0.003184300003340468,
+        "motor_teacher_seconds": 0.0,
+        "neural_step_seconds": 0.23758590026409365,
+        "total_trial_seconds": 0.5298236999951769
+      },
+      "trial": 50557,
+      "windows": 5
+    },
+    {
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6643856151672073,
+              0.38608174191070666
+            ],
+            "endpoint": [
+              0.7356834899859342,
+              0.529317956068765
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": false,
+        "elapsed_s": 0.25,
+        "endpoints": [
+          [
+            0.7356834899859342,
+            0.529317956068765
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "G",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.7356834899859342,
+            "y": 0.529317956068765
+          }
+        ]
+      },
+      "click_attempted_arms": [],
+      "click_margin_bonus": 0.0,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": null,
+      "clicked_label": null,
+      "consecutive_bonus": 0.0,
+      "correct": false,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 0,
+      "deficit_ema": 0.1402756622196326,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.1957764999824576,
+      "global_learning_reward": 0.0,
+      "label": "G",
+      "learned": true,
+      "learning": {
+        "budget": {
+          "edges_scaled": 31211,
+          "mean_scale": 0.9791180006430965,
+          "neurons_touched": 4171
+        },
+        "learning": {
+          "edge_updates": 0,
+          "max_abs_delta": 0.0,
+          "mean_abs_delta": 0.0
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 5,
+          "candidate_edge_count": 293,
+          "deficit": 0.04513888888888889,
+          "edge_updates": 5,
+          "effective_strength_after": 61.81586456298828,
+          "effective_strength_before": 61.685874938964844,
+          "label": "G",
+          "max_delta": 0.00706028938293457,
+          "mean_delta": 0.006439924240112305,
+          "mean_multiplier_after": 2.995919704437256,
+          "mean_multiplier_before": 2.9894795417785645,
+          "nonzero_eligibility_edge_count": 5,
+          "plastic_edge_count": 14,
+          "regression_strength": 1.1402756622196326,
+          "relevant_presynaptic_count": 191
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 5,
+          "candidate_edge_count": 293,
+          "deficit": 0.04513888888888889,
+          "edge_updates": 5,
+          "effective_strength_after": 61.81586456298828,
+          "effective_strength_before": 61.685874938964844,
+          "label": "G",
+          "max_delta": 0.00706028938293457,
+          "mean_delta": 0.006439924240112305,
+          "mean_multiplier_after": 2.995919704437256,
+          "mean_multiplier_before": 2.9894795417785645,
+          "nonzero_eligibility_edge_count": 5,
+          "plastic_edge_count": 14,
+          "regression_strength": 1.1402756622196326,
+          "relevant_presynaptic_count": 191
+        },
+        "reward": 0.0,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": false,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {
+          "label": "G",
+          "net_gain": -0.01045370101928711,
+          "normalizer_loss": -0.01045370101928711,
+          "teacher_gain": 0.006440162658691406,
+          "teacher_multiplier_after_next_normalization": 2.9854660034179688,
+          "teacher_multiplier_after_previous_update": 2.995919704437256,
+          "teacher_multiplier_before_next_normalization": 2.995919704437256
+        },
+        "timing": {
+          "normalization_seconds": 0.05001420000917278,
+          "plastic_lifecycle_seconds": 0.005820000020321459,
+          "reward_update_seconds": 0.0002651000104378909,
+          "total_seconds": 0.056180300016421825
+        }
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.7356834899859342,
+          0.529317956068765
+        ],
+        "endpoint": [
+          0.7356834899859342,
+          0.529317956068765
+        ],
+        "max": [
+          0.7356834899859342,
+          0.529317956068765
+        ],
+        "min": [
+          0.7356834899859342,
+          0.529317956068765
+        ],
+        "samples": 6,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 5.15625,
+      "peak_click_rate_hz": 8.59375,
+      "peak_ema_hz": 8.8566397116844,
+      "peak_motor_rate_hz": 17.96875,
+      "peak_regression_penalty": 0.8,
+      "peak_regression_ratio": 0.3888888888888889,
+      "peak_regression_streak": 1,
+      "peak_regression_strength": 1.0,
+      "peak_regression_triggered": true,
+      "persistence_strength": 0.1402756622196326,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 14.0625,
+      "reward": -2.0,
+      "selection_source": "hard_mining",
+      "subthreshold_streak": 1,
+      "timing": {
+        "brain_learning_seconds": 0.05622960001346655,
+        "brain_reset_seconds": 0.0005354000022634864,
+        "motor_count_seconds": 0.0021936000557616353,
+        "motor_teacher_seconds": 0.00026420000358484685,
+        "neural_step_seconds": 0.13667099986923859,
+        "total_trial_seconds": 0.195777699991595
+      },
+      "trial": 50558,
+      "windows": 5
+    },
+    {
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6969665952061019,
+              0.4652989859958589
+            ],
+            "endpoint": [
+              0.8373995225061794,
+              0.5419709686879162
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": false,
+        "elapsed_s": 0.25,
+        "endpoints": [
+          [
+            0.8373995225061794,
+            0.5419709686879162
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "4",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.8373995225061794,
+            "y": 0.5419709686879162
+          }
+        ]
+      },
+      "click_attempted_arms": [],
+      "click_margin_bonus": 0.0,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": null,
+      "clicked_label": null,
+      "consecutive_bonus": 0.0,
+      "correct": false,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 0,
+      "deficit_ema": 0.27524532631081844,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.11818220000714064,
+      "global_learning_reward": 0.0,
+      "label": "4",
+      "learned": true,
+      "learning": {
+        "budget": {
+          "edges_scaled": 13888,
+          "mean_scale": 0.9788893665128913,
+          "neurons_touched": 1564
+        },
+        "learning": {
+          "edge_updates": 0,
+          "max_abs_delta": 0.0,
+          "mean_abs_delta": 0.0
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 2,
+          "candidate_edge_count": 281,
+          "deficit": 0.5659722222222222,
+          "edge_updates": 2,
+          "effective_strength_after": 22.275001525878906,
+          "effective_strength_before": 22.18345069885254,
+          "label": "4",
+          "max_delta": 0.016909122467041016,
+          "mean_delta": 0.01072704792022705,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 2.9892730712890625,
+          "nonzero_eligibility_edge_count": 2,
+          "plastic_edge_count": 19,
+          "regression_strength": 2.0502453263108187,
+          "relevant_presynaptic_count": 163
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 2,
+          "candidate_edge_count": 281,
+          "deficit": 0.5659722222222222,
+          "edge_updates": 2,
+          "effective_strength_after": 22.275001525878906,
+          "effective_strength_before": 22.18345069885254,
+          "label": "4",
+          "max_delta": 0.016909122467041016,
+          "mean_delta": 0.01072704792022705,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 2.9892730712890625,
+          "nonzero_eligibility_edge_count": 2,
+          "plastic_edge_count": 19,
+          "regression_strength": 2.0502453263108187,
+          "relevant_presynaptic_count": 163
+        },
+        "reward": 0.0,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": false,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {
+          "label": "4",
+          "net_gain": -0.008202314376831055,
+          "normalizer_loss": -0.008202314376831055,
+          "teacher_gain": 0.0107269287109375,
+          "teacher_multiplier_after_next_normalization": 2.991797685623169,
+          "teacher_multiplier_after_previous_update": 3.0,
+          "teacher_multiplier_before_next_normalization": 3.0
+        },
+        "timing": {
+          "normalization_seconds": 0.01766939999652095,
+          "plastic_lifecycle_seconds": 0.004625099973054603,
+          "reward_update_seconds": 0.00010480001219548285,
+          "total_seconds": 0.022453199984738603
+        }
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.8373995225061795,
+          0.5419709686879162
+        ],
+        "endpoint": [
+          0.8373995225061794,
+          0.5419709686879162
+        ],
+        "max": [
+          0.8373995225061794,
+          0.5419709686879162
+        ],
+        "min": [
+          0.8373995225061794,
+          0.5419709686879162
+        ],
+        "samples": 6,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 1.40625,
+      "peak_click_rate_hz": 3.90625,
+      "peak_ema_hz": 7.779703916388155,
+      "peak_motor_rate_hz": 7.8125,
+      "peak_regression_penalty": 1.3,
+      "peak_regression_ratio": 0.2604166666666667,
+      "peak_regression_streak": 2,
+      "peak_regression_strength": 1.625,
+      "peak_regression_triggered": true,
+      "persistence_strength": 0.42524532631081846,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 6.25,
+      "reward": -2.5,
+      "selection_source": "hard_mining",
+      "subthreshold_streak": 2,
+      "timing": {
+        "brain_learning_seconds": 0.022472399985417724,
+        "brain_reset_seconds": 0.0003722999827004969,
+        "motor_count_seconds": 0.0016517999174539,
+        "motor_teacher_seconds": 0.00032970000756904483,
+        "neural_step_seconds": 0.09335250002914108,
+        "total_trial_seconds": 0.11818300001323223
+      },
+      "trial": 50559,
+      "windows": 5
+    },
+    {
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.5761620399131743,
+              0.315069354415597
+            ],
+            "endpoint": [
+              0.7352088061545344,
+              0.33250856736131656
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.25,
+        "endpoints": [
+          [
+            0.7352088061545344,
+            0.33250856736131656
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "P",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.7352088061545344,
+            "y": 0.33250856736131656
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.421875,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "P",
+      "consecutive_bonus": 0.0,
+      "correct": true,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 1,
+      "deficit_ema": 0.11617225069940629,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.4677551999920979,
+      "global_learning_reward": 1.421875,
+      "label": "P",
+      "learned": true,
+      "learning": {
+        "budget": {
+          "edges_scaled": 47596,
+          "mean_scale": 0.9761753897638685,
+          "neurons_touched": 8842
+        },
+        "learning": {
+          "edge_updates": 47596,
+          "max_abs_delta": 0.11300230026245117,
+          "mean_abs_delta": 0.02029575510820087
+        },
+        "motor_teacher": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "plasticity": null,
+        "post_reward": {
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "mean_delta": 0.0,
+          "regression_strength": 0.0
+        },
+        "reward": 1.421875,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 11,
+          "mean_stability": 0.9999969601631165
+        },
+        "teacher_normalizer_followup": {},
+        "timing": {
+          "normalization_seconds": 0.10403679998125881,
+          "plastic_lifecycle_seconds": 0.00507750001270324,
+          "reward_update_seconds": 0.1584590999991633,
+          "total_seconds": 0.2677908999903593
+        }
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.7352088061545344,
+          0.33250856736131656
+        ],
+        "endpoint": [
+          0.7352088061545344,
+          0.33250856736131656
+        ],
+        "max": [
+          0.7352088061545344,
+          0.33250856736131656
+        ],
+        "min": [
+          0.7352088061545344,
+          0.33250856736131656
+        ],
+        "samples": 6,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 4.84375,
+      "peak_click_rate_hz": 14.0625,
+      "peak_ema_hz": 9.933126224164173,
+      "peak_motor_rate_hz": 34.375,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.11617225069940629,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 5.46875,
+      "reward": 1.421875,
+      "selection_source": "hard_mining",
+      "subthreshold_streak": 0,
+      "timing": {
+        "brain_learning_seconds": 0.26788450000458397,
+        "brain_reset_seconds": 0.0003203999949619174,
+        "motor_count_seconds": 0.0027877996617462486,
+        "motor_teacher_seconds": 0.0,
+        "neural_step_seconds": 0.1963053001963999,
+        "total_trial_seconds": 0.4677561999997124
+      },
+      "trial": 50560,
+      "windows": 5
+    }
+  ],
+  "resume": {
+    "changed_edge_count": 106376,
+    "completed_trials": 8928,
+    "path": "checkpoints\\malecns_keyboard_matching_brain.npz",
+    "readout_restored": false,
+    "session_state": null,
+    "stage": "keyboard_matching",
+    "structural_edge_count": 0
+  },
+  "retention_accuracy": 0.5166666666666667,
+  "retention_degraded_keys": [
+    "5",
+    "7",
+    "8",
+    "9",
+    "B",
+    "D",
+    "F",
+    "G",
+    "K",
+    "L",
+    "N",
+    "R",
+    "V",
+    "W",
+    "Z",
+    "\u3141",
+    "\u3147",
+    "\u3148",
+    "\u314c",
+    "\u314d",
+    "\u314e",
+    "\u314f",
+    "\u3153",
+    "\u3155",
+    "\u3157",
+    "\u315c",
+    "\u3160",
+    "\u3161",
+    "\u3163"
+  ],
+  "retention_per_key": {
+    "0": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "1": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "2": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "3": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "4": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "5": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "6": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "7": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "8": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "9": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "A": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "B": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "C": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "D": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "E": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "F": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "G": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "H": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "I": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "J": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "K": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "L": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "M": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "N": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "O": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "P": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "Q": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "R": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "S": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "T": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "U": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "V": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "W": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "X": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "Y": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "Z": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "\u3131": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "\u3134": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "\u3137": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "\u3139": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "\u3141": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "\u3142": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "\u3145": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "\u3147": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "\u3148": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "\u314a": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "\u314b": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "\u314c": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "\u314d": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "\u314e": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "\u314f": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "\u3151": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "\u3153": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "\u3155": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "\u3157": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "\u315b": {
+      "accuracy": 1.0,
+      "attempts": 1,
+      "correct": 1
+    },
+    "\u315c": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "\u3160": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "\u3161": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    },
+    "\u3163": {
+      "accuracy": 0.0,
+      "attempts": 1,
+      "correct": 0
+    }
+  },
+  "robust_mastery_passed": false,
+  "route_provenance": {
+    "output_count": 320,
+    "output_superclass": "descending_neuron",
+    "route_direct_edge_count": 2059,
+    "route_first_hop_neuron_count": 22492,
+    "route_input_count": 366,
+    "route_max_hops": 2,
+    "route_score_max": 9.658609390258789,
+    "route_scored_descending_count": 1292,
+    "route_second_hop_edge_count": 72460,
+    "route_selected_positive_count": 320,
+    "selection": "route_aware_2hop"
+  },
+  "target_accuracy": 0.8,
+  "token_labels": [
+    "\u3131",
+    "\u3134",
+    "\u3137",
+    "\u3139",
+    "\u3141",
+    "\u3142",
+    "\u3145",
+    "\u3147",
+    "\u3148",
+    "\u314a",
+    "\u314b",
+    "\u314c",
+    "\u314d",
+    "\u314e",
+    "\u314f",
+    "\u3151",
+    "\u3153",
+    "\u3155",
+    "\u3157",
+    "\u315b",
+    "\u315c",
+    "\u3160",
+    "\u3161",
+    "\u3163",
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9"
+  ],
+  "training_accuracy": 0.44921739130434785,
+  "training_trials": 46000
+}

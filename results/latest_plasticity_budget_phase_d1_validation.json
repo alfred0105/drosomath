@@ -1,0 +1,47 @@
+{
+  "before": {
+    "plastic_edges": 4,
+    "plastic_indices": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  "exchange": {
+    "promoted": [
+      5,
+      4
+    ],
+    "retired": [
+      2,
+      3
+    ],
+    "plastic_edges_before": 4,
+    "plastic_edges_after": 4,
+    "budget_delta": 0,
+    "protected_edges_retained": true
+  },
+  "after": {
+    "plastic_edges": 4,
+    "plastic_indices": [
+      0,
+      1,
+      4,
+      5
+    ],
+    "promoted_edges_plastic": true,
+    "retired_edges_frozen": true
+  },
+  "anatomy": {
+    "edge_count_before": 10,
+    "edge_count_after": 10,
+    "unchanged": true
+  },
+  "checkpoint_round_trip": {
+    "plastic_mask_equal": true,
+    "learned_state_equal": true,
+    "dynamic_allocation_restored": true
+  },
+  "pass": true
+}

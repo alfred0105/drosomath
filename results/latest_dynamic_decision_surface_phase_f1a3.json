@@ -1,0 +1,865 @@
+{
+  "conclusion": {
+    "all_symbols_observable_on_heldout_seeds": true,
+    "dynamic_surface_improves_observability": true,
+    "ready_for_f1b": true,
+    "recommended_next_step": "proceed_to_f1b"
+  },
+  "discovery": {
+    "candidate_count": 7507,
+    "candidate_count_before_selection": 7507,
+    "discovery_learning_state_unchanged": true,
+    "partition_label_independent": true,
+    "selected_count": 128,
+    "selected_viability_histograms": {
+      "distinct_seed_count_active": {
+        "3": 128
+      },
+      "distinct_symbol_count_active": {
+        "2": 106,
+        "3": 20,
+        "4": 2
+      },
+      "total_active_run_count": {
+        "4": 1,
+        "5": 34,
+        "6": 83,
+        "7": 6,
+        "8": 4
+      }
+    },
+    "selection_rule": "distinct_symbol_count_active, then distinct_seed_count_active, then total_active_run_count, then neuron index/body ID"
+  },
+  "invariants": {
+    "discovery_rng_same_within_seed": true,
+    "discovery_seeds_disjoint_from_validation": true,
+    "external_trainable_decoder": false,
+    "interface_allocation_does_not_consume_brain_rng": true,
+    "learning_calls": 0,
+    "new_validation_rng_same_within_seed": true,
+    "old_validation_rng_same_within_seed": true,
+    "validation_learning_state_unchanged": true,
+    "validation_uses_frozen_selected_indices": true
+  },
+  "pass": true,
+  "protocol": {
+    "discovery_seeds": [
+      7,
+      11,
+      19
+    ],
+    "duration_ms": 40.0,
+    "external_trainable_decoder": false,
+    "fresh_brain_per_symbol": true,
+    "held_out_validation_not_used_for_selection": true,
+    "learning_enabled": false,
+    "phase": "F.1A.3",
+    "stimulus_rate_hz": 205.0,
+    "validation_seeds": [
+      23,
+      29,
+      31
+    ]
+  },
+  "readiness": {
+    "A": {
+      "active_seed_count": 3,
+      "active_seed_fraction": 1.0,
+      "ready": true
+    },
+    "B": {
+      "active_seed_count": 3,
+      "active_seed_fraction": 1.0,
+      "ready": true
+    },
+    "C": {
+      "active_seed_count": 3,
+      "active_seed_fraction": 1.0,
+      "ready": true
+    },
+    "D": {
+      "active_seed_count": 3,
+      "active_seed_fraction": 1.0,
+      "ready": true
+    }
+  },
+  "surface": {
+    "pairwise_output_overlap": {
+      "A|B": 0.0,
+      "A|C": 0.0,
+      "A|D": 0.0,
+      "B|C": 0.0,
+      "B|D": 0.0,
+      "C|D": 0.0
+    },
+    "population_size_per_symbol": 32,
+    "selected_body_ids": {
+      "A": [
+        800236,
+        800226,
+        801347,
+        522706,
+        800117,
+        10299,
+        13377,
+        19618,
+        801006,
+        10172,
+        14435,
+        16781,
+        10518,
+        17244,
+        517101,
+        10202,
+        10825,
+        10472,
+        62207,
+        10109,
+        520115,
+        10855,
+        16495,
+        10224,
+        10185,
+        10119,
+        802864,
+        800150,
+        45311,
+        10477,
+        10137,
+        11017
+      ],
+      "B": [
+        37190,
+        537032,
+        10658,
+        10226,
+        10416,
+        10222,
+        11805,
+        10323,
+        10502,
+        10040,
+        10448,
+        13760,
+        11176,
+        10285,
+        14192,
+        12706,
+        800551,
+        805992,
+        800594,
+        10057,
+        10216,
+        10898,
+        801079,
+        519865,
+        14869,
+        10497,
+        47922,
+        10294,
+        10322,
+        10035,
+        10282,
+        10215
+      ],
+      "C": [
+        10011,
+        41598,
+        10482,
+        12159,
+        15361,
+        10804,
+        10483,
+        11208,
+        10776,
+        802455,
+        10127,
+        800782,
+        19290,
+        10935,
+        926154,
+        10652,
+        14830,
+        10879,
+        32824,
+        800860,
+        10365,
+        10617,
+        16862,
+        10457,
+        10115,
+        10110,
+        10949,
+        11419,
+        10428,
+        16274,
+        19306,
+        10041
+      ],
+      "D": [
+        10167,
+        10241,
+        10687,
+        12183,
+        10820,
+        10447,
+        10830,
+        41801,
+        10286,
+        10205,
+        10402,
+        10072,
+        904395,
+        11588,
+        524893,
+        13864,
+        932684,
+        10977,
+        231558,
+        10816,
+        15905,
+        10082,
+        21637,
+        10242,
+        13724,
+        933913,
+        19616,
+        519131,
+        800162,
+        519132,
+        800304,
+        10414
+      ]
+    },
+    "selected_indices": {
+      "A": [
+        144493,
+        144486,
+        145326,
+        131560,
+        144408,
+        277,
+        3159,
+        8754,
+        145061,
+        155,
+        4112,
+        6218,
+        480,
+        6629,
+        128788,
+        183,
+        764,
+        436,
+        45917,
+        95,
+        130564,
+        793,
+        5956,
+        205,
+        166,
+        105,
+        146450,
+        144436,
+        31508,
+        441,
+        123,
+        942
+      ],
+      "B": [
+        24355,
+        137444,
+        611,
+        206,
+        383,
+        203,
+        1684,
+        298,
+        465,
+        31,
+        412,
+        3506,
+        1086,
+        263,
+        3895,
+        2530,
+        144730,
+        148965,
+        144767,
+        47,
+        197,
+        831,
+        145113,
+        130408,
+        4500,
+        461,
+        33785,
+        272,
+        297,
+        27,
+        260,
+        196
+      ],
+      "C": [
+        7,
+        28254,
+        446,
+        2017,
+        4945,
+        745,
+        447,
+        1117,
+        719,
+        146148,
+        113,
+        144897,
+        8460,
+        865,
+        164208,
+        606,
+        4465,
+        815,
+        20495,
+        144960,
+        337,
+        575,
+        6285,
+        421,
+        101,
+        96,
+        877,
+        1323,
+        393,
+        5757,
+        8473,
+        32
+      ],
+      "D": [
+        151,
+        220,
+        639,
+        2041,
+        761,
+        411,
+        769,
+        28431,
+        264,
+        186,
+        370,
+        59,
+        161313,
+        1480,
+        132551,
+        3604,
+        164383,
+        904,
+        122394,
+        757,
+        5428,
+        69,
+        10549,
+        221,
+        3473,
+        164445,
+        8752,
+        129998,
+        144446,
+        129999,
+        144542,
+        381
+      ]
+    },
+    "selection_strategy": "dynamic_generic",
+    "sensory_output_overlap": 0
+  },
+  "validation": {
+    "dynamic_generic_surface": {
+      "active_fraction_by_input": {
+        "A": 1.0,
+        "B": 1.0,
+        "C": 1.0,
+        "D": 1.0
+      },
+      "no_decision_fraction": 0.0,
+      "per_symbol": {
+        "A": {
+          "active_seed_count": 3,
+          "active_seed_fraction": 1.0,
+          "decision_distribution": {
+            "D": 3
+          },
+          "mean_first_output_latency_ms": 21.933333333333337,
+          "mean_network_spikes": 440.6666666666667,
+          "mean_symbol_output_spikes": 14.666666666666666,
+          "median_network_spikes": 434.0,
+          "median_symbol_output_spikes": 15.0
+        },
+        "B": {
+          "active_seed_count": 3,
+          "active_seed_fraction": 1.0,
+          "decision_distribution": {
+            "D": 3
+          },
+          "mean_first_output_latency_ms": 14.133333333333335,
+          "mean_network_spikes": 6886.333333333333,
+          "mean_symbol_output_spikes": 126.33333333333333,
+          "median_network_spikes": 5916.0,
+          "median_symbol_output_spikes": 100.0
+        },
+        "C": {
+          "active_seed_count": 3,
+          "active_seed_fraction": 1.0,
+          "decision_distribution": {
+            "C": 3
+          },
+          "mean_first_output_latency_ms": 15.533333333333333,
+          "mean_network_spikes": 1083.6666666666667,
+          "mean_symbol_output_spikes": 76.33333333333333,
+          "median_network_spikes": 855.0,
+          "median_symbol_output_spikes": 68.0
+        },
+        "D": {
+          "active_seed_count": 3,
+          "active_seed_fraction": 1.0,
+          "decision_distribution": {
+            "B": 2,
+            "C": 1
+          },
+          "mean_first_output_latency_ms": 11.4,
+          "mean_network_spikes": 474.3333333333333,
+          "mean_symbol_output_spikes": 44.0,
+          "median_network_spikes": 432.0,
+          "median_symbol_output_spikes": 41.0
+        }
+      },
+      "presentations": [
+        {
+          "brain_seed": 23,
+          "decision": "D",
+          "first_output_spike_ms": 20.200000000000003,
+          "input_symbol": "A",
+          "network_spikes": 416,
+          "output_population_rates_hz": {
+            "A": 75.0,
+            "B": 50.0,
+            "C": 75.0,
+            "D": 175.0
+          },
+          "output_spikes": 15,
+          "unique_network_neurons": 232
+        },
+        {
+          "brain_seed": 23,
+          "decision": "D",
+          "first_output_spike_ms": 16.400000000000002,
+          "input_symbol": "B",
+          "network_spikes": 5916,
+          "output_population_rates_hz": {
+            "A": 600.0,
+            "B": 550.0,
+            "C": 650.0,
+            "D": 700.0
+          },
+          "output_spikes": 100,
+          "unique_network_neurons": 3684
+        },
+        {
+          "brain_seed": 23,
+          "decision": "C",
+          "first_output_spike_ms": 13.8,
+          "input_symbol": "C",
+          "network_spikes": 855,
+          "output_population_rates_hz": {
+            "A": 400.0,
+            "B": 425.0,
+            "C": 475.0,
+            "D": 400.0
+          },
+          "output_spikes": 68,
+          "unique_network_neurons": 627
+        },
+        {
+          "brain_seed": 23,
+          "decision": "B",
+          "first_output_spike_ms": 7.4,
+          "input_symbol": "D",
+          "network_spikes": 574,
+          "output_population_rates_hz": {
+            "A": 250.0,
+            "B": 450.0,
+            "C": 350.0,
+            "D": 275.0
+          },
+          "output_spikes": 53,
+          "unique_network_neurons": 299
+        },
+        {
+          "brain_seed": 29,
+          "decision": "D",
+          "first_output_spike_ms": 24.200000000000003,
+          "input_symbol": "A",
+          "network_spikes": 472,
+          "output_population_rates_hz": {
+            "A": 50.0,
+            "B": 25.0,
+            "C": 25.0,
+            "D": 175.0
+          },
+          "output_spikes": 11,
+          "unique_network_neurons": 281
+        },
+        {
+          "brain_seed": 29,
+          "decision": "D",
+          "first_output_spike_ms": 12.4,
+          "input_symbol": "B",
+          "network_spikes": 5295,
+          "output_population_rates_hz": {
+            "A": 450.0,
+            "B": 475.0,
+            "C": 525.0,
+            "D": 700.0
+          },
+          "output_spikes": 86,
+          "unique_network_neurons": 3390
+        },
+        {
+          "brain_seed": 29,
+          "decision": "C",
+          "first_output_spike_ms": 24.0,
+          "input_symbol": "C",
+          "network_spikes": 331,
+          "output_population_rates_hz": {
+            "A": 125.0,
+            "B": 75.0,
+            "C": 150.0,
+            "D": 50.0
+          },
+          "output_spikes": 16,
+          "unique_network_neurons": 161
+        },
+        {
+          "brain_seed": 29,
+          "decision": "C",
+          "first_output_spike_ms": 9.600000000000001,
+          "input_symbol": "D",
+          "network_spikes": 432,
+          "output_population_rates_hz": {
+            "A": 200.0,
+            "B": 275.0,
+            "C": 350.0,
+            "D": 200.0
+          },
+          "output_spikes": 41,
+          "unique_network_neurons": 210
+        },
+        {
+          "brain_seed": 31,
+          "decision": "D",
+          "first_output_spike_ms": 21.400000000000002,
+          "input_symbol": "A",
+          "network_spikes": 434,
+          "output_population_rates_hz": {
+            "A": 100.0,
+            "B": 75.0,
+            "C": 50.0,
+            "D": 225.0
+          },
+          "output_spikes": 18,
+          "unique_network_neurons": 244
+        },
+        {
+          "brain_seed": 31,
+          "decision": "D",
+          "first_output_spike_ms": 13.600000000000001,
+          "input_symbol": "B",
+          "network_spikes": 9448,
+          "output_population_rates_hz": {
+            "A": 1150.0,
+            "B": 1050.0,
+            "C": 1175.0,
+            "D": 1450.0
+          },
+          "output_spikes": 193,
+          "unique_network_neurons": 5528
+        },
+        {
+          "brain_seed": 31,
+          "decision": "C",
+          "first_output_spike_ms": 8.8,
+          "input_symbol": "C",
+          "network_spikes": 2065,
+          "output_population_rates_hz": {
+            "A": 650.0,
+            "B": 900.0,
+            "C": 1200.0,
+            "D": 875.0
+          },
+          "output_spikes": 145,
+          "unique_network_neurons": 1568
+        },
+        {
+          "brain_seed": 31,
+          "decision": "B",
+          "first_output_spike_ms": 17.2,
+          "input_symbol": "D",
+          "network_spikes": 417,
+          "output_population_rates_hz": {
+            "A": 175.0,
+            "B": 300.0,
+            "C": 275.0,
+            "D": 200.0
+          },
+          "output_spikes": 38,
+          "unique_network_neurons": 172
+        }
+      ],
+      "total_output_spikes": 784
+    },
+    "old_random_surface": {
+      "active_fraction_by_input": {
+        "A": 0.0,
+        "B": 1.0,
+        "C": 0.6666666666666666,
+        "D": 0.0
+      },
+      "no_decision_fraction": 0.75,
+      "per_symbol": {
+        "A": {
+          "active_seed_count": 0,
+          "active_seed_fraction": 0.0,
+          "decision_distribution": {
+            "NO_DECISION": 3
+          },
+          "mean_first_output_latency_ms": null,
+          "mean_network_spikes": 440.6666666666667,
+          "mean_symbol_output_spikes": 0.0,
+          "median_network_spikes": 434.0,
+          "median_symbol_output_spikes": 0.0
+        },
+        "B": {
+          "active_seed_count": 3,
+          "active_seed_fraction": 1.0,
+          "decision_distribution": {
+            "A": 1,
+            "NO_DECISION": 2
+          },
+          "mean_first_output_latency_ms": 30.0,
+          "mean_network_spikes": 6886.333333333333,
+          "mean_symbol_output_spikes": 4.666666666666667,
+          "median_network_spikes": 5916.0,
+          "median_symbol_output_spikes": 3.0
+        },
+        "C": {
+          "active_seed_count": 2,
+          "active_seed_fraction": 0.6666666666666666,
+          "decision_distribution": {
+            "D": 2,
+            "NO_DECISION": 1
+          },
+          "mean_first_output_latency_ms": 34.5,
+          "mean_network_spikes": 1083.6666666666667,
+          "mean_symbol_output_spikes": 0.6666666666666666,
+          "median_network_spikes": 855.0,
+          "median_symbol_output_spikes": 1.0
+        },
+        "D": {
+          "active_seed_count": 0,
+          "active_seed_fraction": 0.0,
+          "decision_distribution": {
+            "NO_DECISION": 3
+          },
+          "mean_first_output_latency_ms": null,
+          "mean_network_spikes": 474.3333333333333,
+          "mean_symbol_output_spikes": 0.0,
+          "median_network_spikes": 432.0,
+          "median_symbol_output_spikes": 0.0
+        }
+      },
+      "presentations": [
+        {
+          "brain_seed": 23,
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": null,
+          "input_symbol": "A",
+          "network_spikes": 416,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 0.0
+          },
+          "output_spikes": 0,
+          "unique_network_neurons": 232
+        },
+        {
+          "brain_seed": 23,
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": 31.8,
+          "input_symbol": "B",
+          "network_spikes": 5916,
+          "output_population_rates_hz": {
+            "A": 25.0,
+            "B": 0.0,
+            "C": 25.0,
+            "D": 25.0
+          },
+          "output_spikes": 3,
+          "unique_network_neurons": 3684
+        },
+        {
+          "brain_seed": 23,
+          "decision": "D",
+          "first_output_spike_ms": 39.800000000000004,
+          "input_symbol": "C",
+          "network_spikes": 855,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 25.0
+          },
+          "output_spikes": 1,
+          "unique_network_neurons": 627
+        },
+        {
+          "brain_seed": 23,
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": null,
+          "input_symbol": "D",
+          "network_spikes": 574,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 0.0
+          },
+          "output_spikes": 0,
+          "unique_network_neurons": 299
+        },
+        {
+          "brain_seed": 29,
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": null,
+          "input_symbol": "A",
+          "network_spikes": 472,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 0.0
+          },
+          "output_spikes": 0,
+          "unique_network_neurons": 281
+        },
+        {
+          "brain_seed": 29,
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": 32.6,
+          "input_symbol": "B",
+          "network_spikes": 5295,
+          "output_population_rates_hz": {
+            "A": 25.0,
+            "B": 0.0,
+            "C": 25.0,
+            "D": 25.0
+          },
+          "output_spikes": 3,
+          "unique_network_neurons": 3390
+        },
+        {
+          "brain_seed": 29,
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": null,
+          "input_symbol": "C",
+          "network_spikes": 331,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 0.0
+          },
+          "output_spikes": 0,
+          "unique_network_neurons": 161
+        },
+        {
+          "brain_seed": 29,
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": null,
+          "input_symbol": "D",
+          "network_spikes": 432,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 0.0
+          },
+          "output_spikes": 0,
+          "unique_network_neurons": 210
+        },
+        {
+          "brain_seed": 31,
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": null,
+          "input_symbol": "A",
+          "network_spikes": 434,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 0.0
+          },
+          "output_spikes": 0,
+          "unique_network_neurons": 244
+        },
+        {
+          "brain_seed": 31,
+          "decision": "A",
+          "first_output_spike_ms": 25.6,
+          "input_symbol": "B",
+          "network_spikes": 9448,
+          "output_population_rates_hz": {
+            "A": 125.0,
+            "B": 0.0,
+            "C": 50.0,
+            "D": 25.0
+          },
+          "output_spikes": 8,
+          "unique_network_neurons": 5528
+        },
+        {
+          "brain_seed": 31,
+          "decision": "D",
+          "first_output_spike_ms": 29.200000000000003,
+          "input_symbol": "C",
+          "network_spikes": 2065,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 25.0
+          },
+          "output_spikes": 1,
+          "unique_network_neurons": 1568
+        },
+        {
+          "brain_seed": 31,
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": null,
+          "input_symbol": "D",
+          "network_spikes": 417,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 0.0
+          },
+          "output_spikes": 0,
+          "unique_network_neurons": 172
+        }
+      ],
+      "total_output_spikes": 16
+    },
+    "same_heldout_conditions": true
+  }
+}

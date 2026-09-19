@@ -7,6 +7,71 @@ NUMPY_AVAILABLE = importlib.util.find_spec("numpy") is not None
 
 @unittest.skipUnless(NUMPY_AVAILABLE, "NumPy is an optional whole-brain dependency")
 class WholeBrainPlasticityTests(unittest.TestCase):
+
+    def test_sparse_lifecycle_cache_matches_dense_decay_and_clear(self):
+        import numpy as np
+        from drosomath.whole_brain import PlasticStateConfig
+        from drosomath.whole_brain.plastic_state import SparsePlasticityState
+
+        state = SparsePlasticityState(
+            257, config=PlasticStateConfig(plastic_fraction=0.25, seed=12)
+        )
+        rng = np.random.default_rng(4)
+        # Simulate a curriculum that first unlocked all edges and later froze
+        # most of them: frozen historical state must still decay exactly.
+        state.set_plastic_fraction(1.0)
+        state.usage_ema[:] = rng.random(state.edge_count, dtype=np.float32)
+        state.eligibility[:] = rng.random(state.edge_count, dtype=np.float32)
+        state.stability[:] = rng.random(state.edge_count, dtype=np.float32)
+        state.set_plastic_fraction(0.25)
+
+        dense_usage = state.usage_ema.copy() * np.float32(0.995)
+        dense_eligibility = state.eligibility.copy() * np.float32(0.90)
+        dense_stability = state.stability.copy()
+        state.decay_episode(usage_decay=0.995, eligibility_decay=0.90)
+        np.testing.assert_allclose(state.usage_ema, dense_usage, rtol=0.0, atol=0.0)
+        np.testing.assert_allclose(state.eligibility, dense_eligibility, rtol=0.0, atol=0.0)
+        np.testing.assert_array_equal(state.stability, dense_stability)
+
+        state.clear_eligibility()
+        np.testing.assert_array_equal(state.eligibility, np.zeros(state.edge_count, dtype=np.float32))
+
+    def test_recent_presynaptic_reward_matches_full_scan(self):
+        import numpy as np
+        from drosomath.whole_brain import PlasticStateConfig
+        from drosomath.whole_brain.plastic_state import SparsePlasticityState
+        from drosomath.whole_brain.usage_learning import UsageRewardRule
+
+        edge_count = 31
+        cfg = PlasticStateConfig(plastic_fraction=1.0, seed=6)
+        full = SparsePlasticityState(edge_count, config=cfg)
+        recent = SparsePlasticityState(edge_count, config=cfg)
+        rng = np.random.default_rng(8)
+        for state in (full, recent):
+            state.usage_ema[:] = rng.random(edge_count, dtype=np.float32)
+            state.eligibility[:] = 0.0
+            state.stability[:] = rng.random(edge_count, dtype=np.float32)
+        # Only rows 1 and 3 received activity in this trial.
+        indptr = np.asarray([0, 4, 10, 17, 24, 31], dtype=np.int64)
+        active_edges = np.r_[4:10, 17:24]
+        full.eligibility[active_edges] = 1.0
+        recent.eligibility[active_edges] = 1.0
+        recent.usage_ema[:] = full.usage_ema
+        recent.stability[:] = full.stability
+        rule = UsageRewardRule(learning_rate=0.1)
+
+        expected = rule.apply(full, reward=-0.75)
+        actual = rule.apply_recent_presynaptic(
+            recent,
+            reward=-0.75,
+            indptr=indptr,
+            presynaptic_indices=[1, 3],
+        )
+        self.assertEqual(actual.edge_updates, expected.edge_updates)
+        self.assertAlmostEqual(actual.mean_abs_delta, expected.mean_abs_delta, places=8)
+        self.assertAlmostEqual(actual.max_abs_delta, expected.max_abs_delta, places=8)
+        np.testing.assert_allclose(recent.multiplier, full.multiplier, rtol=0.0, atol=1e-7)
+        np.testing.assert_allclose(recent.stability, full.stability, rtol=0.0, atol=1e-7)
     def test_more_used_rewarded_edge_strengthens_more(self) -> None:
         from drosomath.whole_brain.plastic_state import SparsePlasticityState
         from drosomath.whole_brain.usage_learning import UsageRewardRule

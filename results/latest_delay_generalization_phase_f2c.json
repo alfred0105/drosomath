@@ -1,0 +1,4846 @@
+{
+  "conclusion": {
+    "delay_generalization_supported": false,
+    "f2b_replication_supported": true,
+    "long_delay_memory_supported": false,
+    "recommended_next_step": "short_sequence_with_short_context_then_memory_extension",
+    "recurrent_activity_explosion": false
+  },
+  "pass": true,
+  "performance": {
+    "exact_equivalence": true,
+    "network_profile_learning_disabled": {
+      "learning_enabled": false,
+      "measured_episodes": 100,
+      "median_disjoint_neural_seconds": {
+        "active_neuron_state_update_seconds": 1.5344046990721836,
+        "delay_ring_handling_seconds": 2.994868200024939,
+        "stimulus_injection_seconds": 0.0821955993087613,
+        "synaptic_scheduling_seconds": 1.1779110000279616
+      },
+      "median_disjoint_sum_seconds": 5.789379498433846,
+      "median_episodes_per_second": 15.026421783866777,
+      "median_wall_seconds": 6.65494430000399,
+      "runs": [
+        {
+          "episodes": 100,
+          "episodes_per_second": 14.920738574776585,
+          "profiler": {
+            "counts": {
+              "active_neuron_state_update_seconds": 30000,
+              "delay_ring_handling_seconds": 30000,
+              "stimulus_injection_seconds": 30000,
+              "synaptic_scheduling_seconds": 30000
+            },
+            "enabled": true,
+            "seconds": {
+              "active_neuron_state_update_seconds": 1.5344046990721836,
+              "delay_ring_handling_seconds": 3.031017399945995,
+              "stimulus_injection_seconds": 0.08231350009009475,
+              "synaptic_scheduling_seconds": 1.1924767994569265
+            }
+          },
+          "run": 1,
+          "wall_seconds": 6.702081099996576
+        },
+        {
+          "episodes": 100,
+          "episodes_per_second": 15.16294111687135,
+          "profiler": {
+            "counts": {
+              "active_neuron_state_update_seconds": 30000,
+              "delay_ring_handling_seconds": 30000,
+              "stimulus_injection_seconds": 30000,
+              "synaptic_scheduling_seconds": 30000
+            },
+            "enabled": true,
+            "seconds": {
+              "active_neuron_state_update_seconds": 1.5034337000106461,
+              "delay_ring_handling_seconds": 2.984740499094187,
+              "stimulus_injection_seconds": 0.0821955993087613,
+              "synaptic_scheduling_seconds": 1.1573451995063806
+            }
+          },
+          "run": 2,
+          "wall_seconds": 6.595026599999983
+        },
+        {
+          "episodes": 100,
+          "episodes_per_second": 15.026421783866777,
+          "profiler": {
+            "counts": {
+              "active_neuron_state_update_seconds": 30000,
+              "delay_ring_handling_seconds": 30000,
+              "stimulus_injection_seconds": 30000,
+              "synaptic_scheduling_seconds": 30000
+            },
+            "enabled": true,
+            "seconds": {
+              "active_neuron_state_update_seconds": 1.5358388002496213,
+              "delay_ring_handling_seconds": 2.994868200024939,
+              "stimulus_injection_seconds": 0.08160859985218849,
+              "synaptic_scheduling_seconds": 1.1779110000279616
+            }
+          },
+          "run": 3,
+          "wall_seconds": 6.65494430000399
+        }
+      ],
+      "warm_runs": 3,
+      "warmup_episodes": 4
+    },
+    "network_profile_training": {
+      "learning_enabled": true,
+      "measured_episodes": 100,
+      "median_disjoint_neural_seconds": {
+        "active_neuron_state_update_seconds": 1.5845068006165093,
+        "delay_ring_handling_seconds": 3.059412900438474,
+        "stimulus_injection_seconds": 0.08920320047764108,
+        "synaptic_scheduling_seconds": 1.6274312008390552
+      },
+      "median_disjoint_sum_seconds": 6.36055410237168,
+      "median_episodes_per_second": 6.726928329335439,
+      "median_wall_seconds": 14.865625899998122,
+      "runs": [
+        {
+          "episodes": 100,
+          "episodes_per_second": 6.895410557466726,
+          "profiler": {
+            "counts": {
+              "active_edge_collection_seconds": 100,
+              "active_neuron_state_update_seconds": 30000,
+              "delay_ring_handling_seconds": 30000,
+              "directional_credit_selection_seconds": 147,
+              "multiplier_update_seconds": 147,
+              "network_simulation_seconds": 100,
+              "normalizer_seconds": 100,
+              "plastic_lifecycle_seconds": 100,
+              "post_reward_directional_seconds": 100,
+              "prospective_downstream_effect_seconds": 147,
+              "reward_update_seconds": 100,
+              "stimulus_injection_seconds": 30000,
+              "synaptic_scheduling_seconds": 30000,
+              "total_seconds": 100
+            },
+            "enabled": true,
+            "seconds": {
+              "active_edge_collection_seconds": 0.5950453999903402,
+              "active_neuron_state_update_seconds": 1.555447099468438,
+              "delay_ring_handling_seconds": 2.9925545000078273,
+              "directional_credit_selection_seconds": 2.464918800018495,
+              "multiplier_update_seconds": 0.013135700020939112,
+              "network_simulation_seconds": 7.284655999967072,
+              "normalizer_seconds": 2.390045200001623,
+              "plastic_lifecycle_seconds": 0.6312791000382276,
+              "post_reward_directional_seconds": 3.296694100012246,
+              "prospective_downstream_effect_seconds": 2.3287032000516774,
+              "reward_update_seconds": 0.5396453000284964,
+              "stimulus_injection_seconds": 0.08643849980580853,
+              "synaptic_scheduling_seconds": 1.571626000899414,
+              "total_seconds": 6.882159200038586
+            }
+          },
+          "run": 1,
+          "wall_seconds": 14.50239970000257
+        },
+        {
+          "episodes": 100,
+          "episodes_per_second": 6.670137672908519,
+          "profiler": {
+            "counts": {
+              "active_edge_collection_seconds": 100,
+              "active_neuron_state_update_seconds": 30000,
+              "delay_ring_handling_seconds": 30000,
+              "directional_credit_selection_seconds": 147,
+              "multiplier_update_seconds": 147,
+              "network_simulation_seconds": 100,
+              "normalizer_seconds": 100,
+              "plastic_lifecycle_seconds": 100,
+              "post_reward_directional_seconds": 100,
+              "prospective_downstream_effect_seconds": 147,
+              "reward_update_seconds": 100,
+              "stimulus_injection_seconds": 30000,
+              "synaptic_scheduling_seconds": 30000,
+              "total_seconds": 100
+            },
+            "enabled": true,
+            "seconds": {
+              "active_edge_collection_seconds": 0.6371016000193777,
+              "active_neuron_state_update_seconds": 1.5845068006165093,
+              "delay_ring_handling_seconds": 3.059412900438474,
+              "directional_credit_selection_seconds": 2.573826799991366,
+              "multiplier_update_seconds": 0.013150100036000367,
+              "network_simulation_seconds": 7.496721300012723,
+              "normalizer_seconds": 2.468247000055271,
+              "plastic_lifecycle_seconds": 0.6315799000149127,
+              "post_reward_directional_seconds": 3.450954299973091,
+              "prospective_downstream_effect_seconds": 2.4332811000203947,
+              "reward_update_seconds": 0.5699544999879436,
+              "stimulus_injection_seconds": 0.08920320047764108,
+              "synaptic_scheduling_seconds": 1.6302453005773714,
+              "total_seconds": 7.146801899994898
+            }
+          },
+          "run": 2,
+          "wall_seconds": 14.992194300000847
+        },
+        {
+          "episodes": 100,
+          "episodes_per_second": 6.726928329335439,
+          "profiler": {
+            "counts": {
+              "active_edge_collection_seconds": 100,
+              "active_neuron_state_update_seconds": 30000,
+              "delay_ring_handling_seconds": 30000,
+              "directional_credit_selection_seconds": 147,
+              "multiplier_update_seconds": 147,
+              "network_simulation_seconds": 100,
+              "normalizer_seconds": 100,
+              "plastic_lifecycle_seconds": 100,
+              "post_reward_directional_seconds": 100,
+              "prospective_downstream_effect_seconds": 147,
+              "reward_update_seconds": 100,
+              "stimulus_injection_seconds": 30000,
+              "synaptic_scheduling_seconds": 30000,
+              "total_seconds": 100
+            },
+            "enabled": true,
+            "seconds": {
+              "active_edge_collection_seconds": 0.5925161999839474,
+              "active_neuron_state_update_seconds": 1.5854031000781106,
+              "delay_ring_handling_seconds": 3.0845780999952694,
+              "directional_credit_selection_seconds": 2.5638213000056567,
+              "multiplier_update_seconds": 0.013909900037106127,
+              "network_simulation_seconds": 7.5250360999853,
+              "normalizer_seconds": 2.407278100050462,
+              "plastic_lifecycle_seconds": 0.6228606999866315,
+              "post_reward_directional_seconds": 3.3944990999807487,
+              "prospective_downstream_effect_seconds": 2.418232999953034,
+              "reward_update_seconds": 0.5499234999879263,
+              "stimulus_injection_seconds": 0.09133040133019676,
+              "synaptic_scheduling_seconds": 1.6274312008390552,
+              "total_seconds": 6.999971999990521
+            }
+          },
+          "run": 3,
+          "wall_seconds": 14.865625899998122
+        }
+      ],
+      "warm_runs": 3,
+      "warmup_episodes": 4
+    },
+    "network_speedup": 1.0,
+    "neural_exact_equivalence": {
+      "conductance_equal": true,
+      "fired_indices_equal": true,
+      "membrane_equal": true,
+      "passed": true,
+      "refractory_equal": true,
+      "rng_equal": true
+    },
+    "optimization_applied": false,
+    "optimization_note": "P.3 retained profiling only; no subcomponent was changed before exact-equivalence evidence.",
+    "route_cache_equivalence": {
+      "decisions_and_rates_equal": true,
+      "directional_telemetry_equal": true,
+      "multiplier_stability_mask_eligibility_equal": true,
+      "optimized_route_cache_bytes": 1022940,
+      "passed": true,
+      "plastic_budget_equal": true,
+      "reference_route_cache_bytes": 0,
+      "rng_equal": true,
+      "trials": 16
+    },
+    "total_workload_speedup": 1.0
+  },
+  "protocol": {
+    "adaptive_plastic_budget": false,
+    "directional_learning_rate": 0.02,
+    "dynamic_candidate_count": 7507,
+    "evaluation_delays_ms": [
+      0,
+      10,
+      20,
+      40,
+      80
+    ],
+    "evaluation_trials_per_cue": 10,
+    "input_vocabulary": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "GO"
+    ],
+    "output_vocabulary": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "phase": "F.2C+P.3",
+    "reward_learning_rate": 0.02,
+    "route_cache_enabled": true,
+    "selected_output_count": 128,
+    "stimulus_rate_hz": 205.0,
+    "training_delay_ms": 20,
+    "training_seeds": [
+      101,
+      103,
+      107
+    ],
+    "training_trials_per_seed": 800,
+    "two_hop_credit_mode": "prospective_anatomical"
+  },
+  "retention": {
+    "accuracy_curve": {
+      "intact": {
+        "0": 0.3083333333333333,
+        "10": 0.3666666666666667,
+        "20": 0.31666666666666665,
+        "40": 0.19166666666666665,
+        "80": 0.20000000000000004
+      },
+      "reset": {
+        "0": 0.08333333333333333,
+        "10": 0.08333333333333333,
+        "20": 0.08333333333333333,
+        "40": 0.08333333333333333,
+        "80": 0.08333333333333333
+      }
+    },
+    "delay_criteria": {
+      "40": {
+        "intact_gt_reset": true,
+        "mean_intact_accuracy": 0.19166666666666665,
+        "mean_intact_vs_20ms_fraction": 0.6052631578947368,
+        "mean_reset_accuracy": 0.08333333333333333,
+        "no_global_output_collapse": true,
+        "seeds_intact_gt_reset": 3,
+        "supported": false
+      },
+      "80": {
+        "intact_gt_reset": true,
+        "mean_intact_accuracy": 0.20000000000000004,
+        "mean_intact_vs_20ms_fraction": 0.6315789473684212,
+        "mean_reset_accuracy": 0.08333333333333333,
+        "no_global_output_collapse": true,
+        "seeds_intact_gt_reset": 3,
+        "supported": false
+      }
+    },
+    "margin_curve_hz": {
+      "intact": {
+        "0": -11.25,
+        "10": 78.75,
+        "20": 37.5,
+        "40": -82.91666666666667,
+        "80": -117.91666666666667
+      },
+      "reset": {
+        "0": -30.416666666666668,
+        "10": -30.416666666666668,
+        "20": -30.416666666666668,
+        "40": -30.416666666666668,
+        "80": -30.416666666666668
+      }
+    },
+    "memory_gap_curve": {
+      "0": {
+        "accuracy": 0.22499999999999998,
+        "margin_hz": 19.166666666666668
+      },
+      "10": {
+        "accuracy": 0.2833333333333334,
+        "margin_hz": 109.16666666666667
+      },
+      "20": {
+        "accuracy": 0.23333333333333334,
+        "margin_hz": 67.91666666666667
+      },
+      "40": {
+        "accuracy": 0.10833333333333332,
+        "margin_hz": -52.5
+      },
+      "80": {
+        "accuracy": 0.11666666666666671,
+        "margin_hz": -87.5
+      }
+    },
+    "memory_horizon_ms": 20,
+    "normalized_retention": {
+      "accuracy_retention": {
+        "101": {
+          "0": 0.6666666666666667,
+          "10": 0.5833333333333334,
+          "20": 1.0,
+          "40": 0.5833333333333334,
+          "80": 0.4166666666666667
+        },
+        "103": {
+          "0": 1.1538461538461537,
+          "10": 1.3076923076923077,
+          "20": 1.0,
+          "40": 0.5384615384615384,
+          "80": 0.6153846153846154
+        },
+        "107": {
+          "0": 1.0769230769230769,
+          "10": 1.5384615384615383,
+          "20": 1.0,
+          "40": 0.6923076923076923,
+          "80": 0.8461538461538461
+        }
+      },
+      "margin_retention": {
+        "101": {
+          "0": -1.1891891891891893,
+          "10": 0.13513513513513514,
+          "20": 1.0,
+          "40": -1.4054054054054055,
+          "80": -3.675675675675676
+        },
+        "103": {
+          "0": -0.4583333333333333,
+          "10": 3.0416666666666665,
+          "20": 1.0,
+          "40": -4.875,
+          "80": -5.833333333333333
+        },
+        "107": {
+          "0": 0.9655172413793104,
+          "10": 3.8275862068965516,
+          "20": 1.0,
+          "40": -1.0344827586206897,
+          "80": -0.2413793103448276
+        }
+      }
+    },
+    "state_decay_curve": {
+      "0": {
+        "fingerprint_diversity": 40.0,
+        "mean_pre_go_active_count": 4858.900000000001,
+        "mean_pre_go_conductance_norm": 591.7627485911052,
+        "mean_pre_go_membrane_norm": 124.81483189264934,
+        "pairwise_cue_active_set_jaccard": {
+          "A|B": 0.21550448349400322,
+          "A|C": 0.03911185998312587,
+          "A|D": 0.054191324536745356,
+          "B|C": 0.07853789081855474,
+          "B|D": 0.06425086042685833,
+          "C|D": 0.11960423745272646
+        },
+        "pre_go_active_count_ratio_vs_20ms": 0.19313282543888707,
+        "pre_go_conductance_norm_ratio_vs_20ms": 0.39658620659811106,
+        "reset_mean_post_reset_active_count": 0.0
+      },
+      "10": {
+        "fingerprint_diversity": 40.0,
+        "mean_pre_go_active_count": 12105.775,
+        "mean_pre_go_conductance_norm": 1201.85905863444,
+        "mean_pre_go_membrane_norm": 301.50376110076905,
+        "pairwise_cue_active_set_jaccard": {
+          "A|B": 0.19899406990026303,
+          "A|C": 0.10888827323222457,
+          "A|D": 0.1755662012642607,
+          "B|C": 0.1866490079274051,
+          "B|D": 0.17408075940434978,
+          "C|D": 0.18464611827001556
+        },
+        "pre_go_active_count_ratio_vs_20ms": 0.48118350447167935,
+        "pre_go_conductance_norm_ratio_vs_20ms": 0.8054591575157722,
+        "reset_mean_post_reset_active_count": 0.0
+      },
+      "20": {
+        "fingerprint_diversity": 40.0,
+        "mean_pre_go_active_count": 25158.333333333332,
+        "mean_pre_go_conductance_norm": 1492.1415287415186,
+        "mean_pre_go_membrane_norm": 552.5062696456908,
+        "pairwise_cue_active_set_jaccard": {
+          "A|B": 0.2552151016839108,
+          "A|C": 0.24843004051992104,
+          "A|D": 0.24136293809726536,
+          "B|C": 0.42723762999472054,
+          "B|D": 0.26877692308581524,
+          "C|D": 0.32325949543054594
+        },
+        "pre_go_active_count_ratio_vs_20ms": 1.0,
+        "pre_go_conductance_norm_ratio_vs_20ms": 1.0,
+        "reset_mean_post_reset_active_count": 0.0
+      },
+      "40": {
+        "fingerprint_diversity": 40.0,
+        "mean_pre_go_active_count": 52890.0,
+        "mean_pre_go_conductance_norm": 1962.1405289381744,
+        "mean_pre_go_membrane_norm": 1018.1056083520253,
+        "pairwise_cue_active_set_jaccard": {
+          "A|B": 0.4721816190558014,
+          "A|C": 0.4784508120938707,
+          "A|D": 0.38797307036353024,
+          "B|C": 0.7617342370711656,
+          "B|D": 0.5794674691008143,
+          "C|D": 0.5519933044456186
+        },
+        "pre_go_active_count_ratio_vs_20ms": 2.102285525008281,
+        "pre_go_conductance_norm_ratio_vs_20ms": 1.3149828559446741,
+        "reset_mean_post_reset_active_count": 0.0
+      },
+      "80": {
+        "fingerprint_diversity": 40.0,
+        "mean_pre_go_active_count": 70946.5,
+        "mean_pre_go_conductance_norm": 2170.8255863186946,
+        "mean_pre_go_membrane_norm": 1478.7129497329395,
+        "pairwise_cue_active_set_jaccard": {
+          "A|B": 0.7581944298873754,
+          "A|C": 0.7742471365042592,
+          "A|D": 0.6537433045926049,
+          "B|C": 0.8741730062261034,
+          "B|D": 0.6964948039947988,
+          "C|D": 0.6671109512815193
+        },
+        "pre_go_active_count_ratio_vs_20ms": 2.8200000000000003,
+        "pre_go_conductance_norm_ratio_vs_20ms": 1.4548389308282186,
+        "reset_mean_post_reset_active_count": 0.0
+      }
+    },
+    "target_rank_curve": {
+      "intact": {
+        "0": 2.1587606837606836,
+        "10": 2.064102564102564,
+        "20": 2.054824561403509,
+        "40": 2.409931186246976,
+        "80": 2.5041478129713424
+      },
+      "reset": {
+        "0": 2.6746031746031744,
+        "10": 2.6746031746031744,
+        "20": 2.6746031746031744,
+        "40": 2.6746031746031744,
+        "80": 2.6746031746031744
+      }
+    }
+  },
+  "runs": {
+    "101": {
+      "evaluations": {
+        "0": {
+          "intact": {
+            "accuracy": 0.2,
+            "confusion_matrix": {
+              "A": {
+                "A": 1,
+                "B": 1,
+                "C": 1,
+                "D": 6,
+                "NO_DECISION": 1
+              },
+              "B": {
+                "A": 0,
+                "B": 1,
+                "C": 0,
+                "D": 3,
+                "NO_DECISION": 6
+              },
+              "C": {
+                "A": 1,
+                "B": 1,
+                "C": 6,
+                "D": 0,
+                "NO_DECISION": 2
+              },
+              "D": {
+                "A": 0,
+                "B": 9,
+                "C": 1,
+                "D": 0,
+                "NO_DECISION": 0
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 1687.5,
+            "delay_ms": 0.0,
+            "distinct_predicted_symbols": 5,
+            "fraction_rank_1": 0.2,
+            "fraction_rank_le_2": 0.45,
+            "go_output_spikes": 1151,
+            "largest_prediction_fraction": 0.3,
+            "macro_accuracy": 0.2,
+            "mean_target_rank": 2.425,
+            "no_decision_fraction": 0.225,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.1,
+                "fraction_rank_le_2": 0.5,
+                "go_output_spikes": 59,
+                "mean_pre_go_active_count": 2018.5,
+                "mean_pre_go_conductance_norm": 266.42870635986327,
+                "mean_pre_go_membrane_norm": 98.6807804107666,
+                "mean_target_rank": 2.45,
+                "no_decision_fraction": 0.1,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -115.0,
+                "target_output_share": 0.21807359307359303,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.1,
+                "fraction_rank_le_2": 0.3,
+                "go_output_spikes": 99,
+                "mean_pre_go_active_count": 3769.7,
+                "mean_pre_go_conductance_norm": 442.44167175292966,
+                "mean_pre_go_membrane_norm": 112.45142059326172,
+                "mean_target_rank": 2.8,
+                "no_decision_fraction": 0.6,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -75.0,
+                "target_output_share": 0.23901515151515146,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.6,
+                "fraction_rank_1": 0.6,
+                "fraction_rank_le_2": 0.9,
+                "go_output_spikes": 654,
+                "mean_pre_go_active_count": 3923.2,
+                "mean_pre_go_conductance_norm": 485.1578536987305,
+                "mean_pre_go_membrane_norm": 104.21954650878907,
+                "mean_target_rank": 1.4,
+                "no_decision_fraction": 0.2,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 195.0,
+                "target_output_share": 0.2957963013654089,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.1,
+                "go_output_spikes": 339,
+                "mean_pre_go_active_count": 7962.6,
+                "mean_pre_go_conductance_norm": 805.9081909179688,
+                "mean_pre_go_membrane_norm": 166.55045013427736,
+                "mean_target_rank": 3.05,
+                "no_decision_fraction": 0.0,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -225.0,
+                "target_output_share": 0.21623828394495598,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.1,
+              "B": 0.1,
+              "C": 0.6,
+              "D": 0.0
+            },
+            "prediction_distribution": {
+              "A": 2,
+              "B": 12,
+              "C": 8,
+              "D": 9,
+              "NO_DECISION": 9
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 4418.5,
+              "mean_pre_go_active_count": 4418.5,
+              "mean_pre_go_conductance_norm": 499.98410568237307,
+              "mean_pre_go_membrane_norm": 120.47554941177368,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.3028095733610822,
+                "A|C": 0.03305175650308394,
+                "A|D": 0.025719622587288663,
+                "B|C": 0.08082616179001721,
+                "B|D": 0.04804210323016754,
+                "C|D": 0.10052797411223707
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 0.0
+            },
+            "target_minus_best_competitor_margin_hz": -55.0,
+            "target_output_share": 0.24228083247477733,
+            "trials": 40
+          },
+          "memory_comparison": {
+            "accuracy_gap_intact_minus_reset": 0.15000000000000002,
+            "go_separation_ratio_intact_over_reset": 38.20754716981132,
+            "margin_gap_intact_minus_reset_hz": -30.0
+          },
+          "reset": {
+            "accuracy": 0.05,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 2,
+                "C": 2,
+                "D": 1,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 0,
+                "B": 2,
+                "C": 1,
+                "D": 0,
+                "NO_DECISION": 7
+              },
+              "C": {
+                "A": 0,
+                "B": 2,
+                "C": 0,
+                "D": 0,
+                "NO_DECISION": 8
+              },
+              "D": {
+                "A": 1,
+                "B": 2,
+                "C": 0,
+                "D": 0,
+                "NO_DECISION": 7
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 44.166666666666664,
+            "delay_ms": 0.0,
+            "distinct_predicted_symbols": 5,
+            "fraction_rank_1": 0.1111111111111111,
+            "fraction_rank_le_2": 0.2222222222222222,
+            "go_output_spikes": 77,
+            "largest_prediction_fraction": 0.675,
+            "macro_accuracy": 0.05,
+            "mean_target_rank": 2.75,
+            "no_decision_fraction": 0.675,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 15,
+                "mean_pre_go_active_count": 2018.5,
+                "mean_pre_go_conductance_norm": 266.42870635986327,
+                "mean_pre_go_membrane_norm": 98.6807804107666,
+                "mean_target_rank": 3.0833333333333335,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -30.0,
+                "target_output_share": 0.04,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.2,
+                "fraction_rank_1": 0.4,
+                "fraction_rank_le_2": 0.6,
+                "go_output_spikes": 18,
+                "mean_pre_go_active_count": 3769.7,
+                "mean_pre_go_conductance_norm": 442.44167175292966,
+                "mean_pre_go_membrane_norm": 112.45142059326172,
+                "mean_target_rank": 2.0,
+                "no_decision_fraction": 0.7,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 0.0,
+                "target_output_share": 0.12333333333333334,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 25,
+                "mean_pre_go_active_count": 3923.2,
+                "mean_pre_go_conductance_norm": 485.1578536987305,
+                "mean_pre_go_membrane_norm": 104.21954650878907,
+                "mean_target_rank": 4.0,
+                "no_decision_fraction": 0.8,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -45.0,
+                "target_output_share": 0.016025641025641024,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.2,
+                "go_output_spikes": 19,
+                "mean_pre_go_active_count": 7962.6,
+                "mean_pre_go_conductance_norm": 805.9081909179688,
+                "mean_pre_go_membrane_norm": 166.55045013427736,
+                "mean_target_rank": 2.6,
+                "no_decision_fraction": 0.7,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -25.0,
+                "target_output_share": 0.10928571428571428,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.2,
+              "C": 0.0,
+              "D": 0.0
+            },
+            "prediction_distribution": {
+              "A": 1,
+              "B": 8,
+              "C": 3,
+              "D": 1,
+              "NO_DECISION": 27
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 0.0,
+              "mean_pre_go_active_count": 4418.5,
+              "mean_pre_go_conductance_norm": 499.98410568237307,
+              "mean_pre_go_membrane_norm": 120.47554941177368,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.3028095733610822,
+                "A|C": 0.03305175650308394,
+                "A|D": 0.025719622587288663,
+                "B|C": 0.08082616179001721,
+                "B|D": 0.04804210323016754,
+                "C|D": 0.10052797411223707
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 1.0
+            },
+            "target_minus_best_competitor_margin_hz": -25.0,
+            "target_output_share": 0.07216117216117215,
+            "trials": 40
+          }
+        },
+        "10": {
+          "intact": {
+            "accuracy": 0.175,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 2,
+                "C": 1,
+                "D": 4,
+                "NO_DECISION": 3
+              },
+              "B": {
+                "A": 0,
+                "B": 0,
+                "C": 4,
+                "D": 1,
+                "NO_DECISION": 5
+              },
+              "C": {
+                "A": 0,
+                "B": 2,
+                "C": 7,
+                "D": 0,
+                "NO_DECISION": 1
+              },
+              "D": {
+                "A": 0,
+                "B": 10,
+                "C": 0,
+                "D": 0,
+                "NO_DECISION": 0
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 1750.0,
+            "delay_ms": 10.0,
+            "distinct_predicted_symbols": 4,
+            "fraction_rank_1": 0.1794871794871795,
+            "fraction_rank_le_2": 0.46153846153846156,
+            "go_output_spikes": 1620,
+            "largest_prediction_fraction": 0.35,
+            "macro_accuracy": 0.175,
+            "mean_target_rank": 2.4358974358974357,
+            "no_decision_fraction": 0.225,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.2222222222222222,
+                "go_output_spikes": 138,
+                "mean_pre_go_active_count": 4661.8,
+                "mean_pre_go_conductance_norm": 427.9409858703613,
+                "mean_pre_go_membrane_norm": 130.1519287109375,
+                "mean_target_rank": 2.7222222222222223,
+                "no_decision_fraction": 0.3,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -65.0,
+                "target_output_share": 0.18374331550802137,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.3,
+                "go_output_spikes": 385,
+                "mean_pre_go_active_count": 6777.1,
+                "mean_pre_go_conductance_norm": 842.9741394042969,
+                "mean_pre_go_membrane_norm": 212.5929946899414,
+                "mean_target_rank": 3.0,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -110.0,
+                "target_output_share": 0.2439919469094903,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.7,
+                "fraction_rank_1": 0.7,
+                "fraction_rank_le_2": 0.9,
+                "go_output_spikes": 799,
+                "mean_pre_go_active_count": 10175.6,
+                "mean_pre_go_conductance_norm": 1342.1485443115234,
+                "mean_pre_go_membrane_norm": 272.8144157409668,
+                "mean_target_rank": 1.4,
+                "no_decision_fraction": 0.1,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 365.0,
+                "target_output_share": 0.3156449897486677,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.4,
+                "go_output_spikes": 298,
+                "mean_pre_go_active_count": 15459.6,
+                "mean_pre_go_conductance_norm": 1212.1035949707032,
+                "mean_pre_go_membrane_norm": 463.01624450683596,
+                "mean_target_rank": 2.65,
+                "no_decision_fraction": 0.0,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -165.0,
+                "target_output_share": 0.23109703926228967,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.0,
+              "C": 0.7,
+              "D": 0.0
+            },
+            "prediction_distribution": {
+              "A": 0,
+              "B": 14,
+              "C": 12,
+              "D": 5,
+              "NO_DECISION": 9
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 9268.525,
+              "mean_pre_go_active_count": 9268.525,
+              "mean_pre_go_conductance_norm": 956.2918161392212,
+              "mean_pre_go_membrane_norm": 269.6438959121704,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.1913468318726705,
+                "A|C": 0.09048449166200703,
+                "A|D": 0.1280168853812976,
+                "B|C": 0.1321215581778962,
+                "B|D": 0.09108274964701973,
+                "C|D": 0.1835075493612079
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 0.0
+            },
+            "target_minus_best_competitor_margin_hz": 6.25,
+            "target_output_share": 0.2436193228571173,
+            "trials": 40
+          },
+          "memory_comparison": {
+            "accuracy_gap_intact_minus_reset": 0.12499999999999999,
+            "go_separation_ratio_intact_over_reset": 39.62264150943396,
+            "margin_gap_intact_minus_reset_hz": 31.25
+          },
+          "reset": {
+            "accuracy": 0.05,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 2,
+                "C": 2,
+                "D": 1,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 0,
+                "B": 2,
+                "C": 1,
+                "D": 0,
+                "NO_DECISION": 7
+              },
+              "C": {
+                "A": 0,
+                "B": 2,
+                "C": 0,
+                "D": 0,
+                "NO_DECISION": 8
+              },
+              "D": {
+                "A": 1,
+                "B": 2,
+                "C": 0,
+                "D": 0,
+                "NO_DECISION": 7
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 44.166666666666664,
+            "delay_ms": 10.0,
+            "distinct_predicted_symbols": 5,
+            "fraction_rank_1": 0.1111111111111111,
+            "fraction_rank_le_2": 0.2222222222222222,
+            "go_output_spikes": 77,
+            "largest_prediction_fraction": 0.675,
+            "macro_accuracy": 0.05,
+            "mean_target_rank": 2.75,
+            "no_decision_fraction": 0.675,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 15,
+                "mean_pre_go_active_count": 4661.8,
+                "mean_pre_go_conductance_norm": 427.9409858703613,
+                "mean_pre_go_membrane_norm": 130.1519287109375,
+                "mean_target_rank": 3.0833333333333335,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -30.0,
+                "target_output_share": 0.04,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.2,
+                "fraction_rank_1": 0.4,
+                "fraction_rank_le_2": 0.6,
+                "go_output_spikes": 18,
+                "mean_pre_go_active_count": 6777.1,
+                "mean_pre_go_conductance_norm": 842.9741394042969,
+                "mean_pre_go_membrane_norm": 212.5929946899414,
+                "mean_target_rank": 2.0,
+                "no_decision_fraction": 0.7,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 0.0,
+                "target_output_share": 0.12333333333333334,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 25,
+                "mean_pre_go_active_count": 10175.6,
+                "mean_pre_go_conductance_norm": 1342.1485443115234,
+                "mean_pre_go_membrane_norm": 272.8144157409668,
+                "mean_target_rank": 4.0,
+                "no_decision_fraction": 0.8,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -45.0,
+                "target_output_share": 0.016025641025641024,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.2,
+                "go_output_spikes": 19,
+                "mean_pre_go_active_count": 15459.6,
+                "mean_pre_go_conductance_norm": 1212.1035949707032,
+                "mean_pre_go_membrane_norm": 463.01624450683596,
+                "mean_target_rank": 2.6,
+                "no_decision_fraction": 0.7,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -25.0,
+                "target_output_share": 0.10928571428571428,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.2,
+              "C": 0.0,
+              "D": 0.0
+            },
+            "prediction_distribution": {
+              "A": 1,
+              "B": 8,
+              "C": 3,
+              "D": 1,
+              "NO_DECISION": 27
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 0.0,
+              "mean_pre_go_active_count": 9268.525,
+              "mean_pre_go_conductance_norm": 956.2918161392212,
+              "mean_pre_go_membrane_norm": 269.6438959121704,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.1913468318726705,
+                "A|C": 0.09048449166200703,
+                "A|D": 0.1280168853812976,
+                "B|C": 0.1321215581778962,
+                "B|D": 0.09108274964701973,
+                "C|D": 0.1835075493612079
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 1.0
+            },
+            "target_minus_best_competitor_margin_hz": -25.0,
+            "target_output_share": 0.07216117216117215,
+            "trials": 40
+          }
+        },
+        "20": {
+          "intact": {
+            "accuracy": 0.3,
+            "confusion_matrix": {
+              "A": {
+                "A": 3,
+                "B": 3,
+                "C": 1,
+                "D": 0,
+                "NO_DECISION": 3
+              },
+              "B": {
+                "A": 2,
+                "B": 3,
+                "C": 0,
+                "D": 0,
+                "NO_DECISION": 5
+              },
+              "C": {
+                "A": 0,
+                "B": 1,
+                "C": 6,
+                "D": 1,
+                "NO_DECISION": 2
+              },
+              "D": {
+                "A": 0,
+                "B": 1,
+                "C": 6,
+                "D": 0,
+                "NO_DECISION": 3
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 1895.8333333333333,
+            "delay_ms": 20.0,
+            "distinct_predicted_symbols": 5,
+            "fraction_rank_1": 0.3157894736842105,
+            "fraction_rank_le_2": 0.5526315789473685,
+            "go_output_spikes": 2157,
+            "largest_prediction_fraction": 0.325,
+            "macro_accuracy": 0.3,
+            "mean_target_rank": 2.223684210526316,
+            "no_decision_fraction": 0.325,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.3,
+                "fraction_rank_1": 0.3333333333333333,
+                "fraction_rank_le_2": 0.4444444444444444,
+                "go_output_spikes": 285,
+                "mean_pre_go_active_count": 9320.6,
+                "mean_pre_go_conductance_norm": 559.8218863487243,
+                "mean_pre_go_membrane_norm": 228.08099212646485,
+                "mean_target_rank": 2.3333333333333335,
+                "no_decision_fraction": 0.3,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -5.0,
+                "target_output_share": 0.16707393848785618,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.3,
+                "fraction_rank_1": 0.3,
+                "fraction_rank_le_2": 0.6,
+                "go_output_spikes": 650,
+                "mean_pre_go_active_count": 12468.7,
+                "mean_pre_go_conductance_norm": 1545.6278038024902,
+                "mean_pre_go_membrane_norm": 464.48789291381837,
+                "mean_target_rank": 2.15,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 0.0,
+                "target_output_share": 0.2669952919421005,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.6,
+                "fraction_rank_1": 0.6666666666666666,
+                "fraction_rank_le_2": 0.7777777777777778,
+                "go_output_spikes": 914,
+                "mean_pre_go_active_count": 24493.1,
+                "mean_pre_go_conductance_norm": 1412.1132690429688,
+                "mean_pre_go_membrane_norm": 509.25197143554686,
+                "mean_target_rank": 1.7777777777777777,
+                "no_decision_fraction": 0.2,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 280.0,
+                "target_output_share": 0.24371203100649602,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.4,
+                "go_output_spikes": 308,
+                "mean_pre_go_active_count": 25580.3,
+                "mean_pre_go_conductance_norm": 1206.693048095703,
+                "mean_pre_go_membrane_norm": 692.3931274414062,
+                "mean_target_rank": 2.6,
+                "no_decision_fraction": 0.3,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -90.0,
+                "target_output_share": 0.2549594936255321,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.3,
+              "B": 0.3,
+              "C": 0.6,
+              "D": 0.0
+            },
+            "prediction_distribution": {
+              "A": 5,
+              "B": 8,
+              "C": 13,
+              "D": 1,
+              "NO_DECISION": 13
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 17965.675,
+              "mean_pre_go_active_count": 17965.675,
+              "mean_pre_go_conductance_norm": 1181.0640018224717,
+              "mean_pre_go_membrane_norm": 473.5534959793091,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.18591662950457624,
+                "A|C": 0.2116318928030142,
+                "A|D": 0.22875860574438647,
+                "B|C": 0.23291135760724643,
+                "B|D": 0.19452668394974612,
+                "C|D": 0.405844834797156
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 0.0
+            },
+            "target_minus_best_competitor_margin_hz": 46.25,
+            "target_output_share": 0.23318518876549624,
+            "trials": 40
+          },
+          "memory_comparison": {
+            "accuracy_gap_intact_minus_reset": 0.25,
+            "go_separation_ratio_intact_over_reset": 42.924528301886795,
+            "margin_gap_intact_minus_reset_hz": 71.25
+          },
+          "reset": {
+            "accuracy": 0.05,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 2,
+                "C": 2,
+                "D": 1,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 0,
+                "B": 2,
+                "C": 1,
+                "D": 0,
+                "NO_DECISION": 7
+              },
+              "C": {
+                "A": 0,
+                "B": 2,
+                "C": 0,
+                "D": 0,
+                "NO_DECISION": 8
+              },
+              "D": {
+                "A": 1,
+                "B": 2,
+                "C": 0,
+                "D": 0,
+                "NO_DECISION": 7
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 44.166666666666664,
+            "delay_ms": 20.0,
+            "distinct_predicted_symbols": 5,
+            "fraction_rank_1": 0.1111111111111111,
+            "fraction_rank_le_2": 0.2222222222222222,
+            "go_output_spikes": 77,
+            "largest_prediction_fraction": 0.675,
+            "macro_accuracy": 0.05,
+            "mean_target_rank": 2.75,
+            "no_decision_fraction": 0.675,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 15,
+                "mean_pre_go_active_count": 9320.6,
+                "mean_pre_go_conductance_norm": 559.8218863487243,
+                "mean_pre_go_membrane_norm": 228.08099212646485,
+                "mean_target_rank": 3.0833333333333335,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -30.0,
+                "target_output_share": 0.04,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.2,
+                "fraction_rank_1": 0.4,
+                "fraction_rank_le_2": 0.6,
+                "go_output_spikes": 18,
+                "mean_pre_go_active_count": 12468.7,
+                "mean_pre_go_conductance_norm": 1545.6278038024902,
+                "mean_pre_go_membrane_norm": 464.48789291381837,
+                "mean_target_rank": 2.0,
+                "no_decision_fraction": 0.7,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 0.0,
+                "target_output_share": 0.12333333333333334,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 25,
+                "mean_pre_go_active_count": 24493.1,
+                "mean_pre_go_conductance_norm": 1412.1132690429688,
+                "mean_pre_go_membrane_norm": 509.25197143554686,
+                "mean_target_rank": 4.0,
+                "no_decision_fraction": 0.8,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -45.0,
+                "target_output_share": 0.016025641025641024,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.2,
+                "go_output_spikes": 19,
+                "mean_pre_go_active_count": 25580.3,
+                "mean_pre_go_conductance_norm": 1206.693048095703,
+                "mean_pre_go_membrane_norm": 692.3931274414062,
+                "mean_target_rank": 2.6,
+                "no_decision_fraction": 0.7,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -25.0,
+                "target_output_share": 0.10928571428571428,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.2,
+              "C": 0.0,
+              "D": 0.0
+            },
+            "prediction_distribution": {
+              "A": 1,
+              "B": 8,
+              "C": 3,
+              "D": 1,
+              "NO_DECISION": 27
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 0.0,
+              "mean_pre_go_active_count": 17965.675,
+              "mean_pre_go_conductance_norm": 1181.0640018224717,
+              "mean_pre_go_membrane_norm": 473.5534959793091,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.18591662950457624,
+                "A|C": 0.2116318928030142,
+                "A|D": 0.22875860574438647,
+                "B|C": 0.23291135760724643,
+                "B|D": 0.19452668394974612,
+                "C|D": 0.405844834797156
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 1.0
+            },
+            "target_minus_best_competitor_margin_hz": -25.0,
+            "target_output_share": 0.07216117216117215,
+            "trials": 40
+          }
+        },
+        "40": {
+          "intact": {
+            "accuracy": 0.175,
+            "confusion_matrix": {
+              "A": {
+                "A": 1,
+                "B": 2,
+                "C": 5,
+                "D": 0,
+                "NO_DECISION": 2
+              },
+              "B": {
+                "A": 0,
+                "B": 4,
+                "C": 3,
+                "D": 2,
+                "NO_DECISION": 1
+              },
+              "C": {
+                "A": 1,
+                "B": 4,
+                "C": 1,
+                "D": 2,
+                "NO_DECISION": 2
+              },
+              "D": {
+                "A": 1,
+                "B": 5,
+                "C": 0,
+                "D": 1,
+                "NO_DECISION": 3
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 1842.5,
+            "delay_ms": 40.0,
+            "distinct_predicted_symbols": 5,
+            "fraction_rank_1": 0.18421052631578946,
+            "fraction_rank_le_2": 0.5,
+            "go_output_spikes": 2833,
+            "largest_prediction_fraction": 0.375,
+            "macro_accuracy": 0.175,
+            "mean_target_rank": 2.4078947368421053,
+            "no_decision_fraction": 0.2,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.1111111111111111,
+                "fraction_rank_le_2": 0.2222222222222222,
+                "go_output_spikes": 394,
+                "mean_pre_go_active_count": 21882.1,
+                "mean_pre_go_conductance_norm": 769.9448318123817,
+                "mean_pre_go_membrane_norm": 341.58559398651124,
+                "mean_target_rank": 2.8333333333333335,
+                "no_decision_fraction": 0.2,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -75.0,
+                "target_output_share": 0.1410547081341585,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.4,
+                "fraction_rank_1": 0.4,
+                "fraction_rank_le_2": 0.8,
+                "go_output_spikes": 926,
+                "mean_pre_go_active_count": 35741.8,
+                "mean_pre_go_conductance_norm": 2004.188438230753,
+                "mean_pre_go_membrane_norm": 1061.6143028259278,
+                "mean_target_rank": 1.9,
+                "no_decision_fraction": 0.1,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -45.0,
+                "target_output_share": 0.2965927619119072,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.1111111111111111,
+                "fraction_rank_le_2": 0.6666666666666666,
+                "go_output_spikes": 995,
+                "mean_pre_go_active_count": 65989.5,
+                "mean_pre_go_conductance_norm": 1955.0012393951415,
+                "mean_pre_go_membrane_norm": 889.4741104125976,
+                "mean_target_rank": 2.1666666666666665,
+                "no_decision_fraction": 0.2,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -70.0,
+                "target_output_share": 0.20631291437982946,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.1,
+                "fraction_rank_le_2": 0.3,
+                "go_output_spikes": 518,
+                "mean_pre_go_active_count": 46250.5,
+                "mean_pre_go_conductance_norm": 1454.2039123535155,
+                "mean_pre_go_membrane_norm": 980.5181335449219,
+                "mean_target_rank": 2.75,
+                "no_decision_fraction": 0.3,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -70.0,
+                "target_output_share": 0.23298526584732815,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.1,
+              "B": 0.4,
+              "C": 0.1,
+              "D": 0.1
+            },
+            "prediction_distribution": {
+              "A": 3,
+              "B": 15,
+              "C": 9,
+              "D": 5,
+              "NO_DECISION": 8
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 42465.975,
+              "mean_pre_go_active_count": 42465.975,
+              "mean_pre_go_conductance_norm": 1545.834605447948,
+              "mean_pre_go_membrane_norm": 818.2980351924896,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.39246259044786747,
+                "A|C": 0.38315774203492486,
+                "A|D": 0.3699046715265496,
+                "B|C": 0.6972447828296313,
+                "B|D": 0.7276865746802297,
+                "C|D": 0.6502892669026854
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 0.0
+            },
+            "target_minus_best_competitor_margin_hz": -65.0,
+            "target_output_share": 0.2192364125683058,
+            "trials": 40
+          },
+          "memory_comparison": {
+            "accuracy_gap_intact_minus_reset": 0.12499999999999999,
+            "go_separation_ratio_intact_over_reset": 41.716981132075475,
+            "margin_gap_intact_minus_reset_hz": -40.0
+          },
+          "reset": {
+            "accuracy": 0.05,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 2,
+                "C": 2,
+                "D": 1,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 0,
+                "B": 2,
+                "C": 1,
+                "D": 0,
+                "NO_DECISION": 7
+              },
+              "C": {
+                "A": 0,
+                "B": 2,
+                "C": 0,
+                "D": 0,
+                "NO_DECISION": 8
+              },
+              "D": {
+                "A": 1,
+                "B": 2,
+                "C": 0,
+                "D": 0,
+                "NO_DECISION": 7
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 44.166666666666664,
+            "delay_ms": 40.0,
+            "distinct_predicted_symbols": 5,
+            "fraction_rank_1": 0.1111111111111111,
+            "fraction_rank_le_2": 0.2222222222222222,
+            "go_output_spikes": 77,
+            "largest_prediction_fraction": 0.675,
+            "macro_accuracy": 0.05,
+            "mean_target_rank": 2.75,
+            "no_decision_fraction": 0.675,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 15,
+                "mean_pre_go_active_count": 21882.1,
+                "mean_pre_go_conductance_norm": 769.9448318123817,
+                "mean_pre_go_membrane_norm": 341.58559398651124,
+                "mean_target_rank": 3.0833333333333335,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -30.0,
+                "target_output_share": 0.04,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.2,
+                "fraction_rank_1": 0.4,
+                "fraction_rank_le_2": 0.6,
+                "go_output_spikes": 18,
+                "mean_pre_go_active_count": 35741.8,
+                "mean_pre_go_conductance_norm": 2004.188438230753,
+                "mean_pre_go_membrane_norm": 1061.6143028259278,
+                "mean_target_rank": 2.0,
+                "no_decision_fraction": 0.7,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 0.0,
+                "target_output_share": 0.12333333333333334,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 25,
+                "mean_pre_go_active_count": 65989.5,
+                "mean_pre_go_conductance_norm": 1955.0012393951415,
+                "mean_pre_go_membrane_norm": 889.4741104125976,
+                "mean_target_rank": 4.0,
+                "no_decision_fraction": 0.8,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -45.0,
+                "target_output_share": 0.016025641025641024,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.2,
+                "go_output_spikes": 19,
+                "mean_pre_go_active_count": 46250.5,
+                "mean_pre_go_conductance_norm": 1454.2039123535155,
+                "mean_pre_go_membrane_norm": 980.5181335449219,
+                "mean_target_rank": 2.6,
+                "no_decision_fraction": 0.7,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -25.0,
+                "target_output_share": 0.10928571428571428,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.2,
+              "C": 0.0,
+              "D": 0.0
+            },
+            "prediction_distribution": {
+              "A": 1,
+              "B": 8,
+              "C": 3,
+              "D": 1,
+              "NO_DECISION": 27
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 0.0,
+              "mean_pre_go_active_count": 42465.975,
+              "mean_pre_go_conductance_norm": 1545.834605447948,
+              "mean_pre_go_membrane_norm": 818.2980351924896,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.39246259044786747,
+                "A|C": 0.38315774203492486,
+                "A|D": 0.3699046715265496,
+                "B|C": 0.6972447828296313,
+                "B|D": 0.7276865746802297,
+                "C|D": 0.6502892669026854
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 1.0
+            },
+            "target_minus_best_competitor_margin_hz": -25.0,
+            "target_output_share": 0.07216117216117215,
+            "trials": 40
+          }
+        },
+        "80": {
+          "intact": {
+            "accuracy": 0.125,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 1,
+                "C": 5,
+                "D": 1,
+                "NO_DECISION": 3
+              },
+              "B": {
+                "A": 0,
+                "B": 3,
+                "C": 6,
+                "D": 1,
+                "NO_DECISION": 0
+              },
+              "C": {
+                "A": 0,
+                "B": 1,
+                "C": 1,
+                "D": 5,
+                "NO_DECISION": 3
+              },
+              "D": {
+                "A": 1,
+                "B": 4,
+                "C": 3,
+                "D": 1,
+                "NO_DECISION": 1
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 2795.8333333333335,
+            "delay_ms": 80.0,
+            "distinct_predicted_symbols": 5,
+            "fraction_rank_1": 0.14705882352941177,
+            "fraction_rank_le_2": 0.4411764705882353,
+            "go_output_spikes": 3129,
+            "largest_prediction_fraction": 0.375,
+            "macro_accuracy": 0.125,
+            "mean_target_rank": 2.6470588235294117,
+            "no_decision_fraction": 0.175,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.125,
+                "go_output_spikes": 469,
+                "mean_pre_go_active_count": 38780.6,
+                "mean_pre_go_conductance_norm": 1021.5126896829363,
+                "mean_pre_go_membrane_norm": 606.0321496725082,
+                "mean_target_rank": 3.375,
+                "no_decision_fraction": 0.3,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -175.0,
+                "target_output_share": 0.11816401029339034,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.3,
+                "fraction_rank_1": 0.3,
+                "fraction_rank_le_2": 0.7,
+                "go_output_spikes": 1095,
+                "mean_pre_go_active_count": 83391.4,
+                "mean_pre_go_conductance_norm": 3248.28735252442,
+                "mean_pre_go_membrane_norm": 2137.013615131378,
+                "mean_target_rank": 2.0,
+                "no_decision_fraction": 0.0,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -140.0,
+                "target_output_share": 0.2844927711882215,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.14285714285714285,
+                "fraction_rank_le_2": 0.42857142857142855,
+                "go_output_spikes": 1233,
+                "mean_pre_go_active_count": 81850.8,
+                "mean_pre_go_conductance_norm": 2027.3632019236684,
+                "mean_pre_go_membrane_norm": 1309.2989028930665,
+                "mean_target_rank": 2.5714285714285716,
+                "no_decision_fraction": 0.3,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -250.0,
+                "target_output_share": 0.17349771602732028,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.1111111111111111,
+                "fraction_rank_le_2": 0.4444444444444444,
+                "go_output_spikes": 332,
+                "mean_pre_go_active_count": 55939.9,
+                "mean_pre_go_conductance_norm": 1434.2238464355469,
+                "mean_pre_go_membrane_norm": 1155.3414657592773,
+                "mean_target_rank": 2.7777777777777777,
+                "no_decision_fraction": 0.1,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -115.0,
+                "target_output_share": 0.20370318087709394,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.3,
+              "C": 0.1,
+              "D": 0.1
+            },
+            "prediction_distribution": {
+              "A": 1,
+              "B": 9,
+              "C": 15,
+              "D": 8,
+              "NO_DECISION": 7
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 64990.675,
+              "mean_pre_go_active_count": 64990.675,
+              "mean_pre_go_conductance_norm": 1932.8467726416427,
+              "mean_pre_go_membrane_norm": 1301.9215333640575,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.8199177337188489,
+                "A|C": 0.7725945630312074,
+                "A|D": 0.7890233339457728,
+                "B|C": 0.8887324957413968,
+                "B|D": 0.8823933275695469,
+                "C|D": 0.8283507663339637
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 0.0
+            },
+            "target_minus_best_competitor_margin_hz": -170.0,
+            "target_output_share": 0.1949644195965065,
+            "trials": 40
+          },
+          "memory_comparison": {
+            "accuracy_gap_intact_minus_reset": 0.075,
+            "go_separation_ratio_intact_over_reset": 63.301886792452834,
+            "margin_gap_intact_minus_reset_hz": -145.0
+          },
+          "reset": {
+            "accuracy": 0.05,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 2,
+                "C": 2,
+                "D": 1,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 0,
+                "B": 2,
+                "C": 1,
+                "D": 0,
+                "NO_DECISION": 7
+              },
+              "C": {
+                "A": 0,
+                "B": 2,
+                "C": 0,
+                "D": 0,
+                "NO_DECISION": 8
+              },
+              "D": {
+                "A": 1,
+                "B": 2,
+                "C": 0,
+                "D": 0,
+                "NO_DECISION": 7
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 44.166666666666664,
+            "delay_ms": 80.0,
+            "distinct_predicted_symbols": 5,
+            "fraction_rank_1": 0.1111111111111111,
+            "fraction_rank_le_2": 0.2222222222222222,
+            "go_output_spikes": 77,
+            "largest_prediction_fraction": 0.675,
+            "macro_accuracy": 0.05,
+            "mean_target_rank": 2.75,
+            "no_decision_fraction": 0.675,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 15,
+                "mean_pre_go_active_count": 38780.6,
+                "mean_pre_go_conductance_norm": 1021.5126896829363,
+                "mean_pre_go_membrane_norm": 606.0321496725082,
+                "mean_target_rank": 3.0833333333333335,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -30.0,
+                "target_output_share": 0.04,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.2,
+                "fraction_rank_1": 0.4,
+                "fraction_rank_le_2": 0.6,
+                "go_output_spikes": 18,
+                "mean_pre_go_active_count": 83391.4,
+                "mean_pre_go_conductance_norm": 3248.28735252442,
+                "mean_pre_go_membrane_norm": 2137.013615131378,
+                "mean_target_rank": 2.0,
+                "no_decision_fraction": 0.7,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 0.0,
+                "target_output_share": 0.12333333333333334,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 25,
+                "mean_pre_go_active_count": 81850.8,
+                "mean_pre_go_conductance_norm": 2027.3632019236684,
+                "mean_pre_go_membrane_norm": 1309.2989028930665,
+                "mean_target_rank": 4.0,
+                "no_decision_fraction": 0.8,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -45.0,
+                "target_output_share": 0.016025641025641024,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.2,
+                "go_output_spikes": 19,
+                "mean_pre_go_active_count": 55939.9,
+                "mean_pre_go_conductance_norm": 1434.2238464355469,
+                "mean_pre_go_membrane_norm": 1155.3414657592773,
+                "mean_target_rank": 2.6,
+                "no_decision_fraction": 0.7,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -25.0,
+                "target_output_share": 0.10928571428571428,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.2,
+              "C": 0.0,
+              "D": 0.0
+            },
+            "prediction_distribution": {
+              "A": 1,
+              "B": 8,
+              "C": 3,
+              "D": 1,
+              "NO_DECISION": 27
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 0.0,
+              "mean_pre_go_active_count": 64990.675,
+              "mean_pre_go_conductance_norm": 1932.8467726416427,
+              "mean_pre_go_membrane_norm": 1301.9215333640575,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.8199177337188489,
+                "A|C": 0.7725945630312074,
+                "A|D": 0.7890233339457728,
+                "B|C": 0.8887324957413968,
+                "B|D": 0.8823933275695469,
+                "C|D": 0.8283507663339637
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 1.0
+            },
+            "target_minus_best_competitor_margin_hz": -25.0,
+            "target_output_share": 0.07216117216117215,
+            "trials": 40
+          }
+        }
+      },
+      "safety": {
+        "evaluation_twins_share_learned_state": true,
+        "learning_disabled_during_evaluation": true,
+        "plastic_budget_drift": 0,
+        "plastic_budget_end": 312113,
+        "plastic_budget_start": 312113
+      },
+      "seed": 101,
+      "training": {
+        "accuracy": 0.3525,
+        "persistent_state": {
+          "eligibility": "f82b78341bc08c6237785593ab1114115f5f6a9e72301eff1ef892d9c679b2a2",
+          "multiplier": "af695039717d4f27470ca821a4edf9226d4eddcebd9d61b25f843463f386dd79",
+          "plastic_mask": "9434166432e9c11a760fffba7b027661e2b639c56d1b7ab927cbb95f6b5cb2b4",
+          "promoted_edges": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "retired_edges": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stability": "4739e8428ac5efac2b13f6dfafe6e7b32edb78f373fcc8c1e05325622e9eee39",
+          "usage_ema": "d3e77be75b66ae38c2ef9f8d83f0c2f58e99b9f3a6f5ea074ce546f311512d73"
+        },
+        "trials": 800
+      }
+    },
+    "103": {
+      "evaluations": {
+        "0": {
+          "intact": {
+            "accuracy": 0.375,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 1,
+                "C": 0,
+                "D": 7,
+                "NO_DECISION": 2
+              },
+              "B": {
+                "A": 0,
+                "B": 7,
+                "C": 0,
+                "D": 2,
+                "NO_DECISION": 1
+              },
+              "C": {
+                "A": 2,
+                "B": 1,
+                "C": 7,
+                "D": 0,
+                "NO_DECISION": 0
+              },
+              "D": {
+                "A": 2,
+                "B": 7,
+                "C": 0,
+                "D": 1,
+                "NO_DECISION": 0
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 2539.1666666666665,
+            "delay_ms": 0.0,
+            "distinct_predicted_symbols": 5,
+            "fraction_rank_1": 0.38461538461538464,
+            "fraction_rank_le_2": 0.5897435897435898,
+            "go_output_spikes": 2079,
+            "largest_prediction_fraction": 0.4,
+            "macro_accuracy": 0.375,
+            "mean_target_rank": 2.08974358974359,
+            "no_decision_fraction": 0.075,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.5555555555555556,
+                "go_output_spikes": 101,
+                "mean_pre_go_active_count": 2689.1,
+                "mean_pre_go_conductance_norm": 394.71685791015625,
+                "mean_pre_go_membrane_norm": 109.09019088745117,
+                "mean_target_rank": 2.4444444444444446,
+                "no_decision_fraction": 0.2,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -115.0,
+                "target_output_share": 0.22925324675324674,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.7,
+                "fraction_rank_1": 0.7,
+                "fraction_rank_le_2": 0.8,
+                "go_output_spikes": 964,
+                "mean_pre_go_active_count": 5814.6,
+                "mean_pre_go_conductance_norm": 837.6954620361328,
+                "mean_pre_go_membrane_norm": 141.86786346435548,
+                "mean_target_rank": 1.45,
+                "no_decision_fraction": 0.1,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 150.0,
+                "target_output_share": 0.26931325933538786,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.7,
+                "fraction_rank_1": 0.7,
+                "fraction_rank_le_2": 0.7,
+                "go_output_spikes": 736,
+                "mean_pre_go_active_count": 4178.9,
+                "mean_pre_go_conductance_norm": 576.1568786621094,
+                "mean_pre_go_membrane_norm": 114.54166717529297,
+                "mean_target_rank": 1.7,
+                "no_decision_fraction": 0.0,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 165.0,
+                "target_output_share": 0.27102513514892324,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.1,
+                "fraction_rank_le_2": 0.3,
+                "go_output_spikes": 278,
+                "mean_pre_go_active_count": 6608.7,
+                "mean_pre_go_conductance_norm": 612.6324508666992,
+                "mean_pre_go_membrane_norm": 134.76415100097657,
+                "mean_target_rank": 2.8,
+                "no_decision_fraction": 0.0,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -255.0,
+                "target_output_share": 0.22587158304434954,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.7,
+              "C": 0.7,
+              "D": 0.1
+            },
+            "prediction_distribution": {
+              "A": 4,
+              "B": 16,
+              "C": 7,
+              "D": 10,
+              "NO_DECISION": 3
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 4822.825,
+              "mean_pre_go_active_count": 4822.825,
+              "mean_pre_go_conductance_norm": 605.3004123687745,
+              "mean_pre_go_membrane_norm": 125.06596813201904,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.1760496421958665,
+                "A|C": 0.04137972333672675,
+                "A|D": 0.06602216458382457,
+                "B|C": 0.06849037487335359,
+                "B|D": 0.07294533346923521,
+                "C|D": 0.13346684468179795
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 0.0
+            },
+            "target_minus_best_competitor_margin_hz": -13.75,
+            "target_output_share": 0.24886580607047684,
+            "trials": 40
+          },
+          "memory_comparison": {
+            "accuracy_gap_intact_minus_reset": 0.275,
+            "go_separation_ratio_intact_over_reset": 59.745098039215684,
+            "margin_gap_intact_minus_reset_hz": 21.25
+          },
+          "reset": {
+            "accuracy": 0.1,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 3,
+                "C": 2,
+                "D": 0,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 0,
+                "B": 2,
+                "C": 0,
+                "D": 1,
+                "NO_DECISION": 7
+              },
+              "C": {
+                "A": 0,
+                "B": 2,
+                "C": 1,
+                "D": 1,
+                "NO_DECISION": 6
+              },
+              "D": {
+                "A": 0,
+                "B": 3,
+                "C": 1,
+                "D": 1,
+                "NO_DECISION": 5
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 42.5,
+            "delay_ms": 0.0,
+            "distinct_predicted_symbols": 4,
+            "fraction_rank_1": 0.19047619047619047,
+            "fraction_rank_le_2": 0.2857142857142857,
+            "go_output_spikes": 109,
+            "largest_prediction_fraction": 0.575,
+            "macro_accuracy": 0.1,
+            "mean_target_rank": 2.6904761904761907,
+            "no_decision_fraction": 0.575,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 28,
+                "mean_pre_go_active_count": 2689.1,
+                "mean_pre_go_conductance_norm": 394.71685791015625,
+                "mean_pre_go_membrane_norm": 109.09019088745117,
+                "mean_target_rank": 3.25,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -65.0,
+                "target_output_share": 0.03968253968253968,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.2,
+                "fraction_rank_1": 0.5,
+                "fraction_rank_le_2": 0.75,
+                "go_output_spikes": 22,
+                "mean_pre_go_active_count": 5814.6,
+                "mean_pre_go_conductance_norm": 837.6954620361328,
+                "mean_pre_go_membrane_norm": 141.86786346435548,
+                "mean_target_rank": 1.75,
+                "no_decision_fraction": 0.7,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 15.0,
+                "target_output_share": 0.1194871794871795,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.2,
+                "fraction_rank_le_2": 0.2,
+                "go_output_spikes": 30,
+                "mean_pre_go_active_count": 4178.9,
+                "mean_pre_go_conductance_norm": 576.1568786621094,
+                "mean_pre_go_membrane_norm": 114.54166717529297,
+                "mean_target_rank": 3.1,
+                "no_decision_fraction": 0.6,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -45.0,
+                "target_output_share": 0.12261904761904763,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.16666666666666666,
+                "fraction_rank_le_2": 0.3333333333333333,
+                "go_output_spikes": 29,
+                "mean_pre_go_active_count": 6608.7,
+                "mean_pre_go_conductance_norm": 612.6324508666992,
+                "mean_pre_go_membrane_norm": 134.76415100097657,
+                "mean_target_rank": 2.4166666666666665,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -45.0,
+                "target_output_share": 0.18401515151515152,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.2,
+              "C": 0.1,
+              "D": 0.1
+            },
+            "prediction_distribution": {
+              "A": 0,
+              "B": 10,
+              "C": 4,
+              "D": 3,
+              "NO_DECISION": 23
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 0.0,
+              "mean_pre_go_active_count": 4822.825,
+              "mean_pre_go_conductance_norm": 605.3004123687745,
+              "mean_pre_go_membrane_norm": 125.06596813201904,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.1760496421958665,
+                "A|C": 0.04137972333672675,
+                "A|D": 0.06602216458382457,
+                "B|C": 0.06849037487335359,
+                "B|D": 0.07294533346923521,
+                "C|D": 0.13346684468179795
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 1.0
+            },
+            "target_minus_best_competitor_margin_hz": -35.0,
+            "target_output_share": 0.11645097957597957,
+            "trials": 40
+          }
+        },
+        "10": {
+          "intact": {
+            "accuracy": 0.425,
+            "confusion_matrix": {
+              "A": {
+                "A": 1,
+                "B": 2,
+                "C": 0,
+                "D": 5,
+                "NO_DECISION": 2
+              },
+              "B": {
+                "A": 0,
+                "B": 8,
+                "C": 1,
+                "D": 0,
+                "NO_DECISION": 1
+              },
+              "C": {
+                "A": 0,
+                "B": 2,
+                "C": 7,
+                "D": 0,
+                "NO_DECISION": 1
+              },
+              "D": {
+                "A": 1,
+                "B": 7,
+                "C": 1,
+                "D": 1,
+                "NO_DECISION": 0
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 4915.0,
+            "delay_ms": 10.0,
+            "distinct_predicted_symbols": 5,
+            "fraction_rank_1": 0.4358974358974359,
+            "fraction_rank_le_2": 0.717948717948718,
+            "go_output_spikes": 3326,
+            "largest_prediction_fraction": 0.475,
+            "macro_accuracy": 0.42500000000000004,
+            "mean_target_rank": 1.935897435897436,
+            "no_decision_fraction": 0.1,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.1,
+                "fraction_rank_le_2": 0.6,
+                "go_output_spikes": 252,
+                "mean_pre_go_active_count": 6805.7,
+                "mean_pre_go_conductance_norm": 695.7933052062988,
+                "mean_pre_go_membrane_norm": 195.43060379028321,
+                "mean_target_rank": 2.55,
+                "no_decision_fraction": 0.2,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -120.0,
+                "target_output_share": 0.2010468771996433,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.8,
+                "fraction_rank_1": 0.8888888888888888,
+                "fraction_rank_le_2": 0.8888888888888888,
+                "go_output_spikes": 1968,
+                "mean_pre_go_active_count": 18604.6,
+                "mean_pre_go_conductance_norm": 1876.1652862548829,
+                "mean_pre_go_membrane_norm": 361.5569763183594,
+                "mean_target_rank": 1.1666666666666667,
+                "no_decision_fraction": 0.1,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 245.0,
+                "target_output_share": 0.2469765473766758,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.7,
+                "fraction_rank_1": 0.7,
+                "fraction_rank_le_2": 0.8,
+                "go_output_spikes": 877,
+                "mean_pre_go_active_count": 11430.3,
+                "mean_pre_go_conductance_norm": 1491.94122467041,
+                "mean_pre_go_membrane_norm": 303.8659042358398,
+                "mean_target_rank": 1.7,
+                "no_decision_fraction": 0.1,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 420.0,
+                "target_output_share": 0.3058475284694086,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.1,
+                "fraction_rank_le_2": 0.6,
+                "go_output_spikes": 229,
+                "mean_pre_go_active_count": 14953.1,
+                "mean_pre_go_conductance_norm": 1053.9953979492188,
+                "mean_pre_go_membrane_norm": 368.37478790283205,
+                "mean_target_rank": 2.25,
+                "no_decision_fraction": 0.0,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -180.0,
+                "target_output_share": 0.2159512195121951,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.1,
+              "B": 0.8,
+              "C": 0.7,
+              "D": 0.1
+            },
+            "prediction_distribution": {
+              "A": 2,
+              "B": 19,
+              "C": 9,
+              "D": 6,
+              "NO_DECISION": 4
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 12948.425,
+              "mean_pre_go_active_count": 12948.425,
+              "mean_pre_go_conductance_norm": 1279.4738035202026,
+              "mean_pre_go_membrane_norm": 307.3070680618286,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.21156320717043084,
+                "A|C": 0.1214667891693239,
+                "A|D": 0.2060013486176669,
+                "B|C": 0.20935513969332606,
+                "B|D": 0.22658482184003392,
+                "C|D": 0.18288282305018708
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 0.0
+            },
+            "target_minus_best_competitor_margin_hz": 91.25,
+            "target_output_share": 0.24245554313948067,
+            "trials": 40
+          },
+          "memory_comparison": {
+            "accuracy_gap_intact_minus_reset": 0.32499999999999996,
+            "go_separation_ratio_intact_over_reset": 115.6470588235294,
+            "margin_gap_intact_minus_reset_hz": 126.25
+          },
+          "reset": {
+            "accuracy": 0.1,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 3,
+                "C": 2,
+                "D": 0,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 0,
+                "B": 2,
+                "C": 0,
+                "D": 1,
+                "NO_DECISION": 7
+              },
+              "C": {
+                "A": 0,
+                "B": 2,
+                "C": 1,
+                "D": 1,
+                "NO_DECISION": 6
+              },
+              "D": {
+                "A": 0,
+                "B": 3,
+                "C": 1,
+                "D": 1,
+                "NO_DECISION": 5
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 42.5,
+            "delay_ms": 10.0,
+            "distinct_predicted_symbols": 4,
+            "fraction_rank_1": 0.19047619047619047,
+            "fraction_rank_le_2": 0.2857142857142857,
+            "go_output_spikes": 109,
+            "largest_prediction_fraction": 0.575,
+            "macro_accuracy": 0.1,
+            "mean_target_rank": 2.6904761904761907,
+            "no_decision_fraction": 0.575,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 28,
+                "mean_pre_go_active_count": 6805.7,
+                "mean_pre_go_conductance_norm": 695.7933052062988,
+                "mean_pre_go_membrane_norm": 195.43060379028321,
+                "mean_target_rank": 3.25,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -65.0,
+                "target_output_share": 0.03968253968253968,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.2,
+                "fraction_rank_1": 0.5,
+                "fraction_rank_le_2": 0.75,
+                "go_output_spikes": 22,
+                "mean_pre_go_active_count": 18604.6,
+                "mean_pre_go_conductance_norm": 1876.1652862548829,
+                "mean_pre_go_membrane_norm": 361.5569763183594,
+                "mean_target_rank": 1.75,
+                "no_decision_fraction": 0.7,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 15.0,
+                "target_output_share": 0.1194871794871795,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.2,
+                "fraction_rank_le_2": 0.2,
+                "go_output_spikes": 30,
+                "mean_pre_go_active_count": 11430.3,
+                "mean_pre_go_conductance_norm": 1491.94122467041,
+                "mean_pre_go_membrane_norm": 303.8659042358398,
+                "mean_target_rank": 3.1,
+                "no_decision_fraction": 0.6,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -45.0,
+                "target_output_share": 0.12261904761904763,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.16666666666666666,
+                "fraction_rank_le_2": 0.3333333333333333,
+                "go_output_spikes": 29,
+                "mean_pre_go_active_count": 14953.1,
+                "mean_pre_go_conductance_norm": 1053.9953979492188,
+                "mean_pre_go_membrane_norm": 368.37478790283205,
+                "mean_target_rank": 2.4166666666666665,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -45.0,
+                "target_output_share": 0.18401515151515152,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.2,
+              "C": 0.1,
+              "D": 0.1
+            },
+            "prediction_distribution": {
+              "A": 0,
+              "B": 10,
+              "C": 4,
+              "D": 3,
+              "NO_DECISION": 23
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 0.0,
+              "mean_pre_go_active_count": 12948.425,
+              "mean_pre_go_conductance_norm": 1279.4738035202026,
+              "mean_pre_go_membrane_norm": 307.3070680618286,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.21156320717043084,
+                "A|C": 0.1214667891693239,
+                "A|D": 0.2060013486176669,
+                "B|C": 0.20935513969332606,
+                "B|D": 0.22658482184003392,
+                "C|D": 0.18288282305018708
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 1.0
+            },
+            "target_minus_best_competitor_margin_hz": -35.0,
+            "target_output_share": 0.11645097957597957,
+            "trials": 40
+          }
+        },
+        "20": {
+          "intact": {
+            "accuracy": 0.325,
+            "confusion_matrix": {
+              "A": {
+                "A": 1,
+                "B": 4,
+                "C": 0,
+                "D": 2,
+                "NO_DECISION": 3
+              },
+              "B": {
+                "A": 0,
+                "B": 5,
+                "C": 0,
+                "D": 0,
+                "NO_DECISION": 5
+              },
+              "C": {
+                "A": 0,
+                "B": 2,
+                "C": 6,
+                "D": 0,
+                "NO_DECISION": 2
+              },
+              "D": {
+                "A": 0,
+                "B": 6,
+                "C": 0,
+                "D": 1,
+                "NO_DECISION": 3
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 5373.333333333333,
+            "delay_ms": 20.0,
+            "distinct_predicted_symbols": 5,
+            "fraction_rank_1": 0.3611111111111111,
+            "fraction_rank_le_2": 0.5833333333333334,
+            "go_output_spikes": 3820,
+            "largest_prediction_fraction": 0.425,
+            "macro_accuracy": 0.325,
+            "mean_target_rank": 2.125,
+            "no_decision_fraction": 0.325,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.1,
+                "fraction_rank_le_2": 0.4,
+                "go_output_spikes": 477,
+                "mean_pre_go_active_count": 15124.2,
+                "mean_pre_go_conductance_norm": 840.6106890678406,
+                "mean_pre_go_membrane_norm": 346.41399612426756,
+                "mean_target_rank": 2.6,
+                "no_decision_fraction": 0.3,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -85.0,
+                "target_output_share": 0.19382877607215626,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.5,
+                "fraction_rank_1": 0.5555555555555556,
+                "fraction_rank_le_2": 1.0,
+                "go_output_spikes": 2155,
+                "mean_pre_go_active_count": 44810.6,
+                "mean_pre_go_conductance_norm": 2928.9791931152345,
+                "mean_pre_go_membrane_norm": 757.9846603393555,
+                "mean_target_rank": 1.2222222222222223,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 110.0,
+                "target_output_share": 0.24552608989064076,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.6,
+                "fraction_rank_1": 0.6666666666666666,
+                "fraction_rank_le_2": 0.7777777777777778,
+                "go_output_spikes": 1006,
+                "mean_pre_go_active_count": 24722.6,
+                "mean_pre_go_conductance_norm": 1355.5814392089844,
+                "mean_pre_go_membrane_norm": 583.4692199707031,
+                "mean_target_rank": 1.7222222222222223,
+                "no_decision_fraction": 0.2,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 200.0,
+                "target_output_share": 0.24461912562722343,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.125,
+                "fraction_rank_le_2": 0.125,
+                "go_output_spikes": 182,
+                "mean_pre_go_active_count": 21580.0,
+                "mean_pre_go_conductance_norm": 971.0615234375,
+                "mean_pre_go_membrane_norm": 564.6387817382813,
+                "mean_target_rank": 3.0,
+                "no_decision_fraction": 0.3,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -105.0,
+                "target_output_share": 0.24877990430622007,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.1,
+              "B": 0.5,
+              "C": 0.6,
+              "D": 0.1
+            },
+            "prediction_distribution": {
+              "A": 1,
+              "B": 17,
+              "C": 6,
+              "D": 3,
+              "NO_DECISION": 13
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 26559.35,
+              "mean_pre_go_active_count": 26559.35,
+              "mean_pre_go_conductance_norm": 1524.0582112073898,
+              "mean_pre_go_membrane_norm": 563.1266645431518,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.28991107289410384,
+                "A|C": 0.22075528784003082,
+                "A|D": 0.25294816548740046,
+                "B|C": 0.47947232410803603,
+                "B|D": 0.3319175931700393,
+                "C|D": 0.2817304157191683
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 0.0
+            },
+            "target_minus_best_competitor_margin_hz": 30.0,
+            "target_output_share": 0.23318847397406017,
+            "trials": 40
+          },
+          "memory_comparison": {
+            "accuracy_gap_intact_minus_reset": 0.225,
+            "go_separation_ratio_intact_over_reset": 126.4313725490196,
+            "margin_gap_intact_minus_reset_hz": 65.0
+          },
+          "reset": {
+            "accuracy": 0.1,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 3,
+                "C": 2,
+                "D": 0,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 0,
+                "B": 2,
+                "C": 0,
+                "D": 1,
+                "NO_DECISION": 7
+              },
+              "C": {
+                "A": 0,
+                "B": 2,
+                "C": 1,
+                "D": 1,
+                "NO_DECISION": 6
+              },
+              "D": {
+                "A": 0,
+                "B": 3,
+                "C": 1,
+                "D": 1,
+                "NO_DECISION": 5
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 42.5,
+            "delay_ms": 20.0,
+            "distinct_predicted_symbols": 4,
+            "fraction_rank_1": 0.19047619047619047,
+            "fraction_rank_le_2": 0.2857142857142857,
+            "go_output_spikes": 109,
+            "largest_prediction_fraction": 0.575,
+            "macro_accuracy": 0.1,
+            "mean_target_rank": 2.6904761904761907,
+            "no_decision_fraction": 0.575,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 28,
+                "mean_pre_go_active_count": 15124.2,
+                "mean_pre_go_conductance_norm": 840.6106890678406,
+                "mean_pre_go_membrane_norm": 346.41399612426756,
+                "mean_target_rank": 3.25,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -65.0,
+                "target_output_share": 0.03968253968253968,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.2,
+                "fraction_rank_1": 0.5,
+                "fraction_rank_le_2": 0.75,
+                "go_output_spikes": 22,
+                "mean_pre_go_active_count": 44810.6,
+                "mean_pre_go_conductance_norm": 2928.9791931152345,
+                "mean_pre_go_membrane_norm": 757.9846603393555,
+                "mean_target_rank": 1.75,
+                "no_decision_fraction": 0.7,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 15.0,
+                "target_output_share": 0.1194871794871795,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.2,
+                "fraction_rank_le_2": 0.2,
+                "go_output_spikes": 30,
+                "mean_pre_go_active_count": 24722.6,
+                "mean_pre_go_conductance_norm": 1355.5814392089844,
+                "mean_pre_go_membrane_norm": 583.4692199707031,
+                "mean_target_rank": 3.1,
+                "no_decision_fraction": 0.6,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -45.0,
+                "target_output_share": 0.12261904761904763,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.16666666666666666,
+                "fraction_rank_le_2": 0.3333333333333333,
+                "go_output_spikes": 29,
+                "mean_pre_go_active_count": 21580.0,
+                "mean_pre_go_conductance_norm": 971.0615234375,
+                "mean_pre_go_membrane_norm": 564.6387817382813,
+                "mean_target_rank": 2.4166666666666665,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -45.0,
+                "target_output_share": 0.18401515151515152,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.2,
+              "C": 0.1,
+              "D": 0.1
+            },
+            "prediction_distribution": {
+              "A": 0,
+              "B": 10,
+              "C": 4,
+              "D": 3,
+              "NO_DECISION": 23
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 0.0,
+              "mean_pre_go_active_count": 26559.35,
+              "mean_pre_go_conductance_norm": 1524.0582112073898,
+              "mean_pre_go_membrane_norm": 563.1266645431518,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.28991107289410384,
+                "A|C": 0.22075528784003082,
+                "A|D": 0.25294816548740046,
+                "B|C": 0.47947232410803603,
+                "B|D": 0.3319175931700393,
+                "C|D": 0.2817304157191683
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 1.0
+            },
+            "target_minus_best_competitor_margin_hz": -35.0,
+            "target_output_share": 0.11645097957597957,
+            "trials": 40
+          }
+        },
+        "40": {
+          "intact": {
+            "accuracy": 0.175,
+            "confusion_matrix": {
+              "A": {
+                "A": 1,
+                "B": 4,
+                "C": 3,
+                "D": 0,
+                "NO_DECISION": 2
+              },
+              "B": {
+                "A": 0,
+                "B": 2,
+                "C": 2,
+                "D": 5,
+                "NO_DECISION": 1
+              },
+              "C": {
+                "A": 1,
+                "B": 5,
+                "C": 3,
+                "D": 0,
+                "NO_DECISION": 1
+              },
+              "D": {
+                "A": 1,
+                "B": 6,
+                "C": 0,
+                "D": 1,
+                "NO_DECISION": 2
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 4975.0,
+            "delay_ms": 40.0,
+            "distinct_predicted_symbols": 5,
+            "fraction_rank_1": 0.1891891891891892,
+            "fraction_rank_le_2": 0.5135135135135135,
+            "go_output_spikes": 3924,
+            "largest_prediction_fraction": 0.425,
+            "macro_accuracy": 0.17500000000000002,
+            "mean_target_rank": 2.527027027027027,
+            "no_decision_fraction": 0.15,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.1,
+                "fraction_rank_le_2": 0.2,
+                "go_output_spikes": 488,
+                "mean_pre_go_active_count": 33957.9,
+                "mean_pre_go_conductance_norm": 1344.0188769474626,
+                "mean_pre_go_membrane_norm": 524.3488265991211,
+                "mean_target_rank": 3.2,
+                "no_decision_fraction": 0.2,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -250.0,
+                "target_output_share": 0.17459354137925565,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.2,
+                "fraction_rank_1": 0.2222222222222222,
+                "fraction_rank_le_2": 0.8888888888888888,
+                "go_output_spikes": 2001,
+                "mean_pre_go_active_count": 85021.3,
+                "mean_pre_go_conductance_norm": 3879.5794887542725,
+                "mean_pre_go_membrane_norm": 2053.223194885254,
+                "mean_target_rank": 1.8888888888888888,
+                "no_decision_fraction": 0.1,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -60.0,
+                "target_output_share": 0.23932636619098538,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.3,
+                "fraction_rank_1": 0.3333333333333333,
+                "fraction_rank_le_2": 0.7777777777777778,
+                "go_output_spikes": 1190,
+                "mean_pre_go_active_count": 66459.9,
+                "mean_pre_go_conductance_norm": 2005.8690974235535,
+                "mean_pre_go_membrane_norm": 897.8575820922852,
+                "mean_target_rank": 2.111111111111111,
+                "no_decision_fraction": 0.1,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -150.0,
+                "target_output_share": 0.2082899869529764,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.1111111111111111,
+                "fraction_rank_le_2": 0.2222222222222222,
+                "go_output_spikes": 245,
+                "mean_pre_go_active_count": 36454.8,
+                "mean_pre_go_conductance_norm": 923.6138576507568,
+                "mean_pre_go_membrane_norm": 727.5429809570312,
+                "mean_target_rank": 2.8333333333333335,
+                "no_decision_fraction": 0.2,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -125.0,
+                "target_output_share": 0.25510480580248024,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.1,
+              "B": 0.2,
+              "C": 0.3,
+              "D": 0.1
+            },
+            "prediction_distribution": {
+              "A": 3,
+              "B": 17,
+              "C": 8,
+              "D": 6,
+              "NO_DECISION": 6
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 55473.475,
+              "mean_pre_go_active_count": 55473.475,
+              "mean_pre_go_conductance_norm": 2038.2703301940114,
+              "mean_pre_go_membrane_norm": 1050.743146133423,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.47052064631956914,
+                "A|C": 0.4871583859357196,
+                "A|D": 0.3683216982476136,
+                "B|C": 0.800344738141259,
+                "B|D": 0.5182410304261119,
+                "C|D": 0.5082430266981721
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 0.0
+            },
+            "target_minus_best_competitor_margin_hz": -146.25,
+            "target_output_share": 0.21932867508142442,
+            "trials": 40
+          },
+          "memory_comparison": {
+            "accuracy_gap_intact_minus_reset": 0.07499999999999998,
+            "go_separation_ratio_intact_over_reset": 117.05882352941177,
+            "margin_gap_intact_minus_reset_hz": -111.25
+          },
+          "reset": {
+            "accuracy": 0.1,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 3,
+                "C": 2,
+                "D": 0,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 0,
+                "B": 2,
+                "C": 0,
+                "D": 1,
+                "NO_DECISION": 7
+              },
+              "C": {
+                "A": 0,
+                "B": 2,
+                "C": 1,
+                "D": 1,
+                "NO_DECISION": 6
+              },
+              "D": {
+                "A": 0,
+                "B": 3,
+                "C": 1,
+                "D": 1,
+                "NO_DECISION": 5
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 42.5,
+            "delay_ms": 40.0,
+            "distinct_predicted_symbols": 4,
+            "fraction_rank_1": 0.19047619047619047,
+            "fraction_rank_le_2": 0.2857142857142857,
+            "go_output_spikes": 109,
+            "largest_prediction_fraction": 0.575,
+            "macro_accuracy": 0.1,
+            "mean_target_rank": 2.6904761904761907,
+            "no_decision_fraction": 0.575,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 28,
+                "mean_pre_go_active_count": 33957.9,
+                "mean_pre_go_conductance_norm": 1344.0188769474626,
+                "mean_pre_go_membrane_norm": 524.3488265991211,
+                "mean_target_rank": 3.25,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -65.0,
+                "target_output_share": 0.03968253968253968,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.2,
+                "fraction_rank_1": 0.5,
+                "fraction_rank_le_2": 0.75,
+                "go_output_spikes": 22,
+                "mean_pre_go_active_count": 85021.3,
+                "mean_pre_go_conductance_norm": 3879.5794887542725,
+                "mean_pre_go_membrane_norm": 2053.223194885254,
+                "mean_target_rank": 1.75,
+                "no_decision_fraction": 0.7,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 15.0,
+                "target_output_share": 0.1194871794871795,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.2,
+                "fraction_rank_le_2": 0.2,
+                "go_output_spikes": 30,
+                "mean_pre_go_active_count": 66459.9,
+                "mean_pre_go_conductance_norm": 2005.8690974235535,
+                "mean_pre_go_membrane_norm": 897.8575820922852,
+                "mean_target_rank": 3.1,
+                "no_decision_fraction": 0.6,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -45.0,
+                "target_output_share": 0.12261904761904763,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.16666666666666666,
+                "fraction_rank_le_2": 0.3333333333333333,
+                "go_output_spikes": 29,
+                "mean_pre_go_active_count": 36454.8,
+                "mean_pre_go_conductance_norm": 923.6138576507568,
+                "mean_pre_go_membrane_norm": 727.5429809570312,
+                "mean_target_rank": 2.4166666666666665,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -45.0,
+                "target_output_share": 0.18401515151515152,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.2,
+              "C": 0.1,
+              "D": 0.1
+            },
+            "prediction_distribution": {
+              "A": 0,
+              "B": 10,
+              "C": 4,
+              "D": 3,
+              "NO_DECISION": 23
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 0.0,
+              "mean_pre_go_active_count": 55473.475,
+              "mean_pre_go_conductance_norm": 2038.2703301940114,
+              "mean_pre_go_membrane_norm": 1050.743146133423,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.47052064631956914,
+                "A|C": 0.4871583859357196,
+                "A|D": 0.3683216982476136,
+                "B|C": 0.800344738141259,
+                "B|D": 0.5182410304261119,
+                "C|D": 0.5082430266981721
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 1.0
+            },
+            "target_minus_best_competitor_margin_hz": -35.0,
+            "target_output_share": 0.11645097957597957,
+            "trials": 40
+          }
+        },
+        "80": {
+          "intact": {
+            "accuracy": 0.2,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 2,
+                "C": 4,
+                "D": 3,
+                "NO_DECISION": 1
+              },
+              "B": {
+                "A": 0,
+                "B": 6,
+                "C": 1,
+                "D": 1,
+                "NO_DECISION": 2
+              },
+              "C": {
+                "A": 0,
+                "B": 6,
+                "C": 0,
+                "D": 3,
+                "NO_DECISION": 1
+              },
+              "D": {
+                "A": 2,
+                "B": 3,
+                "C": 1,
+                "D": 2,
+                "NO_DECISION": 2
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 4960.0,
+            "delay_ms": 80.0,
+            "distinct_predicted_symbols": 5,
+            "fraction_rank_1": 0.21052631578947367,
+            "fraction_rank_le_2": 0.3684210526315789,
+            "go_output_spikes": 4886,
+            "largest_prediction_fraction": 0.425,
+            "macro_accuracy": 0.2,
+            "mean_target_rank": 2.75,
+            "no_decision_fraction": 0.15,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 1302,
+                "mean_pre_go_active_count": 68073.4,
+                "mean_pre_go_conductance_norm": 2251.366633357398,
+                "mean_pre_go_membrane_norm": 985.1344029188156,
+                "mean_target_rank": 3.65,
+                "no_decision_fraction": 0.1,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -465.0,
+                "target_output_share": 0.19446716626237878,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.6,
+                "fraction_rank_1": 0.6666666666666666,
+                "fraction_rank_le_2": 1.0,
+                "go_output_spikes": 2059,
+                "mean_pre_go_active_count": 98090.1,
+                "mean_pre_go_conductance_norm": 3922.8199954870156,
+                "mean_pre_go_membrane_norm": 2905.595785903931,
+                "mean_target_rank": 1.2777777777777777,
+                "no_decision_fraction": 0.2,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 105.0,
+                "target_output_share": 0.24773452578139624,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 1407,
+                "mean_pre_go_active_count": 80914.3,
+                "mean_pre_go_conductance_norm": 2517.5264130965925,
+                "mean_pre_go_membrane_norm": 1497.8530647277832,
+                "mean_target_rank": 3.4444444444444446,
+                "no_decision_fraction": 0.1,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -250.0,
+                "target_output_share": 0.1903575609017077,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.2,
+                "fraction_rank_1": 0.2,
+                "fraction_rank_le_2": 0.5,
+                "go_output_spikes": 118,
+                "mean_pre_go_active_count": 42088.0,
+                "mean_pre_go_conductance_norm": 957.8802954041399,
+                "mean_pre_go_membrane_norm": 799.9307039260864,
+                "mean_target_rank": 2.55,
+                "no_decision_fraction": 0.2,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -90.0,
+                "target_output_share": 0.3155176767676767,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.6,
+              "C": 0.0,
+              "D": 0.2
+            },
+            "prediction_distribution": {
+              "A": 2,
+              "B": 17,
+              "C": 6,
+              "D": 9,
+              "NO_DECISION": 6
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 72291.45,
+              "mean_pre_go_active_count": 72291.45,
+              "mean_pre_go_conductance_norm": 2412.3983343362866,
+              "mean_pre_go_membrane_norm": 1547.128489369154,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.8295224427967791,
+                "A|C": 0.8958229576672825,
+                "A|D": 0.5444325208237518,
+                "B|C": 0.8817341031331696,
+                "B|D": 0.5694402886185465,
+                "C|D": 0.5400374249677999
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 0.0
+            },
+            "target_minus_best_competitor_margin_hz": -175.0,
+            "target_output_share": 0.23701923242828987,
+            "trials": 40
+          },
+          "memory_comparison": {
+            "accuracy_gap_intact_minus_reset": 0.1,
+            "go_separation_ratio_intact_over_reset": 116.70588235294117,
+            "margin_gap_intact_minus_reset_hz": -140.0
+          },
+          "reset": {
+            "accuracy": 0.1,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 3,
+                "C": 2,
+                "D": 0,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 0,
+                "B": 2,
+                "C": 0,
+                "D": 1,
+                "NO_DECISION": 7
+              },
+              "C": {
+                "A": 0,
+                "B": 2,
+                "C": 1,
+                "D": 1,
+                "NO_DECISION": 6
+              },
+              "D": {
+                "A": 0,
+                "B": 3,
+                "C": 1,
+                "D": 1,
+                "NO_DECISION": 5
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 42.5,
+            "delay_ms": 80.0,
+            "distinct_predicted_symbols": 4,
+            "fraction_rank_1": 0.19047619047619047,
+            "fraction_rank_le_2": 0.2857142857142857,
+            "go_output_spikes": 109,
+            "largest_prediction_fraction": 0.575,
+            "macro_accuracy": 0.1,
+            "mean_target_rank": 2.6904761904761907,
+            "no_decision_fraction": 0.575,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 28,
+                "mean_pre_go_active_count": 68073.4,
+                "mean_pre_go_conductance_norm": 2251.366633357398,
+                "mean_pre_go_membrane_norm": 985.1344029188156,
+                "mean_target_rank": 3.25,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -65.0,
+                "target_output_share": 0.03968253968253968,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.2,
+                "fraction_rank_1": 0.5,
+                "fraction_rank_le_2": 0.75,
+                "go_output_spikes": 22,
+                "mean_pre_go_active_count": 98090.1,
+                "mean_pre_go_conductance_norm": 3922.8199954870156,
+                "mean_pre_go_membrane_norm": 2905.595785903931,
+                "mean_target_rank": 1.75,
+                "no_decision_fraction": 0.7,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 15.0,
+                "target_output_share": 0.1194871794871795,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.2,
+                "fraction_rank_le_2": 0.2,
+                "go_output_spikes": 30,
+                "mean_pre_go_active_count": 80914.3,
+                "mean_pre_go_conductance_norm": 2517.5264130965925,
+                "mean_pre_go_membrane_norm": 1497.8530647277832,
+                "mean_target_rank": 3.1,
+                "no_decision_fraction": 0.6,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -45.0,
+                "target_output_share": 0.12261904761904763,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.16666666666666666,
+                "fraction_rank_le_2": 0.3333333333333333,
+                "go_output_spikes": 29,
+                "mean_pre_go_active_count": 42088.0,
+                "mean_pre_go_conductance_norm": 957.8802954041399,
+                "mean_pre_go_membrane_norm": 799.9307039260864,
+                "mean_target_rank": 2.4166666666666665,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -45.0,
+                "target_output_share": 0.18401515151515152,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.2,
+              "C": 0.1,
+              "D": 0.1
+            },
+            "prediction_distribution": {
+              "A": 0,
+              "B": 10,
+              "C": 4,
+              "D": 3,
+              "NO_DECISION": 23
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 0.0,
+              "mean_pre_go_active_count": 72291.45,
+              "mean_pre_go_conductance_norm": 2412.3983343362866,
+              "mean_pre_go_membrane_norm": 1547.128489369154,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.8295224427967791,
+                "A|C": 0.8958229576672825,
+                "A|D": 0.5444325208237518,
+                "B|C": 0.8817341031331696,
+                "B|D": 0.5694402886185465,
+                "C|D": 0.5400374249677999
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 1.0
+            },
+            "target_minus_best_competitor_margin_hz": -35.0,
+            "target_output_share": 0.11645097957597957,
+            "trials": 40
+          }
+        }
+      },
+      "safety": {
+        "evaluation_twins_share_learned_state": true,
+        "learning_disabled_during_evaluation": true,
+        "plastic_budget_drift": 0,
+        "plastic_budget_end": 311193,
+        "plastic_budget_start": 311193
+      },
+      "seed": 103,
+      "training": {
+        "accuracy": 0.36875,
+        "persistent_state": {
+          "eligibility": "f82b78341bc08c6237785593ab1114115f5f6a9e72301eff1ef892d9c679b2a2",
+          "multiplier": "764aeddb0d5bba1db0d56715e343bd4128bd530e92e15f1e1983bf3287779dbd",
+          "plastic_mask": "3f81e60472d07192a0bd037cdf297e81004f0951a6d8c0d6e6b0d0dbef30ed77",
+          "promoted_edges": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "retired_edges": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stability": "be6b8717d34c09afe244c982076af6c43ccd97cb5406e26d0e231653d7a8cf69",
+          "usage_ema": "addbc74f53594bb7db9fa7093466dc346686912514668eba540a5bb2057d3135"
+        },
+        "trials": 800
+      }
+    },
+    "107": {
+      "evaluations": {
+        "0": {
+          "intact": {
+            "accuracy": 0.35,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 0,
+                "C": 0,
+                "D": 7,
+                "NO_DECISION": 3
+              },
+              "B": {
+                "A": 0,
+                "B": 5,
+                "C": 1,
+                "D": 1,
+                "NO_DECISION": 3
+              },
+              "C": {
+                "A": 0,
+                "B": 1,
+                "C": 9,
+                "D": 0,
+                "NO_DECISION": 0
+              },
+              "D": {
+                "A": 0,
+                "B": 3,
+                "C": 4,
+                "D": 0,
+                "NO_DECISION": 3
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 2821.6666666666665,
+            "delay_ms": 0.0,
+            "distinct_predicted_symbols": 4,
+            "fraction_rank_1": 0.358974358974359,
+            "fraction_rank_le_2": 0.6153846153846154,
+            "go_output_spikes": 2324,
+            "largest_prediction_fraction": 0.35,
+            "macro_accuracy": 0.35,
+            "mean_target_rank": 1.9615384615384615,
+            "no_decision_fraction": 0.225,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.2222222222222222,
+                "go_output_spikes": 129,
+                "mean_pre_go_active_count": 3617.1,
+                "mean_pre_go_conductance_norm": 513.2275909423828,
+                "mean_pre_go_membrane_norm": 109.39648895263672,
+                "mean_target_rank": 2.7777777777777777,
+                "no_decision_fraction": 0.3,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -180.0,
+                "target_output_share": 0.1328316634908927,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.5,
+                "fraction_rank_1": 0.5,
+                "fraction_rank_le_2": 0.8,
+                "go_output_spikes": 992,
+                "mean_pre_go_active_count": 4857.4,
+                "mean_pre_go_conductance_norm": 745.3605316162109,
+                "mean_pre_go_membrane_norm": 114.32436676025391,
+                "mean_target_rank": 1.55,
+                "no_decision_fraction": 0.3,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 35.0,
+                "target_output_share": 0.27956823480856274,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.9,
+                "fraction_rank_1": 0.9,
+                "fraction_rank_le_2": 1.0,
+                "go_output_spikes": 950,
+                "mean_pre_go_active_count": 5446.7,
+                "mean_pre_go_conductance_norm": 732.7077667236329,
+                "mean_pre_go_membrane_norm": 127.72262649536133,
+                "mean_target_rank": 1.1,
+                "no_decision_fraction": 0.0,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 370.0,
+                "target_output_share": 0.3141951937266291,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.4,
+                "go_output_spikes": 253,
+                "mean_pre_go_active_count": 7420.3,
+                "mean_pre_go_conductance_norm": 688.7190216064453,
+                "mean_pre_go_membrane_norm": 164.16843032836914,
+                "mean_target_rank": 2.5,
+                "no_decision_fraction": 0.3,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -85.0,
+                "target_output_share": 0.24229822200044646,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.5,
+              "C": 0.9,
+              "D": 0.0
+            },
+            "prediction_distribution": {
+              "A": 0,
+              "B": 9,
+              "C": 14,
+              "D": 8,
+              "NO_DECISION": 9
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 5335.375,
+              "mean_pre_go_active_count": 5335.375,
+              "mean_pre_go_conductance_norm": 670.0037277221679,
+              "mean_pre_go_membrane_norm": 128.90297813415526,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.16765423492506099,
+                "A|C": 0.042904100109566926,
+                "A|D": 0.07083218643912285,
+                "B|C": 0.08629713579229342,
+                "B|D": 0.07176514458117224,
+                "C|D": 0.12481789356414431
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 0.0
+            },
+            "target_minus_best_competitor_margin_hz": 35.0,
+            "target_output_share": 0.24222332850663272,
+            "trials": 40
+          },
+          "memory_comparison": {
+            "accuracy_gap_intact_minus_reset": 0.24999999999999997,
+            "go_separation_ratio_intact_over_reset": 66.3921568627451,
+            "margin_gap_intact_minus_reset_hz": 66.25
+          },
+          "reset": {
+            "accuracy": 0.1,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 2,
+                "C": 2,
+                "D": 1,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 0,
+                "B": 1,
+                "C": 0,
+                "D": 1,
+                "NO_DECISION": 8
+              },
+              "C": {
+                "A": 0,
+                "B": 1,
+                "C": 3,
+                "D": 0,
+                "NO_DECISION": 6
+              },
+              "D": {
+                "A": 0,
+                "B": 2,
+                "C": 3,
+                "D": 0,
+                "NO_DECISION": 5
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 42.5,
+            "delay_ms": 0.0,
+            "distinct_predicted_symbols": 4,
+            "fraction_rank_1": 0.13333333333333333,
+            "fraction_rank_le_2": 0.3333333333333333,
+            "go_output_spikes": 129,
+            "largest_prediction_fraction": 0.6,
+            "macro_accuracy": 0.1,
+            "mean_target_rank": 2.5833333333333335,
+            "no_decision_fraction": 0.6,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 35,
+                "mean_pre_go_active_count": 3617.1,
+                "mean_pre_go_conductance_norm": 513.2275909423828,
+                "mean_pre_go_membrane_norm": 109.39648895263672,
+                "mean_target_rank": 3.2222222222222223,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -60.0,
+                "target_output_share": 0.055952380952380955,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.14285714285714285,
+                "fraction_rank_le_2": 0.7142857142857143,
+                "go_output_spikes": 34,
+                "mean_pre_go_active_count": 4857.4,
+                "mean_pre_go_conductance_norm": 745.3605316162109,
+                "mean_pre_go_membrane_norm": 114.32436676025391,
+                "mean_target_rank": 2.0,
+                "no_decision_fraction": 0.8,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -5.0,
+                "target_output_share": 0.18571428571428572,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.3,
+                "fraction_rank_1": 0.42857142857142855,
+                "fraction_rank_le_2": 0.5714285714285714,
+                "go_output_spikes": 24,
+                "mean_pre_go_active_count": 5446.7,
+                "mean_pre_go_conductance_norm": 732.7077667236329,
+                "mean_pre_go_membrane_norm": 127.72262649536133,
+                "mean_target_rank": 2.142857142857143,
+                "no_decision_fraction": 0.6,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -10.0,
+                "target_output_share": 0.3666666666666667,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.14285714285714285,
+                "go_output_spikes": 36,
+                "mean_pre_go_active_count": 7420.3,
+                "mean_pre_go_conductance_norm": 688.7190216064453,
+                "mean_pre_go_membrane_norm": 164.16843032836914,
+                "mean_target_rank": 2.7857142857142856,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -50.0,
+                "target_output_share": 0.08571428571428572,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.1,
+              "C": 0.3,
+              "D": 0.0
+            },
+            "prediction_distribution": {
+              "A": 0,
+              "B": 6,
+              "C": 8,
+              "D": 2,
+              "NO_DECISION": 24
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 0.0,
+              "mean_pre_go_active_count": 5335.375,
+              "mean_pre_go_conductance_norm": 670.0037277221679,
+              "mean_pre_go_membrane_norm": 128.90297813415526,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.16765423492506099,
+                "A|C": 0.042904100109566926,
+                "A|D": 0.07083218643912285,
+                "B|C": 0.08629713579229342,
+                "B|D": 0.07176514458117224,
+                "C|D": 0.12481789356414431
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 1.0
+            },
+            "target_minus_best_competitor_margin_hz": -31.25,
+            "target_output_share": 0.17351190476190478,
+            "trials": 40
+          }
+        },
+        "10": {
+          "intact": {
+            "accuracy": 0.5,
+            "confusion_matrix": {
+              "A": {
+                "A": 3,
+                "B": 1,
+                "C": 1,
+                "D": 2,
+                "NO_DECISION": 3
+              },
+              "B": {
+                "A": 0,
+                "B": 7,
+                "C": 1,
+                "D": 1,
+                "NO_DECISION": 1
+              },
+              "C": {
+                "A": 0,
+                "B": 0,
+                "C": 10,
+                "D": 0,
+                "NO_DECISION": 0
+              },
+              "D": {
+                "A": 0,
+                "B": 6,
+                "C": 1,
+                "D": 0,
+                "NO_DECISION": 3
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 4999.166666666667,
+            "delay_ms": 10.0,
+            "distinct_predicted_symbols": 5,
+            "fraction_rank_1": 0.5128205128205128,
+            "fraction_rank_le_2": 0.717948717948718,
+            "go_output_spikes": 3545,
+            "largest_prediction_fraction": 0.35,
+            "macro_accuracy": 0.5,
+            "mean_target_rank": 1.8205128205128205,
+            "no_decision_fraction": 0.175,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.3,
+                "fraction_rank_1": 0.3333333333333333,
+                "fraction_rank_le_2": 0.5555555555555556,
+                "go_output_spikes": 319,
+                "mean_pre_go_active_count": 7761.7,
+                "mean_pre_go_conductance_norm": 655.0778106689453,
+                "mean_pre_go_membrane_norm": 210.66215972900392,
+                "mean_target_rank": 2.111111111111111,
+                "no_decision_fraction": 0.3,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -10.0,
+                "target_output_share": 0.19876575571014035,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.7,
+                "fraction_rank_1": 0.7,
+                "fraction_rank_le_2": 0.9,
+                "go_output_spikes": 1932,
+                "mean_pre_go_active_count": 18251.4,
+                "mean_pre_go_conductance_norm": 2011.2241516113281,
+                "mean_pre_go_membrane_norm": 337.90474395751954,
+                "mean_target_rank": 1.4,
+                "no_decision_fraction": 0.1,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 80.0,
+                "target_output_share": 0.2620218487048445,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 1.0,
+                "fraction_rank_1": 1.0,
+                "fraction_rank_le_2": 1.0,
+                "go_output_spikes": 1101,
+                "mean_pre_go_active_count": 15977.8,
+                "mean_pre_go_conductance_norm": 1656.2452453613282,
+                "mean_pre_go_membrane_norm": 369.44108657836915,
+                "mean_target_rank": 1.0,
+                "no_decision_fraction": 0.0,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 610.0,
+                "target_output_share": 0.35391719636824825,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.4,
+                "go_output_spikes": 193,
+                "mean_pre_go_active_count": 14410.6,
+                "mean_pre_go_conductance_norm": 1156.6990173339843,
+                "mean_pre_go_membrane_norm": 392.23328704833983,
+                "mean_target_rank": 2.8,
+                "no_decision_fraction": 0.3,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -125.0,
+                "target_output_share": 0.2295940545940546,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.3,
+              "B": 0.7,
+              "C": 1.0,
+              "D": 0.0
+            },
+            "prediction_distribution": {
+              "A": 3,
+              "B": 14,
+              "C": 13,
+              "D": 3,
+              "NO_DECISION": 7
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 14100.375,
+              "mean_pre_go_active_count": 14100.375,
+              "mean_pre_go_conductance_norm": 1369.8115562438966,
+              "mean_pre_go_membrane_norm": 327.5603193283081,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.19407217065768778,
+                "A|C": 0.11471353886534283,
+                "A|D": 0.1926803697938177,
+                "B|C": 0.218470325910993,
+                "B|D": 0.20457470672599565,
+                "C|D": 0.1875479823986518
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 0.0
+            },
+            "target_minus_best_competitor_margin_hz": 138.75,
+            "target_output_share": 0.26107471384432196,
+            "trials": 40
+          },
+          "memory_comparison": {
+            "accuracy_gap_intact_minus_reset": 0.4,
+            "go_separation_ratio_intact_over_reset": 117.62745098039217,
+            "margin_gap_intact_minus_reset_hz": 170.0
+          },
+          "reset": {
+            "accuracy": 0.1,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 2,
+                "C": 2,
+                "D": 1,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 0,
+                "B": 1,
+                "C": 0,
+                "D": 1,
+                "NO_DECISION": 8
+              },
+              "C": {
+                "A": 0,
+                "B": 1,
+                "C": 3,
+                "D": 0,
+                "NO_DECISION": 6
+              },
+              "D": {
+                "A": 0,
+                "B": 2,
+                "C": 3,
+                "D": 0,
+                "NO_DECISION": 5
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 42.5,
+            "delay_ms": 10.0,
+            "distinct_predicted_symbols": 4,
+            "fraction_rank_1": 0.13333333333333333,
+            "fraction_rank_le_2": 0.3333333333333333,
+            "go_output_spikes": 129,
+            "largest_prediction_fraction": 0.6,
+            "macro_accuracy": 0.1,
+            "mean_target_rank": 2.5833333333333335,
+            "no_decision_fraction": 0.6,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 35,
+                "mean_pre_go_active_count": 7761.7,
+                "mean_pre_go_conductance_norm": 655.0778106689453,
+                "mean_pre_go_membrane_norm": 210.66215972900392,
+                "mean_target_rank": 3.2222222222222223,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -60.0,
+                "target_output_share": 0.055952380952380955,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.14285714285714285,
+                "fraction_rank_le_2": 0.7142857142857143,
+                "go_output_spikes": 34,
+                "mean_pre_go_active_count": 18251.4,
+                "mean_pre_go_conductance_norm": 2011.2241516113281,
+                "mean_pre_go_membrane_norm": 337.90474395751954,
+                "mean_target_rank": 2.0,
+                "no_decision_fraction": 0.8,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -5.0,
+                "target_output_share": 0.18571428571428572,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.3,
+                "fraction_rank_1": 0.42857142857142855,
+                "fraction_rank_le_2": 0.5714285714285714,
+                "go_output_spikes": 24,
+                "mean_pre_go_active_count": 15977.8,
+                "mean_pre_go_conductance_norm": 1656.2452453613282,
+                "mean_pre_go_membrane_norm": 369.44108657836915,
+                "mean_target_rank": 2.142857142857143,
+                "no_decision_fraction": 0.6,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -10.0,
+                "target_output_share": 0.3666666666666667,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.14285714285714285,
+                "go_output_spikes": 36,
+                "mean_pre_go_active_count": 14410.6,
+                "mean_pre_go_conductance_norm": 1156.6990173339843,
+                "mean_pre_go_membrane_norm": 392.23328704833983,
+                "mean_target_rank": 2.7857142857142856,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -50.0,
+                "target_output_share": 0.08571428571428572,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.1,
+              "C": 0.3,
+              "D": 0.0
+            },
+            "prediction_distribution": {
+              "A": 0,
+              "B": 6,
+              "C": 8,
+              "D": 2,
+              "NO_DECISION": 24
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 0.0,
+              "mean_pre_go_active_count": 14100.375,
+              "mean_pre_go_conductance_norm": 1369.8115562438966,
+              "mean_pre_go_membrane_norm": 327.5603193283081,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.19407217065768778,
+                "A|C": 0.11471353886534283,
+                "A|D": 0.1926803697938177,
+                "B|C": 0.218470325910993,
+                "B|D": 0.20457470672599565,
+                "C|D": 0.1875479823986518
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 1.0
+            },
+            "target_minus_best_competitor_margin_hz": -31.25,
+            "target_output_share": 0.17351190476190478,
+            "trials": 40
+          }
+        },
+        "20": {
+          "intact": {
+            "accuracy": 0.325,
+            "confusion_matrix": {
+              "A": {
+                "A": 2,
+                "B": 1,
+                "C": 0,
+                "D": 2,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 0,
+                "B": 2,
+                "C": 1,
+                "D": 7,
+                "NO_DECISION": 0
+              },
+              "C": {
+                "A": 0,
+                "B": 2,
+                "C": 8,
+                "D": 0,
+                "NO_DECISION": 0
+              },
+              "D": {
+                "A": 0,
+                "B": 4,
+                "C": 0,
+                "D": 1,
+                "NO_DECISION": 5
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 5640.0,
+            "delay_ms": 20.0,
+            "distinct_predicted_symbols": 5,
+            "fraction_rank_1": 0.34210526315789475,
+            "fraction_rank_le_2": 0.8421052631578947,
+            "go_output_spikes": 4074,
+            "largest_prediction_fraction": 0.25,
+            "macro_accuracy": 0.32500000000000007,
+            "mean_target_rank": 1.8157894736842106,
+            "no_decision_fraction": 0.25,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.2,
+                "fraction_rank_1": 0.2,
+                "fraction_rank_le_2": 0.7,
+                "go_output_spikes": 514,
+                "mean_pre_go_active_count": 18458.4,
+                "mean_pre_go_conductance_norm": 924.1576891899109,
+                "mean_pre_go_membrane_norm": 370.17042007446287,
+                "mean_target_rank": 2.15,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 0.0,
+                "target_output_share": 0.19346245735978873,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.2,
+                "fraction_rank_1": 0.2,
+                "fraction_rank_le_2": 1.0,
+                "go_output_spikes": 2215,
+                "mean_pre_go_active_count": 46216.9,
+                "mean_pre_go_conductance_norm": 3211.2581787109375,
+                "mean_pre_go_membrane_norm": 829.5114105224609,
+                "mean_target_rank": 1.8,
+                "no_decision_fraction": 0.0,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -55.0,
+                "target_output_share": 0.2640321291062667,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.8,
+                "fraction_rank_1": 0.8,
+                "fraction_rank_le_2": 1.0,
+                "go_output_spikes": 1168,
+                "mean_pre_go_active_count": 38862.7,
+                "mean_pre_go_conductance_norm": 1967.3643676757813,
+                "mean_pre_go_membrane_norm": 669.0732635498047,
+                "mean_target_rank": 1.2,
+                "no_decision_fraction": 0.0,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 255.0,
+                "target_output_share": 0.31084885705720455,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.125,
+                "fraction_rank_le_2": 0.625,
+                "go_output_spikes": 177,
+                "mean_pre_go_active_count": 20261.9,
+                "mean_pre_go_conductance_norm": 982.4292572021484,
+                "mean_pre_go_membrane_norm": 614.5994995117187,
+                "mean_target_rank": 2.1875,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -55.0,
+                "target_output_share": 0.21099650349650348,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.2,
+              "B": 0.2,
+              "C": 0.8,
+              "D": 0.1
+            },
+            "prediction_distribution": {
+              "A": 2,
+              "B": 9,
+              "C": 9,
+              "D": 10,
+              "NO_DECISION": 10
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 30949.975,
+              "mean_pre_go_active_count": 30949.975,
+              "mean_pre_go_conductance_norm": 1771.3023731946946,
+              "mean_pre_go_membrane_norm": 620.8386484146118,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.28981760265305234,
+                "A|C": 0.31290294091671816,
+                "A|D": 0.24238204306000916,
+                "B|C": 0.5693292082688792,
+                "B|D": 0.2798864921376603,
+                "C|D": 0.2822032357753136
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 0.0
+            },
+            "target_minus_best_competitor_margin_hz": 36.25,
+            "target_output_share": 0.24483498675494086,
+            "trials": 40
+          },
+          "memory_comparison": {
+            "accuracy_gap_intact_minus_reset": 0.225,
+            "go_separation_ratio_intact_over_reset": 132.7058823529412,
+            "margin_gap_intact_minus_reset_hz": 67.5
+          },
+          "reset": {
+            "accuracy": 0.1,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 2,
+                "C": 2,
+                "D": 1,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 0,
+                "B": 1,
+                "C": 0,
+                "D": 1,
+                "NO_DECISION": 8
+              },
+              "C": {
+                "A": 0,
+                "B": 1,
+                "C": 3,
+                "D": 0,
+                "NO_DECISION": 6
+              },
+              "D": {
+                "A": 0,
+                "B": 2,
+                "C": 3,
+                "D": 0,
+                "NO_DECISION": 5
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 42.5,
+            "delay_ms": 20.0,
+            "distinct_predicted_symbols": 4,
+            "fraction_rank_1": 0.13333333333333333,
+            "fraction_rank_le_2": 0.3333333333333333,
+            "go_output_spikes": 129,
+            "largest_prediction_fraction": 0.6,
+            "macro_accuracy": 0.1,
+            "mean_target_rank": 2.5833333333333335,
+            "no_decision_fraction": 0.6,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 35,
+                "mean_pre_go_active_count": 18458.4,
+                "mean_pre_go_conductance_norm": 924.1576891899109,
+                "mean_pre_go_membrane_norm": 370.17042007446287,
+                "mean_target_rank": 3.2222222222222223,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -60.0,
+                "target_output_share": 0.055952380952380955,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.14285714285714285,
+                "fraction_rank_le_2": 0.7142857142857143,
+                "go_output_spikes": 34,
+                "mean_pre_go_active_count": 46216.9,
+                "mean_pre_go_conductance_norm": 3211.2581787109375,
+                "mean_pre_go_membrane_norm": 829.5114105224609,
+                "mean_target_rank": 2.0,
+                "no_decision_fraction": 0.8,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -5.0,
+                "target_output_share": 0.18571428571428572,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.3,
+                "fraction_rank_1": 0.42857142857142855,
+                "fraction_rank_le_2": 0.5714285714285714,
+                "go_output_spikes": 24,
+                "mean_pre_go_active_count": 38862.7,
+                "mean_pre_go_conductance_norm": 1967.3643676757813,
+                "mean_pre_go_membrane_norm": 669.0732635498047,
+                "mean_target_rank": 2.142857142857143,
+                "no_decision_fraction": 0.6,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -10.0,
+                "target_output_share": 0.3666666666666667,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.14285714285714285,
+                "go_output_spikes": 36,
+                "mean_pre_go_active_count": 20261.9,
+                "mean_pre_go_conductance_norm": 982.4292572021484,
+                "mean_pre_go_membrane_norm": 614.5994995117187,
+                "mean_target_rank": 2.7857142857142856,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -50.0,
+                "target_output_share": 0.08571428571428572,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.1,
+              "C": 0.3,
+              "D": 0.0
+            },
+            "prediction_distribution": {
+              "A": 0,
+              "B": 6,
+              "C": 8,
+              "D": 2,
+              "NO_DECISION": 24
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 0.0,
+              "mean_pre_go_active_count": 30949.975,
+              "mean_pre_go_conductance_norm": 1771.3023731946946,
+              "mean_pre_go_membrane_norm": 620.8386484146118,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.28981760265305234,
+                "A|C": 0.31290294091671816,
+                "A|D": 0.24238204306000916,
+                "B|C": 0.5693292082688792,
+                "B|D": 0.2798864921376603,
+                "C|D": 0.2822032357753136
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 1.0
+            },
+            "target_minus_best_competitor_margin_hz": -31.25,
+            "target_output_share": 0.17351190476190478,
+            "trials": 40
+          }
+        },
+        "40": {
+          "intact": {
+            "accuracy": 0.225,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 0,
+                "C": 4,
+                "D": 1,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 0,
+                "B": 5,
+                "C": 1,
+                "D": 4,
+                "NO_DECISION": 0
+              },
+              "C": {
+                "A": 0,
+                "B": 6,
+                "C": 4,
+                "D": 0,
+                "NO_DECISION": 0
+              },
+              "D": {
+                "A": 1,
+                "B": 2,
+                "C": 4,
+                "D": 0,
+                "NO_DECISION": 3
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 5788.333333333333,
+            "delay_ms": 40.0,
+            "distinct_predicted_symbols": 5,
+            "fraction_rank_1": 0.23076923076923078,
+            "fraction_rank_le_2": 0.6153846153846154,
+            "go_output_spikes": 3958,
+            "largest_prediction_fraction": 0.325,
+            "macro_accuracy": 0.225,
+            "mean_target_rank": 2.2948717948717947,
+            "no_decision_fraction": 0.2,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.1,
+                "go_output_spikes": 270,
+                "mean_pre_go_active_count": 34484.3,
+                "mean_pre_go_conductance_norm": 1343.6494765087962,
+                "mean_pre_go_membrane_norm": 547.5466056823731,
+                "mean_target_rank": 3.5,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -100.0,
+                "target_output_share": 0.16935759469345807,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.5,
+                "fraction_rank_1": 0.5,
+                "fraction_rank_le_2": 0.9,
+                "go_output_spikes": 2182,
+                "mean_pre_go_active_count": 91460.8,
+                "mean_pre_go_conductance_norm": 4439.160888671875,
+                "mean_pre_go_membrane_norm": 2262.639685058594,
+                "mean_target_rank": 1.6,
+                "no_decision_fraction": 0.0,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -25.0,
+                "target_output_share": 0.26917140492695657,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.4,
+                "fraction_rank_1": 0.4,
+                "fraction_rank_le_2": 0.9,
+                "go_output_spikes": 1297,
+                "mean_pre_go_active_count": 90626.6,
+                "mean_pre_go_conductance_norm": 2588.068310546875,
+                "mean_pre_go_membrane_norm": 1242.2278076171874,
+                "mean_target_rank": 1.65,
+                "no_decision_fraction": 0.0,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 35.0,
+                "target_output_share": 0.27076413052835635,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.5555555555555556,
+                "go_output_spikes": 209,
+                "mean_pre_go_active_count": 26350.5,
+                "mean_pre_go_conductance_norm": 838.3879289627075,
+                "mean_pre_go_membrane_norm": 688.6884765625,
+                "mean_target_rank": 2.4444444444444446,
+                "no_decision_fraction": 0.3,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -60.0,
+                "target_output_share": 0.22243808987558986,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.5,
+              "C": 0.4,
+              "D": 0.0
+            },
+            "prediction_distribution": {
+              "A": 1,
+              "B": 13,
+              "C": 13,
+              "D": 5,
+              "NO_DECISION": 8
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 60730.55,
+              "mean_pre_go_active_count": 60730.55,
+              "mean_pre_go_conductance_norm": 2302.3166511725635,
+              "mean_pre_go_membrane_norm": 1185.2756437301637,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.5535616203999676,
+                "A|C": 0.5650363083109678,
+                "A|D": 0.4256928413164275,
+                "B|C": 0.7876131902426068,
+                "B|D": 0.4924748021961013,
+                "C|D": 0.49744761973599805
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 0.0
+            },
+            "target_minus_best_competitor_margin_hz": -37.5,
+            "target_output_share": 0.23293280500609023,
+            "trials": 40
+          },
+          "memory_comparison": {
+            "accuracy_gap_intact_minus_reset": 0.125,
+            "go_separation_ratio_intact_over_reset": 136.19607843137254,
+            "margin_gap_intact_minus_reset_hz": -6.25
+          },
+          "reset": {
+            "accuracy": 0.1,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 2,
+                "C": 2,
+                "D": 1,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 0,
+                "B": 1,
+                "C": 0,
+                "D": 1,
+                "NO_DECISION": 8
+              },
+              "C": {
+                "A": 0,
+                "B": 1,
+                "C": 3,
+                "D": 0,
+                "NO_DECISION": 6
+              },
+              "D": {
+                "A": 0,
+                "B": 2,
+                "C": 3,
+                "D": 0,
+                "NO_DECISION": 5
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 42.5,
+            "delay_ms": 40.0,
+            "distinct_predicted_symbols": 4,
+            "fraction_rank_1": 0.13333333333333333,
+            "fraction_rank_le_2": 0.3333333333333333,
+            "go_output_spikes": 129,
+            "largest_prediction_fraction": 0.6,
+            "macro_accuracy": 0.1,
+            "mean_target_rank": 2.5833333333333335,
+            "no_decision_fraction": 0.6,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 35,
+                "mean_pre_go_active_count": 34484.3,
+                "mean_pre_go_conductance_norm": 1343.6494765087962,
+                "mean_pre_go_membrane_norm": 547.5466056823731,
+                "mean_target_rank": 3.2222222222222223,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -60.0,
+                "target_output_share": 0.055952380952380955,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.14285714285714285,
+                "fraction_rank_le_2": 0.7142857142857143,
+                "go_output_spikes": 34,
+                "mean_pre_go_active_count": 91460.8,
+                "mean_pre_go_conductance_norm": 4439.160888671875,
+                "mean_pre_go_membrane_norm": 2262.639685058594,
+                "mean_target_rank": 2.0,
+                "no_decision_fraction": 0.8,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -5.0,
+                "target_output_share": 0.18571428571428572,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.3,
+                "fraction_rank_1": 0.42857142857142855,
+                "fraction_rank_le_2": 0.5714285714285714,
+                "go_output_spikes": 24,
+                "mean_pre_go_active_count": 90626.6,
+                "mean_pre_go_conductance_norm": 2588.068310546875,
+                "mean_pre_go_membrane_norm": 1242.2278076171874,
+                "mean_target_rank": 2.142857142857143,
+                "no_decision_fraction": 0.6,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -10.0,
+                "target_output_share": 0.3666666666666667,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.14285714285714285,
+                "go_output_spikes": 36,
+                "mean_pre_go_active_count": 26350.5,
+                "mean_pre_go_conductance_norm": 838.3879289627075,
+                "mean_pre_go_membrane_norm": 688.6884765625,
+                "mean_target_rank": 2.7857142857142856,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -50.0,
+                "target_output_share": 0.08571428571428572,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.1,
+              "C": 0.3,
+              "D": 0.0
+            },
+            "prediction_distribution": {
+              "A": 0,
+              "B": 6,
+              "C": 8,
+              "D": 2,
+              "NO_DECISION": 24
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 0.0,
+              "mean_pre_go_active_count": 60730.55,
+              "mean_pre_go_conductance_norm": 2302.3166511725635,
+              "mean_pre_go_membrane_norm": 1185.2756437301637,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.5535616203999676,
+                "A|C": 0.5650363083109678,
+                "A|D": 0.4256928413164275,
+                "B|C": 0.7876131902426068,
+                "B|D": 0.4924748021961013,
+                "C|D": 0.49744761973599805
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 1.0
+            },
+            "target_minus_best_competitor_margin_hz": -31.25,
+            "target_output_share": 0.17351190476190478,
+            "trials": 40
+          }
+        },
+        "80": {
+          "intact": {
+            "accuracy": 0.275,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 1,
+                "C": 2,
+                "D": 3,
+                "NO_DECISION": 4
+              },
+              "B": {
+                "A": 0,
+                "B": 7,
+                "C": 0,
+                "D": 1,
+                "NO_DECISION": 2
+              },
+              "C": {
+                "A": 0,
+                "B": 4,
+                "C": 4,
+                "D": 0,
+                "NO_DECISION": 2
+              },
+              "D": {
+                "A": 1,
+                "B": 4,
+                "C": 1,
+                "D": 0,
+                "NO_DECISION": 4
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 5824.166666666667,
+            "delay_ms": 80.0,
+            "distinct_predicted_symbols": 5,
+            "fraction_rank_1": 0.28205128205128205,
+            "fraction_rank_le_2": 0.6153846153846154,
+            "go_output_spikes": 4039,
+            "largest_prediction_fraction": 0.4,
+            "macro_accuracy": 0.275,
+            "mean_target_rank": 2.1153846153846154,
+            "no_decision_fraction": 0.3,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.1111111111111111,
+                "go_output_spikes": 237,
+                "mean_pre_go_active_count": 42657.3,
+                "mean_pre_go_conductance_norm": 646.3095077240657,
+                "mean_pre_go_membrane_norm": 458.1838039398193,
+                "mean_target_rank": 3.1666666666666665,
+                "no_decision_fraction": 0.4,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -120.0,
+                "target_output_share": 0.08891068333181278,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.7,
+                "fraction_rank_1": 0.7,
+                "fraction_rank_le_2": 0.9,
+                "go_output_spikes": 2168,
+                "mean_pre_go_active_count": 108882.5,
+                "mean_pre_go_conductance_norm": 4293.996411132813,
+                "mean_pre_go_membrane_norm": 3294.35341796875,
+                "mean_target_rank": 1.35,
+                "no_decision_fraction": 0.2,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 115.0,
+                "target_output_share": 0.27367249773954694,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.4,
+                "fraction_rank_1": 0.4,
+                "fraction_rank_le_2": 0.9,
+                "go_output_spikes": 1402,
+                "mean_pre_go_active_count": 106932.5,
+                "mean_pre_go_conductance_norm": 2652.762487792969,
+                "mean_pre_go_membrane_norm": 1785.1954223632813,
+                "mean_target_rank": 1.6,
+                "no_decision_fraction": 0.2,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": 55.0,
+                "target_output_share": 0.27686771677314803,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.5,
+                "go_output_spikes": 232,
+                "mean_pre_go_active_count": 43757.2,
+                "mean_pre_go_conductance_norm": 1075.858201262774,
+                "mean_pre_go_membrane_norm": 810.6226615905762,
+                "mean_target_rank": 2.45,
+                "no_decision_fraction": 0.4,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -85.0,
+                "target_output_share": 0.2701859385594325,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.7,
+              "C": 0.4,
+              "D": 0.0
+            },
+            "prediction_distribution": {
+              "A": 1,
+              "B": 16,
+              "C": 7,
+              "D": 4,
+              "NO_DECISION": 12
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 75557.375,
+              "mean_pre_go_active_count": 75557.375,
+              "mean_pre_go_conductance_norm": 2167.2316519781552,
+              "mean_pre_go_membrane_norm": 1587.0888264656066,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.6251431131464981,
+                "A|C": 0.6543238888142876,
+                "A|D": 0.62777405900829,
+                "B|C": 0.8520524198037438,
+                "B|D": 0.6376507957963031,
+                "C|D": 0.6329446625427942
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 0.0
+            },
+            "target_minus_best_competitor_margin_hz": -8.75,
+            "target_output_share": 0.22740920910098508,
+            "trials": 40
+          },
+          "memory_comparison": {
+            "accuracy_gap_intact_minus_reset": 0.17500000000000002,
+            "go_separation_ratio_intact_over_reset": 137.03921568627453,
+            "margin_gap_intact_minus_reset_hz": 22.5
+          },
+          "reset": {
+            "accuracy": 0.1,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 2,
+                "C": 2,
+                "D": 1,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 0,
+                "B": 1,
+                "C": 0,
+                "D": 1,
+                "NO_DECISION": 8
+              },
+              "C": {
+                "A": 0,
+                "B": 1,
+                "C": 3,
+                "D": 0,
+                "NO_DECISION": 6
+              },
+              "D": {
+                "A": 0,
+                "B": 2,
+                "C": 3,
+                "D": 0,
+                "NO_DECISION": 5
+              }
+            },
+            "cue_conditioned_go_output_separation_hz": 42.5,
+            "delay_ms": 80.0,
+            "distinct_predicted_symbols": 4,
+            "fraction_rank_1": 0.13333333333333333,
+            "fraction_rank_le_2": 0.3333333333333333,
+            "go_output_spikes": 129,
+            "largest_prediction_fraction": 0.6,
+            "macro_accuracy": 0.1,
+            "mean_target_rank": 2.5833333333333335,
+            "no_decision_fraction": 0.6,
+            "output_collapse": false,
+            "per_cue": {
+              "A": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.0,
+                "go_output_spikes": 35,
+                "mean_pre_go_active_count": 42657.3,
+                "mean_pre_go_conductance_norm": 646.3095077240657,
+                "mean_pre_go_membrane_norm": 458.1838039398193,
+                "mean_target_rank": 3.2222222222222223,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -60.0,
+                "target_output_share": 0.055952380952380955,
+                "trials": 10
+              },
+              "B": {
+                "accuracy": 0.1,
+                "fraction_rank_1": 0.14285714285714285,
+                "fraction_rank_le_2": 0.7142857142857143,
+                "go_output_spikes": 34,
+                "mean_pre_go_active_count": 108882.5,
+                "mean_pre_go_conductance_norm": 4293.996411132813,
+                "mean_pre_go_membrane_norm": 3294.35341796875,
+                "mean_target_rank": 2.0,
+                "no_decision_fraction": 0.8,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -5.0,
+                "target_output_share": 0.18571428571428572,
+                "trials": 10
+              },
+              "C": {
+                "accuracy": 0.3,
+                "fraction_rank_1": 0.42857142857142855,
+                "fraction_rank_le_2": 0.5714285714285714,
+                "go_output_spikes": 24,
+                "mean_pre_go_active_count": 106932.5,
+                "mean_pre_go_conductance_norm": 2652.762487792969,
+                "mean_pre_go_membrane_norm": 1785.1954223632813,
+                "mean_target_rank": 2.142857142857143,
+                "no_decision_fraction": 0.6,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -10.0,
+                "target_output_share": 0.3666666666666667,
+                "trials": 10
+              },
+              "D": {
+                "accuracy": 0.0,
+                "fraction_rank_1": 0.0,
+                "fraction_rank_le_2": 0.14285714285714285,
+                "go_output_spikes": 36,
+                "mean_pre_go_active_count": 43757.2,
+                "mean_pre_go_conductance_norm": 1075.858201262774,
+                "mean_pre_go_membrane_norm": 810.6226615905762,
+                "mean_target_rank": 2.7857142857142856,
+                "no_decision_fraction": 0.5,
+                "pre_go_fingerprint_diversity": 10,
+                "target_minus_best_competitor_margin_hz": -50.0,
+                "target_output_share": 0.08571428571428572,
+                "trials": 10
+              }
+            },
+            "per_cue_accuracy": {
+              "A": 0.0,
+              "B": 0.1,
+              "C": 0.3,
+              "D": 0.0
+            },
+            "prediction_distribution": {
+              "A": 0,
+              "B": 6,
+              "C": 8,
+              "D": 2,
+              "NO_DECISION": 24
+            },
+            "state_memory": {
+              "mean_post_reset_active_count": 0.0,
+              "mean_pre_go_active_count": 75557.375,
+              "mean_pre_go_conductance_norm": 2167.2316519781552,
+              "mean_pre_go_membrane_norm": 1587.0888264656066,
+              "pairwise_pre_go_active_set_jaccard": {
+                "A|B": 0.6251431131464981,
+                "A|C": 0.6543238888142876,
+                "A|D": 0.62777405900829,
+                "B|C": 0.8520524198037438,
+                "B|D": 0.6376507957963031,
+                "C|D": 0.6329446625427942
+              },
+              "pre_go_fingerprint_diversity": 40,
+              "reset_empty_fraction": 1.0
+            },
+            "target_minus_best_competitor_margin_hz": -31.25,
+            "target_output_share": 0.17351190476190478,
+            "trials": 40
+          }
+        }
+      },
+      "safety": {
+        "evaluation_twins_share_learned_state": true,
+        "learning_disabled_during_evaluation": true,
+        "plastic_budget_drift": 0,
+        "plastic_budget_end": 312415,
+        "plastic_budget_start": 312415
+      },
+      "seed": 107,
+      "training": {
+        "accuracy": 0.4,
+        "persistent_state": {
+          "eligibility": "f82b78341bc08c6237785593ab1114115f5f6a9e72301eff1ef892d9c679b2a2",
+          "multiplier": "912c431b1ba46b106dc1a6f2ccdfffde98302416421fd7081de650ea8c2e32f8",
+          "plastic_mask": "dc010f59f0593e155a2815eea59d136e95477e240d402e4a5657aa24340e3ac8",
+          "promoted_edges": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "retired_edges": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stability": "65a8f2073241a608fc7e7cad05fb46796398fe8562c6e40dc5eea44f60c96734",
+          "usage_ema": "b82f87e6eed3e9aa3c25cd87b2eec1644fa197f6b995582acdae4141e047e52a"
+        },
+        "trials": 800
+      }
+    }
+  },
+  "runtime_seconds": 491.1852463000032
+}

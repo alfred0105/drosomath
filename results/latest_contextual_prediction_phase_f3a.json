@@ -1,0 +1,6047 @@
+{
+  "aggregate": {
+    "accuracy_curve": {
+      "between_item_reset": {
+        "0": 0.19270833333333334,
+        "400": 0.20833333333333334,
+        "800": 0.19791666666666666
+      },
+      "intact": {
+        "0": 0.20833333333333334,
+        "400": 0.19791666666666666,
+        "800": 0.21875
+      }
+    },
+    "context_accuracy_final_intact": {
+      "AA": 0.16666666666666666,
+      "AB": 0.0,
+      "AC": 0.6666666666666666,
+      "AD": 0.08333333333333333,
+      "BA": 0.0,
+      "BB": 0.5833333333333334,
+      "BC": 0.0,
+      "BD": 0.0,
+      "CA": 0.5833333333333334,
+      "CB": 0.5,
+      "CC": 0.16666666666666666,
+      "CD": 0.0,
+      "DA": 0.3333333333333333,
+      "DB": 0.3333333333333333,
+      "DC": 0.0,
+      "DD": 0.08333333333333333
+    },
+    "margin_curve_hz": {
+      "between_item_reset": {
+        "0": -149.21875,
+        "400": -125.52083333333333,
+        "800": -115.36458333333333
+      },
+      "intact": {
+        "0": -272.1354166666667,
+        "400": -139.84375,
+        "800": -140.88541666666666
+      }
+    },
+    "reset_curve": {
+      "0": 0.19270833333333334,
+      "400": 0.20833333333333334,
+      "800": 0.19791666666666666
+    },
+    "reversed_contexts_final_intact": {
+      "131": {
+        "AB_vs_BA": {
+          "AB": {
+            "accuracy": 0.0,
+            "grammar_target": "B",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 0,
+              "C": 2,
+              "D": 1,
+              "NO_DECISION": 1
+            },
+            "target_rank": 3.375
+          },
+          "BA": {
+            "accuracy": 0.0,
+            "grammar_target": "C",
+            "prediction_distribution": {
+              "A": 1,
+              "B": 0,
+              "C": 0,
+              "D": 3,
+              "NO_DECISION": 0
+            },
+            "target_rank": 3.125
+          },
+          "targets_differ": true
+        },
+        "AC_vs_CA": {
+          "AC": {
+            "accuracy": 0.75,
+            "grammar_target": "C",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 1,
+              "C": 3,
+              "D": 0,
+              "NO_DECISION": 0
+            },
+            "target_rank": 1.75
+          },
+          "CA": {
+            "accuracy": 0.75,
+            "grammar_target": "D",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 1,
+              "C": 0,
+              "D": 3,
+              "NO_DECISION": 0
+            },
+            "target_rank": 1.75
+          },
+          "targets_differ": true
+        },
+        "AD_vs_DA": {
+          "AD": {
+            "accuracy": 0.0,
+            "grammar_target": "D",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 2,
+              "C": 2,
+              "D": 0,
+              "NO_DECISION": 0
+            },
+            "target_rank": 3.75
+          },
+          "DA": {
+            "accuracy": 0.5,
+            "grammar_target": "B",
+            "prediction_distribution": {
+              "A": 1,
+              "B": 2,
+              "C": 0,
+              "D": 1,
+              "NO_DECISION": 0
+            },
+            "target_rank": 2.25
+          },
+          "targets_differ": true
+        },
+        "BC_vs_CB": {
+          "BC": {
+            "accuracy": 0.0,
+            "grammar_target": "A",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 0,
+              "C": 2,
+              "D": 1,
+              "NO_DECISION": 1
+            },
+            "target_rank": 2.875
+          },
+          "CB": {
+            "accuracy": 0.75,
+            "grammar_target": "C",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 0,
+              "C": 3,
+              "D": 1,
+              "NO_DECISION": 0
+            },
+            "target_rank": 1.375
+          },
+          "targets_differ": true
+        },
+        "BD_vs_DB": {
+          "BD": {
+            "accuracy": 0.0,
+            "grammar_target": "B",
+            "prediction_distribution": {
+              "A": 1,
+              "B": 0,
+              "C": 0,
+              "D": 3,
+              "NO_DECISION": 0
+            },
+            "target_rank": 3.375
+          },
+          "DB": {
+            "accuracy": 0.0,
+            "grammar_target": "A",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 2,
+              "C": 1,
+              "D": 1,
+              "NO_DECISION": 0
+            },
+            "target_rank": 2.625
+          },
+          "targets_differ": true
+        },
+        "CD_vs_DC": {
+          "CD": {
+            "accuracy": 0.0,
+            "grammar_target": "A",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 0,
+              "C": 2,
+              "D": 0,
+              "NO_DECISION": 2
+            },
+            "target_rank": 2.125
+          },
+          "DC": {
+            "accuracy": 0.0,
+            "grammar_target": "D",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 0,
+              "C": 3,
+              "D": 0,
+              "NO_DECISION": 1
+            },
+            "target_rank": 3.625
+          },
+          "targets_differ": true
+        },
+        "different_target_reversed_context_count": 6
+      },
+      "137": {
+        "AB_vs_BA": {
+          "AB": {
+            "accuracy": 0.0,
+            "grammar_target": "B",
+            "prediction_distribution": {
+              "A": 1,
+              "B": 0,
+              "C": 1,
+              "D": 1,
+              "NO_DECISION": 1
+            },
+            "target_rank": 3.5
+          },
+          "BA": {
+            "accuracy": 0.0,
+            "grammar_target": "C",
+            "prediction_distribution": {
+              "A": 1,
+              "B": 1,
+              "C": 0,
+              "D": 2,
+              "NO_DECISION": 0
+            },
+            "target_rank": 3.75
+          },
+          "targets_differ": true
+        },
+        "AC_vs_CA": {
+          "AC": {
+            "accuracy": 0.75,
+            "grammar_target": "C",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 0,
+              "C": 3,
+              "D": 0,
+              "NO_DECISION": 1
+            },
+            "target_rank": 1.125
+          },
+          "CA": {
+            "accuracy": 0.75,
+            "grammar_target": "D",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 0,
+              "C": 1,
+              "D": 3,
+              "NO_DECISION": 0
+            },
+            "target_rank": 1.5
+          },
+          "targets_differ": true
+        },
+        "AD_vs_DA": {
+          "AD": {
+            "accuracy": 0.25,
+            "grammar_target": "D",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 2,
+              "C": 1,
+              "D": 1,
+              "NO_DECISION": 0
+            },
+            "target_rank": 2.625
+          },
+          "DA": {
+            "accuracy": 0.0,
+            "grammar_target": "B",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 0,
+              "C": 1,
+              "D": 2,
+              "NO_DECISION": 1
+            },
+            "target_rank": 3.125
+          },
+          "targets_differ": true
+        },
+        "BC_vs_CB": {
+          "BC": {
+            "accuracy": 0.0,
+            "grammar_target": "A",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 0,
+              "C": 1,
+              "D": 3,
+              "NO_DECISION": 0
+            },
+            "target_rank": 2.625
+          },
+          "CB": {
+            "accuracy": 0.5,
+            "grammar_target": "C",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 0,
+              "C": 2,
+              "D": 1,
+              "NO_DECISION": 1
+            },
+            "target_rank": 1.875
+          },
+          "targets_differ": true
+        },
+        "BD_vs_DB": {
+          "BD": {
+            "accuracy": 0.0,
+            "grammar_target": "B",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 0,
+              "C": 1,
+              "D": 2,
+              "NO_DECISION": 1
+            },
+            "target_rank": 3.75
+          },
+          "DB": {
+            "accuracy": 0.75,
+            "grammar_target": "A",
+            "prediction_distribution": {
+              "A": 3,
+              "B": 0,
+              "C": 0,
+              "D": 0,
+              "NO_DECISION": 1
+            },
+            "target_rank": 1.75
+          },
+          "targets_differ": true
+        },
+        "CD_vs_DC": {
+          "CD": {
+            "accuracy": 0.0,
+            "grammar_target": "A",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 1,
+              "C": 1,
+              "D": 2,
+              "NO_DECISION": 0
+            },
+            "target_rank": 3.625
+          },
+          "DC": {
+            "accuracy": 0.0,
+            "grammar_target": "D",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 0,
+              "C": 3,
+              "D": 0,
+              "NO_DECISION": 1
+            },
+            "target_rank": 2.5
+          },
+          "targets_differ": true
+        },
+        "different_target_reversed_context_count": 6
+      },
+      "139": {
+        "AB_vs_BA": {
+          "AB": {
+            "accuracy": 0.0,
+            "grammar_target": "B",
+            "prediction_distribution": {
+              "A": 2,
+              "B": 0,
+              "C": 1,
+              "D": 0,
+              "NO_DECISION": 1
+            },
+            "target_rank": 3.0
+          },
+          "BA": {
+            "accuracy": 0.0,
+            "grammar_target": "C",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 1,
+              "C": 0,
+              "D": 2,
+              "NO_DECISION": 1
+            },
+            "target_rank": 2.5
+          },
+          "targets_differ": true
+        },
+        "AC_vs_CA": {
+          "AC": {
+            "accuracy": 0.5,
+            "grammar_target": "C",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 0,
+              "C": 2,
+              "D": 2,
+              "NO_DECISION": 0
+            },
+            "target_rank": 2.5
+          },
+          "CA": {
+            "accuracy": 0.25,
+            "grammar_target": "D",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 1,
+              "C": 2,
+              "D": 1,
+              "NO_DECISION": 0
+            },
+            "target_rank": 2.0
+          },
+          "targets_differ": true
+        },
+        "AD_vs_DA": {
+          "AD": {
+            "accuracy": 0.0,
+            "grammar_target": "D",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 2,
+              "C": 0,
+              "D": 0,
+              "NO_DECISION": 2
+            },
+            "target_rank": 3.0
+          },
+          "DA": {
+            "accuracy": 0.5,
+            "grammar_target": "B",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 2,
+              "C": 0,
+              "D": 1,
+              "NO_DECISION": 1
+            },
+            "target_rank": 1.875
+          },
+          "targets_differ": true
+        },
+        "BC_vs_CB": {
+          "BC": {
+            "accuracy": 0.0,
+            "grammar_target": "A",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 0,
+              "C": 2,
+              "D": 2,
+              "NO_DECISION": 0
+            },
+            "target_rank": 3.25
+          },
+          "CB": {
+            "accuracy": 0.25,
+            "grammar_target": "C",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 1,
+              "C": 1,
+              "D": 2,
+              "NO_DECISION": 0
+            },
+            "target_rank": 2.5
+          },
+          "targets_differ": true
+        },
+        "BD_vs_DB": {
+          "BD": {
+            "accuracy": 0.0,
+            "grammar_target": "B",
+            "prediction_distribution": {
+              "A": 2,
+              "B": 0,
+              "C": 0,
+              "D": 1,
+              "NO_DECISION": 1
+            },
+            "target_rank": 2.375
+          },
+          "DB": {
+            "accuracy": 0.25,
+            "grammar_target": "A",
+            "prediction_distribution": {
+              "A": 1,
+              "B": 0,
+              "C": 1,
+              "D": 0,
+              "NO_DECISION": 2
+            },
+            "target_rank": 3.125
+          },
+          "targets_differ": true
+        },
+        "CD_vs_DC": {
+          "CD": {
+            "accuracy": 0.0,
+            "grammar_target": "A",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 1,
+              "C": 2,
+              "D": 1,
+              "NO_DECISION": 0
+            },
+            "target_rank": 2.75
+          },
+          "DC": {
+            "accuracy": 0.0,
+            "grammar_target": "D",
+            "prediction_distribution": {
+              "A": 0,
+              "B": 0,
+              "C": 0,
+              "D": 0,
+              "NO_DECISION": 4
+            },
+            "target_rank": 2.25
+          },
+          "targets_differ": true
+        },
+        "different_target_reversed_context_count": 6
+      }
+    },
+    "same_vs_different_final_intact": {
+      "different_symbol_context_accuracy": 0.20833333333333334,
+      "same_symbol_context_accuracy": 0.25
+    }
+  },
+  "conclusion": {
+    "context_memory_dependence_supported": false,
+    "contextual_prediction_learning_supported": false,
+    "discrete_contextual_prediction_demonstrated": false,
+    "output_collapse_detected": false,
+    "recommended_next_step": "diagnose_contextual_predictive_credit"
+  },
+  "episode_credit": {
+    "aggregate": {
+      "eligible_edges_after_first": 28684,
+      "eligible_edges_by_end_go": 814207,
+      "eligible_edges_by_end_second": 313069,
+      "updated_edges": 269519,
+      "updated_edges_eligible_after_first": 9891,
+      "updated_edges_eligible_by_end_second": 108522,
+      "updated_edges_newly_eligible_during_go": 160997,
+      "updated_edges_newly_eligible_during_second": 98631
+    },
+    "captured_per_seed": {
+      "131": 13,
+      "137": 15,
+      "139": 13
+    },
+    "limit_per_seed": 16
+  },
+  "grammar": {
+    "first_conditional_counts": {
+      "A": {
+        "A": 50,
+        "B": 50,
+        "C": 50,
+        "D": 50
+      },
+      "B": {
+        "A": 50,
+        "B": 50,
+        "C": 50,
+        "D": 50
+      },
+      "C": {
+        "A": 50,
+        "B": 50,
+        "C": 50,
+        "D": 50
+      },
+      "D": {
+        "A": 50,
+        "B": 50,
+        "C": 50,
+        "D": 50
+      }
+    },
+    "first_conditional_targets_uniform": true,
+    "first_only_nominal_accuracy": 0.25,
+    "global_majority_target_accuracy": 0.25,
+    "global_target_counts": {
+      "A": 200,
+      "B": 200,
+      "C": 200,
+      "D": 200
+    },
+    "global_targets_uniform": true,
+    "mapping": {
+      "AA": "A",
+      "AB": "B",
+      "AC": "C",
+      "AD": "D",
+      "BA": "C",
+      "BB": "D",
+      "BC": "A",
+      "BD": "B",
+      "CA": "D",
+      "CB": "C",
+      "CC": "B",
+      "CD": "A",
+      "DA": "B",
+      "DB": "A",
+      "DC": "D",
+      "DD": "C"
+    },
+    "order_sensitive_reversed_context_count": 6,
+    "second_conditional_counts": {
+      "A": {
+        "A": 50,
+        "B": 50,
+        "C": 50,
+        "D": 50
+      },
+      "B": {
+        "A": 50,
+        "B": 50,
+        "C": 50,
+        "D": 50
+      },
+      "C": {
+        "A": 50,
+        "B": 50,
+        "C": 50,
+        "D": 50
+      },
+      "D": {
+        "A": 50,
+        "B": 50,
+        "C": 50,
+        "D": 50
+      }
+    },
+    "second_conditional_targets_uniform": true,
+    "second_only_nominal_accuracy": 0.25
+  },
+  "pass": true,
+  "performance": {
+    "component_speedup": 3.0017201757235545,
+    "exact_equivalence": true,
+    "index_microbenchmark": {
+      "candidate_seconds": 0.0003488000002107583,
+      "candidate_speedup": 3.0017201757235545,
+      "current_seconds": 0.0010469999979250133,
+      "samples": 32,
+      "workload_summary": {
+        "chunk_count_median": 1.0,
+        "existing_active_size_median": 12626.0,
+        "new_active_size_median": 67.0,
+        "raw_index_count_max": 214,
+        "raw_index_count_median": 66.0,
+        "raw_index_count_min": 3,
+        "unique_count_median": 66.0
+      }
+    },
+    "index_workload_distribution": {
+      "active_sample_count": 120000,
+      "due_sample_count": 32,
+      "summary": {
+        "chunk_count_median": 1.0,
+        "existing_active_size_median": 12626.0,
+        "new_active_size_median": 67.0,
+        "raw_index_count_max": 214,
+        "raw_index_count_median": 66.0,
+        "raw_index_count_min": 3,
+        "unique_count_median": 66.0
+      }
+    },
+    "neural_exact_equivalence": {
+      "decision_equal": true,
+      "delay_ring_equal": true,
+      "deterministic_replay": true,
+      "fired_indices_equal": true,
+      "legacy_due_equivalent": true,
+      "legacy_fired_indices_equal": true,
+      "legacy_neural_and_plastic_state_equal": true,
+      "neural_state_equal": true,
+      "passed": true,
+      "plastic_state_equal": true,
+      "rng_equal": true
+    },
+    "optimization_applied": true,
+    "optimization_name": "due_index_sort_dedup_without_neuron_mask",
+    "optimization_note": "P.5 retained one due-index optimization because the real F.3A workload met both component and whole-run speed thresholds and optimized-vs-legacy replay was exact.",
+    "prediction_profile_learning_disabled": {
+      "learning_enabled": false,
+      "measured_episodes": 100,
+      "median_delay_ring_subtotal_seconds": 2.2241176015522797,
+      "median_disjoint_sections": {
+        "active_neuron_state_update_seconds": 1.3900076989884838,
+        "active_set_merge_seconds": 1.4668237007572316,
+        "due_index_collection_seconds": 0.7572939007950481,
+        "stimulus_injection_seconds": 0.08976330011500977,
+        "synaptic_scheduling_seconds": 0.8955867996119196
+      },
+      "median_episodes_per_second": 19.418822225531947,
+      "median_wall_seconds": 5.149642899996252,
+      "runs": [
+        {
+          "episodes": 100,
+          "episodes_per_second": 19.398966853716114,
+          "profiler": {
+            "counts": {
+              "active_neuron_state_update_seconds": 30000,
+              "active_set_merge_seconds": 30000,
+              "delay_ring_handling_seconds": 30000,
+              "due_index_collection_seconds": 30000,
+              "stimulus_injection_seconds": 30000,
+              "synaptic_scheduling_seconds": 30000
+            },
+            "enabled": true,
+            "seconds": {
+              "active_neuron_state_update_seconds": 1.3924511989098391,
+              "active_set_merge_seconds": 1.4668237007572316,
+              "delay_ring_handling_seconds": 2.301969599837321,
+              "due_index_collection_seconds": 0.7597942006250378,
+              "stimulus_injection_seconds": 0.08976330011500977,
+              "synaptic_scheduling_seconds": 0.9090446999398409
+            }
+          },
+          "run": 1,
+          "wall_seconds": 5.154913699996541
+        },
+        {
+          "episodes": 100,
+          "episodes_per_second": 19.418822225531947,
+          "profiler": {
+            "counts": {
+              "active_neuron_state_update_seconds": 30000,
+              "active_set_merge_seconds": 30000,
+              "delay_ring_handling_seconds": 30000,
+              "due_index_collection_seconds": 30000,
+              "stimulus_injection_seconds": 30000,
+              "synaptic_scheduling_seconds": 30000
+            },
+            "enabled": true,
+            "seconds": {
+              "active_neuron_state_update_seconds": 1.3900076989884838,
+              "active_set_merge_seconds": 1.4720145004830556,
+              "delay_ring_handling_seconds": 2.304900199509575,
+              "due_index_collection_seconds": 0.7572939007950481,
+              "stimulus_injection_seconds": 0.09059549997618888,
+              "synaptic_scheduling_seconds": 0.8955867996119196
+            }
+          },
+          "run": 2,
+          "wall_seconds": 5.149642899996252
+        },
+        {
+          "episodes": 100,
+          "episodes_per_second": 19.551961331527195,
+          "profiler": {
+            "counts": {
+              "active_neuron_state_update_seconds": 30000,
+              "active_set_merge_seconds": 30000,
+              "delay_ring_handling_seconds": 30000,
+              "due_index_collection_seconds": 30000,
+              "stimulus_injection_seconds": 30000,
+              "synaptic_scheduling_seconds": 30000
+            },
+            "enabled": true,
+            "seconds": {
+              "active_neuron_state_update_seconds": 1.3837556998623768,
+              "active_set_merge_seconds": 1.4643143992798286,
+              "delay_ring_handling_seconds": 2.2880311012195307,
+              "due_index_collection_seconds": 0.7488027998915641,
+              "stimulus_injection_seconds": 0.08924149915401358,
+              "synaptic_scheduling_seconds": 0.8915859993867343
+            }
+          },
+          "run": 3,
+          "wall_seconds": 5.1145764000029885
+        }
+      ],
+      "warm_runs": 3,
+      "warmup_episodes": 4
+    },
+    "prediction_profile_legacy_due": {
+      "learning_enabled": false,
+      "measured_episodes": 100,
+      "median_delay_ring_subtotal_seconds": 5.2665530998128816,
+      "median_disjoint_sections": {
+        "active_neuron_state_update_seconds": 1.4035972996498458,
+        "active_set_merge_seconds": 1.5051654997150763,
+        "due_index_collection_seconds": 3.7613876000978053,
+        "stimulus_injection_seconds": 0.09396690000721719,
+        "synaptic_scheduling_seconds": 0.923806100130605
+      },
+      "median_episodes_per_second": 12.162899316039564,
+      "median_wall_seconds": 8.221723900001962,
+      "runs": [
+        {
+          "episodes": 100,
+          "episodes_per_second": 12.162899316039564,
+          "profiler": {
+            "counts": {
+              "active_neuron_state_update_seconds": 30000,
+              "active_set_merge_seconds": 30000,
+              "delay_ring_handling_seconds": 30000,
+              "due_index_collection_seconds": 30000,
+              "stimulus_injection_seconds": 30000,
+              "synaptic_scheduling_seconds": 30000
+            },
+            "enabled": true,
+            "seconds": {
+              "active_neuron_state_update_seconds": 1.4035972996498458,
+              "active_set_merge_seconds": 1.5051654997150763,
+              "delay_ring_handling_seconds": 5.3407728996971855,
+              "due_index_collection_seconds": 3.7554595997789875,
+              "stimulus_injection_seconds": 0.09396690000721719,
+              "synaptic_scheduling_seconds": 0.923806100130605
+            }
+          },
+          "run": 1,
+          "wall_seconds": 8.221723900001962
+        },
+        {
+          "episodes": 100,
+          "episodes_per_second": 12.184857100688056,
+          "profiler": {
+            "counts": {
+              "active_neuron_state_update_seconds": 30000,
+              "active_set_merge_seconds": 30000,
+              "delay_ring_handling_seconds": 30000,
+              "due_index_collection_seconds": 30000,
+              "stimulus_injection_seconds": 30000,
+              "synaptic_scheduling_seconds": 30000
+            },
+            "enabled": true,
+            "seconds": {
+              "active_neuron_state_update_seconds": 1.3962790993464296,
+              "active_set_merge_seconds": 1.4991790994536132,
+              "delay_ring_handling_seconds": 5.339701200406125,
+              "due_index_collection_seconds": 3.7613876000978053,
+              "stimulus_injection_seconds": 0.09248519945685985,
+              "synaptic_scheduling_seconds": 0.9200722990499344
+            }
+          },
+          "run": 2,
+          "wall_seconds": 8.20690789999935
+        },
+        {
+          "episodes": 100,
+          "episodes_per_second": 11.797932051392298,
+          "profiler": {
+            "counts": {
+              "active_neuron_state_update_seconds": 30000,
+              "active_set_merge_seconds": 30000,
+              "delay_ring_handling_seconds": 30000,
+              "due_index_collection_seconds": 30000,
+              "stimulus_injection_seconds": 30000,
+              "synaptic_scheduling_seconds": 30000
+            },
+            "enabled": true,
+            "seconds": {
+              "active_neuron_state_update_seconds": 1.4432784995879047,
+              "active_set_merge_seconds": 1.5398345998328296,
+              "delay_ring_handling_seconds": 5.479856299389212,
+              "due_index_collection_seconds": 3.8579878003074555,
+              "stimulus_injection_seconds": 0.09648040003230562,
+              "synaptic_scheduling_seconds": 0.9887399998478941
+            }
+          },
+          "run": 3,
+          "wall_seconds": 8.476061699999264
+        }
+      ],
+      "warm_runs": 3,
+      "warmup_episodes": 4
+    },
+    "prediction_profile_training": {
+      "learning_enabled": true,
+      "measured_episodes": 100,
+      "median_delay_ring_subtotal_seconds": 2.181972499616677,
+      "median_disjoint_sections": {
+        "active_neuron_state_update_seconds": 1.3852598995217704,
+        "active_set_merge_seconds": 1.4457729003479471,
+        "due_index_collection_seconds": 0.7361995992687298,
+        "stimulus_injection_seconds": 0.09018429988645948,
+        "synaptic_scheduling_seconds": 1.2069783999031642
+      },
+      "median_episodes_per_second": 7.587081639971225,
+      "median_wall_seconds": 13.180298400002357,
+      "runs": [
+        {
+          "episodes": 100,
+          "episodes_per_second": 7.558289624061418,
+          "profiler": {
+            "counts": {
+              "active_edge_collection_seconds": 100,
+              "active_neuron_state_update_seconds": 30000,
+              "active_set_merge_seconds": 30000,
+              "delay_ring_handling_seconds": 30000,
+              "directional_credit_selection_seconds": 164,
+              "due_index_collection_seconds": 30000,
+              "multiplier_update_seconds": 164,
+              "network_simulation_seconds": 100,
+              "normalizer_seconds": 100,
+              "plastic_lifecycle_seconds": 100,
+              "post_reward_directional_seconds": 100,
+              "prospective_downstream_effect_seconds": 164,
+              "reward_update_seconds": 100,
+              "stimulus_injection_seconds": 30000,
+              "synaptic_scheduling_seconds": 30000,
+              "total_seconds": 100
+            },
+            "enabled": true,
+            "seconds": {
+              "active_edge_collection_seconds": 0.609862700010126,
+              "active_neuron_state_update_seconds": 1.3939377996866824,
+              "active_set_merge_seconds": 1.4602125004021218,
+              "delay_ring_handling_seconds": 2.2800079002263374,
+              "directional_credit_selection_seconds": 2.7900178999698255,
+              "due_index_collection_seconds": 0.7442027988581685,
+              "multiplier_update_seconds": 0.013266499918245245,
+              "network_simulation_seconds": 5.655101799995464,
+              "normalizer_seconds": 2.5703345999572775,
+              "plastic_lifecycle_seconds": 0.5195555000391323,
+              "post_reward_directional_seconds": 3.6424898999466677,
+              "prospective_downstream_effect_seconds": 2.6397436000333983,
+              "reward_update_seconds": 0.5601643999834778,
+              "stimulus_injection_seconds": 0.09126839974487666,
+              "synaptic_scheduling_seconds": 1.2212397002367652,
+              "total_seconds": 7.318412700020417
+            }
+          },
+          "run": 1,
+          "wall_seconds": 13.230506499996409
+        },
+        {
+          "episodes": 100,
+          "episodes_per_second": 7.590887306787841,
+          "profiler": {
+            "counts": {
+              "active_edge_collection_seconds": 100,
+              "active_neuron_state_update_seconds": 30000,
+              "active_set_merge_seconds": 30000,
+              "delay_ring_handling_seconds": 30000,
+              "directional_credit_selection_seconds": 164,
+              "due_index_collection_seconds": 30000,
+              "multiplier_update_seconds": 164,
+              "network_simulation_seconds": 100,
+              "normalizer_seconds": 100,
+              "plastic_lifecycle_seconds": 100,
+              "post_reward_directional_seconds": 100,
+              "prospective_downstream_effect_seconds": 164,
+              "reward_update_seconds": 100,
+              "stimulus_injection_seconds": 30000,
+              "synaptic_scheduling_seconds": 30000,
+              "total_seconds": 100
+            },
+            "enabled": true,
+            "seconds": {
+              "active_edge_collection_seconds": 0.612634299977799,
+              "active_neuron_state_update_seconds": 1.3852598995217704,
+              "active_set_merge_seconds": 1.4457729003479471,
+              "delay_ring_handling_seconds": 2.2565219005264225,
+              "directional_credit_selection_seconds": 2.7891633999242913,
+              "due_index_collection_seconds": 0.7361995992687298,
+              "multiplier_update_seconds": 0.012966099973709788,
+              "network_simulation_seconds": 5.600116100002197,
+              "normalizer_seconds": 2.5833752000471577,
+              "plastic_lifecycle_seconds": 0.5153367999882903,
+              "post_reward_directional_seconds": 3.644014400008018,
+              "prospective_downstream_effect_seconds": 2.638779499968223,
+              "reward_update_seconds": 0.5387915999817778,
+              "stimulus_injection_seconds": 0.08971639961964684,
+              "synaptic_scheduling_seconds": 1.2069783999031642,
+              "total_seconds": 7.307692999958817
+            }
+          },
+          "run": 2,
+          "wall_seconds": 13.173690499999793
+        },
+        {
+          "episodes": 100,
+          "episodes_per_second": 7.587081639971225,
+          "profiler": {
+            "counts": {
+              "active_edge_collection_seconds": 100,
+              "active_neuron_state_update_seconds": 30000,
+              "active_set_merge_seconds": 30000,
+              "delay_ring_handling_seconds": 30000,
+              "directional_credit_selection_seconds": 164,
+              "due_index_collection_seconds": 30000,
+              "multiplier_update_seconds": 164,
+              "network_simulation_seconds": 100,
+              "normalizer_seconds": 100,
+              "plastic_lifecycle_seconds": 100,
+              "post_reward_directional_seconds": 100,
+              "prospective_downstream_effect_seconds": 164,
+              "reward_update_seconds": 100,
+              "stimulus_injection_seconds": 30000,
+              "synaptic_scheduling_seconds": 30000,
+              "total_seconds": 100
+            },
+            "enabled": true,
+            "seconds": {
+              "active_edge_collection_seconds": 0.6004677999808337,
+              "active_neuron_state_update_seconds": 1.3684693995965063,
+              "active_set_merge_seconds": 1.4452738995969412,
+              "delay_ring_handling_seconds": 2.253797299665166,
+              "directional_credit_selection_seconds": 2.821440200023062,
+              "due_index_collection_seconds": 0.7341642003157176,
+              "multiplier_update_seconds": 0.013318700017407537,
+              "network_simulation_seconds": 5.566942099983862,
+              "normalizer_seconds": 2.5910325000004377,
+              "plastic_lifecycle_seconds": 0.5148499999922933,
+              "post_reward_directional_seconds": 3.665246400014439,
+              "prospective_downstream_effect_seconds": 2.6716964000006556,
+              "reward_update_seconds": 0.5422438999376027,
+              "stimulus_injection_seconds": 0.09018429988645948,
+              "synaptic_scheduling_seconds": 1.1970460998054477,
+              "total_seconds": 7.3396691999805626
+            }
+          },
+          "run": 3,
+          "wall_seconds": 13.180298400002357
+        }
+      ],
+      "warm_runs": 3,
+      "warmup_episodes": 4
+    },
+    "route_cache_equivalence": {
+      "decisions_and_rates_equal": true,
+      "directional_telemetry_equal": true,
+      "multiplier_stability_mask_eligibility_equal": true,
+      "optimized_route_cache_bytes": 1022940,
+      "passed": true,
+      "plastic_budget_equal": true,
+      "reference_route_cache_bytes": 0,
+      "rng_equal": true,
+      "trials": 16
+    },
+    "total_speedup": 1.5965619480154531
+  },
+  "protocol": {
+    "adaptive_plastic_budget": false,
+    "contexts": 16,
+    "directional_learning_rate": 0.02,
+    "dynamic_candidate_count": 7507,
+    "evaluation_trials_per_context": 4,
+    "first_ms": 20,
+    "go_ms": 20,
+    "phase": "F.3A+P.5",
+    "reward_learning_rate": 0.02,
+    "route_cache_enabled": true,
+    "second_ms": 20,
+    "selected_output_count": 128,
+    "stimulus_rate_hz": 205.0,
+    "training_seeds": [
+      131,
+      137,
+      139
+    ],
+    "training_trials_per_seed": 800,
+    "trials_per_context": 50,
+    "two_hop_credit_mode": "prospective_anatomical"
+  },
+  "runs": {
+    "131": {
+      "checkpoints": {
+        "0": {
+          "between_item_reset": {
+            "accuracy": 0.1875,
+            "checkpoint": 0,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 4,
+                "C": 3,
+                "D": 6,
+                "NO_DECISION": 3
+              },
+              "B": {
+                "A": 2,
+                "B": 2,
+                "C": 1,
+                "D": 8,
+                "NO_DECISION": 3
+              },
+              "C": {
+                "A": 0,
+                "B": 3,
+                "C": 2,
+                "D": 8,
+                "NO_DECISION": 3
+              },
+              "D": {
+                "A": 0,
+                "B": 4,
+                "C": 3,
+                "D": 8,
+                "NO_DECISION": 1
+              }
+            },
+            "context_accuracy": {
+              "AA": 0.0,
+              "AB": 0.0,
+              "AC": 0.5,
+              "AD": 0.0,
+              "BA": 0.0,
+              "BB": 1.0,
+              "BC": 0.0,
+              "BD": 0.5,
+              "CA": 1.0,
+              "CB": 0.0,
+              "CC": 0.0,
+              "CD": 0.0,
+              "DA": 0.0,
+              "DB": 0.0,
+              "DC": 0.0,
+              "DD": 0.0
+            },
+            "different_symbol_context_accuracy": 0.16666666666666666,
+            "fraction_rank_1": 0.19672131147540983,
+            "fraction_rank_le_2": 0.45901639344262296,
+            "go_output_spikes": 3735,
+            "largest_prediction_fraction": 0.46875,
+            "macro_target_accuracy": 0.1875,
+            "mean_target_rank": 2.5,
+            "no_decision_fraction": 0.15625,
+            "output_collapse": false,
+            "per_first_accuracy": {
+              "A": 0.125,
+              "B": 0.375,
+              "C": 0.25,
+              "D": 0.0
+            },
+            "per_second_accuracy": {
+              "A": 0.25,
+              "B": 0.25,
+              "C": 0.125,
+              "D": 0.125
+            },
+            "per_target_accuracy": {
+              "A": 0.0,
+              "B": 0.125,
+              "C": 0.125,
+              "D": 0.5
+            },
+            "prediction_distribution": {
+              "A": 2,
+              "B": 13,
+              "C": 9,
+              "D": 30,
+              "NO_DECISION": 10
+            },
+            "reversed_contexts": {
+              "AB_vs_BA": {
+                "AB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.375
+                },
+                "BA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.25
+                },
+                "targets_differ": true
+              },
+              "AC_vs_CA": {
+                "AC": {
+                  "accuracy": 0.5,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 1.625
+                },
+                "CA": {
+                  "accuracy": 1.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.0
+                },
+                "targets_differ": true
+              },
+              "AD_vs_DA": {
+                "AD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 4,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.75
+                },
+                "DA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 0,
+                    "D": 2,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.1666666666666665
+                },
+                "targets_differ": true
+              },
+              "BC_vs_CB": {
+                "BC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 3,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.5
+                },
+                "CB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.5
+                },
+                "targets_differ": true
+              },
+              "BD_vs_DB": {
+                "BD": {
+                  "accuracy": 0.5,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 0,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 1.75
+                },
+                "DB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.6666666666666665
+                },
+                "targets_differ": true
+              },
+              "CD_vs_DC": {
+                "CD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 4,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.25
+                },
+                "DC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 3,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.125
+                },
+                "targets_differ": true
+              },
+              "different_target_reversed_context_count": 6
+            },
+            "same_symbol_context_accuracy": 0.25,
+            "target_minus_best_competitor_margin_hz": -164.0625,
+            "target_output_share": 0.22474410875351297,
+            "trials": 64
+          },
+          "intact": {
+            "accuracy": 0.203125,
+            "checkpoint": 0,
+            "confusion_matrix": {
+              "A": {
+                "A": 1,
+                "B": 5,
+                "C": 2,
+                "D": 7,
+                "NO_DECISION": 1
+              },
+              "B": {
+                "A": 0,
+                "B": 3,
+                "C": 2,
+                "D": 10,
+                "NO_DECISION": 1
+              },
+              "C": {
+                "A": 2,
+                "B": 4,
+                "C": 4,
+                "D": 6,
+                "NO_DECISION": 0
+              },
+              "D": {
+                "A": 1,
+                "B": 2,
+                "C": 6,
+                "D": 5,
+                "NO_DECISION": 2
+              }
+            },
+            "context_accuracy": {
+              "AA": 0.25,
+              "AB": 0.0,
+              "AC": 0.5,
+              "AD": 0.0,
+              "BA": 0.0,
+              "BB": 1.0,
+              "BC": 0.0,
+              "BD": 0.0,
+              "CA": 0.25,
+              "CB": 0.5,
+              "CC": 0.0,
+              "CD": 0.0,
+              "DA": 0.75,
+              "DB": 0.0,
+              "DC": 0.0,
+              "DD": 0.0
+            },
+            "different_symbol_context_accuracy": 0.16666666666666666,
+            "fraction_rank_1": 0.203125,
+            "fraction_rank_le_2": 0.484375,
+            "go_output_spikes": 7092,
+            "largest_prediction_fraction": 0.4375,
+            "macro_target_accuracy": 0.203125,
+            "mean_target_rank": 2.3828125,
+            "no_decision_fraction": 0.0625,
+            "output_collapse": false,
+            "per_first_accuracy": {
+              "A": 0.1875,
+              "B": 0.25,
+              "C": 0.1875,
+              "D": 0.1875
+            },
+            "per_second_accuracy": {
+              "A": 0.3125,
+              "B": 0.375,
+              "C": 0.125,
+              "D": 0.0
+            },
+            "per_target_accuracy": {
+              "A": 0.0625,
+              "B": 0.1875,
+              "C": 0.25,
+              "D": 0.3125
+            },
+            "prediction_distribution": {
+              "A": 4,
+              "B": 14,
+              "C": 14,
+              "D": 28,
+              "NO_DECISION": 4
+            },
+            "reversed_contexts": {
+              "AB_vs_BA": {
+                "AB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.625
+                },
+                "BA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.5
+                },
+                "targets_differ": true
+              },
+              "AC_vs_CA": {
+                "AC": {
+                  "accuracy": 0.5,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 2,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.75
+                },
+                "CA": {
+                  "accuracy": 0.25,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 3,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.75
+                },
+                "targets_differ": true
+              },
+              "AD_vs_DA": {
+                "AD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 2,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.0
+                },
+                "DA": {
+                  "accuracy": 0.75,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 3,
+                    "C": 0,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.25
+                },
+                "targets_differ": true
+              },
+              "BC_vs_CB": {
+                "BC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 1,
+                    "D": 3,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.5
+                },
+                "CB": {
+                  "accuracy": 0.5,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 2,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.5
+                },
+                "targets_differ": true
+              },
+              "BD_vs_DB": {
+                "BD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.25
+                },
+                "DB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 0,
+                    "D": 2,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.125
+                },
+                "targets_differ": true
+              },
+              "CD_vs_DC": {
+                "CD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 1,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.75
+                },
+                "DC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 3,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.25
+                },
+                "targets_differ": true
+              },
+              "different_target_reversed_context_count": 6
+            },
+            "same_symbol_context_accuracy": 0.3125,
+            "target_minus_best_competitor_margin_hz": -283.59375,
+            "target_output_share": 0.2545057050439845,
+            "trials": 64
+          }
+        },
+        "400": {
+          "between_item_reset": {
+            "accuracy": 0.265625,
+            "checkpoint": 400,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 4,
+                "C": 5,
+                "D": 5,
+                "NO_DECISION": 2
+              },
+              "B": {
+                "A": 0,
+                "B": 7,
+                "C": 4,
+                "D": 4,
+                "NO_DECISION": 1
+              },
+              "C": {
+                "A": 1,
+                "B": 5,
+                "C": 5,
+                "D": 5,
+                "NO_DECISION": 0
+              },
+              "D": {
+                "A": 0,
+                "B": 6,
+                "C": 2,
+                "D": 5,
+                "NO_DECISION": 3
+              }
+            },
+            "context_accuracy": {
+              "AA": 0.0,
+              "AB": 0.75,
+              "AC": 0.75,
+              "AD": 0.0,
+              "BA": 0.0,
+              "BB": 0.0,
+              "BC": 0.0,
+              "BD": 1.0,
+              "CA": 1.0,
+              "CB": 0.5,
+              "CC": 0.0,
+              "CD": 0.0,
+              "DA": 0.0,
+              "DB": 0.0,
+              "DC": 0.25,
+              "DD": 0.0
+            },
+            "different_symbol_context_accuracy": 0.3541666666666667,
+            "fraction_rank_1": 0.265625,
+            "fraction_rank_le_2": 0.421875,
+            "go_output_spikes": 3531,
+            "largest_prediction_fraction": 0.34375,
+            "macro_target_accuracy": 0.265625,
+            "mean_target_rank": 2.4921875,
+            "no_decision_fraction": 0.09375,
+            "output_collapse": false,
+            "per_first_accuracy": {
+              "A": 0.375,
+              "B": 0.25,
+              "C": 0.375,
+              "D": 0.0625
+            },
+            "per_second_accuracy": {
+              "A": 0.25,
+              "B": 0.3125,
+              "C": 0.25,
+              "D": 0.25
+            },
+            "per_target_accuracy": {
+              "A": 0.0,
+              "B": 0.4375,
+              "C": 0.3125,
+              "D": 0.3125
+            },
+            "prediction_distribution": {
+              "A": 1,
+              "B": 22,
+              "C": 16,
+              "D": 19,
+              "NO_DECISION": 6
+            },
+            "reversed_contexts": {
+              "AB_vs_BA": {
+                "AB": {
+                  "accuracy": 0.75,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 3,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.625
+                },
+                "BA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.75
+                },
+                "targets_differ": true
+              },
+              "AC_vs_CA": {
+                "AC": {
+                  "accuracy": 0.75,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 3,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.375
+                },
+                "CA": {
+                  "accuracy": 1.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.0
+                },
+                "targets_differ": true
+              },
+              "AD_vs_DA": {
+                "AD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 3,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.0
+                },
+                "DA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 1,
+                    "D": 3,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.5
+                },
+                "targets_differ": true
+              },
+              "BC_vs_CB": {
+                "BC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 4,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.625
+                },
+                "CB": {
+                  "accuracy": 0.5,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 2,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.875
+                },
+                "targets_differ": true
+              },
+              "BD_vs_DB": {
+                "BD": {
+                  "accuracy": 1.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 4,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.0
+                },
+                "DB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 1,
+                    "D": 1,
+                    "NO_DECISION": 2
+                  },
+                  "target_rank": 2.875
+                },
+                "targets_differ": true
+              },
+              "CD_vs_DC": {
+                "CD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 4,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.5
+                },
+                "DC": {
+                  "accuracy": 0.25,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 1,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.875
+                },
+                "targets_differ": true
+              },
+              "different_target_reversed_context_count": 6
+            },
+            "same_symbol_context_accuracy": 0.0,
+            "target_minus_best_competitor_margin_hz": -101.5625,
+            "target_output_share": 0.2516534418010684,
+            "trials": 64
+          },
+          "intact": {
+            "accuracy": 0.234375,
+            "checkpoint": 400,
+            "confusion_matrix": {
+              "A": {
+                "A": 1,
+                "B": 1,
+                "C": 3,
+                "D": 8,
+                "NO_DECISION": 3
+              },
+              "B": {
+                "A": 0,
+                "B": 3,
+                "C": 4,
+                "D": 6,
+                "NO_DECISION": 3
+              },
+              "C": {
+                "A": 2,
+                "B": 2,
+                "C": 7,
+                "D": 4,
+                "NO_DECISION": 1
+              },
+              "D": {
+                "A": 2,
+                "B": 6,
+                "C": 3,
+                "D": 4,
+                "NO_DECISION": 1
+              }
+            },
+            "context_accuracy": {
+              "AA": 0.25,
+              "AB": 0.25,
+              "AC": 0.5,
+              "AD": 0.0,
+              "BA": 0.25,
+              "BB": 0.5,
+              "BC": 0.0,
+              "BD": 0.25,
+              "CA": 0.5,
+              "CB": 0.5,
+              "CC": 0.0,
+              "CD": 0.0,
+              "DA": 0.25,
+              "DB": 0.0,
+              "DC": 0.0,
+              "DD": 0.5
+            },
+            "different_symbol_context_accuracy": 0.20833333333333334,
+            "fraction_rank_1": 0.234375,
+            "fraction_rank_le_2": 0.453125,
+            "go_output_spikes": 7806,
+            "largest_prediction_fraction": 0.34375,
+            "macro_target_accuracy": 0.234375,
+            "mean_target_rank": 2.4765625,
+            "no_decision_fraction": 0.125,
+            "output_collapse": false,
+            "per_first_accuracy": {
+              "A": 0.25,
+              "B": 0.25,
+              "C": 0.25,
+              "D": 0.1875
+            },
+            "per_second_accuracy": {
+              "A": 0.3125,
+              "B": 0.3125,
+              "C": 0.125,
+              "D": 0.1875
+            },
+            "per_target_accuracy": {
+              "A": 0.0625,
+              "B": 0.1875,
+              "C": 0.4375,
+              "D": 0.25
+            },
+            "prediction_distribution": {
+              "A": 5,
+              "B": 12,
+              "C": 17,
+              "D": 22,
+              "NO_DECISION": 8
+            },
+            "reversed_contexts": {
+              "AB_vs_BA": {
+                "AB": {
+                  "accuracy": 0.25,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 2
+                  },
+                  "target_rank": 2.125
+                },
+                "BA": {
+                  "accuracy": 0.25,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 1,
+                    "D": 3,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.25
+                },
+                "targets_differ": true
+              },
+              "AC_vs_CA": {
+                "AC": {
+                  "accuracy": 0.5,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 2,
+                    "B": 0,
+                    "C": 2,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.25
+                },
+                "CA": {
+                  "accuracy": 0.5,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 1,
+                    "D": 2,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.0
+                },
+                "targets_differ": true
+              },
+              "AD_vs_DA": {
+                "AD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 3,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.875
+                },
+                "DA": {
+                  "accuracy": 0.25,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 1,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.5
+                },
+                "targets_differ": true
+              },
+              "BC_vs_CB": {
+                "BC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.875
+                },
+                "CB": {
+                  "accuracy": 0.5,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 1.375
+                },
+                "targets_differ": true
+              },
+              "BD_vs_DB": {
+                "BD": {
+                  "accuracy": 0.25,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.0
+                },
+                "DB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 1,
+                    "D": 3,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.75
+                },
+                "targets_differ": true
+              },
+              "CD_vs_DC": {
+                "CD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 2,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.5
+                },
+                "DC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.375
+                },
+                "targets_differ": true
+              },
+              "different_target_reversed_context_count": 6
+            },
+            "same_symbol_context_accuracy": 0.3125,
+            "target_minus_best_competitor_margin_hz": -129.6875,
+            "target_output_share": 0.2475223861747004,
+            "trials": 64
+          }
+        },
+        "800": {
+          "between_item_reset": {
+            "accuracy": 0.21875,
+            "checkpoint": 800,
+            "confusion_matrix": {
+              "A": {
+                "A": 1,
+                "B": 4,
+                "C": 4,
+                "D": 2,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 1,
+                "B": 3,
+                "C": 5,
+                "D": 5,
+                "NO_DECISION": 2
+              },
+              "C": {
+                "A": 0,
+                "B": 1,
+                "C": 7,
+                "D": 4,
+                "NO_DECISION": 4
+              },
+              "D": {
+                "A": 0,
+                "B": 3,
+                "C": 8,
+                "D": 3,
+                "NO_DECISION": 2
+              }
+            },
+            "context_accuracy": {
+              "AA": 0.0,
+              "AB": 0.0,
+              "AC": 0.75,
+              "AD": 0.0,
+              "BA": 0.0,
+              "BB": 0.25,
+              "BC": 0.0,
+              "BD": 0.75,
+              "CA": 0.5,
+              "CB": 0.5,
+              "CC": 0.0,
+              "CD": 0.0,
+              "DA": 0.0,
+              "DB": 0.25,
+              "DC": 0.0,
+              "DD": 0.5
+            },
+            "different_symbol_context_accuracy": 0.22916666666666666,
+            "fraction_rank_1": 0.22580645161290322,
+            "fraction_rank_le_2": 0.46774193548387094,
+            "go_output_spikes": 3462,
+            "largest_prediction_fraction": 0.375,
+            "macro_target_accuracy": 0.21875,
+            "mean_target_rank": 2.4596774193548385,
+            "no_decision_fraction": 0.203125,
+            "output_collapse": false,
+            "per_first_accuracy": {
+              "A": 0.1875,
+              "B": 0.25,
+              "C": 0.25,
+              "D": 0.1875
+            },
+            "per_second_accuracy": {
+              "A": 0.125,
+              "B": 0.25,
+              "C": 0.1875,
+              "D": 0.3125
+            },
+            "per_target_accuracy": {
+              "A": 0.0625,
+              "B": 0.1875,
+              "C": 0.4375,
+              "D": 0.1875
+            },
+            "prediction_distribution": {
+              "A": 2,
+              "B": 11,
+              "C": 24,
+              "D": 14,
+              "NO_DECISION": 13
+            },
+            "reversed_contexts": {
+              "AB_vs_BA": {
+                "AB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.125
+                },
+                "BA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.0
+                },
+                "targets_differ": true
+              },
+              "AC_vs_CA": {
+                "AC": {
+                  "accuracy": 0.75,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 3,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 1.0
+                },
+                "CA": {
+                  "accuracy": 0.5,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 1,
+                    "D": 2,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 1.625
+                },
+                "targets_differ": true
+              },
+              "AD_vs_DA": {
+                "AD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 3,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.0
+                },
+                "DA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.875
+                },
+                "targets_differ": true
+              },
+              "BC_vs_CB": {
+                "BC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 2,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.0
+                },
+                "CB": {
+                  "accuracy": 0.5,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 0,
+                    "NO_DECISION": 2
+                  },
+                  "target_rank": 2.0
+                },
+                "targets_differ": true
+              },
+              "BD_vs_DB": {
+                "BD": {
+                  "accuracy": 0.75,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 3,
+                    "C": 0,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.625
+                },
+                "DB": {
+                  "accuracy": 0.25,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 1,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 2
+                  },
+                  "target_rank": 2.0
+                },
+                "targets_differ": true
+              },
+              "CD_vs_DC": {
+                "CD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 2,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.25
+                },
+                "DC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 4,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.125
+                },
+                "targets_differ": true
+              },
+              "different_target_reversed_context_count": 6
+            },
+            "same_symbol_context_accuracy": 0.1875,
+            "target_minus_best_competitor_margin_hz": -100.0,
+            "target_output_share": 0.2428796897904979,
+            "trials": 64
+          },
+          "intact": {
+            "accuracy": 0.234375,
+            "checkpoint": 800,
+            "confusion_matrix": {
+              "A": {
+                "A": 1,
+                "B": 2,
+                "C": 5,
+                "D": 2,
+                "NO_DECISION": 6
+              },
+              "B": {
+                "A": 2,
+                "B": 2,
+                "C": 4,
+                "D": 6,
+                "NO_DECISION": 2
+              },
+              "C": {
+                "A": 1,
+                "B": 3,
+                "C": 6,
+                "D": 4,
+                "NO_DECISION": 2
+              },
+              "D": {
+                "A": 0,
+                "B": 3,
+                "C": 5,
+                "D": 6,
+                "NO_DECISION": 2
+              }
+            },
+            "context_accuracy": {
+              "AA": 0.25,
+              "AB": 0.0,
+              "AC": 0.75,
+              "AD": 0.0,
+              "BA": 0.0,
+              "BB": 0.75,
+              "BC": 0.0,
+              "BD": 0.0,
+              "CA": 0.75,
+              "CB": 0.75,
+              "CC": 0.0,
+              "CD": 0.0,
+              "DA": 0.5,
+              "DB": 0.0,
+              "DC": 0.0,
+              "DD": 0.0
+            },
+            "different_symbol_context_accuracy": 0.22916666666666666,
+            "fraction_rank_1": 0.234375,
+            "fraction_rank_le_2": 0.421875,
+            "go_output_spikes": 7606,
+            "largest_prediction_fraction": 0.3125,
+            "macro_target_accuracy": 0.234375,
+            "mean_target_rank": 2.515625,
+            "no_decision_fraction": 0.1875,
+            "output_collapse": false,
+            "per_first_accuracy": {
+              "A": 0.25,
+              "B": 0.1875,
+              "C": 0.375,
+              "D": 0.125
+            },
+            "per_second_accuracy": {
+              "A": 0.375,
+              "B": 0.375,
+              "C": 0.1875,
+              "D": 0.0
+            },
+            "per_target_accuracy": {
+              "A": 0.0625,
+              "B": 0.125,
+              "C": 0.375,
+              "D": 0.375
+            },
+            "prediction_distribution": {
+              "A": 4,
+              "B": 10,
+              "C": 20,
+              "D": 18,
+              "NO_DECISION": 12
+            },
+            "reversed_contexts": {
+              "AB_vs_BA": {
+                "AB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.375
+                },
+                "BA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.125
+                },
+                "targets_differ": true
+              },
+              "AC_vs_CA": {
+                "AC": {
+                  "accuracy": 0.75,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 3,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.75
+                },
+                "CA": {
+                  "accuracy": 0.75,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.75
+                },
+                "targets_differ": true
+              },
+              "AD_vs_DA": {
+                "AD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 2,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.75
+                },
+                "DA": {
+                  "accuracy": 0.5,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 2,
+                    "C": 0,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.25
+                },
+                "targets_differ": true
+              },
+              "BC_vs_CB": {
+                "BC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.875
+                },
+                "CB": {
+                  "accuracy": 0.75,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 3,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.375
+                },
+                "targets_differ": true
+              },
+              "BD_vs_DB": {
+                "BD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.375
+                },
+                "DB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 1,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.625
+                },
+                "targets_differ": true
+              },
+              "CD_vs_DC": {
+                "CD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 0,
+                    "NO_DECISION": 2
+                  },
+                  "target_rank": 2.125
+                },
+                "DC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 3,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.625
+                },
+                "targets_differ": true
+              },
+              "different_target_reversed_context_count": 6
+            },
+            "same_symbol_context_accuracy": 0.25,
+            "target_minus_best_competitor_margin_hz": -121.875,
+            "target_output_share": 0.2470177479888064,
+            "trials": 64
+          }
+        }
+      },
+      "episode_credit": {
+        "aggregate": {
+          "eligible_edges_after_first": 6747,
+          "eligible_edges_by_end_go": 255716,
+          "eligible_edges_by_end_second": 90119,
+          "updated_edges": 84920,
+          "updated_edges_eligible_after_first": 2417,
+          "updated_edges_eligible_by_end_second": 31941,
+          "updated_edges_newly_eligible_during_go": 52979,
+          "updated_edges_newly_eligible_during_second": 29524
+        },
+        "episodes_captured": 13
+      },
+      "safety": {
+        "adaptive_reallocations": 0,
+        "mean_multiplier": 1.0001405477523804,
+        "mean_stability": 2.2725967937731184e-05,
+        "multiplier_saturation_fraction": 8.282445157236695e-05,
+        "plastic_budget_drift": 0,
+        "plastic_budget_end": 312040,
+        "plastic_budget_start": 312040
+      },
+      "schedule_balance": {
+        "first_conditional_counts": {
+          "A": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          },
+          "B": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          },
+          "C": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          },
+          "D": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          }
+        },
+        "first_conditional_targets_uniform": true,
+        "first_only_nominal_accuracy": 0.25,
+        "global_majority_target_accuracy": 0.25,
+        "global_target_counts": {
+          "A": 200,
+          "B": 200,
+          "C": 200,
+          "D": 200
+        },
+        "global_targets_uniform": true,
+        "mapping": {
+          "AA": "A",
+          "AB": "B",
+          "AC": "C",
+          "AD": "D",
+          "BA": "C",
+          "BB": "D",
+          "BC": "A",
+          "BD": "B",
+          "CA": "D",
+          "CB": "C",
+          "CC": "B",
+          "CD": "A",
+          "DA": "B",
+          "DB": "A",
+          "DC": "D",
+          "DD": "C"
+        },
+        "order_sensitive_reversed_context_count": 6,
+        "second_conditional_counts": {
+          "A": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          },
+          "B": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          },
+          "C": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          },
+          "D": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          }
+        },
+        "second_conditional_targets_uniform": true,
+        "second_only_nominal_accuracy": 0.25
+      },
+      "seed": 131
+    },
+    "137": {
+      "checkpoints": {
+        "0": {
+          "between_item_reset": {
+            "accuracy": 0.171875,
+            "checkpoint": 0,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 4,
+                "C": 3,
+                "D": 9,
+                "NO_DECISION": 0
+              },
+              "B": {
+                "A": 0,
+                "B": 4,
+                "C": 5,
+                "D": 6,
+                "NO_DECISION": 1
+              },
+              "C": {
+                "A": 0,
+                "B": 4,
+                "C": 3,
+                "D": 8,
+                "NO_DECISION": 1
+              },
+              "D": {
+                "A": 0,
+                "B": 2,
+                "C": 5,
+                "D": 4,
+                "NO_DECISION": 5
+              }
+            },
+            "context_accuracy": {
+              "AA": 0.0,
+              "AB": 0.0,
+              "AC": 0.5,
+              "AD": 0.0,
+              "BA": 0.0,
+              "BB": 0.75,
+              "BC": 0.0,
+              "BD": 0.5,
+              "CA": 0.25,
+              "CB": 0.25,
+              "CC": 0.5,
+              "CD": 0.0,
+              "DA": 0.0,
+              "DB": 0.0,
+              "DC": 0.0,
+              "DD": 0.0
+            },
+            "different_symbol_context_accuracy": 0.125,
+            "fraction_rank_1": 0.18032786885245902,
+            "fraction_rank_le_2": 0.4426229508196721,
+            "go_output_spikes": 3560,
+            "largest_prediction_fraction": 0.421875,
+            "macro_target_accuracy": 0.171875,
+            "mean_target_rank": 2.5901639344262297,
+            "no_decision_fraction": 0.109375,
+            "output_collapse": false,
+            "per_first_accuracy": {
+              "A": 0.125,
+              "B": 0.3125,
+              "C": 0.25,
+              "D": 0.0
+            },
+            "per_second_accuracy": {
+              "A": 0.0625,
+              "B": 0.25,
+              "C": 0.25,
+              "D": 0.125
+            },
+            "per_target_accuracy": {
+              "A": 0.0,
+              "B": 0.25,
+              "C": 0.1875,
+              "D": 0.25
+            },
+            "prediction_distribution": {
+              "A": 0,
+              "B": 14,
+              "C": 16,
+              "D": 27,
+              "NO_DECISION": 7
+            },
+            "reversed_contexts": {
+              "AB_vs_BA": {
+                "AB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 1,
+                    "D": 3,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.25
+                },
+                "BA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.375
+                },
+                "targets_differ": true
+              },
+              "AC_vs_CA": {
+                "AC": {
+                  "accuracy": 0.5,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.125
+                },
+                "CA": {
+                  "accuracy": 0.25,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 1,
+                    "NO_DECISION": 3
+                  },
+                  "target_rank": 1.5
+                },
+                "targets_differ": true
+              },
+              "AD_vs_DA": {
+                "AD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.5
+                },
+                "DA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.0
+                },
+                "targets_differ": true
+              },
+              "BC_vs_CB": {
+                "BC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 3,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.75
+                },
+                "CB": {
+                  "accuracy": 0.25,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 1,
+                    "D": 3,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.25
+                },
+                "targets_differ": true
+              },
+              "BD_vs_DB": {
+                "BD": {
+                  "accuracy": 0.5,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 2,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.75
+                },
+                "DB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.25
+                },
+                "targets_differ": true
+              },
+              "CD_vs_DC": {
+                "CD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 4,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.875
+                },
+                "DC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 4,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.75
+                },
+                "targets_differ": true
+              },
+              "different_target_reversed_context_count": 6
+            },
+            "same_symbol_context_accuracy": 0.3125,
+            "target_minus_best_competitor_margin_hz": -157.8125,
+            "target_output_share": 0.22734355015762664,
+            "trials": 64
+          },
+          "intact": {
+            "accuracy": 0.171875,
+            "checkpoint": 0,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 1,
+                "C": 5,
+                "D": 9,
+                "NO_DECISION": 1
+              },
+              "B": {
+                "A": 0,
+                "B": 2,
+                "C": 1,
+                "D": 12,
+                "NO_DECISION": 1
+              },
+              "C": {
+                "A": 0,
+                "B": 2,
+                "C": 5,
+                "D": 6,
+                "NO_DECISION": 3
+              },
+              "D": {
+                "A": 0,
+                "B": 4,
+                "C": 5,
+                "D": 4,
+                "NO_DECISION": 3
+              }
+            },
+            "context_accuracy": {
+              "AA": 0.0,
+              "AB": 0.0,
+              "AC": 0.5,
+              "AD": 0.0,
+              "BA": 0.0,
+              "BB": 1.0,
+              "BC": 0.0,
+              "BD": 0.0,
+              "CA": 0.0,
+              "CB": 0.5,
+              "CC": 0.0,
+              "CD": 0.0,
+              "DA": 0.5,
+              "DB": 0.0,
+              "DC": 0.0,
+              "DD": 0.25
+            },
+            "different_symbol_context_accuracy": 0.125,
+            "fraction_rank_1": 0.171875,
+            "fraction_rank_le_2": 0.46875,
+            "go_output_spikes": 8003,
+            "largest_prediction_fraction": 0.484375,
+            "macro_target_accuracy": 0.171875,
+            "mean_target_rank": 2.515625,
+            "no_decision_fraction": 0.125,
+            "output_collapse": false,
+            "per_first_accuracy": {
+              "A": 0.125,
+              "B": 0.25,
+              "C": 0.125,
+              "D": 0.1875
+            },
+            "per_second_accuracy": {
+              "A": 0.125,
+              "B": 0.375,
+              "C": 0.125,
+              "D": 0.0625
+            },
+            "per_target_accuracy": {
+              "A": 0.0,
+              "B": 0.125,
+              "C": 0.3125,
+              "D": 0.25
+            },
+            "prediction_distribution": {
+              "A": 0,
+              "B": 9,
+              "C": 16,
+              "D": 31,
+              "NO_DECISION": 8
+            },
+            "reversed_contexts": {
+              "AB_vs_BA": {
+                "AB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.25
+                },
+                "BA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.25
+                },
+                "targets_differ": true
+              },
+              "AC_vs_CA": {
+                "AC": {
+                  "accuracy": 0.5,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 0,
+                    "NO_DECISION": 2
+                  },
+                  "target_rank": 1.25
+                },
+                "CA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 4,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.0
+                },
+                "targets_differ": true
+              },
+              "AD_vs_DA": {
+                "AD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 3,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.125
+                },
+                "DA": {
+                  "accuracy": 0.5,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 0,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.25
+                },
+                "targets_differ": true
+              },
+              "BC_vs_CB": {
+                "BC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.875
+                },
+                "CB": {
+                  "accuracy": 0.5,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 2,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.75
+                },
+                "targets_differ": true
+              },
+              "BD_vs_DB": {
+                "BD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.875
+                },
+                "DB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.5
+                },
+                "targets_differ": true
+              },
+              "CD_vs_DC": {
+                "CD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 4,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.875
+                },
+                "DC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 2
+                  },
+                  "target_rank": 2.375
+                },
+                "targets_differ": true
+              },
+              "different_target_reversed_context_count": 6
+            },
+            "same_symbol_context_accuracy": 0.3125,
+            "target_minus_best_competitor_margin_hz": -285.9375,
+            "target_output_share": 0.25339369039648624,
+            "trials": 64
+          }
+        },
+        "400": {
+          "between_item_reset": {
+            "accuracy": 0.15625,
+            "checkpoint": 400,
+            "confusion_matrix": {
+              "A": {
+                "A": 1,
+                "B": 5,
+                "C": 3,
+                "D": 5,
+                "NO_DECISION": 2
+              },
+              "B": {
+                "A": 3,
+                "B": 1,
+                "C": 5,
+                "D": 5,
+                "NO_DECISION": 2
+              },
+              "C": {
+                "A": 2,
+                "B": 5,
+                "C": 3,
+                "D": 2,
+                "NO_DECISION": 4
+              },
+              "D": {
+                "A": 0,
+                "B": 4,
+                "C": 4,
+                "D": 5,
+                "NO_DECISION": 3
+              }
+            },
+            "context_accuracy": {
+              "AA": 0.0,
+              "AB": 0.0,
+              "AC": 0.5,
+              "AD": 0.0,
+              "BA": 0.0,
+              "BB": 0.25,
+              "BC": 0.0,
+              "BD": 0.25,
+              "CA": 0.75,
+              "CB": 0.25,
+              "CC": 0.0,
+              "CD": 0.0,
+              "DA": 0.0,
+              "DB": 0.25,
+              "DC": 0.25,
+              "DD": 0.0
+            },
+            "different_symbol_context_accuracy": 0.1875,
+            "fraction_rank_1": 0.16129032258064516,
+            "fraction_rank_le_2": 0.41935483870967744,
+            "go_output_spikes": 3734,
+            "largest_prediction_fraction": 0.265625,
+            "macro_target_accuracy": 0.15625,
+            "mean_target_rank": 2.596774193548387,
+            "no_decision_fraction": 0.171875,
+            "output_collapse": false,
+            "per_first_accuracy": {
+              "A": 0.125,
+              "B": 0.125,
+              "C": 0.25,
+              "D": 0.125
+            },
+            "per_second_accuracy": {
+              "A": 0.1875,
+              "B": 0.1875,
+              "C": 0.1875,
+              "D": 0.0625
+            },
+            "per_target_accuracy": {
+              "A": 0.0625,
+              "B": 0.0625,
+              "C": 0.1875,
+              "D": 0.3125
+            },
+            "prediction_distribution": {
+              "A": 6,
+              "B": 15,
+              "C": 15,
+              "D": 17,
+              "NO_DECISION": 11
+            },
+            "reversed_contexts": {
+              "AB_vs_BA": {
+                "AB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 1,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.6666666666666665
+                },
+                "BA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 2,
+                    "NO_DECISION": 2
+                  },
+                  "target_rank": 3.8333333333333335
+                },
+                "targets_differ": true
+              },
+              "AC_vs_CA": {
+                "AC": {
+                  "accuracy": 0.5,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 1,
+                    "C": 2,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.25
+                },
+                "CA": {
+                  "accuracy": 0.75,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 1.25
+                },
+                "targets_differ": true
+              },
+              "AD_vs_DA": {
+                "AD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 4,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.125
+                },
+                "DA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 1,
+                    "D": 3,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.5
+                },
+                "targets_differ": true
+              },
+              "BC_vs_CB": {
+                "BC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 3,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.875
+                },
+                "CB": {
+                  "accuracy": 0.25,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 1,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 1.75
+                },
+                "targets_differ": true
+              },
+              "BD_vs_DB": {
+                "BD": {
+                  "accuracy": 0.25,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 1,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.125
+                },
+                "DB": {
+                  "accuracy": 0.25,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 0,
+                    "D": 1,
+                    "NO_DECISION": 2
+                  },
+                  "target_rank": 2.25
+                },
+                "targets_differ": true
+              },
+              "CD_vs_DC": {
+                "CD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 4,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.5
+                },
+                "DC": {
+                  "accuracy": 0.25,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 3,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.0
+                },
+                "targets_differ": true
+              },
+              "different_target_reversed_context_count": 6
+            },
+            "same_symbol_context_accuracy": 0.0625,
+            "target_minus_best_competitor_margin_hz": -138.28125,
+            "target_output_share": 0.21689906557209965,
+            "trials": 64
+          },
+          "intact": {
+            "accuracy": 0.234375,
+            "checkpoint": 400,
+            "confusion_matrix": {
+              "A": {
+                "A": 1,
+                "B": 1,
+                "C": 4,
+                "D": 9,
+                "NO_DECISION": 1
+              },
+              "B": {
+                "A": 3,
+                "B": 3,
+                "C": 1,
+                "D": 7,
+                "NO_DECISION": 2
+              },
+              "C": {
+                "A": 3,
+                "B": 2,
+                "C": 6,
+                "D": 3,
+                "NO_DECISION": 2
+              },
+              "D": {
+                "A": 3,
+                "B": 2,
+                "C": 3,
+                "D": 5,
+                "NO_DECISION": 3
+              }
+            },
+            "context_accuracy": {
+              "AA": 0.0,
+              "AB": 0.0,
+              "AC": 0.5,
+              "AD": 0.0,
+              "BA": 0.0,
+              "BB": 0.5,
+              "BC": 0.0,
+              "BD": 0.25,
+              "CA": 0.75,
+              "CB": 0.75,
+              "CC": 0.0,
+              "CD": 0.0,
+              "DA": 0.5,
+              "DB": 0.25,
+              "DC": 0.0,
+              "DD": 0.25
+            },
+            "different_symbol_context_accuracy": 0.25,
+            "fraction_rank_1": 0.234375,
+            "fraction_rank_le_2": 0.515625,
+            "go_output_spikes": 7200,
+            "largest_prediction_fraction": 0.375,
+            "macro_target_accuracy": 0.234375,
+            "mean_target_rank": 2.3828125,
+            "no_decision_fraction": 0.125,
+            "output_collapse": false,
+            "per_first_accuracy": {
+              "A": 0.125,
+              "B": 0.1875,
+              "C": 0.375,
+              "D": 0.25
+            },
+            "per_second_accuracy": {
+              "A": 0.3125,
+              "B": 0.375,
+              "C": 0.125,
+              "D": 0.125
+            },
+            "per_target_accuracy": {
+              "A": 0.0625,
+              "B": 0.1875,
+              "C": 0.375,
+              "D": 0.3125
+            },
+            "prediction_distribution": {
+              "A": 10,
+              "B": 8,
+              "C": 14,
+              "D": 24,
+              "NO_DECISION": 8
+            },
+            "reversed_contexts": {
+              "AB_vs_BA": {
+                "AB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 0,
+                    "D": 2,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.375
+                },
+                "BA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 0,
+                    "D": 2,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.25
+                },
+                "targets_differ": true
+              },
+              "AC_vs_CA": {
+                "AC": {
+                  "accuracy": 0.5,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 2,
+                    "B": 0,
+                    "C": 2,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.5
+                },
+                "CA": {
+                  "accuracy": 0.75,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 1,
+                    "D": 3,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.5
+                },
+                "targets_differ": true
+              },
+              "AD_vs_DA": {
+                "AD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 2,
+                    "B": 1,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.125
+                },
+                "DA": {
+                  "accuracy": 0.5,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 0,
+                    "D": 2,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.25
+                },
+                "targets_differ": true
+              },
+              "BC_vs_CB": {
+                "BC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 2,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.625
+                },
+                "CB": {
+                  "accuracy": 0.75,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 3,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.25
+                },
+                "targets_differ": true
+              },
+              "BD_vs_DB": {
+                "BD": {
+                  "accuracy": 0.25,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 1,
+                    "C": 0,
+                    "D": 2,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.125
+                },
+                "DB": {
+                  "accuracy": 0.25,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 0,
+                    "D": 2,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.125
+                },
+                "targets_differ": true
+              },
+              "CD_vs_DC": {
+                "CD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 2,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.25
+                },
+                "DC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 2,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.375
+                },
+                "targets_differ": true
+              },
+              "different_target_reversed_context_count": 6
+            },
+            "same_symbol_context_accuracy": 0.1875,
+            "target_minus_best_competitor_margin_hz": -117.96875,
+            "target_output_share": 0.2482646739751012,
+            "trials": 64
+          }
+        },
+        "800": {
+          "between_item_reset": {
+            "accuracy": 0.203125,
+            "checkpoint": 800,
+            "confusion_matrix": {
+              "A": {
+                "A": 2,
+                "B": 4,
+                "C": 6,
+                "D": 3,
+                "NO_DECISION": 1
+              },
+              "B": {
+                "A": 2,
+                "B": 6,
+                "C": 3,
+                "D": 2,
+                "NO_DECISION": 3
+              },
+              "C": {
+                "A": 2,
+                "B": 5,
+                "C": 2,
+                "D": 4,
+                "NO_DECISION": 3
+              },
+              "D": {
+                "A": 3,
+                "B": 2,
+                "C": 6,
+                "D": 3,
+                "NO_DECISION": 2
+              }
+            },
+            "context_accuracy": {
+              "AA": 0.0,
+              "AB": 0.25,
+              "AC": 0.25,
+              "AD": 0.0,
+              "BA": 0.0,
+              "BB": 0.0,
+              "BC": 0.0,
+              "BD": 1.0,
+              "CA": 0.75,
+              "CB": 0.25,
+              "CC": 0.25,
+              "CD": 0.0,
+              "DA": 0.0,
+              "DB": 0.5,
+              "DC": 0.0,
+              "DD": 0.0
+            },
+            "different_symbol_context_accuracy": 0.25,
+            "fraction_rank_1": 0.21311475409836064,
+            "fraction_rank_le_2": 0.39344262295081966,
+            "go_output_spikes": 3852,
+            "largest_prediction_fraction": 0.265625,
+            "macro_target_accuracy": 0.203125,
+            "mean_target_rank": 2.557377049180328,
+            "no_decision_fraction": 0.140625,
+            "output_collapse": false,
+            "per_first_accuracy": {
+              "A": 0.125,
+              "B": 0.25,
+              "C": 0.3125,
+              "D": 0.125
+            },
+            "per_second_accuracy": {
+              "A": 0.1875,
+              "B": 0.25,
+              "C": 0.125,
+              "D": 0.25
+            },
+            "per_target_accuracy": {
+              "A": 0.125,
+              "B": 0.375,
+              "C": 0.125,
+              "D": 0.1875
+            },
+            "prediction_distribution": {
+              "A": 9,
+              "B": 17,
+              "C": 17,
+              "D": 12,
+              "NO_DECISION": 9
+            },
+            "reversed_contexts": {
+              "AB_vs_BA": {
+                "AB": {
+                  "accuracy": 0.25,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 2,
+                    "B": 1,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.625
+                },
+                "BA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 0,
+                    "D": 2,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.5
+                },
+                "targets_differ": true
+              },
+              "AC_vs_CA": {
+                "AC": {
+                  "accuracy": 0.25,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 1,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 1.875
+                },
+                "CA": {
+                  "accuracy": 0.75,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 1.125
+                },
+                "targets_differ": true
+              },
+              "AD_vs_DA": {
+                "AD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.875
+                },
+                "DA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 2,
+                    "NO_DECISION": 2
+                  },
+                  "target_rank": 3.3333333333333335
+                },
+                "targets_differ": true
+              },
+              "BC_vs_CB": {
+                "BC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 3,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.0
+                },
+                "CB": {
+                  "accuracy": 0.25,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 2,
+                    "B": 0,
+                    "C": 1,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.375
+                },
+                "targets_differ": true
+              },
+              "BD_vs_DB": {
+                "BD": {
+                  "accuracy": 1.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 4,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.0
+                },
+                "DB": {
+                  "accuracy": 0.5,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 2,
+                    "B": 0,
+                    "C": 1,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.25
+                },
+                "targets_differ": true
+              },
+              "CD_vs_DC": {
+                "CD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 3,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.375
+                },
+                "DC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 4,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.875
+                },
+                "targets_differ": true
+              },
+              "different_target_reversed_context_count": 6
+            },
+            "same_symbol_context_accuracy": 0.0625,
+            "target_minus_best_competitor_margin_hz": -124.21875,
+            "target_output_share": 0.2179223092161392,
+            "trials": 64
+          },
+          "intact": {
+            "accuracy": 0.234375,
+            "checkpoint": 800,
+            "confusion_matrix": {
+              "A": {
+                "A": 4,
+                "B": 1,
+                "C": 3,
+                "D": 6,
+                "NO_DECISION": 2
+              },
+              "B": {
+                "A": 1,
+                "B": 0,
+                "C": 4,
+                "D": 7,
+                "NO_DECISION": 4
+              },
+              "C": {
+                "A": 1,
+                "B": 3,
+                "C": 6,
+                "D": 3,
+                "NO_DECISION": 3
+              },
+              "D": {
+                "A": 1,
+                "B": 3,
+                "C": 6,
+                "D": 5,
+                "NO_DECISION": 1
+              }
+            },
+            "context_accuracy": {
+              "AA": 0.25,
+              "AB": 0.0,
+              "AC": 0.75,
+              "AD": 0.25,
+              "BA": 0.0,
+              "BB": 0.25,
+              "BC": 0.0,
+              "BD": 0.0,
+              "CA": 0.75,
+              "CB": 0.5,
+              "CC": 0.0,
+              "CD": 0.0,
+              "DA": 0.0,
+              "DB": 0.75,
+              "DC": 0.0,
+              "DD": 0.25
+            },
+            "different_symbol_context_accuracy": 0.25,
+            "fraction_rank_1": 0.234375,
+            "fraction_rank_le_2": 0.421875,
+            "go_output_spikes": 7550,
+            "largest_prediction_fraction": 0.328125,
+            "macro_target_accuracy": 0.234375,
+            "mean_target_rank": 2.5703125,
+            "no_decision_fraction": 0.15625,
+            "output_collapse": false,
+            "per_first_accuracy": {
+              "A": 0.3125,
+              "B": 0.0625,
+              "C": 0.3125,
+              "D": 0.25
+            },
+            "per_second_accuracy": {
+              "A": 0.25,
+              "B": 0.375,
+              "C": 0.1875,
+              "D": 0.125
+            },
+            "per_target_accuracy": {
+              "A": 0.25,
+              "B": 0.0,
+              "C": 0.375,
+              "D": 0.3125
+            },
+            "prediction_distribution": {
+              "A": 7,
+              "B": 7,
+              "C": 19,
+              "D": 21,
+              "NO_DECISION": 10
+            },
+            "reversed_contexts": {
+              "AB_vs_BA": {
+                "AB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 1,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.5
+                },
+                "BA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 1,
+                    "C": 0,
+                    "D": 2,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.75
+                },
+                "targets_differ": true
+              },
+              "AC_vs_CA": {
+                "AC": {
+                  "accuracy": 0.75,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 3,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 1.125
+                },
+                "CA": {
+                  "accuracy": 0.75,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 1,
+                    "D": 3,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.5
+                },
+                "targets_differ": true
+              },
+              "AD_vs_DA": {
+                "AD": {
+                  "accuracy": 0.25,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 1,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.625
+                },
+                "DA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 1,
+                    "D": 2,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.125
+                },
+                "targets_differ": true
+              },
+              "BC_vs_CB": {
+                "BC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 1,
+                    "D": 3,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.625
+                },
+                "CB": {
+                  "accuracy": 0.5,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 1.875
+                },
+                "targets_differ": true
+              },
+              "BD_vs_DB": {
+                "BD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 1,
+                    "D": 2,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.75
+                },
+                "DB": {
+                  "accuracy": 0.75,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 3,
+                    "B": 0,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 1.75
+                },
+                "targets_differ": true
+              },
+              "CD_vs_DC": {
+                "CD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 1,
+                    "D": 2,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.625
+                },
+                "DC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 3,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.5
+                },
+                "targets_differ": true
+              },
+              "different_target_reversed_context_count": 6
+            },
+            "same_symbol_context_accuracy": 0.1875,
+            "target_minus_best_competitor_margin_hz": -154.6875,
+            "target_output_share": 0.24063828578333643,
+            "trials": 64
+          }
+        }
+      },
+      "episode_credit": {
+        "aggregate": {
+          "eligible_edges_after_first": 10645,
+          "eligible_edges_by_end_go": 297231,
+          "eligible_edges_by_end_second": 114319,
+          "updated_edges": 100711,
+          "updated_edges_eligible_after_first": 3507,
+          "updated_edges_eligible_by_end_second": 39727,
+          "updated_edges_newly_eligible_during_go": 60984,
+          "updated_edges_newly_eligible_during_second": 36220
+        },
+        "episodes_captured": 15
+      },
+      "safety": {
+        "adaptive_reallocations": 0,
+        "mean_multiplier": 1.0000836849212646,
+        "mean_stability": 2.4960480004665442e-05,
+        "multiplier_saturation_fraction": 5.703192410012114e-05,
+        "plastic_budget_drift": 0,
+        "plastic_budget_end": 311106,
+        "plastic_budget_start": 311106
+      },
+      "schedule_balance": {
+        "first_conditional_counts": {
+          "A": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          },
+          "B": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          },
+          "C": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          },
+          "D": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          }
+        },
+        "first_conditional_targets_uniform": true,
+        "first_only_nominal_accuracy": 0.25,
+        "global_majority_target_accuracy": 0.25,
+        "global_target_counts": {
+          "A": 200,
+          "B": 200,
+          "C": 200,
+          "D": 200
+        },
+        "global_targets_uniform": true,
+        "mapping": {
+          "AA": "A",
+          "AB": "B",
+          "AC": "C",
+          "AD": "D",
+          "BA": "C",
+          "BB": "D",
+          "BC": "A",
+          "BD": "B",
+          "CA": "D",
+          "CB": "C",
+          "CC": "B",
+          "CD": "A",
+          "DA": "B",
+          "DB": "A",
+          "DC": "D",
+          "DD": "C"
+        },
+        "order_sensitive_reversed_context_count": 6,
+        "second_conditional_counts": {
+          "A": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          },
+          "B": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          },
+          "C": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          },
+          "D": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          }
+        },
+        "second_conditional_targets_uniform": true,
+        "second_only_nominal_accuracy": 0.25
+      },
+      "seed": 137
+    },
+    "139": {
+      "checkpoints": {
+        "0": {
+          "between_item_reset": {
+            "accuracy": 0.21875,
+            "checkpoint": 0,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 6,
+                "C": 2,
+                "D": 7,
+                "NO_DECISION": 1
+              },
+              "B": {
+                "A": 1,
+                "B": 4,
+                "C": 4,
+                "D": 6,
+                "NO_DECISION": 1
+              },
+              "C": {
+                "A": 0,
+                "B": 5,
+                "C": 3,
+                "D": 6,
+                "NO_DECISION": 2
+              },
+              "D": {
+                "A": 1,
+                "B": 3,
+                "C": 3,
+                "D": 7,
+                "NO_DECISION": 2
+              }
+            },
+            "context_accuracy": {
+              "AA": 0.0,
+              "AB": 0.0,
+              "AC": 0.75,
+              "AD": 0.0,
+              "BA": 0.0,
+              "BB": 0.75,
+              "BC": 0.0,
+              "BD": 0.75,
+              "CA": 1.0,
+              "CB": 0.0,
+              "CC": 0.25,
+              "CD": 0.0,
+              "DA": 0.0,
+              "DB": 0.0,
+              "DC": 0.0,
+              "DD": 0.0
+            },
+            "different_symbol_context_accuracy": 0.20833333333333334,
+            "fraction_rank_1": 0.2222222222222222,
+            "fraction_rank_le_2": 0.4126984126984127,
+            "go_output_spikes": 3396,
+            "largest_prediction_fraction": 0.40625,
+            "macro_target_accuracy": 0.21875,
+            "mean_target_rank": 2.5238095238095237,
+            "no_decision_fraction": 0.09375,
+            "output_collapse": false,
+            "per_first_accuracy": {
+              "A": 0.1875,
+              "B": 0.375,
+              "C": 0.3125,
+              "D": 0.0
+            },
+            "per_second_accuracy": {
+              "A": 0.25,
+              "B": 0.1875,
+              "C": 0.25,
+              "D": 0.1875
+            },
+            "per_target_accuracy": {
+              "A": 0.0,
+              "B": 0.25,
+              "C": 0.1875,
+              "D": 0.4375
+            },
+            "prediction_distribution": {
+              "A": 2,
+              "B": 18,
+              "C": 12,
+              "D": 26,
+              "NO_DECISION": 6
+            },
+            "reversed_contexts": {
+              "AB_vs_BA": {
+                "AB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 2,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.625
+                },
+                "BA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 0,
+                    "D": 2,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.375
+                },
+                "targets_differ": true
+              },
+              "AC_vs_CA": {
+                "AC": {
+                  "accuracy": 0.75,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 3,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 1.625
+                },
+                "CA": {
+                  "accuracy": 1.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.0
+                },
+                "targets_differ": true
+              },
+              "AD_vs_DA": {
+                "AD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 3,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.0
+                },
+                "DA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.0
+                },
+                "targets_differ": true
+              },
+              "BC_vs_CB": {
+                "BC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.125
+                },
+                "CB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.0
+                },
+                "targets_differ": true
+              },
+              "BD_vs_DB": {
+                "BD": {
+                  "accuracy": 0.75,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 3,
+                    "C": 0,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.75
+                },
+                "DB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.875
+                },
+                "targets_differ": true
+              },
+              "CD_vs_DC": {
+                "CD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 4,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.25
+                },
+                "DC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 2
+                  },
+                  "target_rank": 2.5
+                },
+                "targets_differ": true
+              },
+              "different_target_reversed_context_count": 6
+            },
+            "same_symbol_context_accuracy": 0.25,
+            "target_minus_best_competitor_margin_hz": -125.78125,
+            "target_output_share": 0.2436508211283556,
+            "trials": 64
+          },
+          "intact": {
+            "accuracy": 0.25,
+            "checkpoint": 0,
+            "confusion_matrix": {
+              "A": {
+                "A": 1,
+                "B": 3,
+                "C": 3,
+                "D": 8,
+                "NO_DECISION": 1
+              },
+              "B": {
+                "A": 0,
+                "B": 1,
+                "C": 3,
+                "D": 12,
+                "NO_DECISION": 0
+              },
+              "C": {
+                "A": 0,
+                "B": 3,
+                "C": 4,
+                "D": 8,
+                "NO_DECISION": 1
+              },
+              "D": {
+                "A": 0,
+                "B": 4,
+                "C": 1,
+                "D": 10,
+                "NO_DECISION": 1
+              }
+            },
+            "context_accuracy": {
+              "AA": 0.25,
+              "AB": 0.0,
+              "AC": 0.5,
+              "AD": 0.5,
+              "BA": 0.0,
+              "BB": 1.0,
+              "BC": 0.0,
+              "BD": 0.0,
+              "CA": 1.0,
+              "CB": 0.25,
+              "CC": 0.25,
+              "CD": 0.0,
+              "DA": 0.0,
+              "DB": 0.0,
+              "DC": 0.0,
+              "DD": 0.25
+            },
+            "different_symbol_context_accuracy": 0.1875,
+            "fraction_rank_1": 0.25,
+            "fraction_rank_le_2": 0.421875,
+            "go_output_spikes": 7483,
+            "largest_prediction_fraction": 0.59375,
+            "macro_target_accuracy": 0.25,
+            "mean_target_rank": 2.46875,
+            "no_decision_fraction": 0.046875,
+            "output_collapse": false,
+            "per_first_accuracy": {
+              "A": 0.3125,
+              "B": 0.25,
+              "C": 0.375,
+              "D": 0.0625
+            },
+            "per_second_accuracy": {
+              "A": 0.3125,
+              "B": 0.3125,
+              "C": 0.1875,
+              "D": 0.1875
+            },
+            "per_target_accuracy": {
+              "A": 0.0625,
+              "B": 0.0625,
+              "C": 0.25,
+              "D": 0.625
+            },
+            "prediction_distribution": {
+              "A": 1,
+              "B": 11,
+              "C": 11,
+              "D": 38,
+              "NO_DECISION": 3
+            },
+            "reversed_contexts": {
+              "AB_vs_BA": {
+                "AB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.5
+                },
+                "BA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.0
+                },
+                "targets_differ": true
+              },
+              "AC_vs_CA": {
+                "AC": {
+                  "accuracy": 0.5,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.0
+                },
+                "CA": {
+                  "accuracy": 1.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.0
+                },
+                "targets_differ": true
+              },
+              "AD_vs_DA": {
+                "AD": {
+                  "accuracy": 0.5,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 0,
+                    "D": 2,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.0
+                },
+                "DA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.125
+                },
+                "targets_differ": true
+              },
+              "BC_vs_CB": {
+                "BC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.75
+                },
+                "CB": {
+                  "accuracy": 0.25,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 1,
+                    "D": 3,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.0
+                },
+                "targets_differ": true
+              },
+              "BD_vs_DB": {
+                "BD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.5
+                },
+                "DB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.5
+                },
+                "targets_differ": true
+              },
+              "CD_vs_DC": {
+                "CD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 3,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.75
+                },
+                "DC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.75
+                },
+                "targets_differ": true
+              },
+              "different_target_reversed_context_count": 6
+            },
+            "same_symbol_context_accuracy": 0.4375,
+            "target_minus_best_competitor_margin_hz": -246.875,
+            "target_output_share": 0.2555039689844866,
+            "trials": 64
+          }
+        },
+        "400": {
+          "between_item_reset": {
+            "accuracy": 0.203125,
+            "checkpoint": 400,
+            "confusion_matrix": {
+              "A": {
+                "A": 0,
+                "B": 6,
+                "C": 5,
+                "D": 3,
+                "NO_DECISION": 2
+              },
+              "B": {
+                "A": 1,
+                "B": 7,
+                "C": 2,
+                "D": 3,
+                "NO_DECISION": 3
+              },
+              "C": {
+                "A": 3,
+                "B": 4,
+                "C": 3,
+                "D": 4,
+                "NO_DECISION": 2
+              },
+              "D": {
+                "A": 2,
+                "B": 5,
+                "C": 5,
+                "D": 3,
+                "NO_DECISION": 1
+              }
+            },
+            "context_accuracy": {
+              "AA": 0.0,
+              "AB": 0.25,
+              "AC": 0.75,
+              "AD": 0.0,
+              "BA": 0.0,
+              "BB": 0.0,
+              "BC": 0.0,
+              "BD": 1.0,
+              "CA": 0.75,
+              "CB": 0.0,
+              "CC": 0.5,
+              "CD": 0.0,
+              "DA": 0.0,
+              "DB": 0.0,
+              "DC": 0.0,
+              "DD": 0.0
+            },
+            "different_symbol_context_accuracy": 0.22916666666666666,
+            "fraction_rank_1": 0.20634920634920634,
+            "fraction_rank_le_2": 0.4444444444444444,
+            "go_output_spikes": 3859,
+            "largest_prediction_fraction": 0.34375,
+            "macro_target_accuracy": 0.203125,
+            "mean_target_rank": 2.619047619047619,
+            "no_decision_fraction": 0.125,
+            "output_collapse": false,
+            "per_first_accuracy": {
+              "A": 0.25,
+              "B": 0.25,
+              "C": 0.3125,
+              "D": 0.0
+            },
+            "per_second_accuracy": {
+              "A": 0.1875,
+              "B": 0.0625,
+              "C": 0.3125,
+              "D": 0.25
+            },
+            "per_target_accuracy": {
+              "A": 0.0,
+              "B": 0.4375,
+              "C": 0.1875,
+              "D": 0.1875
+            },
+            "prediction_distribution": {
+              "A": 6,
+              "B": 22,
+              "C": 15,
+              "D": 13,
+              "NO_DECISION": 8
+            },
+            "reversed_contexts": {
+              "AB_vs_BA": {
+                "AB": {
+                  "accuracy": 0.25,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 1,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.375
+                },
+                "BA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.625
+                },
+                "targets_differ": true
+              },
+              "AC_vs_CA": {
+                "AC": {
+                  "accuracy": 0.75,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 3,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.25
+                },
+                "CA": {
+                  "accuracy": 0.75,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 1.0
+                },
+                "targets_differ": true
+              },
+              "AD_vs_DA": {
+                "AD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 4,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 4.0
+                },
+                "DA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.25
+                },
+                "targets_differ": true
+              },
+              "BC_vs_CB": {
+                "BC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 2,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.625
+                },
+                "CB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 2,
+                    "B": 0,
+                    "C": 0,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.5
+                },
+                "targets_differ": true
+              },
+              "BD_vs_DB": {
+                "BD": {
+                  "accuracy": 1.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 4,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 1.0
+                },
+                "DB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 3,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.5
+                },
+                "targets_differ": true
+              },
+              "CD_vs_DC": {
+                "CD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 4,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.0
+                },
+                "DC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 3,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.375
+                },
+                "targets_differ": true
+              },
+              "different_target_reversed_context_count": 6
+            },
+            "same_symbol_context_accuracy": 0.125,
+            "target_minus_best_competitor_margin_hz": -136.71875,
+            "target_output_share": 0.22561848712463006,
+            "trials": 64
+          },
+          "intact": {
+            "accuracy": 0.125,
+            "checkpoint": 400,
+            "confusion_matrix": {
+              "A": {
+                "A": 1,
+                "B": 4,
+                "C": 3,
+                "D": 3,
+                "NO_DECISION": 5
+              },
+              "B": {
+                "A": 5,
+                "B": 3,
+                "C": 3,
+                "D": 2,
+                "NO_DECISION": 3
+              },
+              "C": {
+                "A": 2,
+                "B": 3,
+                "C": 1,
+                "D": 5,
+                "NO_DECISION": 5
+              },
+              "D": {
+                "A": 4,
+                "B": 4,
+                "C": 5,
+                "D": 3,
+                "NO_DECISION": 0
+              }
+            },
+            "context_accuracy": {
+              "AA": 0.0,
+              "AB": 0.25,
+              "AC": 0.0,
+              "AD": 0.0,
+              "BA": 0.0,
+              "BB": 0.25,
+              "BC": 0.25,
+              "BD": 0.0,
+              "CA": 0.5,
+              "CB": 0.25,
+              "CC": 0.25,
+              "CD": 0.0,
+              "DA": 0.25,
+              "DB": 0.0,
+              "DC": 0.0,
+              "DD": 0.0
+            },
+            "different_symbol_context_accuracy": 0.125,
+            "fraction_rank_1": 0.125,
+            "fraction_rank_le_2": 0.421875,
+            "go_output_spikes": 7797,
+            "largest_prediction_fraction": 0.21875,
+            "macro_target_accuracy": 0.125,
+            "mean_target_rank": 2.7265625,
+            "no_decision_fraction": 0.203125,
+            "output_collapse": false,
+            "per_first_accuracy": {
+              "A": 0.0625,
+              "B": 0.125,
+              "C": 0.25,
+              "D": 0.0625
+            },
+            "per_second_accuracy": {
+              "A": 0.1875,
+              "B": 0.1875,
+              "C": 0.125,
+              "D": 0.0
+            },
+            "per_target_accuracy": {
+              "A": 0.0625,
+              "B": 0.1875,
+              "C": 0.0625,
+              "D": 0.1875
+            },
+            "prediction_distribution": {
+              "A": 12,
+              "B": 14,
+              "C": 12,
+              "D": 13,
+              "NO_DECISION": 13
+            },
+            "reversed_contexts": {
+              "AB_vs_BA": {
+                "AB": {
+                  "accuracy": 0.25,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 3,
+                    "B": 1,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.875
+                },
+                "BA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.625
+                },
+                "targets_differ": true
+              },
+              "AC_vs_CA": {
+                "AC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 1,
+                    "C": 0,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.0
+                },
+                "CA": {
+                  "accuracy": 0.5,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 1,
+                    "D": 2,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.25
+                },
+                "targets_differ": true
+              },
+              "AD_vs_DA": {
+                "AD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 3,
+                    "B": 0,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.625
+                },
+                "DA": {
+                  "accuracy": 0.25,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 1,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.25
+                },
+                "targets_differ": true
+              },
+              "BC_vs_CB": {
+                "BC": {
+                  "accuracy": 0.25,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 1,
+                    "C": 0,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.0
+                },
+                "CB": {
+                  "accuracy": 0.25,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 1,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.625
+                },
+                "targets_differ": true
+              },
+              "BD_vs_DB": {
+                "BD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 2,
+                    "B": 0,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.25
+                },
+                "DB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 2,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.5
+                },
+                "targets_differ": true
+              },
+              "CD_vs_DC": {
+                "CD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 3
+                  },
+                  "target_rank": 3.75
+                },
+                "DC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 3,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.75
+                },
+                "targets_differ": true
+              },
+              "different_target_reversed_context_count": 6
+            },
+            "same_symbol_context_accuracy": 0.125,
+            "target_minus_best_competitor_margin_hz": -171.875,
+            "target_output_share": 0.24511038065969032,
+            "trials": 64
+          }
+        },
+        "800": {
+          "between_item_reset": {
+            "accuracy": 0.171875,
+            "checkpoint": 800,
+            "confusion_matrix": {
+              "A": {
+                "A": 3,
+                "B": 3,
+                "C": 5,
+                "D": 3,
+                "NO_DECISION": 2
+              },
+              "B": {
+                "A": 2,
+                "B": 3,
+                "C": 2,
+                "D": 4,
+                "NO_DECISION": 5
+              },
+              "C": {
+                "A": 1,
+                "B": 5,
+                "C": 2,
+                "D": 6,
+                "NO_DECISION": 2
+              },
+              "D": {
+                "A": 2,
+                "B": 6,
+                "C": 3,
+                "D": 3,
+                "NO_DECISION": 2
+              }
+            },
+            "context_accuracy": {
+              "AA": 0.0,
+              "AB": 0.0,
+              "AC": 0.25,
+              "AD": 0.0,
+              "BA": 0.0,
+              "BB": 0.0,
+              "BC": 0.5,
+              "BD": 0.75,
+              "CA": 0.5,
+              "CB": 0.0,
+              "CC": 0.0,
+              "CD": 0.0,
+              "DA": 0.0,
+              "DB": 0.25,
+              "DC": 0.25,
+              "DD": 0.25
+            },
+            "different_symbol_context_accuracy": 0.20833333333333334,
+            "fraction_rank_1": 0.1746031746031746,
+            "fraction_rank_le_2": 0.4444444444444444,
+            "go_output_spikes": 3110,
+            "largest_prediction_fraction": 0.265625,
+            "macro_target_accuracy": 0.171875,
+            "mean_target_rank": 2.492063492063492,
+            "no_decision_fraction": 0.171875,
+            "output_collapse": false,
+            "per_first_accuracy": {
+              "A": 0.0625,
+              "B": 0.3125,
+              "C": 0.125,
+              "D": 0.1875
+            },
+            "per_second_accuracy": {
+              "A": 0.125,
+              "B": 0.0625,
+              "C": 0.25,
+              "D": 0.25
+            },
+            "per_target_accuracy": {
+              "A": 0.1875,
+              "B": 0.1875,
+              "C": 0.125,
+              "D": 0.1875
+            },
+            "prediction_distribution": {
+              "A": 8,
+              "B": 17,
+              "C": 12,
+              "D": 16,
+              "NO_DECISION": 11
+            },
+            "reversed_contexts": {
+              "AB_vs_BA": {
+                "AB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 2
+                  },
+                  "target_rank": 2.375
+                },
+                "BA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 4,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.125
+                },
+                "targets_differ": true
+              },
+              "AC_vs_CA": {
+                "AC": {
+                  "accuracy": 0.25,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 1,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.125
+                },
+                "CA": {
+                  "accuracy": 0.5,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 0,
+                    "D": 2,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 1.5
+                },
+                "targets_differ": true
+              },
+              "AD_vs_DA": {
+                "AD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 4,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.25
+                },
+                "DA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 3,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.375
+                },
+                "targets_differ": true
+              },
+              "BC_vs_CB": {
+                "BC": {
+                  "accuracy": 0.5,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 2,
+                    "B": 0,
+                    "C": 2,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.0
+                },
+                "CB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 1,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 2
+                  },
+                  "target_rank": 2.0
+                },
+                "targets_differ": true
+              },
+              "BD_vs_DB": {
+                "BD": {
+                  "accuracy": 0.75,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 3,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 1.5
+                },
+                "DB": {
+                  "accuracy": 0.25,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 2,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.5
+                },
+                "targets_differ": true
+              },
+              "CD_vs_DC": {
+                "CD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 3,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.125
+                },
+                "DC": {
+                  "accuracy": 0.25,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 1,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.125
+                },
+                "targets_differ": true
+              },
+              "different_target_reversed_context_count": 6
+            },
+            "same_symbol_context_accuracy": 0.0625,
+            "target_minus_best_competitor_margin_hz": -121.875,
+            "target_output_share": 0.2429966848254782,
+            "trials": 64
+          },
+          "intact": {
+            "accuracy": 0.1875,
+            "checkpoint": 800,
+            "confusion_matrix": {
+              "A": {
+                "A": 1,
+                "B": 1,
+                "C": 5,
+                "D": 5,
+                "NO_DECISION": 4
+              },
+              "B": {
+                "A": 4,
+                "B": 4,
+                "C": 1,
+                "D": 2,
+                "NO_DECISION": 5
+              },
+              "C": {
+                "A": 1,
+                "B": 3,
+                "C": 3,
+                "D": 7,
+                "NO_DECISION": 2
+              },
+              "D": {
+                "A": 0,
+                "B": 3,
+                "C": 2,
+                "D": 4,
+                "NO_DECISION": 7
+              }
+            },
+            "context_accuracy": {
+              "AA": 0.0,
+              "AB": 0.0,
+              "AC": 0.5,
+              "AD": 0.0,
+              "BA": 0.0,
+              "BB": 0.75,
+              "BC": 0.0,
+              "BD": 0.0,
+              "CA": 0.25,
+              "CB": 0.25,
+              "CC": 0.5,
+              "CD": 0.0,
+              "DA": 0.5,
+              "DB": 0.25,
+              "DC": 0.0,
+              "DD": 0.0
+            },
+            "different_symbol_context_accuracy": 0.14583333333333334,
+            "fraction_rank_1": 0.1875,
+            "fraction_rank_le_2": 0.4375,
+            "go_output_spikes": 7726,
+            "largest_prediction_fraction": 0.28125,
+            "macro_target_accuracy": 0.1875,
+            "mean_target_rank": 2.46875,
+            "no_decision_fraction": 0.28125,
+            "output_collapse": false,
+            "per_first_accuracy": {
+              "A": 0.125,
+              "B": 0.1875,
+              "C": 0.25,
+              "D": 0.1875
+            },
+            "per_second_accuracy": {
+              "A": 0.1875,
+              "B": 0.3125,
+              "C": 0.25,
+              "D": 0.0
+            },
+            "per_target_accuracy": {
+              "A": 0.0625,
+              "B": 0.25,
+              "C": 0.1875,
+              "D": 0.25
+            },
+            "prediction_distribution": {
+              "A": 6,
+              "B": 11,
+              "C": 11,
+              "D": 18,
+              "NO_DECISION": 18
+            },
+            "reversed_contexts": {
+              "AB_vs_BA": {
+                "AB": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 2,
+                    "B": 0,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 3.0
+                },
+                "BA": {
+                  "accuracy": 0.0,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 0,
+                    "D": 2,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.5
+                },
+                "targets_differ": true
+              },
+              "AC_vs_CA": {
+                "AC": {
+                  "accuracy": 0.5,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 2,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.5
+                },
+                "CA": {
+                  "accuracy": 0.25,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 2,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.0
+                },
+                "targets_differ": true
+              },
+              "AD_vs_DA": {
+                "AD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 2
+                  },
+                  "target_rank": 3.0
+                },
+                "DA": {
+                  "accuracy": 0.5,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 2,
+                    "C": 0,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 1.875
+                },
+                "targets_differ": true
+              },
+              "BC_vs_CB": {
+                "BC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 2,
+                    "D": 2,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 3.25
+                },
+                "CB": {
+                  "accuracy": 0.25,
+                  "grammar_target": "C",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 1,
+                    "D": 2,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.5
+                },
+                "targets_differ": true
+              },
+              "BD_vs_DB": {
+                "BD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "B",
+                  "prediction_distribution": {
+                    "A": 2,
+                    "B": 0,
+                    "C": 0,
+                    "D": 1,
+                    "NO_DECISION": 1
+                  },
+                  "target_rank": 2.375
+                },
+                "DB": {
+                  "accuracy": 0.25,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 1,
+                    "B": 0,
+                    "C": 1,
+                    "D": 0,
+                    "NO_DECISION": 2
+                  },
+                  "target_rank": 3.125
+                },
+                "targets_differ": true
+              },
+              "CD_vs_DC": {
+                "CD": {
+                  "accuracy": 0.0,
+                  "grammar_target": "A",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 1,
+                    "C": 2,
+                    "D": 1,
+                    "NO_DECISION": 0
+                  },
+                  "target_rank": 2.75
+                },
+                "DC": {
+                  "accuracy": 0.0,
+                  "grammar_target": "D",
+                  "prediction_distribution": {
+                    "A": 0,
+                    "B": 0,
+                    "C": 0,
+                    "D": 0,
+                    "NO_DECISION": 4
+                  },
+                  "target_rank": 2.25
+                },
+                "targets_differ": true
+              },
+              "different_target_reversed_context_count": 6
+            },
+            "same_symbol_context_accuracy": 0.3125,
+            "target_minus_best_competitor_margin_hz": -146.09375,
+            "target_output_share": 0.2465712137567769,
+            "trials": 64
+          }
+        }
+      },
+      "episode_credit": {
+        "aggregate": {
+          "eligible_edges_after_first": 11292,
+          "eligible_edges_by_end_go": 261260,
+          "eligible_edges_by_end_second": 108631,
+          "updated_edges": 83888,
+          "updated_edges_eligible_after_first": 3967,
+          "updated_edges_eligible_by_end_second": 36854,
+          "updated_edges_newly_eligible_during_go": 47034,
+          "updated_edges_newly_eligible_during_second": 32887
+        },
+        "episodes_captured": 13
+      },
+      "safety": {
+        "adaptive_reallocations": 0,
+        "mean_multiplier": 1.0000282526016235,
+        "mean_stability": 2.1830475816386752e-05,
+        "multiplier_saturation_fraction": 4.725960002678578e-05,
+        "plastic_budget_drift": 0,
+        "plastic_budget_end": 312739,
+        "plastic_budget_start": 312739
+      },
+      "schedule_balance": {
+        "first_conditional_counts": {
+          "A": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          },
+          "B": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          },
+          "C": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          },
+          "D": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          }
+        },
+        "first_conditional_targets_uniform": true,
+        "first_only_nominal_accuracy": 0.25,
+        "global_majority_target_accuracy": 0.25,
+        "global_target_counts": {
+          "A": 200,
+          "B": 200,
+          "C": 200,
+          "D": 200
+        },
+        "global_targets_uniform": true,
+        "mapping": {
+          "AA": "A",
+          "AB": "B",
+          "AC": "C",
+          "AD": "D",
+          "BA": "C",
+          "BB": "D",
+          "BC": "A",
+          "BD": "B",
+          "CA": "D",
+          "CB": "C",
+          "CC": "B",
+          "CD": "A",
+          "DA": "B",
+          "DB": "A",
+          "DC": "D",
+          "DD": "C"
+        },
+        "order_sensitive_reversed_context_count": 6,
+        "second_conditional_counts": {
+          "A": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          },
+          "B": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          },
+          "C": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          },
+          "D": {
+            "A": 50,
+            "B": 50,
+            "C": 50,
+            "D": 50
+          }
+        },
+        "second_conditional_targets_uniform": true,
+        "second_only_nominal_accuracy": 0.25
+      },
+      "seed": 139
+    }
+  },
+  "runtime_seconds": 468.92326019999746,
+  "safety": {
+    "adaptive_reallocations_by_seed": {
+      "131": 0,
+      "137": 0,
+      "139": 0
+    },
+    "all_adaptive_reallocations_zero": true,
+    "all_budgets_fixed": true,
+    "evaluation_twins_isolated": true,
+    "plastic_budget_drift_by_seed": {
+      "131": 0,
+      "137": 0,
+      "139": 0
+    }
+  }
+}

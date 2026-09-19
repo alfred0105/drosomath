@@ -1,0 +1,370 @@
+{
+  "conclusion": {
+    "dynamically_silent_despite_routes": false,
+    "observable_output_by_duration": {
+      "10ms": false,
+      "20ms": false,
+      "40ms": true
+    },
+    "output_appears_with_longer_latency": true,
+    "recommended_next_step": "cognition_integration_window",
+    "structural_reachability_problem": false
+  },
+  "dynamic_latency": {
+    "10ms": {
+      "duration_ms": 10.0,
+      "per_symbol": {
+        "A": {
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": null,
+          "network_spikes": 53,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 0.0
+          },
+          "output_spikes": 0
+        },
+        "B": {
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": null,
+          "network_spikes": 51,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 0.0
+          },
+          "output_spikes": 0
+        },
+        "C": {
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": null,
+          "network_spikes": 56,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 0.0
+          },
+          "output_spikes": 0
+        },
+        "D": {
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": null,
+          "network_spikes": 53,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 0.0
+          },
+          "output_spikes": 0
+        }
+      },
+      "persistent_learning_state_unchanged": true
+    },
+    "20ms": {
+      "duration_ms": 20.0,
+      "per_symbol": {
+        "A": {
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": null,
+          "network_spikes": 125,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 0.0
+          },
+          "output_spikes": 0
+        },
+        "B": {
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": null,
+          "network_spikes": 148,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 0.0
+          },
+          "output_spikes": 0
+        },
+        "C": {
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": null,
+          "network_spikes": 178,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 0.0
+          },
+          "output_spikes": 0
+        },
+        "D": {
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": null,
+          "network_spikes": 149,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 0.0
+          },
+          "output_spikes": 0
+        }
+      },
+      "persistent_learning_state_unchanged": true
+    },
+    "40ms": {
+      "duration_ms": 40.0,
+      "per_symbol": {
+        "A": {
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": null,
+          "network_spikes": 268,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 0.0
+          },
+          "output_spikes": 0
+        },
+        "B": {
+          "decision": "A",
+          "first_output_spike_ms": 28.8,
+          "network_spikes": 7822,
+          "output_population_rates_hz": {
+            "A": 100.0,
+            "B": 0.0,
+            "C": 25.0,
+            "D": 25.0
+          },
+          "output_spikes": 6
+        },
+        "C": {
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": null,
+          "network_spikes": 583,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 0.0
+          },
+          "output_spikes": 0
+        },
+        "D": {
+          "decision": "NO_DECISION",
+          "first_output_spike_ms": null,
+          "network_spikes": 397,
+          "output_population_rates_hz": {
+            "A": 0.0,
+            "B": 0.0,
+            "C": 0.0,
+            "D": 0.0
+          },
+          "output_spikes": 0
+        }
+      },
+      "persistent_learning_state_unchanged": true
+    }
+  },
+  "invariants": {
+    "brain_rng_unchanged_by_allocation": true,
+    "output_population_size": 32,
+    "persistent_learning_state_unchanged": true,
+    "sensory_output_overlap": 0,
+    "sensory_population_size": 32
+  },
+  "pass": true,
+  "protocol": {
+    "allocation_preserved": true,
+    "connectome": "MaleCNS v1.0, min_connection_synapses=5",
+    "durations_ms": [
+      10.0,
+      20.0,
+      40.0
+    ],
+    "learning_enabled": false,
+    "output_selection_changed": false,
+    "phase": "F.1A.1",
+    "seed": 7,
+    "stimulus_rate_hz": 205.0,
+    "symbols": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ]
+  },
+  "readiness": {
+    "decision_surface_ready": false,
+    "observable_output_by_symbol": {
+      "A": false,
+      "B": true,
+      "C": false,
+      "D": false
+    },
+    "ready_for_f1b": false,
+    "sensory_interface_ready": true
+  },
+  "structural_reachability": {
+    "A": {
+      "A": {
+        "hop1_output_neurons": 0,
+        "hop2_output_neurons": 10,
+        "hop3_output_neurons": 31,
+        "reachable_output_fraction_at_1hop": 0.0,
+        "reachable_output_fraction_at_2hop": 0.3125,
+        "reachable_output_fraction_at_3hop": 0.96875,
+        "shortest_reachable_hop": 2
+      },
+      "B": {
+        "hop1_output_neurons": 0,
+        "hop2_output_neurons": 8,
+        "hop3_output_neurons": 28,
+        "reachable_output_fraction_at_1hop": 0.0,
+        "reachable_output_fraction_at_2hop": 0.25,
+        "reachable_output_fraction_at_3hop": 0.875,
+        "shortest_reachable_hop": 2
+      },
+      "C": {
+        "hop1_output_neurons": 0,
+        "hop2_output_neurons": 9,
+        "hop3_output_neurons": 28,
+        "reachable_output_fraction_at_1hop": 0.0,
+        "reachable_output_fraction_at_2hop": 0.28125,
+        "reachable_output_fraction_at_3hop": 0.875,
+        "shortest_reachable_hop": 2
+      },
+      "D": {
+        "hop1_output_neurons": 0,
+        "hop2_output_neurons": 9,
+        "hop3_output_neurons": 28,
+        "reachable_output_fraction_at_1hop": 0.0,
+        "reachable_output_fraction_at_2hop": 0.28125,
+        "reachable_output_fraction_at_3hop": 0.875,
+        "shortest_reachable_hop": 2
+      }
+    },
+    "B": {
+      "A": {
+        "hop1_output_neurons": 0,
+        "hop2_output_neurons": 10,
+        "hop3_output_neurons": 30,
+        "reachable_output_fraction_at_1hop": 0.0,
+        "reachable_output_fraction_at_2hop": 0.3125,
+        "reachable_output_fraction_at_3hop": 0.9375,
+        "shortest_reachable_hop": 2
+      },
+      "B": {
+        "hop1_output_neurons": 1,
+        "hop2_output_neurons": 9,
+        "hop3_output_neurons": 28,
+        "reachable_output_fraction_at_1hop": 0.03125,
+        "reachable_output_fraction_at_2hop": 0.28125,
+        "reachable_output_fraction_at_3hop": 0.875,
+        "shortest_reachable_hop": 1
+      },
+      "C": {
+        "hop1_output_neurons": 0,
+        "hop2_output_neurons": 7,
+        "hop3_output_neurons": 29,
+        "reachable_output_fraction_at_1hop": 0.0,
+        "reachable_output_fraction_at_2hop": 0.21875,
+        "reachable_output_fraction_at_3hop": 0.90625,
+        "shortest_reachable_hop": 2
+      },
+      "D": {
+        "hop1_output_neurons": 0,
+        "hop2_output_neurons": 10,
+        "hop3_output_neurons": 29,
+        "reachable_output_fraction_at_1hop": 0.0,
+        "reachable_output_fraction_at_2hop": 0.3125,
+        "reachable_output_fraction_at_3hop": 0.90625,
+        "shortest_reachable_hop": 2
+      }
+    },
+    "C": {
+      "A": {
+        "hop1_output_neurons": 0,
+        "hop2_output_neurons": 12,
+        "hop3_output_neurons": 31,
+        "reachable_output_fraction_at_1hop": 0.0,
+        "reachable_output_fraction_at_2hop": 0.375,
+        "reachable_output_fraction_at_3hop": 0.96875,
+        "shortest_reachable_hop": 2
+      },
+      "B": {
+        "hop1_output_neurons": 0,
+        "hop2_output_neurons": 8,
+        "hop3_output_neurons": 30,
+        "reachable_output_fraction_at_1hop": 0.0,
+        "reachable_output_fraction_at_2hop": 0.25,
+        "reachable_output_fraction_at_3hop": 0.9375,
+        "shortest_reachable_hop": 2
+      },
+      "C": {
+        "hop1_output_neurons": 0,
+        "hop2_output_neurons": 11,
+        "hop3_output_neurons": 27,
+        "reachable_output_fraction_at_1hop": 0.0,
+        "reachable_output_fraction_at_2hop": 0.34375,
+        "reachable_output_fraction_at_3hop": 0.84375,
+        "shortest_reachable_hop": 2
+      },
+      "D": {
+        "hop1_output_neurons": 0,
+        "hop2_output_neurons": 7,
+        "hop3_output_neurons": 26,
+        "reachable_output_fraction_at_1hop": 0.0,
+        "reachable_output_fraction_at_2hop": 0.21875,
+        "reachable_output_fraction_at_3hop": 0.8125,
+        "shortest_reachable_hop": 2
+      }
+    },
+    "D": {
+      "A": {
+        "hop1_output_neurons": 0,
+        "hop2_output_neurons": 14,
+        "hop3_output_neurons": 32,
+        "reachable_output_fraction_at_1hop": 0.0,
+        "reachable_output_fraction_at_2hop": 0.4375,
+        "reachable_output_fraction_at_3hop": 1.0,
+        "shortest_reachable_hop": 2
+      },
+      "B": {
+        "hop1_output_neurons": 1,
+        "hop2_output_neurons": 12,
+        "hop3_output_neurons": 28,
+        "reachable_output_fraction_at_1hop": 0.03125,
+        "reachable_output_fraction_at_2hop": 0.375,
+        "reachable_output_fraction_at_3hop": 0.875,
+        "shortest_reachable_hop": 1
+      },
+      "C": {
+        "hop1_output_neurons": 0,
+        "hop2_output_neurons": 17,
+        "hop3_output_neurons": 30,
+        "reachable_output_fraction_at_1hop": 0.0,
+        "reachable_output_fraction_at_2hop": 0.53125,
+        "reachable_output_fraction_at_3hop": 0.9375,
+        "shortest_reachable_hop": 2
+      },
+      "D": {
+        "hop1_output_neurons": 0,
+        "hop2_output_neurons": 10,
+        "hop3_output_neurons": 26,
+        "reachable_output_fraction_at_1hop": 0.0,
+        "reachable_output_fraction_at_2hop": 0.3125,
+        "reachable_output_fraction_at_3hop": 0.8125,
+        "shortest_reachable_hop": 2
+      }
+    }
+  }
+}

@@ -27,6 +27,36 @@ Implemented:
 
 The current simulator is a correctness/reference backend for small-to-medium experiments. A large FlyWire-scale run will require a more compact sparse/tensor backend and profiling before claiming practical whole-brain performance.
 
+
+## Connectome-backed learning
+
+This branch adds a first learning path that uses the real annotated connectome rather than a symbolic substitute:
+
+1. load the MaleCNS/FlyWire anatomical graph and neuron annotations;
+2. identify Kenyon cells, MBONs, and dopamine-neuron annotations;
+3. simulate LIF spikes through the anatomical graph;
+4. restrict reward-modulated plasticity to real anatomical KC -> MBON edges;
+5. report DAN activity while accepting the scalar reward only at trial end.
+
+Non-KC -> MBON anatomical edges remain part of the fixed brain dynamics, but they are not modified by this learning rule. No target label, answer, or trainable external decoder is inserted into the neural state.
+
+Example:
+
+```python
+from drosomath.malecns import MushroomBodyCircuit, PlasticMaleCNSBrain, load_malecns_v1
+
+connectome = load_malecns_v1("data/malecns_v1", min_connection_synapses=5)
+brain = PlasticMaleCNSBrain(connectome, seed=7)
+circuit = MushroomBodyCircuit.from_connectome(connectome)
+circuit.attach(brain)
+
+report = circuit.run_trial(stimulus_body_ids=(123, 456), reward=1.0)
+print(report["spikes"], report["learning"]["learning"])
+```
+
+This is a connectome-backed first learning path, not a claim that every biological mushroom-body detail or synaptic sign has been recovered. The loader preserves source annotations and the simulator keeps its assumptions auditable.
+
+
 ## Fast local workflow
 
 Install once:
@@ -48,6 +78,9 @@ Open the realtime dashboard with one command:
 ```
 
 `live.ps1` starts a local-only server, opens `http://127.0.0.1:8765/`, and streams simulation state without requiring a separate frontend build or external web service.
+
+`run-mushroom-body.ps1` saves `results/latest_mushroom_body_trial.json` and pushes that result to the current Git branch by default, so later analysis can read it directly from GitHub. Use `-NoPush` for a local-only run.
+
 
 The live dashboard shows:
 

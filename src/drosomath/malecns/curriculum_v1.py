@@ -43,6 +43,7 @@ class CurriculumV1Config:
     budget_strength: float = 0.25
     silent_reward: float = -0.35
     seed: int = 7
+    numeric_first: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -179,6 +180,8 @@ def build_curriculum(
         plastic_fraction=0.20,
     )
 
+    if config.numeric_first:
+        return (numerosity, compare_task, addition_task), output
     return (laterality, numerosity, compare_task, addition_task), output
 
 
@@ -286,10 +289,17 @@ def run_curriculum(
     checkpoint_path: Path = DEFAULT_CHECKPOINT,
     readout_dir: Path = DEFAULT_READOUT_DIR,
     resume: bool = True,
+    max_stages: int | None = None,
 ) -> dict[str, object]:
     np = __import__("numpy")
     rng = np.random.default_rng(config.seed)
-    tasks, output = build_curriculum(connectome, config=config)
+    all_tasks, output = build_curriculum(connectome, config=config)
+    if max_stages is not None:
+        if max_stages < 1:
+            raise ValueError("max_stages must be >= 1")
+        tasks = all_tasks[: int(max_stages)]
+    else:
+        tasks = all_tasks
 
     brain = PlasticMaleCNSBrain(
         connectome,
@@ -453,13 +463,22 @@ def run_curriculum(
         retention_history.append(retention)
         completed_in_stage = 0
 
-    save_learning_checkpoint(
-        checkpoint_path,
-        brain=brain,
-        config=config,
-        completed_trials=0,
-        stage="complete",
-    )
+    if len(tasks) < len(all_tasks):
+        save_learning_checkpoint(
+            checkpoint_path,
+            brain=brain,
+            config=config,
+            completed_trials=config.stage_trials,
+            stage=tasks[-1].name,
+        )
+    else:
+        save_learning_checkpoint(
+            checkpoint_path,
+            brain=brain,
+            config=config,
+            completed_trials=0,
+            stage="complete",
+        )
 
     plast = brain.plasticity.summary()
     changed = int(np.count_nonzero(np.abs(brain.plasticity.multiplier - 1.0) > 1e-7))
@@ -473,6 +492,7 @@ def run_curriculum(
         "final_plasticity": {**plast, "changed_edges": changed},
         "checkpoint": str(checkpoint_path),
         "readout_dir": str(readout_dir),
+        "stopped_after_stage": tasks[-1].name if len(tasks) < len(all_tasks) else None,
     }
 
 
@@ -486,6 +506,17 @@ def main() -> None:
     parser.add_argument("--validation-trials", type=int, default=8)
     parser.add_argument("--checkpoint-every", type=int, default=64)
     parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument(
+        "--max-stage",
+        type=int,
+        default=None,
+        help="run only the first N curriculum stages, preserving a resumable checkpoint",
+    )
+    parser.add_argument(
+        "--numeric-first",
+        action="store_true",
+        help="start with quantity concepts instead of the legacy laterality stage",
+    )
     parser.add_argument("--fresh", action="store_true")
     parser.add_argument("--result", type=Path, default=DEFAULT_RESULT)
     parser.add_argument("--checkpoint", type=Path, default=DEFAULT_CHECKPOINT)
@@ -502,6 +533,7 @@ def main() -> None:
         validation_trials_per_label=args.validation_trials,
         checkpoint_every=args.checkpoint_every,
         seed=args.seed,
+        numeric_first=args.numeric_first,
     )
     report = run_curriculum(
         connectome,
@@ -509,6 +541,7 @@ def main() -> None:
         checkpoint_path=args.checkpoint,
         readout_dir=args.readout_dir,
         resume=not args.fresh,
+        max_stages=args.max_stage,
     )
     args.result.parent.mkdir(parents=True, exist_ok=True)
     args.result.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
