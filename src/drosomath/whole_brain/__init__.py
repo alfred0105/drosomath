@@ -18,6 +18,11 @@ from .memory_consolidation import (
 )
 from .plastic_state import PlasticStateConfig, SparsePlasticityState
 from .plasticity_budget import PlasticityBudgetConfig, PlasticityBudgetManager
+from .plasticity_budget_adaptation import (
+    PlasticityBudgetAdaptation,
+    PlasticityBudgetAdaptationConfig,
+)
+from .plasticity_need import PlasticityNeedConfig, PlasticityNeedRecord, PlasticityNeedTracker
 from .structural_overlay import LearnedStructuralOverlay, StructuralOverlayConfig
 from .usage_learning import LearningUpdateStats, RewardCredit, UsageRewardRule
 from .directional_modulation import DirectionalModulationConfig, DirectionalUpdate, PlasticityController
@@ -37,6 +42,11 @@ __all__ = [
     "PlasticStateConfig",
     "PlasticityBudgetConfig",
     "PlasticityBudgetManager",
+    "PlasticityBudgetAdaptation",
+    "PlasticityBudgetAdaptationConfig",
+    "PlasticityNeedConfig",
+    "PlasticityNeedRecord",
+    "PlasticityNeedTracker",
     "ProtectedRewardRule",
     "ReplayConfig",
     "ReplayScheduler",

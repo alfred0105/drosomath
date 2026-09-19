@@ -72,28 +72,42 @@ class PlasticityController:
 
     def _credit_edges(self, brain, active_edges, outputs) -> CreditEdges:
         """Select one/two-hop active routes and their net effect on outputs."""
+        return self._route_credit_edges(brain, active_edges, outputs)
+
+    def _route_credit_edges(self, brain, candidate_edges, outputs, *,
+                            discover_upstream_from_candidates: bool = False) -> CreditEdges:
+        """Shared bounded route analysis for plastic and frozen candidates."""
         np = brain.np
         graph, state = brain.connectome, brain.plasticity
         empty = np.empty(0, dtype=np.int32)
-        if not len(active_edges):
+        if not len(candidate_edges):
             return CreditEdges(empty, empty, empty, np.empty(0, dtype=np.float32))
         output_mask = np.zeros(graph.neuron_count, dtype=np.bool_)
         output_mask[np.asarray(outputs, dtype=np.int32)] = True
-        direct = active_edges[output_mask[graph.post_indices[active_edges]]]
+        direct = candidate_edges[output_mask[graph.post_indices[candidate_edges]]]
         direct_sign = np.sign(graph.signed_synapse_counts[direct])
         direct_keep = direct_sign != 0.0
         direct, direct_sign = direct[direct_keep], direct_sign[direct_keep]
         parts = [(direct, np.ones(len(direct), dtype=np.int8), direct_sign, np.ones(len(direct), dtype=np.float32))]
         ambiguous = 0
-        if self.config.max_credit_hops < 2 or not len(direct):
+        if self.config.max_credit_hops < 2:
             return self._join_credit(np, parts, ambiguous)
 
-        intermediates = np.unique(self._pre_indices(np, graph, direct))
+        if discover_upstream_from_candidates:
+            intermediates = np.unique(
+                graph.post_indices[candidate_edges][
+                    ~output_mask[graph.post_indices[candidate_edges]]
+                ]
+            )
+        else:
+            if not len(direct):
+                return self._join_credit(np, parts, ambiguous)
+            intermediates = np.unique(self._pre_indices(np, graph, direct))
         intermediate_mask = np.zeros(graph.neuron_count, dtype=np.bool_)
         intermediate_mask[intermediates] = True
-        upstream = active_edges[
-            intermediate_mask[graph.post_indices[active_edges]]
-            & ~output_mask[graph.post_indices[active_edges]]
+        upstream = candidate_edges[
+            intermediate_mask[graph.post_indices[candidate_edges]]
+            & ~output_mask[graph.post_indices[candidate_edges]]
         ]
         if not len(upstream):
             return self._join_credit(np, parts, ambiguous)
@@ -125,6 +139,29 @@ class PlasticityController:
                 np.full(len(upstream), self.config.credit_decay_per_hop, dtype=np.float32),
             ))
         return self._join_credit(np, parts, ambiguous)
+
+    def structural_credit_edges(self, brain, outputs) -> CreditEdges:
+        """Find useful frozen anatomical routes from actually active inputs.
+
+        Frozen edges intentionally bypass eligibility here: structural need is
+        the evidence used to decide whether an edge should become plastic.
+        Activity still comes only from ``brain._recent_presynaptic``.
+        """
+        np = brain.np
+        graph, state = brain.connectome, brain.plasticity
+        rows = sorted(int(pre) for pre in brain._recent_presynaptic)
+        chunks = [
+            np.arange(int(graph.indptr[pre]), int(graph.indptr[pre + 1]), dtype=np.int32)
+            for pre in rows if int(graph.indptr[pre + 1]) > int(graph.indptr[pre])
+        ]
+        anatomical = np.concatenate(chunks) if chunks else np.empty(0, dtype=np.int32)
+        frozen = anatomical[~state.plastic_mask[anatomical]] if len(anatomical) else anatomical
+        return self._route_credit_edges(
+            brain,
+            frozen,
+            outputs,
+            discover_upstream_from_candidates=True,
+        )
 
     @staticmethod
     def _join_credit(np, parts, ambiguous):

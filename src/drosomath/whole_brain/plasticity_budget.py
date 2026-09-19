@@ -40,7 +40,15 @@ class PlasticityBudgetManager:
         ))
         return np.asarray(candidates[:count], dtype=np.int32)
 
-    def reallocate(self, state, requested_edges, *, need_scores=None, count: int | None = None) -> dict[str, object]:
+    def reallocate(
+        self,
+        state,
+        requested_edges,
+        *,
+        need_scores=None,
+        count: int | None = None,
+        exclude_retirement_edges=(),
+    ) -> dict[str, object]:
         """Promote requested frozen edges while retiring safe donors atomically."""
         np = state.np
         requested = np.asarray(requested_edges, dtype=np.int64)
@@ -63,7 +71,15 @@ class PlasticityBudgetManager:
             raise ValueError("count must be >= 0")
         selected = frozen[:target_count]
         promote = np.asarray([edge for edge, _ in selected], dtype=np.int32)
-        retire = self.choose_retirement_candidates(state, len(promote), exclude=promote)
+        excluded = set(int(edge) for edge in exclude_retirement_edges)
+        excluded.update(int(edge) for edge in promote)
+        promote_set = set(int(edge) for edge in promote)
+        protected_skipped = sum(
+            1 for edge in state.plastic_indices
+            if int(edge) not in promote_set
+            and float(state.stability[int(edge)]) >= self.config.protected_stability
+        )
+        retire = self.choose_retirement_candidates(state, len(promote), exclude=excluded)
         if len(retire) != len(promote):
             raise ValueError("not enough safe plastic donor edges for requested promotion")
         result = state.exchange_plastic_edges(
@@ -74,5 +90,7 @@ class PlasticityBudgetManager:
         result.update({
             "requested_edges": promote.copy(),
             "need_scores": np.asarray([score for _, score in selected], dtype=np.float32),
+            "active_donors_excluded": int(len(set(int(edge) for edge in exclude_retirement_edges) & set(int(edge) for edge in state.plastic_indices))),
+            "protected_donors_skipped": int(protected_skipped),
         })
         return result

@@ -14,7 +14,16 @@ from pathlib import Path
 
 from drosomath.flywire_real import FlyBrainParams
 from drosomath.learning_signal import LearningSignal
-from drosomath.whole_brain import ChannelHomeostasis, DirectionalModulationConfig, OutgoingBudgetNormalizer, PlasticStateConfig, PlasticityController, UsageRewardRule
+from drosomath.whole_brain import (
+    ChannelHomeostasis,
+    DirectionalModulationConfig,
+    OutgoingBudgetNormalizer,
+    PlasticStateConfig,
+    PlasticityBudgetAdaptation,
+    PlasticityBudgetAdaptationConfig,
+    PlasticityController,
+    UsageRewardRule,
+)
 
 from .brain import PlasticMaleCNSBrain
 from .checkpoint import restore_learning_checkpoint, save_learning_checkpoint
@@ -475,6 +484,10 @@ class KeyboardTrainingConfig:
     stimulus_rate_hz: float = 205.0
     plastic_fraction: float = 0.05
     learning_rate: float = 0.02
+    # D.2 is opt-in so existing keyboard runs remain byte-for-byte equivalent
+    # in their learning policy unless explicitly enabled.
+    adaptive_plastic_budget: bool = False
+    adaptive_budget_max_promotions_per_event: int = 1
     budget_strength: float = 0.25
     checkpoint_every: int = 32
     dashboard_update_interval_seconds: float = 0.5
@@ -576,6 +589,8 @@ class KeyboardTrainingConfig:
             raise ValueError("max_control_windows must be >= 1")
         if self.dashboard_update_interval_seconds <= 0.0:
             raise ValueError("dashboard_update_interval_seconds must be > 0")
+        if self.adaptive_budget_max_promotions_per_event < 1:
+            raise ValueError("adaptive_budget_max_promotions_per_event must be >= 1")
 
 
 @dataclass(frozen=True, slots=True)
@@ -691,6 +706,13 @@ class KeyboardNeuralSession:
         }
         self.plasticity_controller = PlasticityController(
             DirectionalModulationConfig(learning_rate=config.learning_rate)
+        )
+        self.plasticity_budget_adaptation = PlasticityBudgetAdaptation(
+            config=PlasticityBudgetAdaptationConfig(
+                enabled=config.adaptive_plastic_budget,
+                max_promotions_per_event=config.adaptive_budget_max_promotions_per_event,
+            ),
+            route_controller=self.plasticity_controller,
         )
         self.channel_homeostasis = ChannelHomeostasis(target_rate_hz=config.click_gate_threshold_hz)
         click_output = self.channel_groups[4]
@@ -1238,6 +1260,8 @@ class KeyboardNeuralSession:
             )
             teacher_normalizer_followup: dict[str, object] = {}
             directional_update: dict[str, object] = {"edge_updates": 0, "channel_updates": {}}
+            generic_update = None
+            structural_need: dict[str, object] = {}
             teacher_stats: dict[str, object] = {
                 "edge_updates": 0,
                 "mean_delta": 0.0,
@@ -1247,10 +1271,11 @@ class KeyboardNeuralSession:
             teacher_seconds = 0.0
 
             def apply_teacher_before_normalization(state) -> dict[str, object]:
-                nonlocal teacher_stats, teacher_seconds, directional_update
+                nonlocal teacher_stats, teacher_seconds, directional_update, generic_update, structural_need
                 generic = self.plasticity_controller.apply_learning_signal(
                     self.brain, learning_signal, self.output_context
                 )
+                generic_update = generic
                 directional_update = {
                     "edge_updates": generic.edge_updates,
                     "channel_updates": generic.channel_updates,
@@ -1264,6 +1289,13 @@ class KeyboardNeuralSession:
                     "ambiguous_path_edges_skipped": generic.ambiguous_path_edges_skipped,
                     "legacy_rescue_used": False,
                 }
+                structural_need = self.plasticity_budget_adaptation.observe_directional_failure(
+                    brain=self.brain,
+                    signal=learning_signal,
+                    output_context=self.output_context,
+                    directional_update=generic,
+                    legacy_rescue_used=False,
+                )
                 if not self.config.click_only:
                     return teacher_stats
                 # Legacy label-route teacher is rescue only: use it when the
@@ -1278,6 +1310,7 @@ class KeyboardNeuralSession:
                     teacher_strength,
                 )
                 directional_update["legacy_rescue_used"] = bool(teacher_stats.get("edge_updates", 0))
+                structural_need["legacy_rescue_used"] = directional_update["legacy_rescue_used"]
                 if timings is not None:
                     teacher_seconds = time.perf_counter() - teacher_started
                 return teacher_stats
@@ -1328,6 +1361,7 @@ class KeyboardNeuralSession:
                 "surprise": learning_signal.surprise,
             }
             learning["directional_modulation"] = directional_update
+            learning["structural_need"] = structural_need
             reward_learning = learning.get("learning", {})
             learning["reward_locality"] = {
                 "positive_reward": float(max(0.0, global_learning_reward)),
@@ -1459,7 +1493,11 @@ def run_keyboard_training(
     session = KeyboardNeuralSession(connectome, config=config)
     resume_info = None
     if config.resume and checkpoint_path.is_file():
-        resume_info = restore_learning_checkpoint(checkpoint_path, brain=session.brain)
+        resume_info = restore_learning_checkpoint(
+            checkpoint_path,
+            brain=session.brain,
+            need_tracker=session.plasticity_budget_adaptation.need_tracker,
+        )
     _finish_live_status()
     print(
         "keyboard matching: ready "
@@ -1955,6 +1993,7 @@ def run_keyboard_training(
                     "teacher_memory_edges_by_label": {label: edges.tolist() for label, edges in session.teacher_memory_edges_by_label.items()},
                     "channel_homeostasis_ema": session.channel_homeostasis.ema,
                 },
+                need_tracker=session.plasticity_budget_adaptation.need_tracker,
             )
             if config.profile_timing:
                 timing_totals["checkpoint_seconds"] = timing_totals.get("checkpoint_seconds", 0.0) + (time.perf_counter() - checkpoint_started)
@@ -2113,6 +2152,12 @@ def main() -> None:
     parser.add_argument("--stimulus-rate-hz", type=float, default=205.0)
     parser.add_argument("--motor-population-size", type=int, default=64)
     parser.add_argument(
+        "--adaptive-plastic-budget",
+        action="store_true",
+        help="Enable conservative Phase D.2 sparse plastic-capacity adaptation.",
+    )
+    parser.add_argument("--adaptive-budget-max-promotions-per-event", type=int, default=1)
+    parser.add_argument(
         "--body-mode",
         choices=("one_arm_fan", "one_arm_circle", "one_arm_circular", "four_arm_grid"),
         default="one_arm_fan",
@@ -2169,6 +2214,8 @@ def main() -> None:
         max_control_windows=args.max_control_windows,
         stimulus_rate_hz=args.stimulus_rate_hz,
         motor_population_size=args.motor_population_size,
+        adaptive_plastic_budget=args.adaptive_plastic_budget,
+        adaptive_budget_max_promotions_per_event=args.adaptive_budget_max_promotions_per_event,
         body_mode=args.body_mode,
         curriculum_stage=args.curriculum_stage,
         checkpoint_every=args.checkpoint_every,
