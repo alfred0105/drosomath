@@ -27,7 +27,7 @@
     "order_reversal_final_intact": {
       "109": {
         "AB_vs_BA": {
-          "accuracy_difference": 0.0,
+          "accuracy_difference": -0.5,
           "forward_accuracy": 0.25,
           "forward_predictions": {
             "A": 1,
@@ -46,7 +46,7 @@
           }
         },
         "AC_vs_CA": {
-          "accuracy_difference": 0.0,
+          "accuracy_difference": -1.0,
           "forward_accuracy": 0.0,
           "forward_predictions": {
             "A": 0,
@@ -65,7 +65,7 @@
           }
         },
         "AD_vs_DA": {
-          "accuracy_difference": 0.0,
+          "accuracy_difference": -0.25,
           "forward_accuracy": 0.25,
           "forward_predictions": {
             "A": 1,
@@ -84,7 +84,7 @@
           }
         },
         "BC_vs_CB": {
-          "accuracy_difference": 0.0,
+          "accuracy_difference": -0.25,
           "forward_accuracy": 0.75,
           "forward_predictions": {
             "A": 0,
@@ -103,7 +103,7 @@
           }
         },
         "BD_vs_DB": {
-          "accuracy_difference": 0.0,
+          "accuracy_difference": 0.75,
           "forward_accuracy": 0.75,
           "forward_predictions": {
             "A": 1,
@@ -122,7 +122,7 @@
           }
         },
         "CD_vs_DC": {
-          "accuracy_difference": 0.0,
+          "accuracy_difference": 0.75,
           "forward_accuracy": 0.75,
           "forward_predictions": {
             "A": 0,
@@ -140,11 +140,11 @@
             "NO_DECISION": 0
           }
         },
-        "reversed_pair_target_sensitivity": 0.0
+        "reversed_pair_target_sensitivity": 0.5833333333333334
       },
       "113": {
         "AB_vs_BA": {
-          "accuracy_difference": 0.0,
+          "accuracy_difference": -0.25,
           "forward_accuracy": 0.25,
           "forward_predictions": {
             "A": 1,
@@ -163,7 +163,7 @@
           }
         },
         "AC_vs_CA": {
-          "accuracy_difference": 0.0,
+          "accuracy_difference": -0.75,
           "forward_accuracy": 0.0,
           "forward_predictions": {
             "A": 0,
@@ -182,7 +182,7 @@
           }
         },
         "AD_vs_DA": {
-          "accuracy_difference": 0.0,
+          "accuracy_difference": -0.5,
           "forward_accuracy": 0.0,
           "forward_predictions": {
             "A": 0,
@@ -201,7 +201,7 @@
           }
         },
         "BC_vs_CB": {
-          "accuracy_difference": 0.0,
+          "accuracy_difference": -0.25,
           "forward_accuracy": 0.75,
           "forward_predictions": {
             "A": 0,
@@ -220,7 +220,7 @@
           }
         },
         "BD_vs_DB": {
-          "accuracy_difference": 0.0,
+          "accuracy_difference": 0.5,
           "forward_accuracy": 0.75,
           "forward_predictions": {
             "A": 0,
@@ -239,7 +239,7 @@
           }
         },
         "CD_vs_DC": {
-          "accuracy_difference": 0.0,
+          "accuracy_difference": 0.5,
           "forward_accuracy": 0.5,
           "forward_predictions": {
             "A": 0,
@@ -257,11 +257,11 @@
             "NO_DECISION": 1
           }
         },
-        "reversed_pair_target_sensitivity": 0.0
+        "reversed_pair_target_sensitivity": 0.4583333333333333
       },
       "127": {
         "AB_vs_BA": {
-          "accuracy_difference": 0.0,
+          "accuracy_difference": -0.75,
           "forward_accuracy": 0.0,
           "forward_predictions": {
             "A": 0,
@@ -280,7 +280,7 @@
           }
         },
         "AC_vs_CA": {
-          "accuracy_difference": 0.0,
+          "accuracy_difference": -0.5,
           "forward_accuracy": 0.0,
           "forward_predictions": {
             "A": 0,
@@ -299,7 +299,7 @@
           }
         },
         "AD_vs_DA": {
-          "accuracy_difference": 0.0,
+          "accuracy_difference": 0.25,
           "forward_accuracy": 0.25,
           "forward_predictions": {
             "A": 1,
@@ -318,7 +318,7 @@
           }
         },
         "BC_vs_CB": {
-          "accuracy_difference": 0.0,
+          "accuracy_difference": -1.0,
           "forward_accuracy": 0.0,
           "forward_predictions": {
             "A": 0,
@@ -337,7 +337,7 @@
           }
         },
         "BD_vs_DB": {
-          "accuracy_difference": 0.0,
+          "accuracy_difference": 0.25,
           "forward_accuracy": 0.5,
           "forward_predictions": {
             "A": 0,
@@ -356,7 +356,7 @@
           }
         },
         "CD_vs_DC": {
-          "accuracy_difference": 0.0,
+          "accuracy_difference": 0.25,
           "forward_accuracy": 0.5,
           "forward_predictions": {
             "A": 0,
@@ -374,7 +374,7 @@
             "NO_DECISION": 0
           }
         },
-        "reversed_pair_target_sensitivity": 0.0
+        "reversed_pair_target_sensitivity": 0.5
       }
     },
     "pair_accuracy_final_intact": {
@@ -788,7 +788,7 @@
             "no_decision_fraction": 0.078125,
             "order_reversal": {
               "AB_vs_BA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.25,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -826,7 +826,7 @@
                 }
               },
               "AD_vs_DA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.75,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -845,7 +845,7 @@
                 }
               },
               "BC_vs_CB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.25,
                 "forward_predictions": {
                   "A": 0,
@@ -864,7 +864,7 @@
                 }
               },
               "BD_vs_DB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.5,
                 "forward_accuracy": 1.0,
                 "forward_predictions": {
                   "A": 0,
@@ -901,7 +901,7 @@
                   "NO_DECISION": 0
                 }
               },
-              "reversed_pair_target_sensitivity": 0.0
+              "reversed_pair_target_sensitivity": 0.2916666666666667
             },
             "output_collapse": false,
             "pair_accuracy": {
@@ -1134,7 +1134,7 @@
                 }
               },
               "AC_vs_CA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.5,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -1153,7 +1153,7 @@
                 }
               },
               "AD_vs_DA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.25,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -1172,7 +1172,7 @@
                 }
               },
               "BC_vs_CB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.25,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -1191,7 +1191,7 @@
                 }
               },
               "BD_vs_DB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.5,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -1210,7 +1210,7 @@
                 }
               },
               "CD_vs_DC": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.75,
                 "forward_accuracy": 0.75,
                 "forward_predictions": {
                   "A": 0,
@@ -1228,7 +1228,7 @@
                   "NO_DECISION": 0
                 }
               },
-              "reversed_pair_target_sensitivity": 0.0
+              "reversed_pair_target_sensitivity": 0.375
             },
             "output_collapse": false,
             "pair_accuracy": {
@@ -1482,7 +1482,7 @@
                 }
               },
               "AD_vs_DA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.5,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -1539,7 +1539,7 @@
                 }
               },
               "CD_vs_DC": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.5,
                 "forward_accuracy": 0.5,
                 "forward_predictions": {
                   "A": 0,
@@ -1557,7 +1557,7 @@
                   "NO_DECISION": 0
                 }
               },
-              "reversed_pair_target_sensitivity": 0.0
+              "reversed_pair_target_sensitivity": 0.16666666666666666
             },
             "output_collapse": false,
             "pair_accuracy": {
@@ -1771,7 +1771,7 @@
             "no_decision_fraction": 0.140625,
             "order_reversal": {
               "AB_vs_BA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.25,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -1790,7 +1790,7 @@
                 }
               },
               "AC_vs_CA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.75,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -1809,7 +1809,7 @@
                 }
               },
               "AD_vs_DA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.25,
                 "forward_predictions": {
                   "A": 1,
@@ -1866,7 +1866,7 @@
                 }
               },
               "CD_vs_DC": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.75,
                 "forward_accuracy": 0.75,
                 "forward_predictions": {
                   "A": 0,
@@ -1884,7 +1884,7 @@
                   "NO_DECISION": 0
                 }
               },
-              "reversed_pair_target_sensitivity": 0.0
+              "reversed_pair_target_sensitivity": 0.3333333333333333
             },
             "output_collapse": false,
             "pair_accuracy": {
@@ -2138,7 +2138,7 @@
                 }
               },
               "AD_vs_DA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -1.0,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -2176,7 +2176,7 @@
                 }
               },
               "BD_vs_DB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.5,
                 "forward_accuracy": 0.5,
                 "forward_predictions": {
                   "A": 0,
@@ -2195,7 +2195,7 @@
                 }
               },
               "CD_vs_DC": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.5,
                 "forward_accuracy": 0.5,
                 "forward_predictions": {
                   "A": 0,
@@ -2213,7 +2213,7 @@
                   "NO_DECISION": 0
                 }
               },
-              "reversed_pair_target_sensitivity": 0.0
+              "reversed_pair_target_sensitivity": 0.3333333333333333
             },
             "output_collapse": false,
             "pair_accuracy": {
@@ -2427,7 +2427,7 @@
             "no_decision_fraction": 0.09375,
             "order_reversal": {
               "AB_vs_BA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.5,
                 "forward_accuracy": 0.25,
                 "forward_predictions": {
                   "A": 1,
@@ -2446,7 +2446,7 @@
                 }
               },
               "AC_vs_CA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -1.0,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -2465,7 +2465,7 @@
                 }
               },
               "AD_vs_DA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.25,
                 "forward_accuracy": 0.25,
                 "forward_predictions": {
                   "A": 1,
@@ -2484,7 +2484,7 @@
                 }
               },
               "BC_vs_CB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.25,
                 "forward_accuracy": 0.75,
                 "forward_predictions": {
                   "A": 0,
@@ -2503,7 +2503,7 @@
                 }
               },
               "BD_vs_DB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.75,
                 "forward_accuracy": 0.75,
                 "forward_predictions": {
                   "A": 1,
@@ -2522,7 +2522,7 @@
                 }
               },
               "CD_vs_DC": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.75,
                 "forward_accuracy": 0.75,
                 "forward_predictions": {
                   "A": 0,
@@ -2540,7 +2540,7 @@
                   "NO_DECISION": 0
                 }
               },
-              "reversed_pair_target_sensitivity": 0.0
+              "reversed_pair_target_sensitivity": 0.5833333333333334
             },
             "output_collapse": false,
             "pair_accuracy": {
@@ -2879,7 +2879,7 @@
                 }
               },
               "AD_vs_DA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.25,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -2898,7 +2898,7 @@
                 }
               },
               "BC_vs_CB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.25,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 1,
@@ -2917,7 +2917,7 @@
                 }
               },
               "BD_vs_DB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.25,
                 "forward_accuracy": 0.75,
                 "forward_predictions": {
                   "A": 0,
@@ -2936,7 +2936,7 @@
                 }
               },
               "CD_vs_DC": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.25,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -2954,7 +2954,7 @@
                   "NO_DECISION": 0
                 }
               },
-              "reversed_pair_target_sensitivity": 0.0
+              "reversed_pair_target_sensitivity": 0.16666666666666666
             },
             "output_collapse": false,
             "pair_accuracy": {
@@ -3187,7 +3187,7 @@
                 }
               },
               "AC_vs_CA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.5,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -3206,7 +3206,7 @@
                 }
               },
               "AD_vs_DA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.5,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -3225,7 +3225,7 @@
                 }
               },
               "BC_vs_CB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.25,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -3244,7 +3244,7 @@
                 }
               },
               "BD_vs_DB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -1.0,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -3263,7 +3263,7 @@
                 }
               },
               "CD_vs_DC": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.25,
                 "forward_predictions": {
                   "A": 0,
@@ -3281,7 +3281,7 @@
                   "NO_DECISION": 1
                 }
               },
-              "reversed_pair_target_sensitivity": 0.0
+              "reversed_pair_target_sensitivity": 0.4166666666666667
             },
             "output_collapse": false,
             "pair_accuracy": {
@@ -3516,7 +3516,7 @@
                 }
               },
               "AC_vs_CA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.25,
                 "forward_predictions": {
                   "A": 1,
@@ -3535,7 +3535,7 @@
                 }
               },
               "AD_vs_DA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.5,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -3554,7 +3554,7 @@
                 }
               },
               "BC_vs_CB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.25,
                 "forward_predictions": {
                   "A": 0,
@@ -3573,7 +3573,7 @@
                 }
               },
               "BD_vs_DB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.75,
                 "forward_predictions": {
                   "A": 0,
@@ -3592,7 +3592,7 @@
                 }
               },
               "CD_vs_DC": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.25,
                 "forward_predictions": {
                   "A": 0,
@@ -3610,7 +3610,7 @@
                   "NO_DECISION": 1
                 }
               },
-              "reversed_pair_target_sensitivity": 0.0
+              "reversed_pair_target_sensitivity": 0.25
             },
             "output_collapse": false,
             "pair_accuracy": {
@@ -3843,7 +3843,7 @@
                 }
               },
               "AC_vs_CA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.25,
                 "forward_accuracy": 0.5,
                 "forward_predictions": {
                   "A": 2,
@@ -3862,7 +3862,7 @@
                 }
               },
               "AD_vs_DA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.25,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -3881,7 +3881,7 @@
                 }
               },
               "BC_vs_CB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.5,
                 "forward_predictions": {
                   "A": 0,
@@ -3919,7 +3919,7 @@
                 }
               },
               "CD_vs_DC": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.75,
                 "forward_accuracy": 0.75,
                 "forward_predictions": {
                   "A": 0,
@@ -3937,7 +3937,7 @@
                   "NO_DECISION": 1
                 }
               },
-              "reversed_pair_target_sensitivity": 0.0
+              "reversed_pair_target_sensitivity": 0.25
             },
             "output_collapse": false,
             "pair_accuracy": {
@@ -4172,7 +4172,7 @@
                 }
               },
               "AC_vs_CA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.25,
                 "forward_predictions": {
                   "A": 1,
@@ -4191,7 +4191,7 @@
                 }
               },
               "AD_vs_DA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.75,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -4210,7 +4210,7 @@
                 }
               },
               "BC_vs_CB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.25,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -4229,7 +4229,7 @@
                 }
               },
               "BD_vs_DB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.5,
                 "forward_predictions": {
                   "A": 1,
@@ -4266,7 +4266,7 @@
                   "NO_DECISION": 0
                 }
               },
-              "reversed_pair_target_sensitivity": 0.0
+              "reversed_pair_target_sensitivity": 0.25
             },
             "output_collapse": false,
             "pair_accuracy": {
@@ -4480,7 +4480,7 @@
             "no_decision_fraction": 0.140625,
             "order_reversal": {
               "AB_vs_BA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.25,
                 "forward_accuracy": 0.25,
                 "forward_predictions": {
                   "A": 1,
@@ -4499,7 +4499,7 @@
                 }
               },
               "AC_vs_CA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.75,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -4518,7 +4518,7 @@
                 }
               },
               "AD_vs_DA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.5,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -4537,7 +4537,7 @@
                 }
               },
               "BC_vs_CB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.25,
                 "forward_accuracy": 0.75,
                 "forward_predictions": {
                   "A": 0,
@@ -4556,7 +4556,7 @@
                 }
               },
               "BD_vs_DB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.5,
                 "forward_accuracy": 0.75,
                 "forward_predictions": {
                   "A": 0,
@@ -4575,7 +4575,7 @@
                 }
               },
               "CD_vs_DC": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.5,
                 "forward_accuracy": 0.5,
                 "forward_predictions": {
                   "A": 0,
@@ -4593,7 +4593,7 @@
                   "NO_DECISION": 1
                 }
               },
-              "reversed_pair_target_sensitivity": 0.0
+              "reversed_pair_target_sensitivity": 0.4583333333333333
             },
             "output_collapse": false,
             "pair_accuracy": {
@@ -4913,7 +4913,7 @@
                 }
               },
               "AC_vs_CA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.25,
                 "forward_predictions": {
                   "A": 1,
@@ -4932,7 +4932,7 @@
                 }
               },
               "AD_vs_DA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.75,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -4970,7 +4970,7 @@
                 }
               },
               "BD_vs_DB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.75,
                 "forward_accuracy": 1.0,
                 "forward_predictions": {
                   "A": 0,
@@ -4989,7 +4989,7 @@
                 }
               },
               "CD_vs_DC": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.75,
                 "forward_accuracy": 0.75,
                 "forward_predictions": {
                   "A": 0,
@@ -5007,7 +5007,7 @@
                   "NO_DECISION": 0
                 }
               },
-              "reversed_pair_target_sensitivity": 0.0
+              "reversed_pair_target_sensitivity": 0.4166666666666667
             },
             "output_collapse": false,
             "pair_accuracy": {
@@ -5259,7 +5259,7 @@
                 }
               },
               "AD_vs_DA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.5,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -5297,7 +5297,7 @@
                 }
               },
               "BD_vs_DB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.25,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -5334,7 +5334,7 @@
                   "NO_DECISION": 1
                 }
               },
-              "reversed_pair_target_sensitivity": 0.0
+              "reversed_pair_target_sensitivity": 0.125
             },
             "output_collapse": false,
             "pair_accuracy": {
@@ -5550,7 +5550,7 @@
             "no_decision_fraction": 0.15625,
             "order_reversal": {
               "AB_vs_BA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.25,
                 "forward_predictions": {
                   "A": 1,
@@ -5588,7 +5588,7 @@
                 }
               },
               "AD_vs_DA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -1.0,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -5607,7 +5607,7 @@
                 }
               },
               "BC_vs_CB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.5,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -5626,7 +5626,7 @@
                 }
               },
               "BD_vs_DB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.25,
                 "forward_predictions": {
                   "A": 0,
@@ -5645,7 +5645,7 @@
                 }
               },
               "CD_vs_DC": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.25,
                 "forward_predictions": {
                   "A": 0,
@@ -5663,7 +5663,7 @@
                   "NO_DECISION": 0
                 }
               },
-              "reversed_pair_target_sensitivity": 0.0
+              "reversed_pair_target_sensitivity": 0.375
             },
             "output_collapse": false,
             "pair_accuracy": {
@@ -5877,7 +5877,7 @@
             "no_decision_fraction": 0.140625,
             "order_reversal": {
               "AB_vs_BA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.25,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -5896,7 +5896,7 @@
                 }
               },
               "AC_vs_CA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.5,
                 "forward_accuracy": 0.25,
                 "forward_predictions": {
                   "A": 1,
@@ -5934,7 +5934,7 @@
                 }
               },
               "BC_vs_CB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.5,
                 "forward_accuracy": 0.5,
                 "forward_predictions": {
                   "A": 0,
@@ -5953,7 +5953,7 @@
                 }
               },
               "BD_vs_DB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.25,
                 "forward_predictions": {
                   "A": 2,
@@ -5972,7 +5972,7 @@
                 }
               },
               "CD_vs_DC": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.75,
                 "forward_accuracy": 0.75,
                 "forward_predictions": {
                   "A": 0,
@@ -5990,7 +5990,7 @@
                   "NO_DECISION": 0
                 }
               },
-              "reversed_pair_target_sensitivity": 0.0
+              "reversed_pair_target_sensitivity": 0.375
             },
             "output_collapse": false,
             "pair_accuracy": {
@@ -6244,7 +6244,7 @@
                 }
               },
               "AD_vs_DA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -1.0,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -6263,7 +6263,7 @@
                 }
               },
               "BC_vs_CB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.5,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -6282,7 +6282,7 @@
                 }
               },
               "BD_vs_DB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.5,
                 "forward_predictions": {
                   "A": 0,
@@ -6319,7 +6319,7 @@
                   "NO_DECISION": 0
                 }
               },
-              "reversed_pair_target_sensitivity": 0.0
+              "reversed_pair_target_sensitivity": 0.2916666666666667
             },
             "output_collapse": false,
             "pair_accuracy": {
@@ -6533,7 +6533,7 @@
             "no_decision_fraction": 0.15625,
             "order_reversal": {
               "AB_vs_BA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.75,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -6552,7 +6552,7 @@
                 }
               },
               "AC_vs_CA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -0.5,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -6571,7 +6571,7 @@
                 }
               },
               "AD_vs_DA": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.25,
                 "forward_predictions": {
                   "A": 1,
@@ -6590,7 +6590,7 @@
                 }
               },
               "BC_vs_CB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": -1.0,
                 "forward_accuracy": 0.0,
                 "forward_predictions": {
                   "A": 0,
@@ -6609,7 +6609,7 @@
                 }
               },
               "BD_vs_DB": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.5,
                 "forward_predictions": {
                   "A": 0,
@@ -6628,7 +6628,7 @@
                 }
               },
               "CD_vs_DC": {
-                "accuracy_difference": 0.0,
+                "accuracy_difference": 0.25,
                 "forward_accuracy": 0.5,
                 "forward_predictions": {
                   "A": 0,
@@ -6646,7 +6646,7 @@
                   "NO_DECISION": 0
                 }
               },
-              "reversed_pair_target_sensitivity": 0.0
+              "reversed_pair_target_sensitivity": 0.5
             },
             "output_collapse": false,
             "pair_accuracy": {

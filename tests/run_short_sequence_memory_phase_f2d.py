@@ -174,8 +174,8 @@ def _order_reversal(rows):
             "forward_predictions": {label: int(forward_labels.count(label)) for label in (*SYMBOLS, "NO_DECISION")},
             "reverse_predictions": {label: int(reverse_labels.count(label)) for label in (*SYMBOLS, "NO_DECISION")},
             "accuracy_difference": float(
-                (np.mean([label == left for label in forward]) if forward else 0.0)
-                - (np.mean([label == right for label in reverse]) if reverse else 0.0)
+                (np.mean([label == left for label in forward_labels]) if forward_labels else 0.0)
+                - (np.mean([label == right for label in reverse_labels]) if reverse_labels else 0.0)
             ),
         }
     result["reversed_pair_target_sensitivity"] = float(np.mean([
