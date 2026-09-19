@@ -43,6 +43,7 @@ class SymbolLearningConfig:
     budget_strength: float = 0.25
     plastic_fraction: float = 0.05
     adaptive_plastic_budget: bool = False
+    two_hop_credit_mode: str = "active_chain"
 
     def __post_init__(self) -> None:
         if self.duration_ms <= 0.0 or self.stimulus_rate_hz < 0.0:
@@ -55,6 +56,11 @@ class SymbolLearningConfig:
             raise ValueError("plastic_fraction must be in [0, 1]")
         if self.adaptive_plastic_budget:
             raise ValueError("F.1B must run with adaptive_plastic_budget=False")
+        if self.two_hop_credit_mode not in {"active_chain", "prospective_anatomical"}:
+            raise ValueError(
+                "two_hop_credit_mode must be 'active_chain' or "
+                "'prospective_anatomical'"
+            )
 
 
 @dataclass(frozen=True, slots=True)
@@ -170,6 +176,7 @@ class SymbolLearningSession:
         *,
         config: SymbolLearningConfig | None = None,
         directional_telemetry_observer=None,
+        directional_attribution_observer=None,
         route_health_observer=None,
     ):
         self.brain = brain
@@ -177,7 +184,10 @@ class SymbolLearningSession:
         self.config = config or SymbolLearningConfig()
         self.output_context = symbol_output_context(interface)
         self.controller = PlasticityController(
-            DirectionalModulationConfig(learning_rate=self.config.directional_learning_rate)
+            DirectionalModulationConfig(
+                learning_rate=self.config.directional_learning_rate,
+                two_hop_credit_mode=self.config.two_hop_credit_mode,
+            )
         )
         self.reward_rule = UsageRewardRule(learning_rate=self.config.reward_learning_rate)
         self.normalizer = OutgoingBudgetNormalizer(strength=self.config.budget_strength)
@@ -190,6 +200,7 @@ class SymbolLearningSession:
             channel: set() for channel in CHANNELS
         }
         self.directional_telemetry_observer = directional_telemetry_observer
+        self.directional_attribution_observer = directional_attribution_observer
         self.route_health_observer = route_health_observer
 
     @property
@@ -250,7 +261,9 @@ class SymbolLearningSession:
                         decision=decision,
                     )
                 observer = self.directional_telemetry_observer
+                attribution_observer = self.directional_attribution_observer
                 callback = None
+                attribution_callback = None
                 if observer is not None:
                     def callback(
                         channel,
@@ -272,11 +285,20 @@ class SymbolLearningSession:
                             path_polarities=path_polarities,
                             requested_direction=requested_direction,
                         )
+                if attribution_observer is not None:
+                    def attribution_callback(**kwargs):
+                        attribution_observer(
+                            target=target,
+                            decision=decision,
+                            output_context=self.output_context,
+                            **kwargs,
+                        )
                 update = self.controller.apply_learning_signal(
                     self.brain,
                     signal,
                     self.output_context,
                     telemetry_observer=callback,
+                    attribution_observer=attribution_callback,
                 )
                 generic_holder["update"] = update
                 return None

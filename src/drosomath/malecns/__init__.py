@@ -63,6 +63,7 @@ from .symbol_credit_interference import (
     cross_target_positive_overlap,
     jaccard,
 )
+from .prospective_twohop import ProspectiveTwoHopAudit
 
 __all__ = [
     "BrainOutputTrialResult",
@@ -116,6 +117,7 @@ __all__ = [
     "classify_primary_hypotheses",
     "cross_target_positive_overlap",
     "jaccard",
+    "ProspectiveTwoHopAudit",
     "download_malecns",
     "load_malecns_v1",
     "missing_files",

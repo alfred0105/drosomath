@@ -17,6 +17,16 @@ class DirectionalModulationConfig:
     credit_decay_per_hop: float = 0.5
     consolidation_gain: float = 0.01
     minimum_downstream_effect: float = 1e-8
+    # F.1B.3 intervention switch.  The default deliberately preserves the
+    # pre-intervention active-chain credit rule exactly.
+    two_hop_credit_mode: str = "active_chain"
+
+    def __post_init__(self) -> None:
+        if self.two_hop_credit_mode not in {"active_chain", "prospective_anatomical"}:
+            raise ValueError(
+                "two_hop_credit_mode must be 'active_chain' or "
+                "'prospective_anatomical'"
+            )
 
 
 @dataclass(frozen=True, slots=True)
@@ -581,6 +591,7 @@ class PlasticityController:
         output_context,
         *,
         telemetry_observer=None,
+        attribution_observer=None,
     ) -> DirectionalUpdate:
         np = brain.np
         state = brain.plasticity
@@ -591,23 +602,48 @@ class PlasticityController:
         updated_edge_hops: dict[int, int] = {}
         hops: dict[int, int] = {}
         excitatory = inhibitory = consolidated = ambiguous = 0
-        credits = {}
+        directional_credits = {}
+        reward_credits = {}
+        prospective = self.config.two_hop_credit_mode == "prospective_anatomical"
         channel_sum_abs_delta: dict[str, float] = {}
         channel_unique_edge_updates: dict[str, int] = {}
         channel_hop_counts: dict[str, dict[int, int]] = {}
         channel_edge_indices: dict[str, tuple[int, ...]] = {}
 
-        def credit_for(name):
+        def directional_credit_for(name):
             nonlocal ambiguous
-            if name not in credits:
+            if name not in directional_credits:
                 outputs = output_context.get(name)
-                credits[name] = self._credit_edges(brain, active_edges, outputs) if outputs is not None else None
-                if credits[name] is not None:
-                    ambiguous += credits[name].ambiguous_path_edges_skipped
-            return credits[name]
+                directional_credits[name] = (
+                    self._route_credit_edges(
+                        brain,
+                        active_edges,
+                        outputs,
+                        discover_upstream_from_candidates=prospective,
+                    )
+                    if outputs is not None else None
+                )
+                if directional_credits[name] is not None:
+                    ambiguous += directional_credits[name].ambiguous_path_edges_skipped
+            return directional_credits[name]
+
+        def reward_credit_for(name):
+            if name not in reward_credits:
+                outputs = output_context.get(name)
+                reward_credits[name] = self._credit_edges(
+                    brain, active_edges, outputs
+                ) if outputs is not None else None
+            return reward_credits[name]
 
         for name, direction in signal.nonzero_directions().items():
-            credit = credit_for(name)
+            credit = directional_credit_for(name)
+            legacy_credit = (
+                self._credit_edges(brain, active_edges, output_context[name])
+                if attribution_observer is not None
+                and prospective
+                and name in output_context
+                else credit
+            )
             if credit is None or not len(credit.edges):
                 per_channel[name] = 0
                 if telemetry_observer is not None:
@@ -619,6 +655,25 @@ class PlasticityController:
                         np.empty(0, dtype=np.float32),
                         np.empty(0, dtype=np.float32),
                         float(direction),
+                    )
+                if attribution_observer is not None:
+                    attribution_observer(
+                        channel=name,
+                        current_edge_indices=np.empty(0, dtype=np.int32),
+                        current_hops=np.empty(0, dtype=np.int8),
+                        legacy_edge_indices=(
+                            np.asarray(legacy_credit.edges, dtype=np.int32).copy()
+                            if legacy_credit is not None else np.empty(0, dtype=np.int32)
+                        ),
+                        legacy_hops=(
+                            np.asarray(legacy_credit.hops, dtype=np.int8).copy()
+                            if legacy_credit is not None else np.empty(0, dtype=np.int8)
+                        ),
+                        actual_deltas=np.empty(0, dtype=np.float32),
+                        eligibility=np.empty(0, dtype=np.float32),
+                        path_polarities=np.empty(0, dtype=np.float32),
+                        requested_direction=float(direction),
+                        brain=brain,
                     )
                 continue
             edges = credit.edges
@@ -651,13 +706,28 @@ class PlasticityController:
                     credit.path_polarities.copy(),
                     float(direction),
                 )
+            if attribution_observer is not None:
+                attribution_observer(
+                    channel=name,
+                    current_edge_indices=edges.copy(),
+                    current_hops=credit.hops.copy(),
+                    legacy_edge_indices=np.asarray(legacy_credit.edges, dtype=np.int32).copy(),
+                    legacy_hops=np.asarray(legacy_credit.hops, dtype=np.int8).copy(),
+                    actual_deltas=actual.copy(),
+                    eligibility=state.eligibility[edges].copy(),
+                    path_polarities=credit.path_polarities.copy(),
+                    requested_direction=float(direction),
+                    brain=brain,
+                )
             anatomical_sign = np.sign(brain.connectome.signed_synapse_counts[edges])
             excitatory += int((anatomical_sign > 0).sum())
             inhibitory += int((anatomical_sign < 0).sum())
 
         reinforced = []
         for name in signal.positive_reinforcements():
-            credit = credit_for(name)
+            # Reward consolidation remains on the legacy active-chain route;
+            # the F.1B.3 switch is directional-learning-only.
+            credit = reward_credit_for(name)
             if credit is None or not len(credit.edges):
                 continue
             # Reinforcement stabilizes causal routes; success alone does not
