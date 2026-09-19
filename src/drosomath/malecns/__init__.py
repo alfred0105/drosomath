@@ -33,6 +33,12 @@ from .symbol_interface import (
     symbol_decision_surface_ready,
     symbol_f1b_ready,
 )
+from .symbol_dynamics_audit import (
+    allocation_fingerprint,
+    burst_outlier_symbols,
+    classify_output_observability,
+    count_candidate_dynamic_pool,
+)
 
 __all__ = [
     "BrainOutputTrialResult",
@@ -64,6 +70,10 @@ __all__ = [
     "audit_symbol_reachability",
     "symbol_decision_surface_ready",
     "symbol_f1b_ready",
+    "allocation_fingerprint",
+    "burst_outlier_symbols",
+    "classify_output_observability",
+    "count_candidate_dynamic_pool",
     "download_malecns",
     "load_malecns_v1",
     "missing_files",

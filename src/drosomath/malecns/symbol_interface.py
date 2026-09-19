@@ -285,6 +285,7 @@ class SymbolPresentationResult:
     total_output_spikes: int
     network_activity: dict[str, int]
     first_output_spike_ms: float | None = None
+    active_neuron_indices: tuple[int, ...] = ()
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -471,6 +472,7 @@ class SymbolSession:
                 "steps": int(steps),
             },
             first_output_spike_ms=first_output_spike_ms,
+            active_neuron_indices=tuple(sorted(active_neurons)),
         )
 
 
