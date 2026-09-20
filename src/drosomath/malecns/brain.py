@@ -36,6 +36,7 @@ class PlasticMaleCNSBrain(FastSparseStateMixin, PlasticSparseFlyBrain):
         slow_adaptation_config: SlowAdaptationConfig | None = None,
         presynaptic_depression_config: PresynapticDepressionConfig | None = None,
         transient_hebbian_config: TransientHebbianBindingConfig | None = None,
+        kc_threshold_offset_mv: float = 0.0,
     ) -> None:
         self.slow_adaptation_config = slow_adaptation_config or SlowAdaptationConfig()
         self.presynaptic_depression_config = (
@@ -44,6 +45,9 @@ class PlasticMaleCNSBrain(FastSparseStateMixin, PlasticSparseFlyBrain):
         self.transient_hebbian_config = (
             transient_hebbian_config or TransientHebbianBindingConfig()
         )
+        self.kc_threshold_offset_mv = float(kc_threshold_offset_mv)
+        if self.kc_threshold_offset_mv < 0.0:
+            raise ValueError("kc_threshold_offset_mv must be >= 0")
         super().__init__(
             connectome,
             params=params,

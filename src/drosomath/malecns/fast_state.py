@@ -126,6 +126,16 @@ class FastSparseStateMixin:
             NUMBA_AVAILABLE
             and requested_numba not in {"0", "false", "off", "no"}
         )
+        self._kc_threshold_offset_mv = float(getattr(self, "kc_threshold_offset_mv", 0.0))
+        self._kc_mask = np.zeros(int(self.connectome.neuron_count), dtype=np.bool_)
+        if self._kc_threshold_offset_mv:
+            classes = np.asarray(self.connectome.metadata.get("class"), dtype=object)
+            if classes.shape != (int(self.connectome.neuron_count),):
+                raise ValueError("KC threshold offset requires class annotations")
+            self._kc_mask[:] = classes == "Kenyon_Cell"
+            # The calibration axis is intentionally conservative and uses the
+            # exact Python sparse update path; offset=0 keeps the Numba path.
+            self._numba_enabled = False
         self._std_config = getattr(self, "presynaptic_depression_config", None)
         self._std_enabled = bool(self._std_config is not None and self._std_config.enabled)
         if self._std_enabled:
@@ -931,7 +941,14 @@ class FastSparseStateMixin:
             self.v[stimulated] += p.mv_per_synapse * p.poisson_drive_scale
         if len(active):
             local_fire = (
-                (self.v[active] > p.threshold_mv)
+                (
+                    self.v[active]
+                    > (
+                        p.threshold_mv
+                        + np.float32(self._kc_threshold_offset_mv)
+                        * self._kc_mask[active].astype(np.float32)
+                    )
+                )
                 & (self.step_index >= self.refractory_until[active])
             )
             fired = active[local_fire].astype(np.int32, copy=False)
@@ -960,7 +977,15 @@ class FastSparseStateMixin:
             self.v[stimulated] += p.mv_per_synapse * p.poisson_drive_scale
         if len(active):
             local_fire = (
-                (self.v[active] > (p.threshold_mv + self.adaptation_mv[active]))
+                (
+                    self.v[active]
+                    > (
+                        p.threshold_mv
+                        + self.adaptation_mv[active]
+                        + np.float32(self._kc_threshold_offset_mv)
+                        * self._kc_mask[active].astype(np.float32)
+                    )
+                )
                 & (self.step_index >= self.refractory_until[active])
             )
             fired = active[local_fire].astype(np.int32, copy=False)
