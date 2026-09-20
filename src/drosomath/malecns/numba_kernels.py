@@ -12,6 +12,7 @@ try:  # Optional performance dependency, not a required simulation dependency.
 except ImportError:  # pragma: no cover - exercised on minimal installations
     NUMBA_AVAILABLE = False
     advance_sparse_lif = None
+    advance_sparse_lif_with_adaptation = None
     scatter_csr_rows = None
     scatter_csr_rows_with_plasticity = None
 else:
