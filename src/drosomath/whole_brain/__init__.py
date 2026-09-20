@@ -31,6 +31,7 @@ from .directional_modulation import (
     DirectionalRouteHealth,
     DirectionalUpdate,
     OutputRouteIndex,
+    PlasticRowIndex,
     PlasticityController,
 )
 from .performance import TimingProfiler
@@ -66,6 +67,7 @@ __all__ = [
     "DirectionalRouteHealth",
     "DirectionalUpdate",
     "OutputRouteIndex",
+    "PlasticRowIndex",
     "PlasticityController",
     "TimingProfiler",
 ]

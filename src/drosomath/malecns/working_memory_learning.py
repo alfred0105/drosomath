@@ -99,7 +99,7 @@ class WorkingMemoryLearningTrial:
 def _compact_directional(update) -> dict[str, object]:
     if update is None:
         return {"edge_updates": 0, "unique_edge_updates": 0, "hop_counts": {}}
-    return {
+    result = {
         "edge_updates": int(update.edge_updates),
         "unique_edge_updates": int(update.unique_edge_updates),
         "sum_abs_delta": float(update.sum_abs_delta),
@@ -109,8 +109,10 @@ def _compact_directional(update) -> dict[str, object]:
             str(channel): {str(hop): int(count) for hop, count in hops.items()}
             for channel, hops in update.channel_hop_counts.items()
         },
-        "updated_edge_indices": [int(edge) for edge in update.updated_edge_indices],
     }
+    if getattr(update, "telemetry_level", "full") == "full":
+        result["updated_edge_indices"] = [int(edge) for edge in update.updated_edge_indices]
+    return result
 
 
 def _compact_reward(update) -> dict[str, object]:

@@ -96,6 +96,8 @@ class ContextualPredictionLearningSession:
         config: ContextualPredictionConfig | None = None,
         timing_profiler: TimingProfiler | None = None,
         route_cache_enabled: bool = True,
+        plastic_row_cache_enabled: bool = True,
+        prospective_index_enabled: bool = True,
     ) -> None:
         if brain.connectome is not interface.connectome:
             raise ValueError("brain and contextual interface must match")
@@ -113,6 +115,8 @@ class ContextualPredictionLearningSession:
                 two_hop_credit_mode=self.config.two_hop_credit_mode,
             ),
             route_cache_enabled=route_cache_enabled,
+            plastic_row_cache_enabled=plastic_row_cache_enabled,
+            prospective_index_enabled=prospective_index_enabled,
         )
         self.reward_rule = UsageRewardRule(learning_rate=self.config.reward_learning_rate)
         self.normalizer = OutgoingBudgetNormalizer(strength=self.config.budget_strength)
@@ -171,7 +175,11 @@ class ContextualPredictionLearningSession:
 
             def apply_directional(_state):
                 holder["update"] = self.controller.apply_learning_signal(
-                    self.brain, signal, self.output_context, timing_profiler=self.timing_profiler
+                    self.brain,
+                    signal,
+                    self.output_context,
+                    timing_profiler=self.timing_profiler,
+                    telemetry_level=self.config.telemetry_level,
                 )
 
             reward_report = self.brain.learn_from_reward(

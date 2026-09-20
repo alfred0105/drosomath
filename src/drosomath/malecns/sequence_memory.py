@@ -45,6 +45,7 @@ class SequenceMemoryConfig:
     adaptive_plastic_budget: bool = False
     route_cache_enabled: bool = True
     episode_credit_limit: int = 16
+    telemetry_level: str = "summary"
 
     def __post_init__(self) -> None:
         if (self.first_ms, self.second_ms, self.go_ms) != (20.0, 20.0, 20.0):
@@ -61,6 +62,8 @@ class SequenceMemoryConfig:
             raise ValueError("F.2D keeps adaptive plastic budget disabled")
         if not self.route_cache_enabled:
             raise ValueError("F.2D scientific runs require route cache enabled")
+        if self.telemetry_level not in {"full", "summary"}:
+            raise ValueError("telemetry_level must be 'full' or 'summary'")
 
 
 @dataclass(frozen=True, slots=True)
@@ -259,7 +262,11 @@ class SequenceLearningSession:
 
             def apply_directional(_state):
                 holder["update"] = self.controller.apply_learning_signal(
-                    self.brain, signal, self.output_context, timing_profiler=self.timing_profiler
+                    self.brain,
+                    signal,
+                    self.output_context,
+                    timing_profiler=self.timing_profiler,
+                    telemetry_level=self.config.telemetry_level,
                 )
 
             reward_report = self.brain.learn_from_reward(

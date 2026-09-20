@@ -81,6 +81,13 @@ class SparsePlasticityState:
         self._state_indices = self._plastic_indices.copy()
         self._promoted_overrides = np.empty(0, dtype=np.int32)
         self._retired_overrides = np.empty(0, dtype=np.int32)
+        # Topology caches use this generation to distinguish allocation
+        # changes from ordinary learned-state updates.  It is intentionally
+        # not changed by multiplier, eligibility, usage, or stability writes.
+        self.allocation_generation = 0
+
+    def _bump_allocation_generation(self) -> None:
+        self.allocation_generation = int(self.allocation_generation) + 1
 
     @property
     def plastic_edge_count(self) -> int:
@@ -121,6 +128,7 @@ class SparsePlasticityState:
         ).astype(self.np.int32, copy=False)
         self._apply_allocation_overrides()
         self.config = replace(self.config, plastic_fraction=float(fraction))
+        self._bump_allocation_generation()
         after = self.plastic_edge_count
         return {
             "fraction": float(fraction),
@@ -195,6 +203,7 @@ class SparsePlasticityState:
             self._retired_overrides = self.np.setdiff1d(self._retired_overrides, promote).astype(self.np.int32, copy=False)
         self._plastic_indices = self.np.flatnonzero(self.plastic_mask).astype(self.np.int32, copy=False)
         self._state_indices = self.np.union1d(self._state_indices, self._plastic_indices).astype(self.np.int32, copy=False)
+        self._bump_allocation_generation()
         after = self.plastic_edge_count
         return {
             "plastic_edges_before": before,
@@ -215,6 +224,7 @@ class SparsePlasticityState:
         self._retired_overrides = self.np.setdiff1d(self._retired_overrides, values).astype(self.np.int32, copy=False)
         self._plastic_indices = self.np.flatnonzero(self.plastic_mask).astype(self.np.int32, copy=False)
         self._state_indices = self.np.union1d(self._state_indices, self._plastic_indices).astype(self.np.int32, copy=False)
+        self._bump_allocation_generation()
         return {
             "plastic_edges_before": before,
             "plastic_edges_after": self.plastic_edge_count,
@@ -235,6 +245,7 @@ class SparsePlasticityState:
         self._promoted_overrides = self.np.setdiff1d(self._promoted_overrides, values).astype(self.np.int32, copy=False)
         self._plastic_indices = self.np.flatnonzero(self.plastic_mask).astype(self.np.int32, copy=False)
         self._state_indices = self.np.union1d(self._state_indices, self._plastic_indices).astype(self.np.int32, copy=False)
+        self._bump_allocation_generation()
         return {
             "plastic_edges_before": before,
             "plastic_edges_after": self.plastic_edge_count,
@@ -261,6 +272,7 @@ class SparsePlasticityState:
         self._promoted_overrides = promoted.copy()
         self._retired_overrides = retired.copy()
         self._apply_allocation_overrides()
+        self._bump_allocation_generation()
         return {
             "promoted_edges": int(len(promoted)),
             "retired_edges": int(len(retired)),

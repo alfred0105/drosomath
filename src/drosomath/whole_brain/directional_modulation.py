@@ -55,6 +55,12 @@ class OutputRouteIndex:
     output_mask: object
     downstream_intermediates: object
     downstream_edges_by_intermediate: object
+    # Compact lookup for the prospective two-hop path.  The mapping above is
+    # retained for backwards-compatible diagnostic consumers; the learning
+    # path uses these immutable CSR-like arrays to avoid repeated dictionary
+    # construction and lookup.
+    downstream_edge_indices: object = None
+    downstream_indptr: object = None
 
     @property
     def nbytes(self) -> int:
@@ -64,6 +70,8 @@ class OutputRouteIndex:
                 self.output_indices,
                 self.output_mask,
                 self.downstream_intermediates,
+                self.downstream_edge_indices,
+                self.downstream_indptr,
             )
         )
         total += sum(int(getattr(value, "nbytes", 0)) for value in self.downstream_edges_by_intermediate.values())
@@ -93,6 +101,23 @@ class DirectionalUpdate:
     channel_unique_edge_updates: dict[str, int] = field(default_factory=dict)
     channel_hop_counts: dict[str, dict[int, int]] = field(default_factory=dict)
     channel_edge_indices: dict[str, tuple[int, ...]] = field(default_factory=dict)
+    telemetry_level: str = "full"
+
+
+@dataclass(frozen=True, slots=True)
+class PlasticRowIndex:
+    """Allocation-only CSR index of plastic edges grouped by presynaptic row."""
+
+    indptr: object
+    edge_indices: object
+    allocation_generation: int
+
+    @property
+    def nbytes(self) -> int:
+        return int(
+            getattr(self.indptr, "nbytes", 0)
+            + getattr(self.edge_indices, "nbytes", 0)
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -152,10 +177,15 @@ class PlasticityController:
         config: DirectionalModulationConfig | None = None,
         *,
         route_cache_enabled: bool = True,
+        plastic_row_cache_enabled: bool = True,
+        prospective_index_enabled: bool = True,
     ) -> None:
         self.config = config or DirectionalModulationConfig()
         self.route_cache_enabled = bool(route_cache_enabled)
+        self.plastic_row_cache_enabled = bool(plastic_row_cache_enabled)
+        self.prospective_index_enabled = bool(prospective_index_enabled)
         self._output_route_cache: dict[tuple[int, tuple[int, ...]], OutputRouteIndex] = {}
+        self._plastic_row_cache: dict[tuple[int, int], PlasticRowIndex] = {}
 
     def _output_route_index(self, brain, outputs) -> OutputRouteIndex:
         """Build/read immutable output topology without caching learned state."""
@@ -182,6 +212,19 @@ class PlasticityController:
         output_mask.setflags(write=False)
         downstream_intermediates = np.asarray(sorted(downstream_edges), dtype=np.int32)
         downstream_intermediates.setflags(write=False)
+        downstream_indptr = np.zeros(len(downstream_intermediates) + 1, dtype=np.int32)
+        if len(downstream_intermediates):
+            downstream_indptr[1:] = np.cumsum(
+                [len(downstream_edges[int(value)]) for value in downstream_intermediates],
+                dtype=np.int64,
+            ).astype(np.int32, copy=False)
+            downstream_edge_indices = np.concatenate(
+                [downstream_edges[int(value)] for value in downstream_intermediates]
+            ).astype(np.int32, copy=False)
+        else:
+            downstream_edge_indices = np.empty(0, dtype=np.int32)
+        downstream_edge_indices.setflags(write=False)
+        downstream_indptr.setflags(write=False)
         for edges in downstream_edges.values():
             edges.setflags(write=False)
         index = OutputRouteIndex(
@@ -189,6 +232,8 @@ class PlasticityController:
             output_mask,
             downstream_intermediates,
             MappingProxyType(downstream_edges),
+            downstream_edge_indices,
+            downstream_indptr,
         )
         self._output_route_cache[key] = index
         return index
@@ -196,15 +241,67 @@ class PlasticityController:
     def route_cache_bytes(self) -> int:
         return int(sum(index.nbytes for index in self._output_route_cache.values()))
 
+    def _plastic_row_index(self, brain) -> PlasticRowIndex:
+        """Return the current allocation topology without reading learned values."""
+        graph, state = brain.connectome, brain.plasticity
+        key = (id(graph), int(getattr(state, "allocation_generation", 0)))
+        cached = self._plastic_row_cache.get(key)
+        if cached is not None:
+            return cached
+        np = brain.np
+        # Small unit-test doubles and legacy callers may expose only the
+        # original dense mask.  Keep their reference path fully compatible.
+        if not self.plastic_row_cache_enabled or not hasattr(state, "plastic_indices"):
+            all_edges = np.arange(len(graph.post_indices), dtype=np.int32)
+            plastic_edges = all_edges[np.asarray(state.plastic_mask, dtype=np.bool_)]
+        else:
+            plastic_edges = np.asarray(state.plastic_indices, dtype=np.int32)
+        if len(plastic_edges):
+            presynaptic = self._pre_indices(np, graph, plastic_edges)
+            counts = np.bincount(presynaptic, minlength=graph.neuron_count)
+            indptr = np.empty(graph.neuron_count + 1, dtype=np.int32)
+            indptr[0] = 0
+            np.cumsum(counts, dtype=np.int64, out=indptr[1:])
+        else:
+            indptr = np.zeros(graph.neuron_count + 1, dtype=np.int32)
+        # plastic_indices is sorted in anatomical CSR edge order, so keeping
+        # it intact preserves the reference active-edge order exactly.
+        plastic_edges = plastic_edges.copy()
+        indptr.setflags(write=False)
+        plastic_edges.setflags(write=False)
+        index = PlasticRowIndex(indptr, plastic_edges, int(state.allocation_generation))
+        for old_key in tuple(self._plastic_row_cache):
+            if old_key[0] == id(graph) and old_key != key:
+                del self._plastic_row_cache[old_key]
+        self._plastic_row_cache[key] = index
+        return index
+
+    def plastic_row_cache_bytes(self) -> int:
+        return int(sum(index.nbytes for index in self._plastic_row_cache.values()))
+
     def _active_edges(self, brain):
         np = brain.np
-        graph, state = brain.connectome, brain.plasticity
+        state = brain.plasticity
+        if not self.plastic_row_cache_enabled or not hasattr(state, "plastic_indices"):
+            graph = brain.connectome
+            rows = sorted(brain._recent_presynaptic)
+            chunks = [
+                np.arange(int(graph.indptr[pre]), int(graph.indptr[pre + 1]), dtype=np.int32)
+                for pre in rows if int(graph.indptr[pre + 1]) > int(graph.indptr[pre])
+            ]
+            edges = np.concatenate(chunks) if chunks else np.empty(0, dtype=np.int32)
+            return edges[state.plastic_mask[edges] & (state.eligibility[edges] > 0.0)]
+        row_index = self._plastic_row_index(brain)
         rows = sorted(brain._recent_presynaptic)
         chunks = [
-            np.arange(int(graph.indptr[pre]), int(graph.indptr[pre + 1]), dtype=np.int32)
-            for pre in rows if int(graph.indptr[pre + 1]) > int(graph.indptr[pre])
+            row_index.edge_indices[int(row_index.indptr[pre]):int(row_index.indptr[pre + 1])]
+            for pre in rows if int(row_index.indptr[pre + 1]) > int(row_index.indptr[pre])
         ]
         edges = np.concatenate(chunks) if chunks else np.empty(0, dtype=np.int32)
+        # Allocation is cached; eligibility remains a live per-episode filter.
+        # Keep the live mask check for low-level/debug callers that may edit
+        # the mask directly; managed allocation changes invalidate the index
+        # through allocation_generation.
         return edges[state.plastic_mask[edges] & (state.eligibility[edges] > 0.0)]
 
     def _active_anatomical_edges(self, brain, *, plastic: bool):
@@ -315,20 +412,44 @@ class PlasticityController:
             if not len(upstream):
                 return self._join_credit(np, parts, ambiguous)
             upstream_post = graph.post_indices[upstream]
-            downstream_effect = {}
-            for intermediate in np.unique(upstream_post):
-                if route_index is not None:
-                    outgoing = route_index.downstream_edges_by_intermediate.get(int(intermediate), np.empty(0, dtype=np.int32))
-                else:
+            unique_posts, inverse = np.unique(upstream_post, return_inverse=True)
+            downstream_effect = np.zeros(len(unique_posts), dtype=np.float32)
+            if route_index is not None and self.prospective_index_enabled:
+                # Search the immutable sorted intermediate index, then reduce
+                # each original anatomical edge slice in its original order.
+                # The reduction order is deliberately the same as the old
+                # per-intermediate np.sum path, so learned values remain exact.
+                positions = np.searchsorted(
+                    route_index.downstream_intermediates,
+                    unique_posts,
+                )
+                valid = positions < len(route_index.downstream_intermediates)
+                if valid.any():
+                    valid_positions = np.flatnonzero(valid)
+                    valid[valid_positions] = (
+                        route_index.downstream_intermediates[positions[valid_positions]]
+                        == unique_posts[valid_positions]
+                    )
+                    for local, position in enumerate(positions):
+                        if not valid[local]:
+                            continue
+                        start = int(route_index.downstream_indptr[int(position)])
+                        stop = int(route_index.downstream_indptr[int(position) + 1])
+                        outgoing = route_index.downstream_edge_indices[start:stop]
+                        downstream_effect[local] = float(
+                            (graph.signed_synapse_counts[outgoing] * state.multiplier[outgoing]).sum()
+                        ) if len(outgoing) else 0.0
+            else:
+                for local, intermediate in enumerate(unique_posts):
                     start, stop = int(graph.indptr[intermediate]), int(graph.indptr[intermediate + 1])
                     outgoing = np.arange(start, stop, dtype=np.int32)
                     outgoing = outgoing[output_mask[graph.post_indices[outgoing]]]
-                # Net anatomical signed influence, scaled by current learned
-                # strength; never pick an arbitrary first outgoing edge.
-                downstream_effect[int(intermediate)] = float(
-                    (graph.signed_synapse_counts[outgoing] * state.multiplier[outgoing]).sum()
-                ) if len(outgoing) else 0.0
-            effects = np.asarray([downstream_effect[int(post)] for post in upstream_post], dtype=np.float32)
+                    # Net anatomical signed influence, scaled by current learned
+                    # strength; never pick an arbitrary first outgoing edge.
+                    downstream_effect[local] = float(
+                        (graph.signed_synapse_counts[outgoing] * state.multiplier[outgoing]).sum()
+                    ) if len(outgoing) else 0.0
+            effects = downstream_effect[inverse]
             downstream_sign = np.sign(effects)
             keep = np.abs(effects) > self.config.minimum_downstream_effect
             ambiguous = int((~keep).sum())
@@ -683,7 +804,13 @@ class PlasticityController:
         telemetry_observer=None,
         attribution_observer=None,
         timing_profiler=None,
+        telemetry_level: str = "full",
     ) -> DirectionalUpdate:
+        if telemetry_level not in {"full", "summary"}:
+            raise ValueError("telemetry_level must be 'full' or 'summary'")
+        # Diagnostic callbacks need the edge arrays regardless of the compact
+        # ordinary-training mode.  The learning math below is shared exactly.
+        materialize_edge_telemetry = telemetry_level == "full" or telemetry_observer is not None or attribution_observer is not None
         np = brain.np
         state = brain.plasticity
         if timing_profiler is not None:
@@ -694,7 +821,7 @@ class PlasticityController:
         total, sum_abs = 0, 0.0
         per_channel: dict[str, int] = {}
         changed_all = []
-        updated_edge_hops: dict[int, int] = {}
+        updated_edge_hops: dict[int, int] = {} if materialize_edge_telemetry else {}
         hops: dict[int, int] = {}
         excitatory = inhibitory = consolidated = ambiguous = 0
         directional_credits = {}
@@ -703,7 +830,7 @@ class PlasticityController:
         channel_sum_abs_delta: dict[str, float] = {}
         channel_unique_edge_updates: dict[str, int] = {}
         channel_hop_counts: dict[str, dict[int, int]] = {}
-        channel_edge_indices: dict[str, tuple[int, ...]] = {}
+        channel_edge_indices: dict[str, tuple[int, ...]] = {} if materialize_edge_telemetry else {}
 
         def directional_credit_for(name):
             nonlocal ambiguous
@@ -797,10 +924,12 @@ class PlasticityController:
             channel_sum_abs_delta[name] = float(np.abs(actual).sum())
             changed_edges = np.unique(edges[np.abs(actual) > 0.0])
             channel_unique_edge_updates[name] = int(len(changed_edges))
-            channel_edge_indices[name] = tuple(int(edge) for edge in changed_edges)
+            if materialize_edge_telemetry:
+                channel_edge_indices[name] = tuple(int(edge) for edge in changed_edges)
             sum_abs += channel_sum_abs_delta[name]; changed_all.append(edges)
-            for edge, hop in zip(edges, credit.hops):
-                updated_edge_hops[int(edge)] = int(hop)
+            if materialize_edge_telemetry:
+                for edge, hop in zip(edges, credit.hops):
+                    updated_edge_hops[int(edge)] = int(hop)
             for hop in np.unique(credit.hops):
                 hops[int(hop)] = hops.get(int(hop), 0) + int((credit.hops == hop).sum())
             channel_hop_counts[name] = {
@@ -851,13 +980,33 @@ class PlasticityController:
             np.clip(state.stability[edges], 0.0, 1.0, out=state.stability[edges])
             consolidated += int(len(edges)); reinforced.append(name)
 
-        updated = np.unique(np.concatenate(changed_all)).astype(np.int32, copy=False) if changed_all else np.empty(0, dtype=np.int32)
+        unique_updated = (
+            np.unique(np.concatenate(changed_all)).astype(np.int32, copy=False)
+            if changed_all else np.empty(0, dtype=np.int32)
+        )
+        updated = unique_updated if materialize_edge_telemetry else np.empty(0, dtype=np.int32)
+        if timing_profiler is not None:
+            # Keep packaging visible in P.8 without including it in the
+            # directional math timings.
+            with timing_profiler.section("directional_telemetry_packaging_seconds"):
+                result = DirectionalUpdate(
+                    total, per_channel, sum_abs / total if total else 0.0, updated, hops,
+                    excitatory, inhibitory, consolidated, int(len(unique_updated)), tuple(reinforced), ambiguous,
+                    sum_abs, updated_edge_hops,
+                    channel_sum_abs_delta,
+                    channel_unique_edge_updates,
+                    channel_hop_counts,
+                    channel_edge_indices,
+                    telemetry_level,
+                )
+            return result
         return DirectionalUpdate(
             total, per_channel, sum_abs / total if total else 0.0, updated, hops,
-            excitatory, inhibitory, consolidated, int(len(updated)), tuple(reinforced), ambiguous,
+            excitatory, inhibitory, consolidated, int(len(unique_updated)), tuple(reinforced), ambiguous,
             sum_abs, updated_edge_hops,
             channel_sum_abs_delta,
             channel_unique_edge_updates,
             channel_hop_counts,
             channel_edge_indices,
+            telemetry_level,
         )
