@@ -12,6 +12,8 @@ from .numba_kernels import (
     advance_sparse_lif_with_adaptation,
     scatter_csr_rows,
     scatter_csr_rows_with_plasticity,
+    scatter_csr_rows_with_std,
+    scatter_csr_rows_with_plasticity_and_std,
 )
 
 
@@ -121,6 +123,20 @@ class FastSparseStateMixin:
             NUMBA_AVAILABLE
             and requested_numba not in {"0", "false", "off", "no"}
         )
+        self._std_config = getattr(self, "presynaptic_depression_config", None)
+        self._std_enabled = bool(self._std_config is not None and self._std_config.enabled)
+        if self._std_enabled:
+            self.release_factor = np.ones(
+                int(self.connectome.neuron_count), dtype=np.float32
+            )
+            self.last_release_step = np.full(
+                int(self.connectome.neuron_count), -1, dtype=np.int64
+            )
+        else:
+            # Disabled STD must not add another dense neuron-sized state array
+            # to the normal P.8 path.
+            self.release_factor = np.empty(0, dtype=np.float32)
+            self.last_release_step = np.empty(0, dtype=np.int64)
         # Optional P.3 audit hook.  It is None in all normal runs, so timing
         # cannot alter model state or consume RNG values.
         self._neural_timing_profiler = None
@@ -140,6 +156,9 @@ class FastSparseStateMixin:
             chunks.clear()
         self._fast_peak_active = 0
         self.adaptation_mv.fill(0.0)
+        if self._std_enabled:
+            self.release_factor.fill(1.0)
+            self.last_release_step.fill(-1)
 
     @property
     def slow_adaptation_enabled(self) -> bool:
@@ -169,6 +188,80 @@ class FastSparseStateMixin:
         values = self.adaptation_mv[fired] + np.float32(config.spike_increment_mv)
         np.minimum(values, np.float32(config.max_adaptation_mv), out=values)
         self.adaptation_mv[fired] = values
+
+    def _std_release_for_pre(self, pre: int) -> float:
+        """Recover lazily, then depress after the current firing event."""
+        if not self._std_enabled:
+            return 1.0
+        np = self.np
+        config = self._std_config
+        old = float(self.release_factor[pre])
+        last = int(self.last_release_step[pre])
+        if last >= 0:
+            elapsed_ms = (int(self.step_index) - last) * float(self.params.dt_ms)
+            recovered = 1.0 - (1.0 - old) * math.exp(
+                -elapsed_ms / float(config.recovery_tau_ms)
+            )
+        else:
+            recovered = old
+        recovered = max(float(config.min_release_factor), recovered)
+        self.release_factor[pre] = np.float32(
+            max(float(config.min_release_factor), recovered * (1.0 - float(config.depression_fraction)))
+        )
+        self.last_release_step[pre] = int(self.step_index)
+        return recovered
+
+    def presynaptic_depression_summary(self) -> dict[str, float | int | bool]:
+        """Compact transient STD state summary; never serializes dense arrays."""
+        if not self._std_enabled:
+            return {
+                "enabled": False,
+                "depressed_neurons": 0,
+                "mean_release_factor_depressed": 1.0,
+                "minimum_release_factor": 1.0,
+                "fraction_at_floor": 0.0,
+                "mean_recovery_now": 1.0,
+                "extra_state_bytes": 0,
+            }
+        np = self.np
+        depressed = self.release_factor < np.float32(1.0 - 1e-7)
+        values = self.release_factor[depressed]
+        recovered_touched = self._std_recovered_factors()
+        return {
+            "enabled": True,
+            "touched_neurons": int(np.count_nonzero(self.last_release_step >= 0)),
+            "depressed_neurons": int(depressed.sum()),
+            "mean_release_factor_depressed": float(values.mean()) if len(values) else 1.0,
+            "minimum_release_factor": float(self.release_factor.min()) if len(self.release_factor) else 1.0,
+            "fraction_at_floor": float(
+                np.mean(self.release_factor <= np.float32(self._std_config.min_release_factor + 1e-6))
+            ) if len(self.release_factor) else 0.0,
+            "mean_recovery_now": float(recovered_touched.mean()) if len(recovered_touched) else 1.0,
+            "extra_state_bytes": int(self.release_factor.nbytes + self.last_release_step.nbytes),
+        }
+
+    def _std_recovered_factors(self):
+        """Return recovered factors only for touched neurons.
+
+        Telemetry must not turn the sparse lazy state into a dense per-neuron
+        work array.  The returned temporary is bounded by the neurons that
+        actually fired since the last reset.
+        """
+        if not self._std_enabled:
+            return self.np.empty(0, dtype=self.np.float32)
+        np = self.np
+        touched = np.flatnonzero(self.last_release_step >= 0)
+        if not len(touched):
+            return np.empty(0, dtype=np.float32)
+        result = self.release_factor[touched].astype(np.float32, copy=True)
+        elapsed = (int(self.step_index) - self.last_release_step[touched]).astype(np.float32) * np.float32(self.params.dt_ms)
+        result = np.maximum(
+            np.float32(self._std_config.min_release_factor),
+            1.0 - (1.0 - result) * np.exp(
+                -elapsed / np.float32(self._std_config.recovery_tau_ms)
+            ),
+        )
+        return result
 
     def fast_state_summary(self) -> dict[str, int | float]:
         n = int(self.connectome.neuron_count)
@@ -234,30 +327,45 @@ class FastSparseStateMixin:
             if canonical_total:
                 if self._numba_enabled:
                     if self.plasticity_tracking_enabled:
-                        scatter_csr_rows_with_plasticity(
-                            fired,
-                            indptr,
-                            posts,
-                            base_signed,
-                            self.plasticity.multiplier,
-                            target_slot,
-                            self.plasticity.plastic_mask,
-                            self.plasticity.usage_ema,
-                            self.plasticity.eligibility,
-                            scale,
-                            self.usage_alpha,
-                            self.eligibility_gain,
-                        )
+                        if self._std_enabled:
+                            config = self._std_config
+                            scatter_csr_rows_with_plasticity_and_std(
+                                fired, indptr, posts, base_signed,
+                                self.plasticity.multiplier, target_slot,
+                                self.plasticity.plastic_mask,
+                                self.plasticity.usage_ema,
+                                self.plasticity.eligibility,
+                                scale, self.usage_alpha, self.eligibility_gain,
+                                self.release_factor, self.last_release_step,
+                                self.step_index, self.params.dt_ms,
+                                config.recovery_tau_ms, config.depression_fraction,
+                                config.min_release_factor,
+                            )
+                        else:
+                            scatter_csr_rows_with_plasticity(
+                                fired, indptr, posts, base_signed,
+                                self.plasticity.multiplier, target_slot,
+                                self.plasticity.plastic_mask,
+                                self.plasticity.usage_ema,
+                                self.plasticity.eligibility,
+                                scale, self.usage_alpha, self.eligibility_gain,
+                            )
                     else:
-                        scatter_csr_rows(
-                            fired,
-                            indptr,
-                            posts,
-                            base_signed,
-                            self.plasticity.multiplier,
-                            target_slot,
-                            scale,
-                        )
+                        if self._std_enabled:
+                            config = self._std_config
+                            scatter_csr_rows_with_std(
+                                fired, indptr, posts, base_signed,
+                                self.plasticity.multiplier, target_slot, scale,
+                                self.release_factor, self.last_release_step,
+                                self.step_index, self.params.dt_ms,
+                                config.recovery_tau_ms, config.depression_fraction,
+                                config.min_release_factor,
+                            )
+                        else:
+                            scatter_csr_rows(
+                                fired, indptr, posts, base_signed,
+                                self.plasticity.multiplier, target_slot, scale,
+                            )
                 else:
                     lengths = (stops - starts).astype(np.int64, copy=False)
                     offsets = np.arange(canonical_total, dtype=np.int64)
@@ -270,13 +378,28 @@ class FastSparseStateMixin:
                         + offsets
                         - block_offsets
                     )
-                    np.add.at(
-                        target_slot,
-                        posts[edge_indices],
-                        base_signed[edge_indices]
-                        * self.plasticity.multiplier[edge_indices]
-                        * scale,
-                    )
+                    if self._std_enabled:
+                        for pre_raw, start_raw, stop_raw in zip(fired, starts, stops):
+                            pre = int(pre_raw)
+                            release = self._std_release_for_pre(pre)
+                            if int(stop_raw) > int(start_raw):
+                                edges = np.arange(int(start_raw), int(stop_raw), dtype=np.int32)
+                                np.add.at(
+                                    target_slot,
+                                    posts[edges],
+                                    base_signed[edges]
+                                    * self.plasticity.multiplier[edges]
+                                    * np.float32(release)
+                                    * scale,
+                                )
+                    else:
+                        np.add.at(
+                            target_slot,
+                            posts[edge_indices],
+                            base_signed[edge_indices]
+                            * self.plasticity.multiplier[edge_indices]
+                            * scale,
+                        )
                     if self.plasticity_tracking_enabled:
                         self.plasticity.record_use_indices(
                             edge_indices,
@@ -285,6 +408,9 @@ class FastSparseStateMixin:
                         )
                 if self.plasticity_tracking_enabled:
                     self._recent_presynaptic.update(int(pre) for pre in fired)
+            if self._std_enabled and canonical_total == 0:
+                for pre_raw in fired:
+                    self._std_release_for_pre(int(pre_raw))
             self._record_fast_delay_targets(fired)
             return canonical_total
 
@@ -307,9 +433,12 @@ class FastSparseStateMixin:
             pre = int(pre_raw)
             start = int(start_raw)
             stop = int(stop_raw)
+            std_release = self._std_release_for_pre(pre) if self._std_enabled else 1.0
             if stop > start:
                 count = stop - start
                 effective = self.plasticity.effective_signed_slice(base_signed, start, stop)
+                if self._std_enabled:
+                    effective = effective * np.float32(std_release)
                 output_posts[cursor : cursor + count] = posts[start:stop]
                 output_values[cursor : cursor + count] = effective * scale
                 cursor += count

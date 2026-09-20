@@ -35,6 +35,7 @@ from .directional_modulation import (
     PlasticityController,
 )
 from .performance import TimingProfiler
+from .presynaptic_depression import PresynapticDepressionConfig
 
 __all__ = [
     "AdaptiveReplayConfig",
@@ -70,4 +71,5 @@ __all__ = [
     "PlasticRowIndex",
     "PlasticityController",
     "TimingProfiler",
+    "PresynapticDepressionConfig",
 ]

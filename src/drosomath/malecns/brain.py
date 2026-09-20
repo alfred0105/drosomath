@@ -9,6 +9,7 @@ from drosomath.whole_brain import (
     OutgoingBudgetNormalizer,
     PlasticSparseFlyBrain,
     PlasticStateConfig,
+    PresynapticDepressionConfig,
     SlowAdaptationConfig,
     StructuralOverlayConfig,
     UsageRewardRule,
@@ -32,8 +33,12 @@ class PlasticMaleCNSBrain(FastSparseStateMixin, PlasticSparseFlyBrain):
         usage_alpha: float = 0.05,
         eligibility_gain: float = 1.0,
         slow_adaptation_config: SlowAdaptationConfig | None = None,
+        presynaptic_depression_config: PresynapticDepressionConfig | None = None,
     ) -> None:
         self.slow_adaptation_config = slow_adaptation_config or SlowAdaptationConfig()
+        self.presynaptic_depression_config = (
+            presynaptic_depression_config or PresynapticDepressionConfig()
+        )
         super().__init__(
             connectome,
             params=params,
