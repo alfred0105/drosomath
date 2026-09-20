@@ -109,6 +109,43 @@ class DistributedSymbolEncoder:
             self._indices[symbol] = values
             cursor += self.config.sensory_population_size
 
+    @classmethod
+    def from_fixed_populations(
+        cls,
+        connectome,
+        config: SymbolInterfaceConfig,
+        populations: Mapping[str, np.ndarray],
+        *,
+        source: str = "fixed",
+    ) -> "DistributedSymbolEncoder":
+        """Build a frozen encoder from already selected real neuron indices."""
+        obj = cls.__new__(cls)
+        obj.config = config
+        obj.connectome = connectome
+        obj._body_ids = _as_neuron_ids(connectome)
+        n = int(getattr(connectome, "neuron_count", len(obj._body_ids)))
+        if set(populations) != set(SYMBOLS):
+            raise ValueError("fixed input populations must contain exactly A, B, C, D")
+        obj._indices = {}
+        merged = []
+        for symbol in SYMBOLS:
+            values = np.asarray(populations[symbol], dtype=np.int32)
+            if values.ndim != 1 or len(values) != config.sensory_population_size:
+                raise ValueError("fixed input populations must have equal configured size")
+            if len(np.unique(values)) != len(values):
+                raise ValueError("fixed input populations contain duplicate neurons")
+            if len(values) and (int(values.min()) < 0 or int(values.max()) >= n):
+                raise IndexError("fixed input populations contain an invalid neuron index")
+            frozen = values.copy()
+            frozen.setflags(write=False)
+            obj._indices[symbol] = frozen
+            merged.append(frozen)
+        merged_values = np.concatenate(merged)
+        if len(np.unique(merged_values)) != len(merged_values):
+            raise ValueError("fixed input populations must be mutually disjoint")
+        obj.source = source
+        return obj
+
     @property
     def symbols(self) -> tuple[str, ...]:
         return SYMBOLS
@@ -369,6 +406,34 @@ class SymbolInterface:
             self.config,
             excluded_indices=np.concatenate(tuple(self.encoder.populations.values())),
         )
+
+    @classmethod
+    def with_input_populations(
+        cls,
+        connectome,
+        config: SymbolInterfaceConfig,
+        input_populations: Mapping[str, np.ndarray],
+        *,
+        output_populations: Mapping[str, np.ndarray] | None = None,
+        source: str = "fixed_input",
+    ) -> "SymbolInterface":
+        """Construct an interface with frozen inputs and an optional frozen output."""
+        obj = cls.__new__(cls)
+        obj.config = config
+        obj.encoder = DistributedSymbolEncoder.from_fixed_populations(
+            connectome, config, input_populations, source=source
+        )
+        if output_populations is None:
+            obj.decision_surface = SymbolDecisionSurface(
+                connectome,
+                config,
+                excluded_indices=np.concatenate(tuple(obj.encoder.populations.values())),
+            )
+        else:
+            obj.decision_surface = SymbolDecisionSurface.from_fixed_populations(
+                connectome, config, output_populations, source=source
+            )
+        return obj
 
     @classmethod
     def with_output_populations(
