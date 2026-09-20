@@ -25,6 +25,7 @@ from .plasticity_budget_adaptation import (
 from .plasticity_need import PlasticityNeedConfig, PlasticityNeedRecord, PlasticityNeedTracker
 from .structural_overlay import LearnedStructuralOverlay, StructuralOverlayConfig
 from .usage_learning import LearningUpdateStats, RewardCredit, UsageRewardRule
+from .slow_adaptation import SlowAdaptationConfig
 from .directional_modulation import (
     DirectionalModulationConfig,
     DirectionalRouteHealth,
@@ -60,6 +61,7 @@ __all__ = [
     "SparsePlasticityState",
     "StructuralOverlayConfig",
     "UsageRewardRule",
+    "SlowAdaptationConfig",
     "DirectionalModulationConfig",
     "DirectionalRouteHealth",
     "DirectionalUpdate",

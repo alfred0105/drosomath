@@ -123,3 +123,64 @@ if NUMBA_AVAILABLE:
                 g[neuron] = 0.0
                 refractory_until[neuron] = step_index + refractory_steps
         return fired_count
+
+    @njit(cache=True, nogil=True)
+    def advance_sparse_lif_with_adaptation(
+        active,
+        due,
+        due_slot,
+        v,
+        g,
+        refractory_until,
+        adaptation,
+        stimulated,
+        fired_out,
+        step_index,
+        resting_mv,
+        threshold_mv,
+        reset_mv,
+        membrane_decay,
+        g_to_v,
+        synapse_decay,
+        poisson_drive_mv,
+        refractory_steps,
+        adaptation_decay,
+        spike_increment_mv,
+        max_adaptation_mv,
+    ):
+        """Sparse LIF update with generic transient threshold adaptation."""
+        for offset in range(len(due)):
+            neuron = due[offset]
+            g[neuron] += due_slot[neuron]
+            due_slot[neuron] = 0.0
+
+        for offset in range(len(active)):
+            neuron = active[offset]
+            old_g = g[neuron]
+            v[neuron] = (
+                resting_mv
+                + (v[neuron] - resting_mv) * membrane_decay
+                + old_g * g_to_v
+            )
+            g[neuron] = old_g * synapse_decay
+            if step_index < refractory_until[neuron]:
+                v[neuron] = resting_mv
+                g[neuron] = 0.0
+            adaptation[neuron] *= adaptation_decay
+
+        for offset in range(len(stimulated)):
+            v[stimulated[offset]] += poisson_drive_mv
+
+        fired_count = 0
+        for offset in range(len(active)):
+            neuron = active[offset]
+            if v[neuron] > threshold_mv + adaptation[neuron] and step_index >= refractory_until[neuron]:
+                fired_out[fired_count] = neuron
+                fired_count += 1
+                adaptation[neuron] += spike_increment_mv
+                if adaptation[neuron] > max_adaptation_mv:
+                    adaptation[neuron] = max_adaptation_mv
+                v[neuron] = reset_mv
+                g[neuron] = 0.0
+                refractory_until[neuron] = step_index + refractory_steps
+        return fired_count

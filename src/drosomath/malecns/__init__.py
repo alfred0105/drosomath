@@ -92,6 +92,7 @@ from .contextual_prediction import (
     ContextualPredictionSession,
     ContextualPredictionTrial,
 )
+from drosomath.whole_brain import SlowAdaptationConfig
 
 __all__ = [
     "BrainOutputTrialResult",
@@ -166,6 +167,7 @@ __all__ = [
     "ContextualPredictionLearningSession",
     "ContextualPredictionSession",
     "ContextualPredictionTrial",
+    "SlowAdaptationConfig",
     "download_malecns",
     "load_malecns_v1",
     "missing_files",

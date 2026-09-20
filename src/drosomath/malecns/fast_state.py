@@ -9,6 +9,7 @@ from drosomath.whole_brain.structural_overlay import LearnedStructuralOverlay
 from .numba_kernels import (
     NUMBA_AVAILABLE,
     advance_sparse_lif,
+    advance_sparse_lif_with_adaptation,
     scatter_csr_rows,
     scatter_csr_rows_with_plasticity,
 )
@@ -107,6 +108,14 @@ class FastSparseStateMixin:
             [] for _ in range(len(self._delay_ring))
         ]
         self._fast_peak_active = 0
+        self.adaptation_mv = np.zeros(
+            int(self.connectome.neuron_count), dtype=np.float32
+        )
+        self._slow_adaptation_decay = (
+            self.slow_adaptation_config.decay_factor(self.params.dt_ms)
+            if self.slow_adaptation_config.enabled
+            else 1.0
+        )
         requested_numba = os.environ.get("DROSOMATH_NUMBA", "auto").strip().lower()
         self._numba_enabled = (
             NUMBA_AVAILABLE
@@ -130,6 +139,36 @@ class FastSparseStateMixin:
         for chunks in self._fast_delay_touched:
             chunks.clear()
         self._fast_peak_active = 0
+        self.adaptation_mv.fill(0.0)
+
+    @property
+    def slow_adaptation_enabled(self) -> bool:
+        return bool(self.slow_adaptation_config.enabled)
+
+    def slow_adaptation_summary(self) -> dict[str, float | int | bool]:
+        values = self.adaptation_mv
+        positive = values[values > 0.0]
+        return {
+            "enabled": self.slow_adaptation_enabled,
+            "adapted_neurons": int(len(positive)),
+            "mean_adaptation_mv": float(positive.mean()) if len(positive) else 0.0,
+            "max_adaptation_mv": float(values.max()) if len(values) else 0.0,
+            "extra_state_bytes": int(values.nbytes),
+        }
+
+    def _apply_slow_adaptation_decay(self, active) -> None:
+        if not self.slow_adaptation_enabled or len(active) == 0:
+            return
+        self.adaptation_mv[active] *= self._slow_adaptation_decay
+
+    def _apply_slow_adaptation_spikes(self, fired) -> None:
+        if not self.slow_adaptation_enabled or len(fired) == 0:
+            return
+        np = self.np
+        config = self.slow_adaptation_config
+        values = self.adaptation_mv[fired] + np.float32(config.spike_increment_mv)
+        np.minimum(values, np.float32(config.max_adaptation_mv), out=values)
+        self.adaptation_mv[fired] = values
 
     def fast_state_summary(self) -> dict[str, int | float]:
         n = int(self.connectome.neuron_count)
@@ -443,21 +482,19 @@ class FastSparseStateMixin:
                     ]
         if profiler is None:
             if self._numba_enabled:
-                fired_count = advance_sparse_lif(
-                    active, due, due_slot, self.v, self.g, self.refractory_until,
-                    stimulated, self._fast_fired, self.step_index,
-                    np.float32(p.resting_mv), np.float32(p.threshold_mv),
-                    np.float32(p.reset_mv), np.float32(self._membrane_decay),
-                    np.float32(self._g_to_v), np.float32(self._synapse_decay),
-                    np.float32(p.mv_per_synapse * p.poisson_drive_scale),
-                    self.refractory_steps,
-                )
-                fired = self._fast_fired[:fired_count]
-            else:
-                fired = self._advance_python(active, due, due_slot, stimulated, p)
-        else:
-            with profiler.section("active_neuron_state_update_seconds"):
-                if self._numba_enabled:
+                if self.slow_adaptation_enabled:
+                    fired_count = advance_sparse_lif_with_adaptation(
+                        active, due, due_slot, self.v, self.g, self.refractory_until,
+                        self.adaptation_mv, stimulated, self._fast_fired, self.step_index,
+                        np.float32(p.resting_mv), np.float32(p.threshold_mv),
+                        np.float32(p.reset_mv), np.float32(self._membrane_decay),
+                        np.float32(self._g_to_v), np.float32(self._synapse_decay),
+                        np.float32(p.mv_per_synapse * p.poisson_drive_scale),
+                        self.refractory_steps, np.float32(self._slow_adaptation_decay),
+                        np.float32(self.slow_adaptation_config.spike_increment_mv),
+                        np.float32(self.slow_adaptation_config.max_adaptation_mv),
+                    )
+                else:
                     fired_count = advance_sparse_lif(
                         active, due, due_slot, self.v, self.g, self.refractory_until,
                         stimulated, self._fast_fired, self.step_index,
@@ -467,9 +504,45 @@ class FastSparseStateMixin:
                         np.float32(p.mv_per_synapse * p.poisson_drive_scale),
                         self.refractory_steps,
                     )
+                fired = self._fast_fired[:fired_count]
+            else:
+                fired = (
+                    self._advance_python_with_slow_adaptation(active, due, due_slot, stimulated, p)
+                    if self.slow_adaptation_enabled
+                    else self._advance_python(active, due, due_slot, stimulated, p)
+                )
+        else:
+            with profiler.section("active_neuron_state_update_seconds"):
+                if self._numba_enabled:
+                    if self.slow_adaptation_enabled:
+                        fired_count = advance_sparse_lif_with_adaptation(
+                            active, due, due_slot, self.v, self.g, self.refractory_until,
+                            self.adaptation_mv, stimulated, self._fast_fired, self.step_index,
+                            np.float32(p.resting_mv), np.float32(p.threshold_mv),
+                            np.float32(p.reset_mv), np.float32(self._membrane_decay),
+                            np.float32(self._g_to_v), np.float32(self._synapse_decay),
+                            np.float32(p.mv_per_synapse * p.poisson_drive_scale),
+                            self.refractory_steps, np.float32(self._slow_adaptation_decay),
+                            np.float32(self.slow_adaptation_config.spike_increment_mv),
+                            np.float32(self.slow_adaptation_config.max_adaptation_mv),
+                        )
+                    else:
+                        fired_count = advance_sparse_lif(
+                            active, due, due_slot, self.v, self.g, self.refractory_until,
+                            stimulated, self._fast_fired, self.step_index,
+                            np.float32(p.resting_mv), np.float32(p.threshold_mv),
+                            np.float32(p.reset_mv), np.float32(self._membrane_decay),
+                            np.float32(self._g_to_v), np.float32(self._synapse_decay),
+                            np.float32(p.mv_per_synapse * p.poisson_drive_scale),
+                            self.refractory_steps,
+                        )
                     fired = self._fast_fired[:fired_count]
                 else:
-                    fired = self._advance_python(active, due, due_slot, stimulated, p)
+                    fired = (
+                        self._advance_python_with_slow_adaptation(active, due, due_slot, stimulated, p)
+                        if self.slow_adaptation_enabled
+                        else self._advance_python(active, due, due_slot, stimulated, p)
+                    )
 
         if profiler is None:
             transferred = self._schedule_spike_outputs(fired)
@@ -516,4 +589,34 @@ class FastSparseStateMixin:
             fired = active[local_fire].astype(np.int32, copy=False)
         else:
             fired = np.empty(0, dtype=np.int32)
+        return fired
+
+    def _advance_python_with_slow_adaptation(self, active, due, due_slot, stimulated, p):
+        """Reference sparse LIF update with transient threshold adaptation."""
+        np = self.np
+        if len(due):
+            self.g[due] += due_slot[due]
+            due_slot[due] = 0.0
+        if len(active):
+            old_g = self.g[active]
+            y = self.v[active] - p.resting_mv
+            self.v[active] = p.resting_mv + y * self._membrane_decay + old_g * self._g_to_v
+            self.g[active] = old_g * self._synapse_decay
+            refractory = self.step_index < self.refractory_until[active]
+            if refractory.any():
+                blocked = active[refractory]
+                self.v[blocked] = p.resting_mv
+                self.g[blocked] = 0.0
+            self._apply_slow_adaptation_decay(active)
+        if len(stimulated):
+            self.v[stimulated] += p.mv_per_synapse * p.poisson_drive_scale
+        if len(active):
+            local_fire = (
+                (self.v[active] > (p.threshold_mv + self.adaptation_mv[active]))
+                & (self.step_index >= self.refractory_until[active])
+            )
+            fired = active[local_fire].astype(np.int32, copy=False)
+        else:
+            fired = np.empty(0, dtype=np.int32)
+        self._apply_slow_adaptation_spikes(fired)
         return fired
