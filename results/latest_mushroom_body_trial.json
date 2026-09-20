@@ -1,0 +1,306 @@
+{
+  "config": {
+    "duration_ms": 20.0,
+    "min_connection_synapses": 5,
+    "reward": 1.0,
+    "seed": 7,
+    "stimulus_rate_hz": 205.0,
+    "trial_count": 5
+  },
+  "connectome": {
+    "dataset": "MaleCNS v1.0 / HHMI Janelia",
+    "edge_count": 6242118,
+    "inhibitory_neuron_fraction": 0.355500899820036,
+    "min_connection_synapses": 5,
+    "neuron_count": 166700,
+    "sign_model": "presynaptic consensus_nt in {gaba, glutamate, histamine} -> inhibitory; all other/unclear -> positive drive",
+    "synapse_count_in_loaded_edges": 89860280
+  },
+  "experiment": "connectome_mushroom_body_trial",
+  "mushroom_body": {
+    "dopamine_neuron_count": 344,
+    "dopamine_role": "reported circuit activity; reward remains an external trial signal",
+    "kc_to_mbon_edge_count": 14331,
+    "kenyon_cell_count": 1559,
+    "mbon_count": 97,
+    "plasticity_scope": "anatomical KC -> MBON edges only",
+    "type": "connectome_mushroom_body"
+  },
+  "stimulus_body_ids": [
+    10002,
+    10006,
+    10012,
+    10015,
+    10016,
+    10019,
+    10023,
+    10025
+  ],
+  "trials": [
+    {
+      "duration_ms": 20.0,
+      "learning": {
+        "budget": null,
+        "learning": {
+          "edge_updates": 0,
+          "max_abs_delta": 0.0,
+          "mean_abs_delta": 0.0
+        },
+        "mushroom_body": {
+          "dopamine_neuron_count": 344,
+          "dopamine_role": "reported circuit activity; reward remains an external trial signal",
+          "kc_to_mbon_edge_count": 14331,
+          "kenyon_cell_count": 1559,
+          "mbon_count": 97,
+          "plasticity_scope": "anatomical KC -> MBON edges only",
+          "type": "connectome_mushroom_body"
+        },
+        "plasticity": {
+          "edge_count": 6242118,
+          "mean_multiplier": 1.0,
+          "mean_stability": 0.0,
+          "mean_usage_ema": 0.0,
+          "plastic_edge_count": 14331,
+          "plastic_fraction": 1.0
+        },
+        "reward": 1.0,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null
+      },
+      "reward": 1.0,
+      "spikes": {
+        "dopamine_neurons": 0,
+        "kenyon_cells": 0,
+        "mbons": 2,
+        "total": 398
+      },
+      "stimulus_body_ids": [
+        10002,
+        10006,
+        10012,
+        10015,
+        10016,
+        10019,
+        10023,
+        10025
+      ]
+    },
+    {
+      "duration_ms": 20.0,
+      "learning": {
+        "budget": null,
+        "learning": {
+          "edge_updates": 0,
+          "max_abs_delta": 0.0,
+          "mean_abs_delta": 0.0
+        },
+        "mushroom_body": {
+          "dopamine_neuron_count": 344,
+          "dopamine_role": "reported circuit activity; reward remains an external trial signal",
+          "kc_to_mbon_edge_count": 14331,
+          "kenyon_cell_count": 1559,
+          "mbon_count": 97,
+          "plasticity_scope": "anatomical KC -> MBON edges only",
+          "type": "connectome_mushroom_body"
+        },
+        "plasticity": {
+          "edge_count": 6242118,
+          "mean_multiplier": 1.0,
+          "mean_stability": 0.0,
+          "mean_usage_ema": 0.0,
+          "plastic_edge_count": 14331,
+          "plastic_fraction": 1.0
+        },
+        "reward": 1.0,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null
+      },
+      "reward": 1.0,
+      "spikes": {
+        "dopamine_neurons": 0,
+        "kenyon_cells": 0,
+        "mbons": 0,
+        "total": 246
+      },
+      "stimulus_body_ids": [
+        10002,
+        10006,
+        10012,
+        10015,
+        10016,
+        10019,
+        10023,
+        10025
+      ]
+    },
+    {
+      "duration_ms": 20.0,
+      "learning": {
+        "budget": null,
+        "learning": {
+          "edge_updates": 0,
+          "max_abs_delta": 0.0,
+          "mean_abs_delta": 0.0
+        },
+        "mushroom_body": {
+          "dopamine_neuron_count": 344,
+          "dopamine_role": "reported circuit activity; reward remains an external trial signal",
+          "kc_to_mbon_edge_count": 14331,
+          "kenyon_cell_count": 1559,
+          "mbon_count": 97,
+          "plasticity_scope": "anatomical KC -> MBON edges only",
+          "type": "connectome_mushroom_body"
+        },
+        "plasticity": {
+          "edge_count": 6242118,
+          "mean_multiplier": 1.0,
+          "mean_stability": 0.0,
+          "mean_usage_ema": 0.0,
+          "plastic_edge_count": 14331,
+          "plastic_fraction": 1.0
+        },
+        "reward": 1.0,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null
+      },
+      "reward": 1.0,
+      "spikes": {
+        "dopamine_neurons": 0,
+        "kenyon_cells": 0,
+        "mbons": 0,
+        "total": 295
+      },
+      "stimulus_body_ids": [
+        10002,
+        10006,
+        10012,
+        10015,
+        10016,
+        10019,
+        10023,
+        10025
+      ]
+    },
+    {
+      "duration_ms": 20.0,
+      "learning": {
+        "budget": null,
+        "learning": {
+          "edge_updates": 0,
+          "max_abs_delta": 0.0,
+          "mean_abs_delta": 0.0
+        },
+        "mushroom_body": {
+          "dopamine_neuron_count": 344,
+          "dopamine_role": "reported circuit activity; reward remains an external trial signal",
+          "kc_to_mbon_edge_count": 14331,
+          "kenyon_cell_count": 1559,
+          "mbon_count": 97,
+          "plasticity_scope": "anatomical KC -> MBON edges only",
+          "type": "connectome_mushroom_body"
+        },
+        "plasticity": {
+          "edge_count": 6242118,
+          "mean_multiplier": 1.0,
+          "mean_stability": 0.0,
+          "mean_usage_ema": 0.0,
+          "plastic_edge_count": 14331,
+          "plastic_fraction": 1.0
+        },
+        "reward": 1.0,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null
+      },
+      "reward": 1.0,
+      "spikes": {
+        "dopamine_neurons": 0,
+        "kenyon_cells": 0,
+        "mbons": 0,
+        "total": 125
+      },
+      "stimulus_body_ids": [
+        10002,
+        10006,
+        10012,
+        10015,
+        10016,
+        10019,
+        10023,
+        10025
+      ]
+    },
+    {
+      "duration_ms": 20.0,
+      "learning": {
+        "budget": null,
+        "learning": {
+          "edge_updates": 0,
+          "max_abs_delta": 0.0,
+          "mean_abs_delta": 0.0
+        },
+        "mushroom_body": {
+          "dopamine_neuron_count": 344,
+          "dopamine_role": "reported circuit activity; reward remains an external trial signal",
+          "kc_to_mbon_edge_count": 14331,
+          "kenyon_cell_count": 1559,
+          "mbon_count": 97,
+          "plasticity_scope": "anatomical KC -> MBON edges only",
+          "type": "connectome_mushroom_body"
+        },
+        "plasticity": {
+          "edge_count": 6242118,
+          "mean_multiplier": 1.0,
+          "mean_stability": 0.0,
+          "mean_usage_ema": 0.0,
+          "plastic_edge_count": 14331,
+          "plastic_fraction": 1.0
+        },
+        "reward": 1.0,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null
+      },
+      "reward": 1.0,
+      "spikes": {
+        "dopamine_neurons": 0,
+        "kenyon_cells": 0,
+        "mbons": 0,
+        "total": 285
+      },
+      "stimulus_body_ids": [
+        10002,
+        10006,
+        10012,
+        10015,
+        10016,
+        10019,
+        10023,
+        10025
+      ]
+    }
+  ]
+}

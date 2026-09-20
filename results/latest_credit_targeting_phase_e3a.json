@@ -1,0 +1,165 @@
+{
+  "baseline": {
+    "accuracy": 0.8383333333333334,
+    "baseline_below_margin": {
+      "mean_fraction_peak_causal_edges_updated": 0.0,
+      "mean_fraction_updated_in_any_trial_causal_set": 0.0,
+      "mean_fraction_updated_in_early_causal_set": 0.0,
+      "mean_fraction_updated_in_final_window_causal_set": 0.0,
+      "mean_fraction_updated_in_peak_window_causal_set": 0.0,
+      "mean_peak_final_causal_jaccard": 1.0,
+      "mean_updated_2hop_fraction": 0.0,
+      "mean_updated_direct_1hop_fraction": 0.0,
+      "mean_updated_edge_count": 0.0,
+      "median_peak_final_causal_jaccard": 1.0,
+      "next_same_key": {
+        "mean_next_same_key_peak_delta": 0.4376750700280112,
+        "mean_next_same_key_success_change": -0.11764705882352941,
+        "median_next_same_key_peak_delta": 0.0,
+        "pair_count": 357,
+        "success_decline_count": 42,
+        "success_improvement_count": 0
+      },
+      "selected_trial_count": 399
+    },
+    "config": {
+      "credit_targeting_diagnostic": true,
+      "success_margin_directional_learning": false
+    },
+    "credit_targeting": {
+      "mean_fraction_peak_causal_edges_updated": 0.0,
+      "mean_fraction_updated_in_any_trial_causal_set": 0.0,
+      "mean_fraction_updated_in_early_causal_set": 0.0,
+      "mean_fraction_updated_in_final_window_causal_set": 0.0,
+      "mean_fraction_updated_in_peak_window_causal_set": 0.0,
+      "mean_peak_final_causal_jaccard": 1.0,
+      "mean_updated_2hop_fraction": 0.0,
+      "mean_updated_direct_1hop_fraction": 0.0,
+      "mean_updated_edge_count": 0.0,
+      "median_peak_final_causal_jaccard": 1.0,
+      "next_same_key": {
+        "mean_next_same_key_peak_delta": 0.4376750700280112,
+        "mean_next_same_key_success_change": -0.11764705882352941,
+        "median_next_same_key_peak_delta": 0.0,
+        "pair_count": 357,
+        "success_decline_count": 42,
+        "success_improvement_count": 0
+      },
+      "selected_trial_count": 399
+    },
+    "failure_count": 97,
+    "key_sharing": {
+      "fraction_updated_edges_used_by_at_least_2_keys": 0.0,
+      "fraction_updated_edges_used_by_at_least_5_keys": 0.0,
+      "key_count": 60,
+      "maximum_pairwise_updated_edge_overlap": 0.0,
+      "mean_pairwise_updated_edge_overlap": 0.0,
+      "median_pairwise_updated_edge_overlap": 0.0,
+      "unique_margin_updated_edge_count": 0
+    },
+    "macro_recent_accuracy": 0.8383333333333333,
+    "minimum_recent_accuracy": 0.3,
+    "plastic_budget": {
+      "drift": 0,
+      "end": 311433,
+      "start": 311433
+    }
+  },
+  "comparison": {
+    "cross_key_maximum_overlap": 0.6140350877192983,
+    "cross_key_mean_overlap": 0.38555817864366854,
+    "cross_key_median_overlap": 0.3837670273331545,
+    "early_window_update_overlap": 0.7997719289235059,
+    "final_window_update_overlap": 0.7520663069584523,
+    "fraction_edges_used_by_at_least_2_keys": 0.7545103092783505,
+    "fraction_edges_used_by_at_least_5_keys": 0.5335051546391752,
+    "fraction_peak_causal_edges_updated": 0.0019836314011389164,
+    "next_same_key_peak_delta_baseline": 0.4376750700280112,
+    "next_same_key_peak_delta_margin": 0.6376218662952646,
+    "next_same_key_success_change_baseline": -0.11764705882352941,
+    "next_same_key_success_change_margin": -0.10863509749303621,
+    "peak_window_update_overlap_delta": 0.7520663069584523
+  },
+  "conclusion": {
+    "margin_updates_mostly_final_window_only": false,
+    "margin_updates_strongly_aligned_with_peak_window": false,
+    "next_same_key_peak_improved_more_than_baseline": true,
+    "updated_edges_heavily_shared_across_keys": true
+  },
+  "margin": {
+    "accuracy": 0.8333333333333334,
+    "baseline_below_margin": {
+      "mean_fraction_peak_causal_edges_updated": 0.0,
+      "mean_fraction_updated_in_any_trial_causal_set": 0.0,
+      "mean_fraction_updated_in_early_causal_set": 0.0,
+      "mean_fraction_updated_in_final_window_causal_set": 0.0,
+      "mean_fraction_updated_in_peak_window_causal_set": 0.0,
+      "mean_peak_final_causal_jaccard": 0.0,
+      "mean_updated_2hop_fraction": 0.0,
+      "mean_updated_direct_1hop_fraction": 0.0,
+      "mean_updated_edge_count": 0.0,
+      "median_peak_final_causal_jaccard": 0.0,
+      "next_same_key": {
+        "mean_next_same_key_peak_delta": 0.6376218662952646,
+        "mean_next_same_key_success_change": -0.10863509749303621,
+        "median_next_same_key_peak_delta": 0.78125,
+        "pair_count": 359,
+        "success_decline_count": 39,
+        "success_improvement_count": 0
+      },
+      "selected_trial_count": 0
+    },
+    "config": {
+      "credit_targeting_diagnostic": true,
+      "success_margin_directional_learning": true
+    },
+    "credit_targeting": {
+      "mean_fraction_peak_causal_edges_updated": 0.0019836314011389164,
+      "mean_fraction_updated_in_any_trial_causal_set": 1.0,
+      "mean_fraction_updated_in_early_causal_set": 0.7997719289235059,
+      "mean_fraction_updated_in_final_window_causal_set": 0.7520663069584523,
+      "mean_fraction_updated_in_peak_window_causal_set": 0.7520663069584523,
+      "mean_peak_final_causal_jaccard": 1.0,
+      "mean_updated_2hop_fraction": 0.5576323618827305,
+      "mean_updated_direct_1hop_fraction": 0.4423676381172695,
+      "mean_updated_edge_count": 144.67412935323384,
+      "median_peak_final_causal_jaccard": 1.0,
+      "next_same_key": {
+        "mean_next_same_key_peak_delta": 0.6376218662952646,
+        "mean_next_same_key_success_change": -0.10863509749303621,
+        "median_next_same_key_peak_delta": 0.78125,
+        "pair_count": 359,
+        "success_decline_count": 39,
+        "success_improvement_count": 0
+      },
+      "selected_trial_count": 402
+    },
+    "failure_count": 100,
+    "key_sharing": {
+      "fraction_updated_edges_used_by_at_least_2_keys": 0.7545103092783505,
+      "fraction_updated_edges_used_by_at_least_5_keys": 0.5335051546391752,
+      "key_count": 60,
+      "maximum_pairwise_updated_edge_overlap": 0.6140350877192983,
+      "mean_pairwise_updated_edge_overlap": 0.38555817864366854,
+      "median_pairwise_updated_edge_overlap": 0.3837670273331545,
+      "unique_margin_updated_edge_count": 1552
+    },
+    "macro_recent_accuracy": 0.8333333333333334,
+    "minimum_recent_accuracy": 0.3,
+    "plastic_budget": {
+      "drift": 0,
+      "end": 311433,
+      "start": 311433
+    }
+  },
+  "pass": true,
+  "protocol": {
+    "connectome": "MaleCNS v1 min_connection_synapses=5",
+    "credit_targeting_diagnostic": true,
+    "resume": false,
+    "same_config_except_success_margin": true,
+    "seed": 7,
+    "temporal_engagement_diagnostic": true,
+    "trials": 600
+  }
+}

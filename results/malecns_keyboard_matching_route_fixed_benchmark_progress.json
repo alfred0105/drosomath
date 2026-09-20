@@ -1,0 +1,5938 @@
+{
+  "accuracy": 0.9033333333333333,
+  "body": {
+    "arms": [
+      {
+        "elbow": [
+          0.6996891775664278,
+          0.4888540427578572
+        ],
+        "endpoint": [
+          0.5874309205765658,
+          0.6028631815915406
+        ],
+        "shoulder": [
+          0.5,
+          0.5
+        ]
+      }
+    ],
+    "done": true,
+    "elapsed_s": 0.1,
+    "endpoints": [
+      [
+        0.5874309205765658,
+        0.6028631815915406
+      ]
+    ],
+    "targets": [
+      {
+        "hitbox_height": 0.026,
+        "hitbox_shape": "box",
+        "hitbox_width": 0.026,
+        "id": "\u314a",
+        "owner_arm": null,
+        "radius": 0.025,
+        "x": 0.5874309205765658,
+        "y": 0.6028631815915406
+      }
+    ]
+  },
+  "click_window": [
+    true,
+    true,
+    true,
+    false,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    false,
+    false,
+    true,
+    true,
+    true
+  ],
+  "click_window_reached": false,
+  "click_window_size": 20,
+  "completed_trials": 600,
+  "config": {
+    "background_neurons": 6,
+    "body_mode": "one_arm_fan",
+    "budget_strength": 0.25,
+    "checkpoint_every": 32,
+    "click_evidence_windows": 5,
+    "click_gate_threshold_hz": 9.0,
+    "click_integration_windows": 1,
+    "click_margin_reward_scale": 0.5,
+    "click_margin_target_hz": 15.0,
+    "click_only": true,
+    "click_penalty": 1.2,
+    "click_teacher_credit_floor": 0.05,
+    "click_teacher_learning_rate": 0.08,
+    "click_window_size": 20,
+    "consecutive_correct_bonus": 0.25,
+    "control_window_ms": 20.0,
+    "correct_distance_penalty_scale": 0.2,
+    "coverage_interval": 4,
+    "curriculum_stage": "click_accuracy",
+    "dashboard_update_interval_seconds": 0.5,
+    "distance_penalty_scale": 1.2,
+    "duration_ms": 100.0,
+    "hard_mining_floor": 0.1,
+    "hard_mining_power": 2.0,
+    "learning_rate": 0.02,
+    "lock_arm_during_click_training": true,
+    "low_peak_click_penalty_scale": 0.0,
+    "max_consecutive_bonus": 1.0,
+    "max_control_windows": 30,
+    "min_connection_synapses": 5,
+    "min_trials_per_key": 5,
+    "motor_population_size": 64,
+    "peak_regression_escalation": 0.5,
+    "peak_regression_fixed_penalty": 0.8,
+    "peak_regression_max_penalty": 2.0,
+    "peak_regression_trigger_hz": 1.5,
+    "persistent_deficit_ema_alpha": 0.25,
+    "persistent_deficit_max_strength": 2.0,
+    "persistent_deficit_streak_gain": 0.15,
+    "persistent_peak_ema_alpha": 0.25,
+    "plastic_fraction": 0.05,
+    "profile_timing": false,
+    "resume": false,
+    "retention_degraded_accuracy": 0.8,
+    "retention_probe_interval": 600,
+    "retention_replay_bonus": 0.5,
+    "retention_trials_per_key": 5,
+    "robust_mastery_enabled": false,
+    "robust_mastery_macro_accuracy": 0.95,
+    "robust_mastery_min_key_accuracy": 0.9,
+    "seed": 7,
+    "stimulus_rate_hz": 205.0,
+    "target_accuracy": 0.8,
+    "teacher_confirmation_stability_gain": 0.05,
+    "teacher_memory_edges_per_key": 128,
+    "teacher_stability_protection": 0.85,
+    "token_neurons": 6,
+    "trials": 600
+  },
+  "evaluation_accuracy": 0.0,
+  "evaluation_correct": 0,
+  "evaluation_failures": 0,
+  "evaluation_number": 0,
+  "evaluation_passed": false,
+  "evaluation_per_key": {
+    "0": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "1": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "2": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "3": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "4": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "5": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "6": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "7": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "8": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "9": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "A": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "B": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "C": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "D": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "E": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "F": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "G": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "H": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "I": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "J": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "K": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "L": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "M": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "N": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "O": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "P": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "Q": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "R": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "S": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "T": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "U": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "V": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "W": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "X": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "Y": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "Z": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3131": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3134": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3137": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3139": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3141": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3142": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3145": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3147": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3148": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u314a": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u314b": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u314c": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u314d": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u314e": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u314f": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3151": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3153": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3155": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3157": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u315b": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u315c": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3160": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3161": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3163": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    }
+  },
+  "evaluation_ready": false,
+  "evaluation_total": 1200,
+  "evaluation_trials": 0,
+  "experiment": "malecns_virtual_keyboard_matching_v1",
+  "key_accuracy_reached": false,
+  "keyboard_layout": [
+    {
+      "height": 0.026,
+      "label": "\u3131",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5280680782603975,
+      "y": 0.36795007390093626
+    },
+    {
+      "height": 0.026,
+      "label": "\u3134",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5595648486678348,
+      "y": 0.3788512121266666
+    },
+    {
+      "height": 0.026,
+      "label": "\u3137",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5874309205765658,
+      "y": 0.39713681840845944
+    },
+    {
+      "height": 0.026,
+      "label": "\u3139",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6099677535267953,
+      "y": 0.42169231720788825
+    },
+    {
+      "height": 0.026,
+      "label": "\u3141",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6258016439435461,
+      "y": 0.45102095977766343
+    },
+    {
+      "height": 0.026,
+      "label": "\u3142",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6339674574656889,
+      "y": 0.4833350565503862
+    },
+    {
+      "height": 0.026,
+      "label": "\u3145",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6339674574656889,
+      "y": 0.5166649434496138
+    },
+    {
+      "height": 0.026,
+      "label": "\u3147",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6258016439435461,
+      "y": 0.5489790402223366
+    },
+    {
+      "height": 0.026,
+      "label": "\u3148",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6099677535267953,
+      "y": 0.5783076827921118
+    },
+    {
+      "height": 0.026,
+      "label": "\u314a",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5874309205765658,
+      "y": 0.6028631815915406
+    },
+    {
+      "height": 0.026,
+      "label": "\u314b",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5595648486678348,
+      "y": 0.6211487878733334
+    },
+    {
+      "height": 0.026,
+      "label": "\u314c",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5280680782603975,
+      "y": 0.6320499260990637
+    },
+    {
+      "height": 0.026,
+      "label": "\u314d",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5387235524148077,
+      "y": 0.3178200093633287
+    },
+    {
+      "height": 0.026,
+      "label": "\u314e",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.58217743010655,
+      "y": 0.3328595426562345
+    },
+    {
+      "height": 0.026,
+      "label": "\u314f",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.620622288573225,
+      "y": 0.35808690687833755
+    },
+    {
+      "height": 0.026,
+      "label": "\u3151",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.651714771069375,
+      "y": 0.39196440059236437
+    },
+    {
+      "height": 0.026,
+      "label": "\u3153",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.673559675440633,
+      "y": 0.4324270648784431
+    },
+    {
+      "height": 0.026,
+      "label": "\u3155",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6848254737258116,
+      "y": 0.4770085502408106
+    },
+    {
+      "height": 0.026,
+      "label": "\u3157",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6848254737258116,
+      "y": 0.5229914497591893
+    },
+    {
+      "height": 0.026,
+      "label": "\u315b",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.673559675440633,
+      "y": 0.5675729351215568
+    },
+    {
+      "height": 0.026,
+      "label": "\u315c",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.651714771069375,
+      "y": 0.6080355994076356
+    },
+    {
+      "height": 0.026,
+      "label": "\u3160",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.620622288573225,
+      "y": 0.6419130931216624
+    },
+    {
+      "height": 0.026,
+      "label": "\u3161",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.58217743010655,
+      "y": 0.6671404573437655
+    },
+    {
+      "height": 0.026,
+      "label": "\u3163",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5387235524148077,
+      "y": 0.6821799906366712
+    },
+    {
+      "height": 0.026,
+      "label": "A",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5493790265692179,
+      "y": 0.26768994482572117
+    },
+    {
+      "height": 0.026,
+      "label": "B",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6047900115452651,
+      "y": 0.2868678731858024
+    },
+    {
+      "height": 0.026,
+      "label": "C",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6538136565698842,
+      "y": 0.31903699534821567
+    },
+    {
+      "height": 0.026,
+      "label": "D",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6934617886119547,
+      "y": 0.36223648397684044
+    },
+    {
+      "height": 0.026,
+      "label": "E",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7213177069377199,
+      "y": 0.41383316997922276
+    },
+    {
+      "height": 0.026,
+      "label": "F",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7356834899859342,
+      "y": 0.470682043931235
+    },
+    {
+      "height": 0.026,
+      "label": "G",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7356834899859342,
+      "y": 0.529317956068765
+    },
+    {
+      "height": 0.026,
+      "label": "H",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7213177069377199,
+      "y": 0.5861668300207772
+    },
+    {
+      "height": 0.026,
+      "label": "I",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6934617886119547,
+      "y": 0.6377635160231596
+    },
+    {
+      "height": 0.026,
+      "label": "J",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6538136565698842,
+      "y": 0.6809630046517843
+    },
+    {
+      "height": 0.026,
+      "label": "K",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6047900115452651,
+      "y": 0.7131321268141976
+    },
+    {
+      "height": 0.026,
+      "label": "L",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5493790265692179,
+      "y": 0.7323100551742788
+    },
+    {
+      "height": 0.026,
+      "label": "M",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.560034500723628,
+      "y": 0.21755988028811368
+    },
+    {
+      "height": 0.026,
+      "label": "N",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6274025929839802,
+      "y": 0.24087620371537033
+    },
+    {
+      "height": 0.026,
+      "label": "O",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6870050245665434,
+      "y": 0.27998708381809384
+    },
+    {
+      "height": 0.026,
+      "label": "P",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7352088061545344,
+      "y": 0.33250856736131656
+    },
+    {
+      "height": 0.026,
+      "label": "Q",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7690757384348068,
+      "y": 0.39523927508000245
+    },
+    {
+      "height": 0.026,
+      "label": "R",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7865415062460568,
+      "y": 0.4643555376216594
+    },
+    {
+      "height": 0.026,
+      "label": "S",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7865415062460568,
+      "y": 0.5356444623783405
+    },
+    {
+      "height": 0.026,
+      "label": "T",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7690757384348068,
+      "y": 0.6047607249199975
+    },
+    {
+      "height": 0.026,
+      "label": "U",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7352088061545344,
+      "y": 0.6674914326386834
+    },
+    {
+      "height": 0.026,
+      "label": "V",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6870050245665433,
+      "y": 0.7200129161819062
+    },
+    {
+      "height": 0.026,
+      "label": "W",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6274025929839802,
+      "y": 0.7591237962846297
+    },
+    {
+      "height": 0.026,
+      "label": "X",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.560034500723628,
+      "y": 0.7824401197118863
+    },
+    {
+      "height": 0.026,
+      "label": "Y",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5706899748780382,
+      "y": 0.16742981575050614
+    },
+    {
+      "height": 0.026,
+      "label": "Z",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6500151744226953,
+      "y": 0.19488453424493818
+    },
+    {
+      "height": 0.026,
+      "label": "0",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7201963925632027,
+      "y": 0.24093717228797196
+    },
+    {
+      "height": 0.026,
+      "label": "1",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7769558236971141,
+      "y": 0.30278065074579263
+    },
+    {
+      "height": 0.026,
+      "label": "2",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.8168337699318937,
+      "y": 0.3766453801807821
+    },
+    {
+      "height": 0.026,
+      "label": "3",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.8373995225061794,
+      "y": 0.4580290313120838
+    },
+    {
+      "height": 0.026,
+      "label": "4",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.8373995225061794,
+      "y": 0.5419709686879162
+    },
+    {
+      "height": 0.026,
+      "label": "5",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.8168337699318937,
+      "y": 0.6233546198192179
+    },
+    {
+      "height": 0.026,
+      "label": "6",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7769558236971141,
+      "y": 0.6972193492542074
+    },
+    {
+      "height": 0.026,
+      "label": "7",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.7201963925632026,
+      "y": 0.7590628277120282
+    },
+    {
+      "height": 0.026,
+      "label": "8",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.6500151744226953,
+      "y": 0.8051154657550619
+    },
+    {
+      "height": 0.026,
+      "label": "9",
+      "owner_arm": null,
+      "width": 0.026,
+      "x": 0.5706899748780382,
+      "y": 0.8325701842494939
+    }
+  ],
+  "macro_recent_accuracy": 0.9033333333333334,
+  "mastery_passed": false,
+  "mastery_reached": false,
+  "median_recent_accuracy": 1.0,
+  "min_trials_per_key": 5,
+  "minimum_recent_accuracy": 0.5,
+  "motor_channel_count": 5,
+  "per_key": {
+    "0": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "1": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "2": {
+      "accuracy": 0.7,
+      "correct": 7,
+      "mastered": false,
+      "recent_accuracy": 0.7,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "recent_correct": 7,
+      "trials": 10
+    },
+    "3": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "4": {
+      "accuracy": 0.9,
+      "correct": 9,
+      "mastered": false,
+      "recent_accuracy": 0.9,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "recent_correct": 9,
+      "trials": 10
+    },
+    "5": {
+      "accuracy": 0.5,
+      "correct": 5,
+      "mastered": false,
+      "recent_accuracy": 0.5,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ],
+      "recent_correct": 5,
+      "trials": 10
+    },
+    "6": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "7": {
+      "accuracy": 0.6,
+      "correct": 6,
+      "mastered": false,
+      "recent_accuracy": 0.6,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false
+      ],
+      "recent_correct": 6,
+      "trials": 10
+    },
+    "8": {
+      "accuracy": 0.6,
+      "correct": 6,
+      "mastered": false,
+      "recent_accuracy": 0.6,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        false,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        true
+      ],
+      "recent_correct": 6,
+      "trials": 10
+    },
+    "9": {
+      "accuracy": 0.9,
+      "correct": 9,
+      "mastered": false,
+      "recent_accuracy": 0.9,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 9,
+      "trials": 10
+    },
+    "A": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "B": {
+      "accuracy": 0.9,
+      "correct": 9,
+      "mastered": false,
+      "recent_accuracy": 0.9,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 9,
+      "trials": 10
+    },
+    "C": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "D": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "E": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "F": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "G": {
+      "accuracy": 0.9,
+      "correct": 9,
+      "mastered": false,
+      "recent_accuracy": 0.9,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 9,
+      "trials": 10
+    },
+    "H": {
+      "accuracy": 0.9,
+      "correct": 9,
+      "mastered": false,
+      "recent_accuracy": 0.9,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "recent_correct": 9,
+      "trials": 10
+    },
+    "I": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "J": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "K": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "L": {
+      "accuracy": 0.7,
+      "correct": 7,
+      "mastered": false,
+      "recent_accuracy": 0.7,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "recent_correct": 7,
+      "trials": 10
+    },
+    "M": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "N": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "O": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "P": {
+      "accuracy": 0.9,
+      "correct": 9,
+      "mastered": false,
+      "recent_accuracy": 0.9,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 9,
+      "trials": 10
+    },
+    "Q": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "R": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "S": {
+      "accuracy": 0.7,
+      "correct": 7,
+      "mastered": false,
+      "recent_accuracy": 0.7,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true
+      ],
+      "recent_correct": 7,
+      "trials": 10
+    },
+    "T": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "U": {
+      "accuracy": 0.9,
+      "correct": 9,
+      "mastered": false,
+      "recent_accuracy": 0.9,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 9,
+      "trials": 10
+    },
+    "V": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "W": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "X": {
+      "accuracy": 0.9,
+      "correct": 9,
+      "mastered": false,
+      "recent_accuracy": 0.9,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 9,
+      "trials": 10
+    },
+    "Y": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "Z": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "\u3131": {
+      "accuracy": 0.8,
+      "correct": 8,
+      "mastered": false,
+      "recent_accuracy": 0.8,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "recent_correct": 8,
+      "trials": 10
+    },
+    "\u3134": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "\u3137": {
+      "accuracy": 0.8,
+      "correct": 8,
+      "mastered": false,
+      "recent_accuracy": 0.8,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 8,
+      "trials": 10
+    },
+    "\u3139": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "\u3141": {
+      "accuracy": 0.9,
+      "correct": 9,
+      "mastered": false,
+      "recent_accuracy": 0.9,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 9,
+      "trials": 10
+    },
+    "\u3142": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "\u3145": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "\u3147": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "\u3148": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "\u314a": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "\u314b": {
+      "accuracy": 0.8,
+      "correct": 8,
+      "mastered": false,
+      "recent_accuracy": 0.8,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "recent_correct": 8,
+      "trials": 10
+    },
+    "\u314c": {
+      "accuracy": 0.6,
+      "correct": 6,
+      "mastered": false,
+      "recent_accuracy": 0.6,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        false,
+        true,
+        false,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 6,
+      "trials": 10
+    },
+    "\u314d": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "\u314e": {
+      "accuracy": 0.9,
+      "correct": 9,
+      "mastered": false,
+      "recent_accuracy": 0.9,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 9,
+      "trials": 10
+    },
+    "\u314f": {
+      "accuracy": 0.7,
+      "correct": 7,
+      "mastered": false,
+      "recent_accuracy": 0.7,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 7,
+      "trials": 10
+    },
+    "\u3151": {
+      "accuracy": 0.9,
+      "correct": 9,
+      "mastered": false,
+      "recent_accuracy": 0.9,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "recent_correct": 9,
+      "trials": 10
+    },
+    "\u3153": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "\u3155": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "\u3157": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "\u315b": {
+      "accuracy": 0.7,
+      "correct": 7,
+      "mastered": false,
+      "recent_accuracy": 0.7,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "recent_correct": 7,
+      "trials": 10
+    },
+    "\u315c": {
+      "accuracy": 0.8,
+      "correct": 8,
+      "mastered": false,
+      "recent_accuracy": 0.8,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 8,
+      "trials": 10
+    },
+    "\u3160": {
+      "accuracy": 1.0,
+      "correct": 10,
+      "mastered": false,
+      "recent_accuracy": 1.0,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "recent_correct": 10,
+      "trials": 10
+    },
+    "\u3161": {
+      "accuracy": 0.5,
+      "correct": 5,
+      "mastered": false,
+      "recent_accuracy": 0.5,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false
+      ],
+      "recent_correct": 5,
+      "trials": 10
+    },
+    "\u3163": {
+      "accuracy": 0.8,
+      "correct": 8,
+      "mastered": false,
+      "recent_accuracy": 0.8,
+      "recent_attempts": 10,
+      "recent_clicks": [
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "recent_correct": 8,
+      "trials": 10
+    }
+  },
+  "perfect_1200_passed": false,
+  "phase": "training",
+  "recent_trials": [
+    {
+      "active_click_output_neuron_count": 19,
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6395826153752291,
+              0.35676350505192167
+            ],
+            "endpoint": [
+              0.6339674574656889,
+              0.5166649434496138
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.15000000000000002,
+        "endpoints": [
+          [
+            0.6339674574656889,
+            0.5166649434496138
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "\u3145",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.6339674574656889,
+            "y": 0.5166649434496138
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.2916666666666667,
+      "click_population_spike_count": 29,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "\u3145",
+      "consecutive_bonus": 1.0,
+      "correct": true,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 10,
+      "deficit_ema": 0.0,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.13857450000068638,
+      "global_learning_reward": 2.2916666666666665,
+      "label": "\u3145",
+      "learned": true,
+      "learning": {
+        "active_route": {
+          "active_eligible_teacher_edges": 13,
+          "active_teacher_fraction": 0.41935483870967744,
+          "active_teacher_presynaptic_neurons": 13,
+          "candidate_teacher_edges": 671,
+          "effective_teacher_strength": 165.9345703125,
+          "plastic_teacher_edges": 31,
+          "status": "HEALTHY",
+          "teacher_edges_usage_nonzero": 25,
+          "threshold_margin_hz": 3.5,
+          "total_teacher_credit": 25.926223754882812,
+          "total_teacher_eligibility": 31.0
+        },
+        "budget": {
+          "edges_scaled": 20722,
+          "mean_scale": 0.9802463563246726,
+          "neurons_touched": 2376
+        },
+        "learning": {
+          "edge_updates": 20722,
+          "max_abs_delta": 0.11731600761413574,
+          "mean_abs_delta": 0.018763841193749308
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 13,
+          "active_presynaptic_count": 13,
+          "candidate_edge_count": 671,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 165.9345703125,
+          "effective_strength_before": 165.9345703125,
+          "label": "\u3145",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 2.5594136714935303,
+          "mean_multiplier_before": 2.5594136714935303,
+          "nonzero_eligibility_edge_count": 13,
+          "plastic_edge_count": 31,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 284,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 25.926223754882812,
+          "total_eligibility": 31.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 25
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 13,
+          "active_presynaptic_count": 13,
+          "candidate_edge_count": 671,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 165.9345703125,
+          "effective_strength_before": 165.9345703125,
+          "label": "\u3145",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 2.5594136714935303,
+          "mean_multiplier_before": 2.5594136714935303,
+          "nonzero_eligibility_edge_count": 13,
+          "plastic_edge_count": 31,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 284,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 25.926223754882812,
+          "total_eligibility": 31.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 25
+        },
+        "reward": 2.2916666666666665,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {}
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.6339674574656889,
+          0.5166649434496138
+        ],
+        "endpoint": [
+          0.6339674574656889,
+          0.5166649434496138
+        ],
+        "max": [
+          0.6339674574656889,
+          0.5166649434496138
+        ],
+        "min": [
+          0.6339674574656889,
+          0.5166649434496138
+        ],
+        "samples": 4,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 4.53125,
+      "peak_click_rate_hz": 12.5,
+      "peak_ema_hz": 12.061154842376709,
+      "peak_motor_rate_hz": 18.75,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.0,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 9.375,
+      "reward": 2.2916666666666665,
+      "selection_source": "warmup_coverage",
+      "subthreshold_streak": 0,
+      "trial": 585,
+      "windows": 3
+    },
+    {
+      "active_click_output_neuron_count": 18,
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6002356726806338,
+              0.3269311988766871
+            ],
+            "endpoint": [
+              0.6339674574656888,
+              0.4833350565503862
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.1,
+        "endpoints": [
+          [
+            0.6339674574656888,
+            0.4833350565503862
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "\u3142",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.6339674574656889,
+            "y": 0.4833350565503862
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.5,
+      "click_population_spike_count": 22,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "\u3142",
+      "consecutive_bonus": 1.0,
+      "correct": true,
+      "correct_distance_penalty": 1.2077634297567501e-15,
+      "correct_distance_ratio": 6.03881714878375e-15,
+      "correct_streak": 10,
+      "deficit_ema": 0.0,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.1091642999999749,
+      "global_learning_reward": 2.4999999999999987,
+      "label": "\u3142",
+      "learned": true,
+      "learning": {
+        "active_route": {
+          "active_eligible_teacher_edges": 17,
+          "active_teacher_fraction": 0.5151515151515151,
+          "active_teacher_presynaptic_neurons": 15,
+          "candidate_teacher_edges": 707,
+          "effective_teacher_strength": 149.95152282714844,
+          "plastic_teacher_edges": 33,
+          "status": "HEALTHY",
+          "teacher_edges_usage_nonzero": 26,
+          "threshold_margin_hz": 6.625,
+          "total_teacher_credit": 22.56498146057129,
+          "total_teacher_eligibility": 27.0
+        },
+        "budget": {
+          "edges_scaled": 19228,
+          "mean_scale": 0.980436567776153,
+          "neurons_touched": 2160
+        },
+        "learning": {
+          "edge_updates": 19228,
+          "max_abs_delta": 0.2962620258331299,
+          "mean_abs_delta": 0.015345096054954046
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 17,
+          "active_presynaptic_count": 15,
+          "candidate_edge_count": 707,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 149.95152282714844,
+          "effective_strength_before": 149.95152282714844,
+          "label": "\u3142",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 2.6802306175231934,
+          "mean_multiplier_before": 2.6802306175231934,
+          "nonzero_eligibility_edge_count": 17,
+          "plastic_edge_count": 33,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 298,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 22.56498146057129,
+          "total_eligibility": 27.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 26
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 17,
+          "active_presynaptic_count": 15,
+          "candidate_edge_count": 707,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 149.95152282714844,
+          "effective_strength_before": 149.95152282714844,
+          "label": "\u3142",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 2.6802306175231934,
+          "mean_multiplier_before": 2.6802306175231934,
+          "nonzero_eligibility_edge_count": 17,
+          "plastic_edge_count": 33,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 298,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 22.56498146057129,
+          "total_eligibility": 27.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 26
+        },
+        "reward": 2.4999999999999987,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {}
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 1.1102230246251565e-16,
+      "movement": {
+        "center": [
+          0.6339674574656888,
+          0.4833350565503862
+        ],
+        "endpoint": [
+          0.6339674574656888,
+          0.4833350565503862
+        ],
+        "max": [
+          0.6339674574656888,
+          0.4833350565503862
+        ],
+        "min": [
+          0.6339674574656888,
+          0.4833350565503862
+        ],
+        "samples": 3,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 3.4375,
+      "peak_click_rate_hz": 15.625,
+      "peak_ema_hz": 13.463202118873596,
+      "peak_motor_rate_hz": 16.40625,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.0,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 11.71875,
+      "reward": 2.4999999999999987,
+      "selection_source": "warmup_coverage",
+      "subthreshold_streak": 0,
+      "trial": 586,
+      "windows": 2
+    },
+    {
+      "active_click_output_neuron_count": 14,
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.3802429964484845,
+              0.33981804065263055
+            ],
+            "endpoint": [
+              0.5387235524148077,
+              0.3178200093633287
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.1,
+        "endpoints": [
+          [
+            0.5387235524148077,
+            0.3178200093633287
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "\u314d",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.5387235524148077,
+            "y": 0.3178200093633287
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.16145833333333334,
+      "click_population_spike_count": 18,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "\u314d",
+      "consecutive_bonus": 1.0,
+      "correct": true,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 10,
+      "deficit_ema": 0.0,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.05263759999979811,
+      "global_learning_reward": 2.1614583333333335,
+      "label": "\u314d",
+      "learned": true,
+      "learning": {
+        "active_route": {
+          "active_eligible_teacher_edges": 4,
+          "active_teacher_fraction": 0.16666666666666666,
+          "active_teacher_presynaptic_neurons": 4,
+          "candidate_teacher_edges": 557,
+          "effective_teacher_strength": 25.005889892578125,
+          "plastic_teacher_edges": 24,
+          "status": "HEALTHY",
+          "teacher_edges_usage_nonzero": 17,
+          "threshold_margin_hz": 1.9375,
+          "total_teacher_credit": 5.386200428009033,
+          "total_teacher_eligibility": 8.0
+        },
+        "budget": {
+          "edges_scaled": 8513,
+          "mean_scale": 0.9810969075464769,
+          "neurons_touched": 762
+        },
+        "learning": {
+          "edge_updates": 8513,
+          "max_abs_delta": 0.2177441120147705,
+          "mean_abs_delta": 0.013525689248961399
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 4,
+          "active_presynaptic_count": 4,
+          "candidate_edge_count": 557,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 25.005889892578125,
+          "effective_strength_before": 25.005889892578125,
+          "label": "\u314d",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 2.654078483581543,
+          "mean_multiplier_before": 2.654078483581543,
+          "nonzero_eligibility_edge_count": 4,
+          "plastic_edge_count": 24,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 249,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 5.386200428009033,
+          "total_eligibility": 8.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 17
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 4,
+          "active_presynaptic_count": 4,
+          "candidate_edge_count": 557,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 25.005889892578125,
+          "effective_strength_before": 25.005889892578125,
+          "label": "\u314d",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 2.654078483581543,
+          "mean_multiplier_before": 2.654078483581543,
+          "nonzero_eligibility_edge_count": 4,
+          "plastic_edge_count": 24,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 249,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 5.386200428009033,
+          "total_eligibility": 8.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 17
+        },
+        "reward": 2.1614583333333335,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {}
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.5387235524148077,
+          0.3178200093633287
+        ],
+        "endpoint": [
+          0.5387235524148077,
+          0.3178200093633287
+        ],
+        "max": [
+          0.5387235524148077,
+          0.3178200093633287
+        ],
+        "min": [
+          0.5387235524148077,
+          0.3178200093633287
+        ],
+        "samples": 3,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 2.8125,
+      "peak_click_rate_hz": 10.9375,
+      "peak_ema_hz": 11.432233452796936,
+      "peak_motor_rate_hz": 10.9375,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.0,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 10.9375,
+      "reward": 2.1614583333333335,
+      "selection_source": "warmup_coverage",
+      "subthreshold_streak": 0,
+      "trial": 587,
+      "windows": 2
+    },
+    {
+      "active_click_output_neuron_count": 16,
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.4568229642064368,
+              0.3047162485507784
+            ],
+            "endpoint": [
+              0.5874309205765658,
+              0.3971368184084595
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.1,
+        "endpoints": [
+          [
+            0.5874309205765658,
+            0.3971368184084595
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "\u3137",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.5874309205765658,
+            "y": 0.39713681840845944
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.3567708333333333,
+      "click_population_spike_count": 20,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "\u3137",
+      "consecutive_bonus": 0.5,
+      "correct": true,
+      "correct_distance_penalty": 6.038817148783751e-16,
+      "correct_distance_ratio": 3.019408574391875e-15,
+      "correct_streak": 3,
+      "deficit_ema": 0.019786834716796875,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.07895600000119884,
+      "global_learning_reward": 1.8567708333333326,
+      "label": "\u3137",
+      "learned": true,
+      "learning": {
+        "active_route": {
+          "active_eligible_teacher_edges": 5,
+          "active_teacher_fraction": 0.1724137931034483,
+          "active_teacher_presynaptic_neurons": 4,
+          "candidate_teacher_edges": 591,
+          "effective_teacher_strength": 41.25,
+          "plastic_teacher_edges": 29,
+          "status": "HEALTHY",
+          "teacher_edges_usage_nonzero": 21,
+          "threshold_margin_hz": 4.28125,
+          "total_teacher_credit": 15.917247772216797,
+          "total_teacher_eligibility": 17.0
+        },
+        "budget": {
+          "edges_scaled": 13799,
+          "mean_scale": 0.9798869218348518,
+          "neurons_touched": 1340
+        },
+        "learning": {
+          "edge_updates": 13799,
+          "max_abs_delta": 0.23128771781921387,
+          "mean_abs_delta": 0.013475596641265738
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 5,
+          "active_presynaptic_count": 4,
+          "candidate_edge_count": 591,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 41.25,
+          "effective_strength_before": 41.25,
+          "label": "\u3137",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 3.0,
+          "nonzero_eligibility_edge_count": 5,
+          "plastic_edge_count": 29,
+          "regression_strength": 0.019786834716796875,
+          "relevant_presynaptic_count": 263,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 15.917247772216797,
+          "total_eligibility": 17.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 21
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 5,
+          "active_presynaptic_count": 4,
+          "candidate_edge_count": 591,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 41.25,
+          "effective_strength_before": 41.25,
+          "label": "\u3137",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 3.0,
+          "nonzero_eligibility_edge_count": 5,
+          "plastic_edge_count": 29,
+          "regression_strength": 0.019786834716796875,
+          "relevant_presynaptic_count": 263,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 15.917247772216797,
+          "total_eligibility": 17.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 21
+        },
+        "reward": 1.8567708333333326,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 11,
+          "mean_stability": 0.9624689221382141
+        },
+        "teacher_normalizer_followup": {}
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 5.551115123125783e-17,
+      "movement": {
+        "center": [
+          0.5874309205765658,
+          0.39713681840845955
+        ],
+        "endpoint": [
+          0.5874309205765658,
+          0.3971368184084595
+        ],
+        "max": [
+          0.5874309205765658,
+          0.3971368184084595
+        ],
+        "min": [
+          0.5874309205765658,
+          0.3971368184084595
+        ],
+        "samples": 3,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 3.125,
+      "peak_click_rate_hz": 13.28125,
+      "peak_ema_hz": 11.872115731239319,
+      "peak_motor_rate_hz": 13.28125,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.019786834716796875,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 12.5,
+      "reward": 1.8567708333333326,
+      "selection_source": "warmup_coverage",
+      "subthreshold_streak": 0,
+      "trial": 588,
+      "windows": 2
+    },
+    {
+      "active_click_output_neuron_count": 20,
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6122034034819924,
+              0.33443914639306427
+            ],
+            "endpoint": [
+              0.6848254737258116,
+              0.4770085502408107
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.1,
+        "endpoints": [
+          [
+            0.6848254737258116,
+            0.4770085502408107
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "\u3155",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.6848254737258116,
+            "y": 0.4770085502408106
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.5,
+      "click_population_spike_count": 26,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "\u3155",
+      "consecutive_bonus": 1.0,
+      "correct": true,
+      "correct_distance_penalty": 6.038817148783751e-16,
+      "correct_distance_ratio": 3.019408574391875e-15,
+      "correct_streak": 10,
+      "deficit_ema": 0.0,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.12008560000140278,
+      "global_learning_reward": 2.4999999999999996,
+      "label": "\u3155",
+      "learned": true,
+      "learning": {
+        "active_route": {
+          "active_eligible_teacher_edges": 4,
+          "active_teacher_fraction": 0.2,
+          "active_teacher_presynaptic_neurons": 3,
+          "candidate_teacher_edges": 593,
+          "effective_teacher_strength": 24.750001907348633,
+          "plastic_teacher_edges": 20,
+          "status": "HEALTHY",
+          "teacher_edges_usage_nonzero": 10,
+          "threshold_margin_hz": 10.53125,
+          "total_teacher_credit": 10.467377662658691,
+          "total_teacher_eligibility": 11.0
+        },
+        "budget": {
+          "edges_scaled": 21914,
+          "mean_scale": 0.9808829735569943,
+          "neurons_touched": 2441
+        },
+        "learning": {
+          "edge_updates": 21914,
+          "max_abs_delta": 0.25897669792175293,
+          "mean_abs_delta": 0.015047886564836696
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 4,
+          "active_presynaptic_count": 3,
+          "candidate_edge_count": 593,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 24.750001907348633,
+          "effective_strength_before": 24.750001907348633,
+          "label": "\u3155",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 3.0,
+          "nonzero_eligibility_edge_count": 4,
+          "plastic_edge_count": 20,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 253,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 10.467377662658691,
+          "total_eligibility": 11.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 10
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 4,
+          "active_presynaptic_count": 3,
+          "candidate_edge_count": 593,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 24.750001907348633,
+          "effective_strength_before": 24.750001907348633,
+          "label": "\u3155",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 3.0,
+          "nonzero_eligibility_edge_count": 4,
+          "plastic_edge_count": 20,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 253,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 10.467377662658691,
+          "total_eligibility": 11.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 10
+        },
+        "reward": 2.4999999999999996,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {}
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 5.551115123125783e-17,
+      "movement": {
+        "center": [
+          0.6848254737258116,
+          0.4770085502408106
+        ],
+        "endpoint": [
+          0.6848254737258116,
+          0.4770085502408107
+        ],
+        "max": [
+          0.6848254737258116,
+          0.4770085502408107
+        ],
+        "min": [
+          0.6848254737258116,
+          0.4770085502408107
+        ],
+        "samples": 3,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 4.0625,
+      "peak_click_rate_hz": 19.53125,
+      "peak_ema_hz": 14.149871468544006,
+      "peak_motor_rate_hz": 19.53125,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.0,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 11.71875,
+      "reward": 2.4999999999999996,
+      "selection_source": "warmup_coverage",
+      "subthreshold_streak": 0,
+      "trial": 589,
+      "windows": 2
+    },
+    {
+      "active_click_output_neuron_count": 18,
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.698138311971719,
+              0.5272251598525658
+            ],
+            "endpoint": [
+              0.6538136565698843,
+              0.6809630046517843
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.1,
+        "endpoints": [
+          [
+            0.6538136565698843,
+            0.6809630046517843
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "J",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.6538136565698842,
+            "y": 0.6809630046517843
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.5,
+      "click_population_spike_count": 29,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "J",
+      "consecutive_bonus": 1.0,
+      "correct": true,
+      "correct_distance_penalty": 1.2077634297567501e-15,
+      "correct_distance_ratio": 6.03881714878375e-15,
+      "correct_streak": 10,
+      "deficit_ema": 0.0,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.1645208999998431,
+      "global_learning_reward": 2.4999999999999987,
+      "label": "J",
+      "learned": true,
+      "learning": {
+        "active_route": {
+          "active_eligible_teacher_edges": 7,
+          "active_teacher_fraction": 0.3333333333333333,
+          "active_teacher_presynaptic_neurons": 7,
+          "candidate_teacher_edges": 513,
+          "effective_teacher_strength": 83.09452819824219,
+          "plastic_teacher_edges": 21,
+          "status": "HEALTHY",
+          "teacher_edges_usage_nonzero": 14,
+          "threshold_margin_hz": 8.96875,
+          "total_teacher_credit": 11.953908920288086,
+          "total_teacher_eligibility": 14.0
+        },
+        "budget": {
+          "edges_scaled": 25911,
+          "mean_scale": 0.9773681093316734,
+          "neurons_touched": 4018
+        },
+        "learning": {
+          "edge_updates": 25911,
+          "max_abs_delta": 0.23690342903137207,
+          "mean_abs_delta": 0.015932202702629347
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 7,
+          "active_presynaptic_count": 7,
+          "candidate_edge_count": 513,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 83.09452819824219,
+          "effective_strength_before": 83.09452819824219,
+          "label": "J",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 2.71891188621521,
+          "mean_multiplier_before": 2.71891188621521,
+          "nonzero_eligibility_edge_count": 7,
+          "plastic_edge_count": 21,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 222,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 11.953908920288086,
+          "total_eligibility": 14.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 14
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 7,
+          "active_presynaptic_count": 7,
+          "candidate_edge_count": 513,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 83.09452819824219,
+          "effective_strength_before": 83.09452819824219,
+          "label": "J",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 2.71891188621521,
+          "mean_multiplier_before": 2.71891188621521,
+          "nonzero_eligibility_edge_count": 7,
+          "plastic_edge_count": 21,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 222,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 11.953908920288086,
+          "total_eligibility": 14.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 14
+        },
+        "reward": 2.4999999999999987,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {}
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 1.1102230246251565e-16,
+      "movement": {
+        "center": [
+          0.6538136565698843,
+          0.6809630046517844
+        ],
+        "endpoint": [
+          0.6538136565698843,
+          0.6809630046517843
+        ],
+        "max": [
+          0.6538136565698843,
+          0.6809630046517843
+        ],
+        "min": [
+          0.6538136565698843,
+          0.6809630046517843
+        ],
+        "samples": 3,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 4.53125,
+      "peak_click_rate_hz": 17.96875,
+      "peak_ema_hz": 15.298780798912048,
+      "peak_motor_rate_hz": 21.09375,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.0,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 16.40625,
+      "reward": 2.4999999999999987,
+      "selection_source": "warmup_coverage",
+      "subthreshold_streak": 0,
+      "trial": 590,
+      "windows": 2
+    },
+    {
+      "active_click_output_neuron_count": 34,
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6568355401774497,
+              0.37589273455092337
+            ],
+            "endpoint": [
+              0.8168337699318937,
+              0.3766453801807821
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.25,
+        "endpoints": [
+          [
+            0.8168337699318937,
+            0.3766453801807821
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "2",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.8168337699318937,
+            "y": 0.3766453801807821
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.5,
+      "click_population_spike_count": 68,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "2",
+      "consecutive_bonus": 0.25,
+      "correct": true,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 2,
+      "deficit_ema": 0.027711451053619388,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.40236799999911455,
+      "global_learning_reward": 1.75,
+      "label": "2",
+      "learned": true,
+      "learning": {
+        "active_route": {
+          "active_eligible_teacher_edges": 10,
+          "active_teacher_fraction": 0.45454545454545453,
+          "active_teacher_presynaptic_neurons": 10,
+          "candidate_teacher_edges": 536,
+          "effective_teacher_strength": 245.7762908935547,
+          "plastic_teacher_edges": 22,
+          "status": "HEALTHY",
+          "teacher_edges_usage_nonzero": 15,
+          "threshold_margin_hz": 26.15625,
+          "total_teacher_credit": 27.412246704101562,
+          "total_teacher_eligibility": 30.0
+        },
+        "budget": {
+          "edges_scaled": 44012,
+          "mean_scale": 0.9804225746080891,
+          "neurons_touched": 8344
+        },
+        "learning": {
+          "edge_updates": 44012,
+          "max_abs_delta": 0.40587854385375977,
+          "mean_abs_delta": 0.016157665713574684
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 10,
+          "active_presynaptic_count": 10,
+          "candidate_edge_count": 536,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 245.7762908935547,
+          "effective_strength_before": 245.7762908935547,
+          "label": "2",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 2.6865782737731934,
+          "mean_multiplier_before": 2.6865782737731934,
+          "nonzero_eligibility_edge_count": 10,
+          "plastic_edge_count": 22,
+          "regression_strength": 0.027711451053619388,
+          "relevant_presynaptic_count": 227,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 27.412246704101562,
+          "total_eligibility": 30.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 15
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 10,
+          "active_presynaptic_count": 10,
+          "candidate_edge_count": 536,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 245.7762908935547,
+          "effective_strength_before": 245.7762908935547,
+          "label": "2",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 2.6865782737731934,
+          "mean_multiplier_before": 2.6865782737731934,
+          "nonzero_eligibility_edge_count": 10,
+          "plastic_edge_count": 22,
+          "regression_strength": 0.027711451053619388,
+          "relevant_presynaptic_count": 227,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 27.412246704101562,
+          "total_eligibility": 30.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 15
+        },
+        "reward": 1.75,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 8,
+          "mean_stability": 0.885652482509613
+        },
+        "teacher_normalizer_followup": {}
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.8168337699318937,
+          0.3766453801807821
+        ],
+        "endpoint": [
+          0.8168337699318937,
+          0.3766453801807821
+        ],
+        "max": [
+          0.8168337699318937,
+          0.3766453801807821
+        ],
+        "min": [
+          0.8168337699318937,
+          0.3766453801807821
+        ],
+        "samples": 6,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 10.625,
+      "peak_click_rate_hz": 35.15625,
+      "peak_ema_hz": 17.201587557792664,
+      "peak_motor_rate_hz": 35.15625,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.027711451053619388,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 13.28125,
+      "reward": 1.75,
+      "selection_source": "warmup_coverage",
+      "subthreshold_streak": 0,
+      "trial": 591,
+      "windows": 5
+    },
+    {
+      "active_click_output_neuron_count": 19,
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.619148819992727,
+              0.3393651386082686
+            ],
+            "endpoint": [
+              0.7690757384348068,
+              0.39523927508000245
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.1,
+        "endpoints": [
+          [
+            0.7690757384348068,
+            0.39523927508000245
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "Q",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.7690757384348068,
+            "y": 0.39523927508000245
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.4869791666666667,
+      "click_population_spike_count": 25,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "Q",
+      "consecutive_bonus": 1.0,
+      "correct": true,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 10,
+      "deficit_ema": 0.0,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.06702890000087791,
+      "global_learning_reward": 2.4869791666666665,
+      "label": "Q",
+      "learned": true,
+      "learning": {
+        "active_route": {
+          "active_eligible_teacher_edges": 10,
+          "active_teacher_fraction": 0.2127659574468085,
+          "active_teacher_presynaptic_neurons": 9,
+          "candidate_teacher_edges": 924,
+          "effective_teacher_strength": 101.80625915527344,
+          "plastic_teacher_edges": 47,
+          "status": "HEALTHY",
+          "teacher_edges_usage_nonzero": 36,
+          "threshold_margin_hz": 5.84375,
+          "total_teacher_credit": 11.017969131469727,
+          "total_teacher_eligibility": 14.0
+        },
+        "budget": {
+          "edges_scaled": 11229,
+          "mean_scale": 0.9791129537381418,
+          "neurons_touched": 1079
+        },
+        "learning": {
+          "edge_updates": 11229,
+          "max_abs_delta": 0.1767430305480957,
+          "mean_abs_delta": 0.013011792090603904
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 10,
+          "active_presynaptic_count": 9,
+          "candidate_edge_count": 924,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 101.80625915527344,
+          "effective_strength_before": 101.80625915527344,
+          "label": "Q",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 2.5489437580108643,
+          "mean_multiplier_before": 2.5489437580108643,
+          "nonzero_eligibility_edge_count": 10,
+          "plastic_edge_count": 47,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 369,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 11.017969131469727,
+          "total_eligibility": 14.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 36
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 10,
+          "active_presynaptic_count": 9,
+          "candidate_edge_count": 924,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 101.80625915527344,
+          "effective_strength_before": 101.80625915527344,
+          "label": "Q",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 2.5489437580108643,
+          "mean_multiplier_before": 2.5489437580108643,
+          "nonzero_eligibility_edge_count": 10,
+          "plastic_edge_count": 47,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 369,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 11.017969131469727,
+          "total_eligibility": 14.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 36
+        },
+        "reward": 2.4869791666666665,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {}
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.7690757384348069,
+          0.39523927508000245
+        ],
+        "endpoint": [
+          0.7690757384348068,
+          0.39523927508000245
+        ],
+        "max": [
+          0.7690757384348068,
+          0.39523927508000245
+        ],
+        "min": [
+          0.7690757384348068,
+          0.39523927508000245
+        ],
+        "samples": 3,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 3.90625,
+      "peak_click_rate_hz": 14.84375,
+      "peak_ema_hz": 15.969893336296082,
+      "peak_motor_rate_hz": 14.84375,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.0,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 9.375,
+      "reward": 2.4869791666666665,
+      "selection_source": "warmup_coverage",
+      "subthreshold_streak": 0,
+      "trial": 592,
+      "windows": 2
+    },
+    {
+      "active_click_output_neuron_count": 11,
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.5790483528199379,
+              0.31628457354796086
+            ],
+            "endpoint": [
+              0.7201963925632027,
+              0.24093717228797196
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.1,
+        "endpoints": [
+          [
+            0.7201963925632027,
+            0.24093717228797196
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "0",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.7201963925632027,
+            "y": 0.24093717228797196
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.03125,
+      "click_population_spike_count": 19,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "0",
+      "consecutive_bonus": 1.0,
+      "correct": true,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 10,
+      "deficit_ema": 0.0,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.08400050000091142,
+      "global_learning_reward": 2.03125,
+      "label": "0",
+      "learned": true,
+      "learning": {
+        "active_route": {
+          "active_eligible_teacher_edges": 7,
+          "active_teacher_fraction": 0.35,
+          "active_teacher_presynaptic_neurons": 7,
+          "candidate_teacher_edges": 468,
+          "effective_teacher_strength": 136.9499969482422,
+          "plastic_teacher_edges": 20,
+          "status": "HEALTHY",
+          "teacher_edges_usage_nonzero": 12,
+          "threshold_margin_hz": 0.375,
+          "total_teacher_credit": 13.833084106445312,
+          "total_teacher_eligibility": 15.0
+        },
+        "budget": {
+          "edges_scaled": 14444,
+          "mean_scale": 0.9783488003320482,
+          "neurons_touched": 1536
+        },
+        "learning": {
+          "edge_updates": 14444,
+          "max_abs_delta": 0.19661426544189453,
+          "mean_abs_delta": 0.013162627003259587
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 7,
+          "active_presynaptic_count": 7,
+          "candidate_edge_count": 468,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 136.9499969482422,
+          "effective_strength_before": 136.9499969482422,
+          "label": "0",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 3.0,
+          "nonzero_eligibility_edge_count": 7,
+          "plastic_edge_count": 20,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 209,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 13.833084106445312,
+          "total_eligibility": 15.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 12
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 7,
+          "active_presynaptic_count": 7,
+          "candidate_edge_count": 468,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 136.9499969482422,
+          "effective_strength_before": 136.9499969482422,
+          "label": "0",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 3.0,
+          "nonzero_eligibility_edge_count": 7,
+          "plastic_edge_count": 20,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 209,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 13.833084106445312,
+          "total_eligibility": 15.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 12
+        },
+        "reward": 2.03125,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {}
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.7201963925632026,
+          0.24093717228797196
+        ],
+        "endpoint": [
+          0.7201963925632027,
+          0.24093717228797196
+        ],
+        "max": [
+          0.7201963925632027,
+          0.24093717228797196
+        ],
+        "min": [
+          0.7201963925632027,
+          0.24093717228797196
+        ],
+        "samples": 3,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 2.96875,
+      "peak_click_rate_hz": 9.375,
+      "peak_ema_hz": 12.72364854812622,
+      "peak_motor_rate_hz": 10.9375,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.4,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.0,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 15.625,
+      "reward": 2.03125,
+      "selection_source": "warmup_coverage",
+      "subthreshold_streak": 0,
+      "trial": 593,
+      "windows": 2
+    },
+    {
+      "active_click_output_neuron_count": 19,
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.44611242119048894,
+              0.3073964464241411
+            ],
+            "endpoint": [
+              0.6047900115452651,
+              0.2868678731858024
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.25,
+        "endpoints": [
+          [
+            0.6047900115452651,
+            0.2868678731858024
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "B",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.6047900115452651,
+            "y": 0.2868678731858024
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.2265625,
+      "click_population_spike_count": 30,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "B",
+      "consecutive_bonus": 1.0,
+      "correct": true,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 8,
+      "deficit_ema": 0.0054749250411987305,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.23143160000108765,
+      "global_learning_reward": 2.2265625,
+      "label": "B",
+      "learned": true,
+      "learning": {
+        "active_route": {
+          "active_eligible_teacher_edges": 2,
+          "active_teacher_fraction": 0.08695652173913043,
+          "active_teacher_presynaptic_neurons": 2,
+          "candidate_teacher_edges": 598,
+          "effective_teacher_strength": 10.725000381469727,
+          "plastic_teacher_edges": 23,
+          "status": "HEALTHY",
+          "teacher_edges_usage_nonzero": 15,
+          "threshold_margin_hz": 2.71875,
+          "total_teacher_credit": 2.8486599922180176,
+          "total_teacher_eligibility": 3.0
+        },
+        "budget": {
+          "edges_scaled": 26917,
+          "mean_scale": 0.9771042191884751,
+          "neurons_touched": 4652
+        },
+        "learning": {
+          "edge_updates": 26917,
+          "max_abs_delta": 0.2700486183166504,
+          "mean_abs_delta": 0.014212526028651506
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 2,
+          "active_presynaptic_count": 2,
+          "candidate_edge_count": 598,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 10.725000381469727,
+          "effective_strength_before": 10.725000381469727,
+          "label": "B",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 3.0,
+          "nonzero_eligibility_edge_count": 2,
+          "plastic_edge_count": 23,
+          "regression_strength": 0.0054749250411987305,
+          "relevant_presynaptic_count": 241,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 2.8486599922180176,
+          "total_eligibility": 3.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 15
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 2,
+          "active_presynaptic_count": 2,
+          "candidate_edge_count": 598,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 10.725000381469727,
+          "effective_strength_before": 10.725000381469727,
+          "label": "B",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 3.0,
+          "nonzero_eligibility_edge_count": 2,
+          "plastic_edge_count": 23,
+          "regression_strength": 0.0054749250411987305,
+          "relevant_presynaptic_count": 241,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 2.8486599922180176,
+          "total_eligibility": 3.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 15
+        },
+        "reward": 2.2265625,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 3,
+          "mean_stability": 0.9977932572364807
+        },
+        "teacher_normalizer_followup": {}
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.6047900115452651,
+          0.2868678731858024
+        ],
+        "endpoint": [
+          0.6047900115452651,
+          0.2868678731858024
+        ],
+        "max": [
+          0.6047900115452651,
+          0.2868678731858024
+        ],
+        "min": [
+          0.6047900115452651,
+          0.2868678731858024
+        ],
+        "samples": 6,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 4.6875,
+      "peak_click_rate_hz": 11.71875,
+      "peak_ema_hz": 11.60331666469574,
+      "peak_motor_rate_hz": 14.0625,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.0054749250411987305,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 10.15625,
+      "reward": 2.2265625,
+      "selection_source": "warmup_coverage",
+      "subthreshold_streak": 0,
+      "trial": 594,
+      "windows": 5
+    },
+    {
+      "active_click_output_neuron_count": 13,
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6548730374779782,
+              0.37345221352254016
+            ],
+            "endpoint": [
+              0.7865415062460568,
+              0.4643555376216594
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.1,
+        "endpoints": [
+          [
+            0.7865415062460568,
+            0.4643555376216594
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "R",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.7865415062460568,
+            "y": 0.4643555376216594
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.2265625,
+      "click_population_spike_count": 16,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "R",
+      "consecutive_bonus": 1.0,
+      "correct": true,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 10,
+      "deficit_ema": 0.0,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.05595019999964279,
+      "global_learning_reward": 2.2265625,
+      "label": "R",
+      "learned": true,
+      "learning": {
+        "active_route": {
+          "active_eligible_teacher_edges": 5,
+          "active_teacher_fraction": 0.2777777777777778,
+          "active_teacher_presynaptic_neurons": 5,
+          "candidate_teacher_edges": 382,
+          "effective_teacher_strength": 53.625,
+          "plastic_teacher_edges": 18,
+          "status": "HEALTHY",
+          "teacher_edges_usage_nonzero": 15,
+          "threshold_margin_hz": 2.71875,
+          "total_teacher_credit": 12.103668212890625,
+          "total_teacher_eligibility": 13.0
+        },
+        "budget": {
+          "edges_scaled": 9978,
+          "mean_scale": 0.9783758329083926,
+          "neurons_touched": 932
+        },
+        "learning": {
+          "edge_updates": 9978,
+          "max_abs_delta": 0.1611776351928711,
+          "mean_abs_delta": 0.012122741990921898
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 5,
+          "active_presynaptic_count": 5,
+          "candidate_edge_count": 382,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 53.625,
+          "effective_strength_before": 53.625,
+          "label": "R",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 3.0,
+          "nonzero_eligibility_edge_count": 5,
+          "plastic_edge_count": 18,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 170,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 12.103668212890625,
+          "total_eligibility": 13.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 15
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 5,
+          "active_presynaptic_count": 5,
+          "candidate_edge_count": 382,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 53.625,
+          "effective_strength_before": 53.625,
+          "label": "R",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 3.0,
+          "nonzero_eligibility_edge_count": 5,
+          "plastic_edge_count": 18,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 170,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 12.103668212890625,
+          "total_eligibility": 13.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 15
+        },
+        "reward": 2.2265625,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {}
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.7865415062460568,
+          0.4643555376216593
+        ],
+        "endpoint": [
+          0.7865415062460568,
+          0.4643555376216594
+        ],
+        "max": [
+          0.7865415062460568,
+          0.4643555376216594
+        ],
+        "min": [
+          0.7865415062460568,
+          0.4643555376216594
+        ],
+        "samples": 3,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 2.5,
+      "peak_click_rate_hz": 11.71875,
+      "peak_ema_hz": 13.127401471138,
+      "peak_motor_rate_hz": 16.40625,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.0,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 10.15625,
+      "reward": 2.2265625,
+      "selection_source": "warmup_coverage",
+      "subthreshold_streak": 0,
+      "trial": 595,
+      "windows": 2
+    },
+    {
+      "active_click_output_neuron_count": 12,
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6773857183202315,
+              0.4076186873008644
+            ],
+            "endpoint": [
+              0.673559675440633,
+              0.5675729351215568
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": false,
+        "elapsed_s": 0.25,
+        "endpoints": [
+          [
+            0.673559675440633,
+            0.5675729351215568
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "\u315b",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.673559675440633,
+            "y": 0.5675729351215568
+          }
+        ]
+      },
+      "click_attempted_arms": [],
+      "click_margin_bonus": 0.0,
+      "click_population_spike_count": 27,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": null,
+      "clicked_label": null,
+      "consecutive_bonus": 0.0,
+      "correct": false,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 0,
+      "deficit_ema": 0.06861379742622375,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.10989869999866642,
+      "global_learning_reward": 0.0,
+      "label": "\u315b",
+      "learned": true,
+      "learning": {
+        "active_route": {
+          "active_eligible_teacher_edges": 6,
+          "active_teacher_fraction": 0.42857142857142855,
+          "active_teacher_presynaptic_neurons": 5,
+          "candidate_teacher_edges": 426,
+          "effective_teacher_strength": 109.7249984741211,
+          "plastic_teacher_edges": 14,
+          "status": "WEAK_ACTIVE",
+          "teacher_edges_usage_nonzero": 10,
+          "threshold_margin_hz": -1.96875,
+          "total_teacher_credit": 17.413066864013672,
+          "total_teacher_eligibility": 18.0
+        },
+        "budget": {
+          "edges_scaled": 18980,
+          "mean_scale": 0.9785564185948509,
+          "neurons_touched": 1958
+        },
+        "learning": {
+          "edge_updates": 0,
+          "max_abs_delta": 0.0,
+          "mean_abs_delta": 0.0
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 6,
+          "active_presynaptic_count": 5,
+          "candidate_edge_count": 426,
+          "deficit": 0.21875,
+          "edge_updates": 6,
+          "effective_strength_after": 109.7249984741211,
+          "effective_strength_before": 109.10698699951172,
+          "label": "\u315b",
+          "max_delta": 0.022803306579589844,
+          "mean_delta": 0.012360532768070698,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 2.9876396656036377,
+          "nonzero_eligibility_edge_count": 6,
+          "plastic_edge_count": 14,
+          "regression_strength": 1.0686137974262238,
+          "relevant_presynaptic_count": 171,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 17.413066864013672,
+          "total_eligibility": 18.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 10
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 6,
+          "active_presynaptic_count": 5,
+          "candidate_edge_count": 426,
+          "deficit": 0.21875,
+          "edge_updates": 6,
+          "effective_strength_after": 109.7249984741211,
+          "effective_strength_before": 109.10698699951172,
+          "label": "\u315b",
+          "max_delta": 0.022803306579589844,
+          "mean_delta": 0.012360532768070698,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 2.9876396656036377,
+          "nonzero_eligibility_edge_count": 6,
+          "plastic_edge_count": 14,
+          "regression_strength": 1.0686137974262238,
+          "relevant_presynaptic_count": 171,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 17.413066864013672,
+          "total_eligibility": 18.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 10
+        },
+        "reward": 0.0,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": false,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {
+          "label": "\u315b",
+          "net_gain": 4.9114227294921875e-05,
+          "normalizer_loss": -0.012311220169067383,
+          "teacher_gain": 0.012360334396362305,
+          "teacher_multiplier_after_next_normalization": 2.9876887798309326,
+          "teacher_multiplier_after_previous_update": 3.0,
+          "teacher_multiplier_before_next_normalization": 3.0,
+          "true_net_gain": 4.9114227294921875e-05
+        }
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.6735596754406329,
+          0.5675729351215568
+        ],
+        "endpoint": [
+          0.673559675440633,
+          0.5675729351215568
+        ],
+        "max": [
+          0.673559675440633,
+          0.5675729351215568
+        ],
+        "min": [
+          0.673559675440633,
+          0.5675729351215568
+        ],
+        "samples": 6,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 4.21875,
+      "peak_click_rate_hz": 7.03125,
+      "peak_ema_hz": 16.422441601753235,
+      "peak_motor_rate_hz": 10.9375,
+      "peak_regression_penalty": 0.8,
+      "peak_regression_ratio": 0.75,
+      "peak_regression_streak": 1,
+      "peak_regression_strength": 1.0,
+      "peak_regression_triggered": true,
+      "persistence_strength": 0.06861379742622375,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 28.125,
+      "reward": -2.0,
+      "selection_source": "warmup_coverage",
+      "subthreshold_streak": 1,
+      "trial": 596,
+      "windows": 5
+    },
+    {
+      "active_click_output_neuron_count": 13,
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.3692337185599097,
+              0.34867194695519566
+            ],
+            "endpoint": [
+              0.5280680782603975,
+              0.36795007390093626
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": false,
+        "elapsed_s": 0.25,
+        "endpoints": [
+          [
+            0.5280680782603975,
+            0.36795007390093626
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "\u3131",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.5280680782603975,
+            "y": 0.36795007390093626
+          }
+        ]
+      },
+      "click_attempted_arms": [],
+      "click_margin_bonus": 0.0,
+      "click_population_spike_count": 28,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": null,
+      "clicked_label": null,
+      "consecutive_bonus": 0.0,
+      "correct": false,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 0,
+      "deficit_ema": 0.07600784301757812,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.0834539000006771,
+      "global_learning_reward": 0.0,
+      "label": "\u3131",
+      "learned": true,
+      "learning": {
+        "active_route": {
+          "active_eligible_teacher_edges": 4,
+          "active_teacher_fraction": 0.14814814814814814,
+          "active_teacher_presynaptic_neurons": 4,
+          "candidate_teacher_edges": 514,
+          "effective_teacher_strength": 94.05000305175781,
+          "plastic_teacher_edges": 27,
+          "status": "WEAK_ACTIVE",
+          "teacher_edges_usage_nonzero": 9,
+          "threshold_margin_hz": -1.96875,
+          "total_teacher_credit": 5.642248153686523,
+          "total_teacher_eligibility": 6.0
+        },
+        "budget": {
+          "edges_scaled": 10617,
+          "mean_scale": 0.9793183966222498,
+          "neurons_touched": 1108
+        },
+        "learning": {
+          "edge_updates": 0,
+          "max_abs_delta": 0.0,
+          "mean_abs_delta": 0.0
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 4,
+          "active_presynaptic_count": 4,
+          "candidate_edge_count": 514,
+          "deficit": 0.21875,
+          "edge_updates": 4,
+          "effective_strength_after": 94.05000305175781,
+          "effective_strength_before": 93.48572540283203,
+          "label": "\u3131",
+          "max_delta": 0.022683143615722656,
+          "mean_delta": 0.013558745384216309,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 2.9864413738250732,
+          "nonzero_eligibility_edge_count": 4,
+          "plastic_edge_count": 27,
+          "regression_strength": 1.0760078430175781,
+          "relevant_presynaptic_count": 225,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 5.642248153686523,
+          "total_eligibility": 6.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 9
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 4,
+          "active_presynaptic_count": 4,
+          "candidate_edge_count": 514,
+          "deficit": 0.21875,
+          "edge_updates": 4,
+          "effective_strength_after": 94.05000305175781,
+          "effective_strength_before": 93.48572540283203,
+          "label": "\u3131",
+          "max_delta": 0.022683143615722656,
+          "mean_delta": 0.013558745384216309,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 2.9864413738250732,
+          "nonzero_eligibility_edge_count": 4,
+          "plastic_edge_count": 27,
+          "regression_strength": 1.0760078430175781,
+          "relevant_presynaptic_count": 225,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 5.642248153686523,
+          "total_eligibility": 6.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 9
+        },
+        "reward": 0.0,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": false,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {
+          "label": "\u3131",
+          "net_gain": 5.125999450683594e-05,
+          "normalizer_loss": -0.013507366180419922,
+          "teacher_gain": 0.013558626174926758,
+          "teacher_multiplier_after_next_normalization": 2.98649263381958,
+          "teacher_multiplier_after_previous_update": 3.0,
+          "teacher_multiplier_before_next_normalization": 3.0,
+          "true_net_gain": 5.125999450683594e-05
+        }
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.5280680782603975,
+          0.36795007390093626
+        ],
+        "endpoint": [
+          0.5280680782603975,
+          0.36795007390093626
+        ],
+        "max": [
+          0.5280680782603975,
+          0.36795007390093626
+        ],
+        "min": [
+          0.5280680782603975,
+          0.36795007390093626
+        ],
+        "samples": 6,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 4.375,
+      "peak_click_rate_hz": 7.03125,
+      "peak_ema_hz": 12.458619475364685,
+      "peak_motor_rate_hz": 7.03125,
+      "peak_regression_penalty": 0.8,
+      "peak_regression_ratio": 0.25,
+      "peak_regression_streak": 1,
+      "peak_regression_strength": 1.0,
+      "peak_regression_triggered": true,
+      "persistence_strength": 0.07600784301757812,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 9.375,
+      "reward": -2.0,
+      "selection_source": "warmup_coverage",
+      "subthreshold_streak": 1,
+      "trial": 597,
+      "windows": 5
+    },
+    {
+      "active_click_output_neuron_count": 18,
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6908725228866373,
+              0.44026994050823204
+            ],
+            "endpoint": [
+              0.6099677535267953,
+              0.5783076827921116
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.15000000000000002,
+        "endpoints": [
+          [
+            0.6099677535267953,
+            0.5783076827921116
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "\u3148",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.6099677535267953,
+            "y": 0.5783076827921118
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.2265625,
+      "click_population_spike_count": 29,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "\u3148",
+      "consecutive_bonus": 1.0,
+      "correct": true,
+      "correct_distance_penalty": 1.2077634297567501e-15,
+      "correct_distance_ratio": 6.03881714878375e-15,
+      "correct_streak": 10,
+      "deficit_ema": 0.0,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.12066410000079486,
+      "global_learning_reward": 2.2265624999999987,
+      "label": "\u3148",
+      "learned": true,
+      "learning": {
+        "active_route": {
+          "active_eligible_teacher_edges": 7,
+          "active_teacher_fraction": 0.35,
+          "active_teacher_presynaptic_neurons": 7,
+          "candidate_teacher_edges": 545,
+          "effective_teacher_strength": 118.5616683959961,
+          "plastic_teacher_edges": 20,
+          "status": "HEALTHY",
+          "teacher_edges_usage_nonzero": 15,
+          "threshold_margin_hz": 2.71875,
+          "total_teacher_credit": 10.920919418334961,
+          "total_teacher_eligibility": 14.0
+        },
+        "budget": {
+          "edges_scaled": 17567,
+          "mean_scale": 0.9805452161821803,
+          "neurons_touched": 2028
+        },
+        "learning": {
+          "edge_updates": 17567,
+          "max_abs_delta": 0.3104064464569092,
+          "mean_abs_delta": 0.022798378595000498
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 7,
+          "active_presynaptic_count": 7,
+          "candidate_edge_count": 545,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 118.5616683959961,
+          "effective_strength_before": 118.5616683959961,
+          "label": "\u3148",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 2.724404811859131,
+          "mean_multiplier_before": 2.724404811859131,
+          "nonzero_eligibility_edge_count": 7,
+          "plastic_edge_count": 20,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 230,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 10.920919418334961,
+          "total_eligibility": 14.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 15
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 7,
+          "active_presynaptic_count": 7,
+          "candidate_edge_count": 545,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 118.5616683959961,
+          "effective_strength_before": 118.5616683959961,
+          "label": "\u3148",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 2.724404811859131,
+          "mean_multiplier_before": 2.724404811859131,
+          "nonzero_eligibility_edge_count": 7,
+          "plastic_edge_count": 20,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 230,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 10.920919418334961,
+          "total_eligibility": 14.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 15
+        },
+        "reward": 2.2265624999999987,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {}
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 1.1102230246251565e-16,
+      "movement": {
+        "center": [
+          0.6099677535267953,
+          0.5783076827921116
+        ],
+        "endpoint": [
+          0.6099677535267953,
+          0.5783076827921116
+        ],
+        "max": [
+          0.6099677535267953,
+          0.5783076827921116
+        ],
+        "min": [
+          0.6099677535267953,
+          0.5783076827921116
+        ],
+        "samples": 4,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 4.53125,
+      "peak_click_rate_hz": 11.71875,
+      "peak_ema_hz": 11.54124140739441,
+      "peak_motor_rate_hz": 13.28125,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.0,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 9.375,
+      "reward": 2.2265624999999987,
+      "selection_source": "warmup_coverage",
+      "subthreshold_streak": 0,
+      "trial": 598,
+      "windows": 3
+    },
+    {
+      "active_click_output_neuron_count": 14,
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.4791645758359877,
+              0.301088247959288
+            ],
+            "endpoint": [
+              0.6274025929839802,
+              0.24087620371537036
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.1,
+        "endpoints": [
+          [
+            0.6274025929839802,
+            0.24087620371537036
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "N",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.6274025929839802,
+            "y": 0.24087620371537033
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.16145833333333334,
+      "click_population_spike_count": 17,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "N",
+      "consecutive_bonus": 1.0,
+      "correct": true,
+      "correct_distance_penalty": 3.0194085743918753e-16,
+      "correct_distance_ratio": 1.5097042871959376e-15,
+      "correct_streak": 10,
+      "deficit_ema": 0.0,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.057517000001098495,
+      "global_learning_reward": 2.161458333333333,
+      "label": "N",
+      "learned": true,
+      "learning": {
+        "active_route": {
+          "active_eligible_teacher_edges": 3,
+          "active_teacher_fraction": 0.09375,
+          "active_teacher_presynaptic_neurons": 3,
+          "candidate_teacher_edges": 726,
+          "effective_teacher_strength": 53.625,
+          "plastic_teacher_edges": 32,
+          "status": "HEALTHY",
+          "teacher_edges_usage_nonzero": 19,
+          "threshold_margin_hz": 1.9375,
+          "total_teacher_credit": 5.769285202026367,
+          "total_teacher_eligibility": 6.0
+        },
+        "budget": {
+          "edges_scaled": 8938,
+          "mean_scale": 0.9788195689889686,
+          "neurons_touched": 778
+        },
+        "learning": {
+          "edge_updates": 8938,
+          "max_abs_delta": 0.1042795181274414,
+          "mean_abs_delta": 0.015148018865036895
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 3,
+          "active_presynaptic_count": 3,
+          "candidate_edge_count": 726,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 53.625,
+          "effective_strength_before": 53.625,
+          "label": "N",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 3.0,
+          "nonzero_eligibility_edge_count": 3,
+          "plastic_edge_count": 32,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 288,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 5.769285202026367,
+          "total_eligibility": 6.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 19
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 3,
+          "active_presynaptic_count": 3,
+          "candidate_edge_count": 726,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 53.625,
+          "effective_strength_before": 53.625,
+          "label": "N",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 3.0,
+          "mean_multiplier_before": 3.0,
+          "nonzero_eligibility_edge_count": 3,
+          "plastic_edge_count": 32,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 288,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 5.769285202026367,
+          "total_eligibility": 6.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 19
+        },
+        "reward": 2.161458333333333,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {}
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 2.7755575615628914e-17,
+      "movement": {
+        "center": [
+          0.6274025929839802,
+          0.24087620371537036
+        ],
+        "endpoint": [
+          0.6274025929839802,
+          0.24087620371537036
+        ],
+        "max": [
+          0.6274025929839802,
+          0.24087620371537036
+        ],
+        "min": [
+          0.6274025929839802,
+          0.24087620371537036
+        ],
+        "samples": 3,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 2.65625,
+      "peak_click_rate_hz": 10.9375,
+      "peak_ema_hz": 13.24756145477295,
+      "peak_motor_rate_hz": 10.9375,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.0,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 9.375,
+      "reward": 2.161458333333333,
+      "selection_source": "warmup_coverage",
+      "subthreshold_streak": 0,
+      "trial": 599,
+      "windows": 2
+    },
+    {
+      "active_click_output_neuron_count": 18,
+      "body": {
+        "arms": [
+          {
+            "elbow": [
+              0.6996891775664278,
+              0.4888540427578572
+            ],
+            "endpoint": [
+              0.5874309205765658,
+              0.6028631815915406
+            ],
+            "shoulder": [
+              0.5,
+              0.5
+            ]
+          }
+        ],
+        "done": true,
+        "elapsed_s": 0.1,
+        "endpoints": [
+          [
+            0.5874309205765658,
+            0.6028631815915406
+          ]
+        ],
+        "targets": [
+          {
+            "hitbox_height": 0.026,
+            "hitbox_shape": "box",
+            "hitbox_width": 0.026,
+            "id": "\u314a",
+            "owner_arm": null,
+            "radius": 0.025,
+            "x": 0.5874309205765658,
+            "y": 0.6028631815915406
+          }
+        ]
+      },
+      "click_attempted_arms": [
+        0
+      ],
+      "click_margin_bonus": 0.3567708333333333,
+      "click_population_spike_count": 28,
+      "click_threshold_hz": 9.0,
+      "clicked_arm": 0,
+      "clicked_label": "\u314a",
+      "consecutive_bonus": 1.0,
+      "correct": true,
+      "correct_distance_penalty": 0.0,
+      "correct_distance_ratio": 0.0,
+      "correct_streak": 10,
+      "deficit_ema": 0.0,
+      "distance_penalty": 0.0,
+      "distance_ratio": 0.0,
+      "elapsed_seconds": 0.07483330000104615,
+      "global_learning_reward": 2.3567708333333335,
+      "label": "\u314a",
+      "learned": true,
+      "learning": {
+        "active_route": {
+          "active_eligible_teacher_edges": 10,
+          "active_teacher_fraction": 0.43478260869565216,
+          "active_teacher_presynaptic_neurons": 10,
+          "candidate_teacher_edges": 580,
+          "effective_teacher_strength": 363.91229248046875,
+          "plastic_teacher_edges": 23,
+          "status": "HEALTHY",
+          "teacher_edges_usage_nonzero": 18,
+          "threshold_margin_hz": 4.28125,
+          "total_teacher_credit": 15.162817001342773,
+          "total_teacher_eligibility": 18.0
+        },
+        "budget": {
+          "edges_scaled": 12502,
+          "mean_scale": 0.9792484133213385,
+          "neurons_touched": 1206
+        },
+        "learning": {
+          "edge_updates": 12502,
+          "max_abs_delta": 0.3007524013519287,
+          "mean_abs_delta": 0.01436427338106921
+        },
+        "motor_teacher": {
+          "active_eligible_edge_count": 10,
+          "active_presynaptic_count": 10,
+          "candidate_edge_count": 580,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 363.91229248046875,
+          "effective_strength_before": 363.91229248046875,
+          "label": "\u314a",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 2.851982831954956,
+          "mean_multiplier_before": 2.851982831954956,
+          "nonzero_eligibility_edge_count": 10,
+          "plastic_edge_count": 23,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 249,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 15.162817001342773,
+          "total_eligibility": 18.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 18
+        },
+        "plasticity": null,
+        "post_reward": {
+          "active_eligible_edge_count": 10,
+          "active_presynaptic_count": 10,
+          "candidate_edge_count": 580,
+          "deficit": 0.0,
+          "edge_updates": 0,
+          "effective_strength_after": 363.91229248046875,
+          "effective_strength_before": 363.91229248046875,
+          "label": "\u314a",
+          "max_delta": 0.0,
+          "mean_delta": 0.0,
+          "mean_multiplier_after": 2.851982831954956,
+          "mean_multiplier_before": 2.851982831954956,
+          "nonzero_eligibility_edge_count": 10,
+          "plastic_edge_count": 23,
+          "regression_strength": 0.0,
+          "relevant_presynaptic_count": 249,
+          "teacher_update_mode": "DIRECT_CLICK_EDGE",
+          "total_credit": 15.162817001342773,
+          "total_eligibility": 18.0,
+          "upstream_fallback_edge_count": 0,
+          "usage_nonzero_edge_count": 18
+        },
+        "reward": 2.3567708333333335,
+        "structural": {
+          "active_edges": 0,
+          "enabled": false
+        },
+        "structural_learning": null,
+        "structural_reward_events": 0,
+        "structural_rewire": null,
+        "teacher_confirmation": {
+          "confirmed": true,
+          "edge_updates": 0,
+          "mean_stability": 0.0
+        },
+        "teacher_normalizer_followup": {}
+      },
+      "low_peak_click_penalty": 0.0,
+      "max_target_distance": 0.72,
+      "min_target_distance": 0.0,
+      "movement": {
+        "center": [
+          0.5874309205765658,
+          0.6028631815915406
+        ],
+        "endpoint": [
+          0.5874309205765658,
+          0.6028631815915406
+        ],
+        "max": [
+          0.5874309205765658,
+          0.6028631815915406
+        ],
+        "min": [
+          0.5874309205765658,
+          0.6028631815915406
+        ],
+        "samples": 3,
+        "trajectory_span": 0.0
+      },
+      "peak_click_evidence_hz": 4.375,
+      "peak_click_rate_hz": 13.28125,
+      "peak_ema_hz": 12.704896926879883,
+      "peak_motor_rate_hz": 13.28125,
+      "peak_regression_penalty": 0.0,
+      "peak_regression_ratio": 0.0,
+      "peak_regression_streak": 0,
+      "peak_regression_strength": 0.0,
+      "peak_regression_triggered": false,
+      "persistence_strength": 0.0,
+      "phase": "training",
+      "previous_peak_click_rate_hz": 10.9375,
+      "reward": 2.3567708333333335,
+      "selection_source": "warmup_coverage",
+      "subthreshold_streak": 0,
+      "trial": 600,
+      "windows": 2
+    }
+  ],
+  "resume": null,
+  "retention_accuracy": 0.0,
+  "retention_degraded_keys": [],
+  "retention_per_key": {
+    "0": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "1": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "2": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "3": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "4": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "5": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "6": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "7": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "8": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "9": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "A": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "B": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "C": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "D": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "E": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "F": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "G": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "H": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "I": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "J": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "K": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "L": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "M": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "N": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "O": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "P": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "Q": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "R": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "S": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "T": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "U": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "V": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "W": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "X": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "Y": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "Z": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3131": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3134": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3137": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3139": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3141": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3142": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3145": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3147": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3148": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u314a": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u314b": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u314c": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u314d": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u314e": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u314f": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3151": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3153": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3155": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3157": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u315b": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u315c": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3160": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3161": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    },
+    "\u3163": {
+      "accuracy": 0.0,
+      "attempts": 0,
+      "correct": 0
+    }
+  },
+  "robust_mastery_passed": false,
+  "route_provenance": {
+    "channel_allocation": "rank_round_robin",
+    "output_count": 320,
+    "output_superclass": "descending_neuron",
+    "per_channel_route_scores": [
+      {
+        "channel": 0,
+        "maximum": 9.658609390258789,
+        "mean": 6.790474891662598,
+        "minimum": 5.1134748458862305
+      },
+      {
+        "channel": 1,
+        "maximum": 9.568511009216309,
+        "mean": 6.774792194366455,
+        "minimum": 5.111318588256836
+      },
+      {
+        "channel": 2,
+        "maximum": 9.413554191589355,
+        "mean": 6.7609477043151855,
+        "minimum": 5.1049017906188965
+      },
+      {
+        "channel": 3,
+        "maximum": 9.37933349609375,
+        "mean": 6.7502031326293945,
+        "minimum": 5.104748725891113
+      },
+      {
+        "channel": 4,
+        "maximum": 9.260276794433594,
+        "mean": 6.7319254875183105,
+        "minimum": 5.09190034866333
+      }
+    ],
+    "route_direct_edge_count": 2059,
+    "route_first_hop_neuron_count": 22492,
+    "route_input_count": 366,
+    "route_max_hops": 2,
+    "route_score_max": 9.658609390258789,
+    "route_scored_descending_count": 1292,
+    "route_second_hop_edge_count": 72460,
+    "route_selected_positive_count": 320,
+    "selected_route_scores": [
+      9.658609390258789,
+      9.568511009216309,
+      9.413554191589355,
+      9.37933349609375,
+      9.260276794433594,
+      9.228739738464355,
+      9.215848922729492,
+      9.172523498535156,
+      9.15229320526123,
+      9.138362884521484,
+      9.135706901550293,
+      9.074037551879883,
+      9.019866943359375,
+      9.0081205368042,
+      8.95543098449707,
+      8.93813419342041,
+      8.799763679504395,
+      8.796420097351074,
+      8.784122467041016,
+      8.728686332702637,
+      8.66456127166748,
+      8.62353515625,
+      8.60937786102295,
+      8.592117309570312,
+      8.526960372924805,
+      8.521812438964844,
+      8.463387489318848,
+      8.450961112976074,
+      8.443347930908203,
+      8.383148193359375,
+      8.371440887451172,
+      8.362784385681152,
+      8.362691879272461,
+      8.358797073364258,
+      8.354951858520508,
+      8.340863227844238,
+      8.305488586425781,
+      8.2310152053833,
+      8.223559379577637,
+      8.185606956481934,
+      8.131758689880371,
+      8.079217910766602,
+      8.06956672668457,
+      8.051196098327637,
+      8.03675365447998,
+      8.033437728881836,
+      7.98433780670166,
+      7.978569030761719,
+      7.966466426849365,
+      7.960038185119629,
+      7.953782081604004,
+      7.943661689758301,
+      7.940678596496582,
+      7.900918006896973,
+      7.870983123779297,
+      7.861993789672852,
+      7.853940486907959,
+      7.839283466339111,
+      7.827625274658203,
+      7.802578926086426,
+      7.792407512664795,
+      7.785614967346191,
+      7.7790985107421875,
+      7.777824401855469,
+      7.753978729248047,
+      7.744393348693848,
+      7.741978168487549,
+      7.739418029785156,
+      7.72697639465332,
+      7.726215362548828,
+      7.705483913421631,
+      7.680294990539551,
+      7.638657093048096,
+      7.633452415466309,
+      7.6325578689575195,
+      7.623723030090332,
+      7.611570358276367,
+      7.607358932495117,
+      7.606267929077148,
+      7.603165626525879,
+      7.584821701049805,
+      7.579863548278809,
+      7.576536178588867,
+      7.562488555908203,
+      7.542329788208008,
+      7.534279823303223,
+      7.530835151672363,
+      7.529937267303467,
+      7.52197265625,
+      7.512291431427002,
+      7.5113325119018555,
+      7.511091232299805,
+      7.507918834686279,
+      7.482800483703613,
+      7.479043960571289,
+      7.4723711013793945,
+      7.4487762451171875,
+      7.445972919464111,
+      7.415202617645264,
+      7.411032676696777,
+      7.402901649475098,
+      7.398599624633789,
+      7.39223575592041,
+      7.379374027252197,
+      7.3499932289123535,
+      7.349050521850586,
+      7.340015411376953,
+      7.334535121917725,
+      7.324843406677246,
+      7.310234069824219,
+      7.30107307434082,
+      7.288481712341309,
+      7.279116630554199,
+      7.27626895904541,
+      7.269691467285156,
+      7.22805643081665,
+      7.201150894165039,
+      7.191275596618652,
+      7.172472953796387,
+      7.149750709533691,
+      7.140873908996582,
+      7.1387481689453125,
+      7.131731033325195,
+      7.110716342926025,
+      7.107987403869629,
+      7.103065490722656,
+      7.085394859313965,
+      7.084766864776611,
+      7.072951793670654,
+      7.010995388031006,
+      6.977014541625977,
+      6.974494457244873,
+      6.9395270347595215,
+      6.932530403137207,
+      6.90483283996582,
+      6.882172107696533,
+      6.878344535827637,
+      6.847202301025391,
+      6.844337463378906,
+      6.830068588256836,
+      6.804018974304199,
+      6.781785488128662,
+      6.739091873168945,
+      6.738587379455566,
+      6.719011306762695,
+      6.709449768066406,
+      6.7081499099731445,
+      6.699540138244629,
+      6.696159362792969,
+      6.687799453735352,
+      6.667447566986084,
+      6.6601457595825195,
+      6.6455888748168945,
+      6.634327411651611,
+      6.6321821212768555,
+      6.618066310882568,
+      6.618001461029053,
+      6.605180740356445,
+      6.601333141326904,
+      6.584596633911133,
+      6.584036827087402,
+      6.543209075927734,
+      6.541487216949463,
+      6.525773525238037,
+      6.515048503875732,
+      6.504851818084717,
+      6.498621463775635,
+      6.49545955657959,
+      6.490971088409424,
+      6.485187530517578,
+      6.453886032104492,
+      6.453070640563965,
+      6.452681064605713,
+      6.44104528427124,
+      6.436958312988281,
+      6.42603874206543,
+      6.4183502197265625,
+      6.411175727844238,
+      6.403039455413818,
+      6.388036727905273,
+      6.383350849151611,
+      6.381407737731934,
+      6.3735857009887695,
+      6.37141227722168,
+      6.362938404083252,
+      6.340167999267578,
+      6.325984001159668,
+      6.315607070922852,
+      6.307453632354736,
+      6.299011707305908,
+      6.293486595153809,
+      6.287675857543945,
+      6.285977363586426,
+      6.282377243041992,
+      6.279551029205322,
+      6.270303249359131,
+      6.253541946411133,
+      6.248826026916504,
+      6.220970153808594,
+      6.204415798187256,
+      6.189741134643555,
+      6.187028884887695,
+      6.184692859649658,
+      6.183635711669922,
+      6.175455093383789,
+      6.17518949508667,
+      6.160059928894043,
+      6.15516996383667,
+      6.135898113250732,
+      6.134247779846191,
+      6.127128601074219,
+      6.122267723083496,
+      6.118858814239502,
+      6.11106538772583,
+      6.099642276763916,
+      6.0853400230407715,
+      6.082583427429199,
+      6.080364227294922,
+      6.06877326965332,
+      6.068081855773926,
+      6.064480781555176,
+      6.060316562652588,
+      6.051510810852051,
+      6.037177085876465,
+      6.019113540649414,
+      5.980853080749512,
+      5.969539642333984,
+      5.952408790588379,
+      5.937004566192627,
+      5.898122787475586,
+      5.897747039794922,
+      5.889485836029053,
+      5.859827041625977,
+      5.84984827041626,
+      5.846800804138184,
+      5.839878082275391,
+      5.835513114929199,
+      5.826488018035889,
+      5.819319725036621,
+      5.739522933959961,
+      5.731169700622559,
+      5.72998571395874,
+      5.720747947692871,
+      5.7170820236206055,
+      5.716653823852539,
+      5.712337493896484,
+      5.696493625640869,
+      5.691727161407471,
+      5.68587589263916,
+      5.664934158325195,
+      5.637546062469482,
+      5.630790710449219,
+      5.630176544189453,
+      5.627172470092773,
+      5.620184898376465,
+      5.60642147064209,
+      5.604642868041992,
+      5.597224235534668,
+      5.59687614440918,
+      5.589539051055908,
+      5.584828853607178,
+      5.576382637023926,
+      5.574917316436768,
+      5.56260871887207,
+      5.554595947265625,
+      5.5501508712768555,
+      5.542118549346924,
+      5.538603782653809,
+      5.535850524902344,
+      5.533360004425049,
+      5.53001594543457,
+      5.506012439727783,
+      5.502383232116699,
+      5.4869608879089355,
+      5.475668907165527,
+      5.472410202026367,
+      5.459908962249756,
+      5.440884113311768,
+      5.415216445922852,
+      5.402957916259766,
+      5.39632511138916,
+      5.395185470581055,
+      5.3912434577941895,
+      5.3887104988098145,
+      5.382124900817871,
+      5.369359493255615,
+      5.368184566497803,
+      5.360527992248535,
+      5.358088970184326,
+      5.349741458892822,
+      5.346220016479492,
+      5.345119953155518,
+      5.33639669418335,
+      5.332606792449951,
+      5.302044868469238,
+      5.276602745056152,
+      5.266602039337158,
+      5.262171745300293,
+      5.259690284729004,
+      5.249156475067139,
+      5.247859954833984,
+      5.243124485015869,
+      5.228504657745361,
+      5.223770618438721,
+      5.217756271362305,
+      5.216089248657227,
+      5.215085983276367,
+      5.2034149169921875,
+      5.202959060668945,
+      5.194593906402588,
+      5.190258502960205,
+      5.189230442047119,
+      5.163511276245117,
+      5.130249977111816,
+      5.124347686767578,
+      5.1134748458862305,
+      5.111318588256836,
+      5.1049017906188965,
+      5.104748725891113,
+      5.09190034866333
+    ],
+    "selection": "route_aware_2hop"
+  },
+  "target_accuracy": 0.8,
+  "token_labels": [
+    "\u3131",
+    "\u3134",
+    "\u3137",
+    "\u3139",
+    "\u3141",
+    "\u3142",
+    "\u3145",
+    "\u3147",
+    "\u3148",
+    "\u314a",
+    "\u314b",
+    "\u314c",
+    "\u314d",
+    "\u314e",
+    "\u314f",
+    "\u3151",
+    "\u3153",
+    "\u3155",
+    "\u3157",
+    "\u315b",
+    "\u315c",
+    "\u3160",
+    "\u3161",
+    "\u3163",
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9"
+  ],
+  "training_accuracy": 0.9033333333333333,
+  "training_trials": 600
+}

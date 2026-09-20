@@ -1,0 +1,57 @@
+{
+  "persistent_error": {
+    "trials_before_trigger": 3,
+    "candidate_observations": [
+      {
+        "trial": 1,
+        "candidates_observed": 2,
+        "tracked": 2,
+        "ready": 0,
+        "reallocation_triggered": false
+      },
+      {
+        "trial": 2,
+        "candidates_observed": 2,
+        "tracked": 2,
+        "ready": 0,
+        "reallocation_triggered": false
+      },
+      {
+        "trial": 3,
+        "candidates_observed": 2,
+        "tracked": 1,
+        "ready": 2,
+        "reallocation_triggered": true
+      }
+    ],
+    "max_need": 2.71
+  },
+  "reallocation": {
+    "triggered": true,
+    "promoted_edges": [
+      1
+    ],
+    "retired_edges": [
+      5
+    ],
+    "budget_before": 4,
+    "budget_after": 4,
+    "budget_delta": 0
+  },
+  "next_trial": {
+    "promoted_edge": 1,
+    "promoted_edge_recorded_eligibility": true,
+    "generic_directional_update": true,
+    "promoted_route_learned": true
+  },
+  "safety": {
+    "protected_donor_retained": true,
+    "irrelevant_edge_not_promoted": true,
+    "anatomy_unchanged": true,
+    "negative_inhibitory_candidate_supported": true
+  },
+  "checkpoint": {
+    "need_state_restored": true
+  },
+  "pass": true
+}

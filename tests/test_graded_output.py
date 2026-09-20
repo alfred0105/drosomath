@@ -5,6 +5,7 @@ from drosomath.malecns.graded_output import (
     NO_OUTPUT,
     GradedPopulationCode,
     GradedRateCodeConfig,
+    calibrate_two_level_rate_code,
 )
 
 
@@ -69,6 +70,26 @@ class GradedOutputTests(unittest.TestCase):
         self.assertEqual(summary["type"], "fixed_population_rate_code")
         self.assertFalse(summary["trainable_decoder"])
         self.assertEqual(summary["population_size"], 512)
+
+    def test_rate_code_is_calibrated_from_measured_distributions(self):
+        calibration = calibrate_two_level_rate_code(
+            [1.0, 1.1, 0.9],
+            [2.9, 3.0, 3.1],
+            min_separation_hz=0.5,
+        )
+        self.assertTrue(calibration.usable)
+        config = calibration.code_config(max_level=1)
+        self.assertAlmostEqual(config.base_rate_hz, 1.0)
+        self.assertAlmostEqual(config.target_rate_hz(1), 3.0)
+        self.assertLess(config.tolerance_hz, abs(config.level_step_hz) / 2.0)
+
+    def test_rate_calibration_rejects_unseparated_classes(self):
+        calibration = calibrate_two_level_rate_code(
+            [1.0, 1.0],
+            [1.02, 0.98],
+            min_separation_hz=0.10,
+        )
+        self.assertFalse(calibration.usable)
 
 
 if __name__ == "__main__":

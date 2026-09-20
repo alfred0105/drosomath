@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from dataclasses import asdict, fields, is_dataclass
 from pathlib import Path
 
@@ -47,19 +48,27 @@ def save_learning_checkpoint(
     config=None,
     completed_trials: int = 0,
     stage: str = "",
+    session_state: dict[str, object] | None = None,
+    need_tracker=None,
 ) -> dict[str, object]:
     """Persist long-term learned state without copying immutable anatomy."""
     np = brain.np
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    changed = np.flatnonzero(
-        (np.abs(brain.plasticity.multiplier - 1.0) > 1e-7)
-        | (brain.plasticity.stability > 0.0)
-        | (brain.plasticity.usage_ema > 1e-7)
-    ).astype(np.int32, copy=False)
+    # Only plastic or historically plastic edges can differ from the default
+    # state through the public learning API. This avoids a full 6.2M-edge scan
+    # at every periodic keyboard checkpoint while retaining frozen curriculum
+    # state required for a later unlock.
+    candidates = brain.plasticity.lifecycle_indices
+    candidate_changed = (
+        (np.abs(brain.plasticity.multiplier[candidates] - 1.0) > 1e-7)
+        | (brain.plasticity.stability[candidates] > 0.0)
+        | (brain.plasticity.usage_ema[candidates] > 1e-7)
+    )
+    changed = candidates[candidate_changed].astype(np.int32, copy=False)
 
     payload: dict[str, object] = {
-        "format_version": np.asarray([3], dtype=np.int32),
+        "format_version": np.asarray([5], dtype=np.int32),
         "neuron_count": np.asarray([brain.connectome.neuron_count], dtype=np.int64),
         "edge_count": np.asarray([brain.connectome.edge_count], dtype=np.int64),
         "min_connection_synapses": np.asarray(
@@ -73,6 +82,8 @@ def save_learning_checkpoint(
             [float(brain.plasticity.config.plastic_fraction)], dtype=np.float32
         ),
         "plastic_seed": np.asarray([int(brain.plasticity.config.seed)], dtype=np.int64),
+        "dynamic__promoted_edges": brain.plasticity.allocation_overrides()["promoted_edges"],
+        "dynamic__retired_edges": brain.plasticity.allocation_overrides()["retired_edges"],
         "completed_trials": np.asarray([int(completed_trials)], dtype=np.int64),
         "stage": np.asarray([str(stage)], dtype="U64"),
     }
@@ -80,6 +91,9 @@ def save_learning_checkpoint(
     structural = getattr(brain, "structural_overlay", None)
     if structural is not None:
         payload.update(structural.checkpoint_payload())
+    if need_tracker is not None:
+        for key, value in need_tracker.checkpoint_payload(np).items():
+            payload[f"need__{key}"] = value
 
     if config is not None:
         cfg = asdict(config) if is_dataclass(config) else dict(config)
@@ -104,15 +118,22 @@ def save_learning_checkpoint(
                 "readout_frozen": np.asarray([readout.frozen], dtype=np.bool_),
             }
         )
+    if session_state is not None:
+        session_json = json.dumps(session_state, sort_keys=True)
+        payload["session_state_json"] = np.asarray(
+            [session_json], dtype=f"U{max(1, len(session_json))}"
+        )
 
     np.savez_compressed(path, **payload)
     return {
         "path": str(path),
-        "format_version": 3,
+        "format_version": 5,
         "changed_edge_count": int(len(changed)),
         "structural_edge_count": int(structural.edge_count) if structural is not None else 0,
         "completed_trials": int(completed_trials),
         "stage": str(stage),
+        "session_state_saved": session_state is not None,
+        "need_state_saved": need_tracker is not None,
     }
 
 
@@ -148,6 +169,7 @@ def restore_learning_checkpoint(
     brain,
     readout=None,
     strict_readout: bool = True,
+    need_tracker=None,
 ) -> dict[str, object]:
     """Restore long-term plastic and optional structural state."""
     np = brain.np
@@ -171,12 +193,32 @@ def restore_learning_checkpoint(
         if len(changed) and (int(changed.min()) < 0 or int(changed.max()) >= edge_count):
             raise ValueError("checkpoint contains out-of-range edge indices")
 
+        dynamic_restored = False
+        if "dynamic__promoted_edges" in data and "dynamic__retired_edges" in data:
+            brain.plasticity.restore_allocation_overrides(
+                data["dynamic__promoted_edges"], data["dynamic__retired_edges"]
+            )
+            dynamic_restored = True
         brain.plasticity.multiplier[changed] = data["multipliers"]
         brain.plasticity.stability[changed] = data["stability"]
         if "usage_ema" in data:
             brain.plasticity.usage_ema[changed] = data["usage_ema"]
         brain.plasticity.clear_eligibility()
         structural_edge_count = _restore_structural_if_present(data, brain)
+        need_restored = False
+        need_keys = {
+            "edge_indices": "need__edge_indices",
+            "scores": "need__scores",
+            "observations": "need__observations",
+            "last_seen": "need__last_seen",
+        }
+        if need_tracker is not None and all(key in data for key in need_keys.values()):
+            payload = {name: data[key] for name, key in need_keys.items()}
+            if "need__recent_observations" in data:
+                payload["recent_observations"] = data["need__recent_observations"]
+            payload["event_count"] = data["need__event_count"] if "need__event_count" in data else [0]
+            need_tracker.restore_from_checkpoint(payload)
+            need_restored = True
 
         readout_restored = False
         if readout is not None and "readout_weights" in data:
@@ -201,4 +243,11 @@ def restore_learning_checkpoint(
             "completed_trials": int(data["completed_trials"][0]) if "completed_trials" in data else 0,
             "stage": str(data["stage"][0]) if "stage" in data else "",
             "readout_restored": readout_restored,
+            "dynamic_allocation_restored": dynamic_restored,
+            "need_state_restored": need_restored,
+            "session_state": (
+                json.loads(str(data["session_state_json"][0]))
+                if "session_state_json" in data
+                else None
+            ),
         }

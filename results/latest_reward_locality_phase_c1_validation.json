@@ -1,0 +1,31 @@
+{
+  "legacy": {
+    "legacy_eligible_edges": 8,
+    "legacy_updated_edges": 8,
+    "eligible_edges": 8,
+    "updated_edges": 8,
+    "mean_abs_delta": 0.10000002384185791
+  },
+  "localized": {
+    "localized_eligible_edges": 8,
+    "localized_selected_credit_edges": 3,
+    "localized_actual_updated_edges": 3,
+    "selected_credit_edges": 3,
+    "actual_updated_edges": 3,
+    "actual_credited_updated_edges": 3,
+    "opposing_path_edges_skipped": 2,
+    "mean_abs_delta": 0.08333333333333333
+  },
+  "reduction": {
+    "update_reduction_fraction": 0.625,
+    "reinforced_route_edges_updated": 3,
+    "opposing_route_edges_updated": 0,
+    "unrelated_edges_updated": 0
+  },
+  "interference_probe": {
+    "output_b_only_edges": 2,
+    "legacy_b_only_edges_updated": 2,
+    "localized_b_only_edges_updated": 0
+  },
+  "pass": true
+}

@@ -1,0 +1,1841 @@
+{
+  "channels": {
+    "symbol/A": {
+      "cancellation": {
+        "cancellation_fraction": 0.2888954834110906,
+        "median_edge_level_cancellation_fraction": 0.22209775025794298,
+        "overlap_edge_abs_net_delta": 5.189492970705032,
+        "overlap_edge_count": 7,
+        "overlap_edge_total_abs_delta": 7.297792166471481
+      },
+      "contexts": {
+        "target/A:positive": {
+          "unique_edges": 77
+        },
+        "target/B:negative": {
+          "unique_edges": 112
+        },
+        "target/D:negative": {
+          "unique_edges": 15
+        }
+      },
+      "edge_overlap": {
+        "fraction_negative_edges_also_positive": 0.05511811023622047,
+        "fraction_positive_edges_also_negative": 0.09090909090909091,
+        "intersection_count": 7,
+        "jaccard_positive_negative": 0.03553299492385787,
+        "negative_unique_edges": 127,
+        "positive_unique_edges": 77
+      },
+      "hop_specific": {
+        "1hop": {
+          "cancellation_fraction": 0.2826268254017317,
+          "jaccard_positive_negative": 0.0759493670886076,
+          "median_edge_level_cancellation_fraction": 0.20693931684652495,
+          "overlap_edge_abs_net_delta": 5.174442917108536,
+          "overlap_edge_count": 6,
+          "overlap_edge_total_abs_delta": 7.213042110204697
+        },
+        "2hop": {
+          "cancellation_fraction": 0.8224183645480951,
+          "jaccard_positive_negative": 0.00847457627118644,
+          "median_edge_level_cancellation_fraction": 0.8224183645480951,
+          "overlap_edge_abs_net_delta": 0.015050053596496582,
+          "overlap_edge_count": 1,
+          "overlap_edge_total_abs_delta": 0.08475005626678467
+        }
+      },
+      "negative_requests": {
+        "direction_requests": 7,
+        "mean_edge_updates_per_request": 63.0,
+        "median_edge_updates_per_request": 77.0,
+        "negative_zero_update_count": 0,
+        "negative_zero_update_fraction": 0.0,
+        "requests_with_at_least_one_edge_update": 7,
+        "total_edge_updates": 441,
+        "zero_update_count": 0,
+        "zero_update_fraction": 0.0
+      },
+      "pairwise_context_overlap": {
+        "target/A:positive|target/B:negative": 0.03278688524590164,
+        "target/A:positive|target/D:negative": 0.01098901098901099,
+        "target/B:negative|target/D:negative": 0.0
+      },
+      "positive_requests": {
+        "direction_requests": 294,
+        "mean_edge_updates_per_request": 8.377551020408163,
+        "median_edge_updates_per_request": 8.0,
+        "positive_zero_update_count": 3,
+        "positive_zero_update_fraction": 0.01020408163265306,
+        "requests_with_at_least_one_edge_update": 291,
+        "total_edge_updates": 2463,
+        "zero_update_count": 3,
+        "zero_update_fraction": 0.01020408163265306
+      },
+      "presynaptic_overlap": {
+        "intersection_count": 8,
+        "jaccard": 0.0427807486631016,
+        "negative_presynaptic_neurons": 124,
+        "positive_presynaptic_neurons": 71
+      },
+      "route_health": {
+        "target/A:positive": {
+          "active_plastic_candidate_edges": 2196.2916666666665,
+          "plastic_engagement_efficiency": 1.3203325992513153,
+          "plastic_structural_opportunity": 310.72984981536865,
+          "realized_plastic_capacity": 379.3934238751729,
+          "sample_count": 24,
+          "useful_frozen_edges": 9752.208333333334,
+          "useful_plastic_edges": 521.9166666666666
+        },
+        "target/B:negative": {
+          "active_plastic_candidate_edges": 23310.0,
+          "plastic_engagement_efficiency": 1.7514902616750117,
+          "plastic_structural_opportunity": 1739.4759033203125,
+          "realized_plastic_capacity": 3036.925439453125,
+          "sample_count": 5,
+          "useful_frozen_edges": 76496.0,
+          "useful_plastic_edges": 3917.6
+        },
+        "target/D:negative": {
+          "active_plastic_candidate_edges": 1521.5,
+          "plastic_engagement_efficiency": 1.6172804774858676,
+          "plastic_structural_opportunity": 107.03029727935791,
+          "realized_plastic_capacity": 193.78499031066895,
+          "sample_count": 2,
+          "useful_frozen_edges": 5945.0,
+          "useful_plastic_edges": 316.0
+        }
+      }
+    },
+    "symbol/B": {
+      "cancellation": {
+        "cancellation_fraction": 0.9721330928356315,
+        "median_edge_level_cancellation_fraction": 0.30000000000000004,
+        "overlap_edge_abs_net_delta": 1.0277036055922508,
+        "overlap_edge_count": 47,
+        "overlap_edge_total_abs_delta": 36.87899771332741
+      },
+      "contexts": {
+        "target/A:negative": {
+          "unique_edges": 1
+        },
+        "target/B:positive": {
+          "unique_edges": 693
+        },
+        "target/C:negative": {
+          "unique_edges": 102
+        },
+        "target/D:negative": {
+          "unique_edges": 62
+        }
+      },
+      "edge_overlap": {
+        "fraction_negative_edges_also_positive": 0.29375,
+        "fraction_positive_edges_also_negative": 0.06782106782106782,
+        "intersection_count": 47,
+        "jaccard_positive_negative": 0.05831265508684864,
+        "negative_unique_edges": 160,
+        "positive_unique_edges": 693
+      },
+      "hop_specific": {
+        "1hop": {
+          "cancellation_fraction": 0.9750004487217692,
+          "jaccard_positive_negative": 0.11194029850746269,
+          "median_edge_level_cancellation_fraction": 0.16803760282021152,
+          "overlap_edge_abs_net_delta": 0.7382425293326378,
+          "overlap_edge_count": 30,
+          "overlap_edge_total_abs_delta": 29.530231207609177
+        },
+        "2hop": {
+          "cancellation_fraction": 0.960610930278656,
+          "jaccard_positive_negative": 0.031598513011152414,
+          "median_edge_level_cancellation_fraction": 0.5,
+          "overlap_edge_abs_net_delta": 0.28946107625961304,
+          "overlap_edge_count": 17,
+          "overlap_edge_total_abs_delta": 7.348766505718231
+        }
+      },
+      "negative_requests": {
+        "direction_requests": 115,
+        "mean_edge_updates_per_request": 11.11304347826087,
+        "median_edge_updates_per_request": 9.0,
+        "negative_zero_update_count": 1,
+        "negative_zero_update_fraction": 0.008695652173913044,
+        "requests_with_at_least_one_edge_update": 114,
+        "total_edge_updates": 1278,
+        "zero_update_count": 1,
+        "zero_update_fraction": 0.008695652173913044
+      },
+      "pairwise_context_overlap": {
+        "target/A:negative|target/B:positive": 0.0,
+        "target/A:negative|target/C:negative": 0.0,
+        "target/A:negative|target/D:negative": 0.0,
+        "target/B:positive|target/C:negative": 0.052980132450331126,
+        "target/B:positive|target/D:negative": 0.016150740242261104,
+        "target/C:negative|target/D:negative": 0.031446540880503145
+      },
+      "positive_requests": {
+        "direction_requests": 297,
+        "mean_edge_updates_per_request": 94.14814814814815,
+        "median_edge_updates_per_request": 90.0,
+        "positive_zero_update_count": 1,
+        "positive_zero_update_fraction": 0.003367003367003367,
+        "requests_with_at_least_one_edge_update": 296,
+        "total_edge_updates": 27962,
+        "zero_update_count": 1,
+        "zero_update_fraction": 0.003367003367003367
+      },
+      "presynaptic_overlap": {
+        "intersection_count": 43,
+        "jaccard": 0.06408345752608048,
+        "negative_presynaptic_neurons": 137,
+        "positive_presynaptic_neurons": 577
+      },
+      "route_health": {
+        "target/A:negative": {
+          "active_plastic_candidate_edges": 538.0,
+          "plastic_engagement_efficiency": 1.4784338279752884,
+          "plastic_structural_opportunity": 35.299150466918945,
+          "realized_plastic_capacity": 51.991106033325195,
+          "sample_count": 2,
+          "useful_frozen_edges": 1322.0,
+          "useful_plastic_edges": 76.0
+        },
+        "target/B:positive": {
+          "active_plastic_candidate_edges": 18084.333333333332,
+          "plastic_engagement_efficiency": 1.678519900255204,
+          "plastic_structural_opportunity": 1767.8646926879883,
+          "realized_plastic_capacity": 3032.475092569987,
+          "sample_count": 24,
+          "useful_frozen_edges": 53834.708333333336,
+          "useful_plastic_edges": 2819.5416666666665
+        },
+        "target/C:negative": {
+          "active_plastic_candidate_edges": 3521.6666666666665,
+          "plastic_engagement_efficiency": 1.233389222960228,
+          "plastic_structural_opportunity": 560.559315999349,
+          "realized_plastic_capacity": 691.3663330078125,
+          "sample_count": 9,
+          "useful_frozen_edges": 15945.222222222223,
+          "useful_plastic_edges": 836.7777777777778
+        },
+        "target/D:negative": {
+          "active_plastic_candidate_edges": 2936.625,
+          "plastic_engagement_efficiency": 1.934931026934894,
+          "plastic_structural_opportunity": 280.530304590861,
+          "realized_plastic_capacity": 539.0591799418131,
+          "sample_count": 24,
+          "useful_frozen_edges": 9600.166666666666,
+          "useful_plastic_edges": 521.4166666666666
+        }
+      }
+    },
+    "symbol/C": {
+      "cancellation": {
+        "cancellation_fraction": 0.9598596885412098,
+        "median_edge_level_cancellation_fraction": 0.3451504316293442,
+        "overlap_edge_abs_net_delta": 0.24787068367004395,
+        "overlap_edge_count": 13,
+        "overlap_edge_total_abs_delta": 6.1751061379909515
+      },
+      "contexts": {
+        "target/B:negative": {
+          "unique_edges": 309
+        },
+        "target/C:positive": {
+          "unique_edges": 75
+        },
+        "target/D:negative": {
+          "unique_edges": 77
+        }
+      },
+      "edge_overlap": {
+        "fraction_negative_edges_also_positive": 0.034482758620689655,
+        "fraction_positive_edges_also_negative": 0.17333333333333334,
+        "intersection_count": 13,
+        "jaccard_positive_negative": 0.029612756264236904,
+        "negative_unique_edges": 377,
+        "positive_unique_edges": 75
+      },
+      "hop_specific": {
+        "1hop": {
+          "cancellation_fraction": 0.974006440446406,
+          "jaccard_positive_negative": 0.05263157894736842,
+          "median_edge_level_cancellation_fraction": 0.3377075933432054,
+          "overlap_edge_abs_net_delta": 0.15240424871444702,
+          "overlap_edge_count": 10,
+          "overlap_edge_total_abs_delta": 5.863154232501984
+        },
+        "2hop": {
+          "cancellation_fraction": 0.6939706625418479,
+          "jaccard_positive_negative": 0.012048192771084338,
+          "median_edge_level_cancellation_fraction": 0.36363636363636365,
+          "overlap_edge_abs_net_delta": 0.09546643495559692,
+          "overlap_edge_count": 3,
+          "overlap_edge_total_abs_delta": 0.3119519054889679
+        }
+      },
+      "negative_requests": {
+        "direction_requests": 286,
+        "mean_edge_updates_per_request": 18.192307692307693,
+        "median_edge_updates_per_request": 10.5,
+        "negative_zero_update_count": 0,
+        "negative_zero_update_fraction": 0.0,
+        "requests_with_at_least_one_edge_update": 286,
+        "total_edge_updates": 5203,
+        "zero_update_count": 0,
+        "zero_update_fraction": 0.0
+      },
+      "pairwise_context_overlap": {
+        "target/B:negative|target/C:positive": 0.03225806451612903,
+        "target/B:negative|target/D:negative": 0.023872679045092837,
+        "target/C:positive|target/D:negative": 0.013333333333333334
+      },
+      "positive_requests": {
+        "direction_requests": 11,
+        "mean_edge_updates_per_request": 21.727272727272727,
+        "median_edge_updates_per_request": 18.0,
+        "positive_zero_update_count": 0,
+        "positive_zero_update_fraction": 0.0,
+        "requests_with_at_least_one_edge_update": 11,
+        "total_edge_updates": 239,
+        "zero_update_count": 0,
+        "zero_update_fraction": 0.0
+      },
+      "presynaptic_overlap": {
+        "intersection_count": 13,
+        "jaccard": 0.03504043126684636,
+        "negative_presynaptic_neurons": 324,
+        "positive_presynaptic_neurons": 60
+      },
+      "route_health": {
+        "target/B:negative": {
+          "active_plastic_candidate_edges": 14592.75,
+          "plastic_engagement_efficiency": 1.4606422734496487,
+          "plastic_structural_opportunity": 1171.8902842203777,
+          "realized_plastic_capacity": 1717.7663497924805,
+          "sample_count": 24,
+          "useful_frozen_edges": 41354.708333333336,
+          "useful_plastic_edges": 2191.375
+        },
+        "target/C:positive": {
+          "active_plastic_candidate_edges": 3841.5454545454545,
+          "plastic_engagement_efficiency": 1.294928063123302,
+          "plastic_structural_opportunity": 484.91841541637075,
+          "realized_plastic_capacity": 627.3634699041194,
+          "sample_count": 11,
+          "useful_frozen_edges": 14365.181818181818,
+          "useful_plastic_edges": 766.4545454545455
+        },
+        "target/D:negative": {
+          "active_plastic_candidate_edges": 2559.4166666666665,
+          "plastic_engagement_efficiency": 1.8789822696855483,
+          "plastic_structural_opportunity": 330.3105182647705,
+          "realized_plastic_capacity": 617.8111623128256,
+          "sample_count": 24,
+          "useful_frozen_edges": 10509.958333333334,
+          "useful_plastic_edges": 564.6666666666666
+        }
+      }
+    },
+    "symbol/D": {
+      "cancellation": {
+        "cancellation_fraction": 0.7683036374530053,
+        "median_edge_level_cancellation_fraction": 0.2857142857142857,
+        "overlap_edge_abs_net_delta": 15.393430035561323,
+        "overlap_edge_count": 35,
+        "overlap_edge_total_abs_delta": 66.43794432654977
+      },
+      "contexts": {
+        "target/A:negative": {
+          "unique_edges": 135
+        },
+        "target/B:negative": {
+          "unique_edges": 1192
+        },
+        "target/C:negative": {
+          "unique_edges": 54
+        },
+        "target/D:positive": {
+          "unique_edges": 85
+        }
+      },
+      "edge_overlap": {
+        "fraction_negative_edges_also_positive": 0.026555386949924126,
+        "fraction_positive_edges_also_negative": 0.4117647058823529,
+        "intersection_count": 35,
+        "jaccard_positive_negative": 0.025584795321637425,
+        "negative_unique_edges": 1318,
+        "positive_unique_edges": 85
+      },
+      "hop_specific": {
+        "1hop": {
+          "cancellation_fraction": 0.7801034860839218,
+          "jaccard_positive_negative": 0.06912442396313365,
+          "median_edge_level_cancellation_fraction": 0.28209569170816196,
+          "overlap_edge_abs_net_delta": 13.544403668493032,
+          "overlap_edge_count": 30,
+          "overlap_edge_total_abs_delta": 61.59444471076131
+        },
+        "2hop": {
+          "cancellation_fraction": 0.6182457904939271,
+          "jaccard_positive_negative": 0.0053533190578158455,
+          "median_edge_level_cancellation_fraction": 0.2857142857142857,
+          "overlap_edge_abs_net_delta": 1.8490263670682907,
+          "overlap_edge_count": 5,
+          "overlap_edge_total_abs_delta": 4.84349961578846
+        }
+      },
+      "negative_requests": {
+        "direction_requests": 562,
+        "mean_edge_updates_per_request": 92.13701067615658,
+        "median_edge_updates_per_request": 25.0,
+        "negative_zero_update_count": 12,
+        "negative_zero_update_fraction": 0.021352313167259787,
+        "requests_with_at_least_one_edge_update": 550,
+        "total_edge_updates": 51781,
+        "zero_update_count": 12,
+        "zero_update_fraction": 0.021352313167259787
+      },
+      "pairwise_context_overlap": {
+        "target/A:negative|target/B:negative": 0.02948021722265322,
+        "target/A:negative|target/C:negative": 0.02717391304347826,
+        "target/A:negative|target/D:positive": 0.08374384236453201,
+        "target/B:negative|target/C:negative": 0.017973856209150325,
+        "target/B:negative|target/D:positive": 0.024057738572574178,
+        "target/C:negative|target/D:positive": 0.014598540145985401
+      },
+      "positive_requests": {
+        "direction_requests": 298,
+        "mean_edge_updates_per_request": 10.963087248322148,
+        "median_edge_updates_per_request": 8.0,
+        "positive_zero_update_count": 1,
+        "positive_zero_update_fraction": 0.003355704697986577,
+        "requests_with_at_least_one_edge_update": 297,
+        "total_edge_updates": 3267,
+        "zero_update_count": 1,
+        "zero_update_fraction": 0.003355704697986577
+      },
+      "presynaptic_overlap": {
+        "intersection_count": 33,
+        "jaccard": 0.029359430604982206,
+        "negative_presynaptic_neurons": 1084,
+        "positive_presynaptic_neurons": 73
+      },
+      "route_health": {
+        "target/A:negative": {
+          "active_plastic_candidate_edges": 2243.9166666666665,
+          "plastic_engagement_efficiency": 1.2536293346311373,
+          "plastic_structural_opportunity": 693.2339795430502,
+          "realized_plastic_capacity": 871.1450996398926,
+          "sample_count": 24,
+          "useful_frozen_edges": 18351.375,
+          "useful_plastic_edges": 962.3333333333334
+        },
+        "target/B:negative": {
+          "active_plastic_candidate_edges": 18469.875,
+          "plastic_engagement_efficiency": 2.0885478555797623,
+          "plastic_structural_opportunity": 3040.8912455240884,
+          "realized_plastic_capacity": 6662.671478271484,
+          "sample_count": 24,
+          "useful_frozen_edges": 99347.54166666667,
+          "useful_plastic_edges": 5203.458333333333
+        },
+        "target/C:negative": {
+          "active_plastic_candidate_edges": 5281.0,
+          "plastic_engagement_efficiency": 1.2028803532279992,
+          "plastic_structural_opportunity": 806.0732879638672,
+          "realized_plastic_capacity": 977.3580322265625,
+          "sample_count": 2,
+          "useful_frozen_edges": 22827.5,
+          "useful_plastic_edges": 1199.5
+        },
+        "target/D:positive": {
+          "active_plastic_candidate_edges": 2550.125,
+          "plastic_engagement_efficiency": 1.8744776593468628,
+          "plastic_structural_opportunity": 324.1696694691976,
+          "realized_plastic_capacity": 603.2535692850748,
+          "sample_count": 24,
+          "useful_frozen_edges": 10154.458333333334,
+          "useful_plastic_edges": 542.2083333333334
+        }
+      }
+    }
+  },
+  "conclusion": {
+    "A_credit_starvation_comparison": {
+      "A": {
+        "mean_edge_updates_per_positive_request": 8.377551020408163,
+        "positive_zero_update_fraction": 0.01020408163265306
+      },
+      "B": {
+        "mean_edge_updates_per_positive_request": 94.14814814814815,
+        "positive_zero_update_fraction": 0.003367003367003367
+      },
+      "C": {
+        "mean_edge_updates_per_positive_request": 21.727272727272727,
+        "positive_zero_update_fraction": 0.0
+      },
+      "D": {
+        "mean_edge_updates_per_positive_request": 10.963087248322148,
+        "positive_zero_update_fraction": 0.003355704697986577
+      }
+    },
+    "A_credit_starvation_supported": true,
+    "A_vs_BD_thresholds": {
+      "A_mean_edge_updates_per_request": 8.377551020408163,
+      "A_zero_update_fraction": 0.01020408163265306,
+      "B_D_mean_edge_updates_per_request": 52.55561769823515,
+      "B_D_mean_zero_update_fraction": 0.003361354032494972
+    },
+    "D_sign_conflict_supported": false,
+    "D_thresholds": {
+      "cancellation_fraction": 0.7683036374530053,
+      "edge_jaccard": 0.025584795321637425,
+      "strong_sign_conflict": false
+    },
+    "description": {
+      "A": "positive requests with weak realized generic update yield",
+      "D": "same channel receives sign-conflicting target/competitor credit"
+    },
+    "primary_bottleneck": "credit_starvation",
+    "recommended_next_step": "improve_route_engagement",
+    "upstream_context_interference_supported": false
+  },
+  "cross_target_positive_overlap": {
+    "target/A|target/B": 0.0026041666666666665,
+    "target/A|target/C": 0.0,
+    "target/A|target/D": 0.006211180124223602,
+    "target/B|target/C": 0.011857707509881422,
+    "target/B|target/D": 0.0,
+    "target/C|target/D": 0.0
+  },
+  "pass": true,
+  "per_seed": {
+    "41": {
+      "adaptive_reallocations": 0,
+      "budget_drift": 0,
+      "channels": {
+        "symbol/A": {
+          "cancellation": {
+            "cancellation_fraction": 0.0,
+            "median_edge_level_cancellation_fraction": 0.0,
+            "overlap_edge_abs_net_delta": 0.0,
+            "overlap_edge_count": 0,
+            "overlap_edge_total_abs_delta": 0.0
+          },
+          "contexts": {
+            "target/A:positive": {
+              "unique_edges": 17
+            }
+          },
+          "edge_overlap": {
+            "fraction_negative_edges_also_positive": 0.0,
+            "fraction_positive_edges_also_negative": 0.0,
+            "intersection_count": 0,
+            "jaccard_positive_negative": 0.0,
+            "negative_unique_edges": 0,
+            "positive_unique_edges": 17
+          },
+          "hop_specific": {
+            "1hop": {
+              "cancellation_fraction": 0.0,
+              "jaccard_positive_negative": 0.0,
+              "median_edge_level_cancellation_fraction": 0.0,
+              "overlap_edge_abs_net_delta": 0.0,
+              "overlap_edge_count": 0,
+              "overlap_edge_total_abs_delta": 0.0
+            },
+            "2hop": {
+              "cancellation_fraction": 0.0,
+              "jaccard_positive_negative": 0.0,
+              "median_edge_level_cancellation_fraction": 0.0,
+              "overlap_edge_abs_net_delta": 0.0,
+              "overlap_edge_count": 0,
+              "overlap_edge_total_abs_delta": 0.0
+            }
+          },
+          "negative_requests": {
+            "direction_requests": 0,
+            "mean_edge_updates_per_request": 0.0,
+            "median_edge_updates_per_request": 0.0,
+            "negative_zero_update_count": 0,
+            "negative_zero_update_fraction": 0.0,
+            "requests_with_at_least_one_edge_update": 0,
+            "total_edge_updates": 0,
+            "zero_update_count": 0,
+            "zero_update_fraction": 0.0
+          },
+          "pairwise_context_overlap": {},
+          "positive_requests": {
+            "direction_requests": 99,
+            "mean_edge_updates_per_request": 6.606060606060606,
+            "median_edge_updates_per_request": 7.0,
+            "positive_zero_update_count": 0,
+            "positive_zero_update_fraction": 0.0,
+            "requests_with_at_least_one_edge_update": 99,
+            "total_edge_updates": 654,
+            "zero_update_count": 0,
+            "zero_update_fraction": 0.0
+          },
+          "presynaptic_overlap": {
+            "intersection_count": 0,
+            "jaccard": 0.0,
+            "negative_presynaptic_neurons": 0,
+            "positive_presynaptic_neurons": 17
+          },
+          "route_health": {
+            "target/A:positive": {
+              "active_plastic_candidate_edges": 2262.0,
+              "plastic_engagement_efficiency": 1.4270099825728038,
+              "plastic_structural_opportunity": 314.3637580871582,
+              "realized_plastic_capacity": 398.2205982208252,
+              "sample_count": 8,
+              "useful_frozen_edges": 9987.5,
+              "useful_plastic_edges": 521.75
+            }
+          }
+        },
+        "symbol/B": {
+          "cancellation": {
+            "cancellation_fraction": 0.8318324342585228,
+            "median_edge_level_cancellation_fraction": 0.14814814814814814,
+            "overlap_edge_abs_net_delta": 3.5137441419065,
+            "overlap_edge_count": 25,
+            "overlap_edge_total_abs_delta": 20.894303407520056
+          },
+          "contexts": {
+            "target/A:negative": {
+              "unique_edges": 1
+            },
+            "target/B:positive": {
+              "unique_edges": 293
+            },
+            "target/C:negative": {
+              "unique_edges": 41
+            },
+            "target/D:negative": {
+              "unique_edges": 19
+            }
+          },
+          "edge_overlap": {
+            "fraction_negative_edges_also_positive": 0.4166666666666667,
+            "fraction_positive_edges_also_negative": 0.08532423208191127,
+            "intersection_count": 25,
+            "jaccard_positive_negative": 0.07621951219512195,
+            "negative_unique_edges": 60,
+            "positive_unique_edges": 293
+          },
+          "hop_specific": {
+            "1hop": {
+              "cancellation_fraction": 0.8838173089673051,
+              "jaccard_positive_negative": 0.16666666666666666,
+              "median_edge_level_cancellation_fraction": 0.1226177633944624,
+              "overlap_edge_abs_net_delta": 1.943206038326025,
+              "overlap_edge_count": 18,
+              "overlap_edge_total_abs_delta": 16.72543492540717
+            },
+            "2hop": {
+              "cancellation_fraction": 0.6232699327601509,
+              "jaccard_positive_negative": 0.031818181818181815,
+              "median_edge_level_cancellation_fraction": 0.33333333333333337,
+              "overlap_edge_abs_net_delta": 1.5705381035804749,
+              "overlap_edge_count": 7,
+              "overlap_edge_total_abs_delta": 4.1688684821128845
+            }
+          },
+          "negative_requests": {
+            "direction_requests": 45,
+            "mean_edge_updates_per_request": 8.6,
+            "median_edge_updates_per_request": 7.0,
+            "negative_zero_update_count": 1,
+            "negative_zero_update_fraction": 0.022222222222222223,
+            "requests_with_at_least_one_edge_update": 44,
+            "total_edge_updates": 387,
+            "zero_update_count": 1,
+            "zero_update_fraction": 0.022222222222222223
+          },
+          "pairwise_context_overlap": {
+            "target/A:negative|target/B:positive": 0.0,
+            "target/A:negative|target/C:negative": 0.0,
+            "target/A:negative|target/D:negative": 0.0,
+            "target/B:positive|target/C:negative": 0.0670926517571885,
+            "target/B:positive|target/D:negative": 0.016286644951140065,
+            "target/C:negative|target/D:negative": 0.01694915254237288
+          },
+          "positive_requests": {
+            "direction_requests": 100,
+            "mean_edge_updates_per_request": 118.89,
+            "median_edge_updates_per_request": 111.5,
+            "positive_zero_update_count": 0,
+            "positive_zero_update_fraction": 0.0,
+            "requests_with_at_least_one_edge_update": 100,
+            "total_edge_updates": 11889,
+            "zero_update_count": 0,
+            "zero_update_fraction": 0.0
+          },
+          "presynaptic_overlap": {
+            "intersection_count": 24,
+            "jaccard": 0.07920792079207921,
+            "negative_presynaptic_neurons": 56,
+            "positive_presynaptic_neurons": 271
+          },
+          "route_health": {
+            "target/A:negative": {
+              "active_plastic_candidate_edges": 538.0,
+              "plastic_engagement_efficiency": 1.4784338279752884,
+              "plastic_structural_opportunity": 35.299150466918945,
+              "realized_plastic_capacity": 51.991106033325195,
+              "sample_count": 2,
+              "useful_frozen_edges": 1322.0,
+              "useful_plastic_edges": 76.0
+            },
+            "target/B:positive": {
+              "active_plastic_candidate_edges": 19088.625,
+              "plastic_engagement_efficiency": 1.6791250764546763,
+              "plastic_structural_opportunity": 1883.0965728759766,
+              "realized_plastic_capacity": 3190.990737915039,
+              "sample_count": 8,
+              "useful_frozen_edges": 56312.625,
+              "useful_plastic_edges": 3001.75
+            },
+            "target/C:negative": {
+              "active_plastic_candidate_edges": 3553.8333333333335,
+              "plastic_engagement_efficiency": 1.2252309629874194,
+              "plastic_structural_opportunity": 566.698486328125,
+              "realized_plastic_capacity": 694.2379455566406,
+              "sample_count": 6,
+              "useful_frozen_edges": 15730.833333333334,
+              "useful_plastic_edges": 835.6666666666666
+            },
+            "target/D:negative": {
+              "active_plastic_candidate_edges": 2690.75,
+              "plastic_engagement_efficiency": 1.914354484016751,
+              "plastic_structural_opportunity": 264.50746726989746,
+              "realized_plastic_capacity": 502.88564682006836,
+              "sample_count": 8,
+              "useful_frozen_edges": 8841.5,
+              "useful_plastic_edges": 482.125
+            }
+          }
+        },
+        "symbol/C": {
+          "cancellation": {
+            "cancellation_fraction": 0.6994147228823193,
+            "median_edge_level_cancellation_fraction": 0.31598508315268714,
+            "overlap_edge_abs_net_delta": 0.9750458002090454,
+            "overlap_edge_count": 8,
+            "overlap_edge_total_abs_delta": 3.24382421374321
+          },
+          "contexts": {
+            "target/B:negative": {
+              "unique_edges": 88
+            },
+            "target/C:positive": {
+              "unique_edges": 56
+            },
+            "target/D:negative": {
+              "unique_edges": 21
+            }
+          },
+          "edge_overlap": {
+            "fraction_negative_edges_also_positive": 0.07339449541284404,
+            "fraction_positive_edges_also_negative": 0.14285714285714285,
+            "intersection_count": 8,
+            "jaccard_positive_negative": 0.050955414012738856,
+            "negative_unique_edges": 109,
+            "positive_unique_edges": 56
+          },
+          "hop_specific": {
+            "1hop": {
+              "cancellation_fraction": 0.6710866745749664,
+              "jaccard_positive_negative": 0.1,
+              "median_edge_level_cancellation_fraction": 0.31598508315268714,
+              "overlap_edge_abs_net_delta": 1.0005123019218445,
+              "overlap_edge_count": 6,
+              "overlap_edge_total_abs_delta": 3.041872203350067
+            },
+            "2hop": {
+              "cancellation_fraction": 0.8738982510586397,
+              "jaccard_positive_negative": 0.020618556701030927,
+              "median_edge_level_cancellation_fraction": 0.4744089610482085,
+              "overlap_edge_abs_net_delta": 0.025466501712799072,
+              "overlap_edge_count": 2,
+              "overlap_edge_total_abs_delta": 0.2019520103931427
+            }
+          },
+          "negative_requests": {
+            "direction_requests": 99,
+            "mean_edge_updates_per_request": 17.363636363636363,
+            "median_edge_updates_per_request": 9.0,
+            "negative_zero_update_count": 0,
+            "negative_zero_update_fraction": 0.0,
+            "requests_with_at_least_one_edge_update": 99,
+            "total_edge_updates": 1719,
+            "zero_update_count": 0,
+            "zero_update_fraction": 0.0
+          },
+          "pairwise_context_overlap": {
+            "target/B:negative|target/C:positive": 0.051094890510948905,
+            "target/B:negative|target/D:negative": 0.0,
+            "target/C:positive|target/D:negative": 0.013157894736842105
+          },
+          "positive_requests": {
+            "direction_requests": 8,
+            "mean_edge_updates_per_request": 23.875,
+            "median_edge_updates_per_request": 19.0,
+            "positive_zero_update_count": 0,
+            "positive_zero_update_fraction": 0.0,
+            "requests_with_at_least_one_edge_update": 8,
+            "total_edge_updates": 191,
+            "zero_update_count": 0,
+            "zero_update_fraction": 0.0
+          },
+          "presynaptic_overlap": {
+            "intersection_count": 8,
+            "jaccard": 0.055944055944055944,
+            "negative_presynaptic_neurons": 105,
+            "positive_presynaptic_neurons": 46
+          },
+          "route_health": {
+            "target/B:negative": {
+              "active_plastic_candidate_edges": 14536.625,
+              "plastic_engagement_efficiency": 1.4685812630972275,
+              "plastic_structural_opportunity": 1070.3967208862305,
+              "realized_plastic_capacity": 1574.849479675293,
+              "sample_count": 8,
+              "useful_frozen_edges": 40361.875,
+              "useful_plastic_edges": 2113.125
+            },
+            "target/C:positive": {
+              "active_plastic_candidate_edges": 3985.625,
+              "plastic_engagement_efficiency": 1.3011913109376962,
+              "plastic_structural_opportunity": 493.2273139953613,
+              "realized_plastic_capacity": 640.8244247436523,
+              "sample_count": 8,
+              "useful_frozen_edges": 14634.5,
+              "useful_plastic_edges": 781.875
+            },
+            "target/D:negative": {
+              "active_plastic_candidate_edges": 2380.625,
+              "plastic_engagement_efficiency": 1.857473554265428,
+              "plastic_structural_opportunity": 281.0974178314209,
+              "realized_plastic_capacity": 518.5023498535156,
+              "sample_count": 8,
+              "useful_frozen_edges": 10201.875,
+              "useful_plastic_edges": 511.625
+            }
+          }
+        },
+        "symbol/D": {
+          "cancellation": {
+            "cancellation_fraction": 0.8297524189826622,
+            "median_edge_level_cancellation_fraction": 0.22857141397436126,
+            "overlap_edge_abs_net_delta": 2.7587049305438995,
+            "overlap_edge_count": 12,
+            "overlap_edge_total_abs_delta": 16.20407710969448
+          },
+          "contexts": {
+            "target/A:negative": {
+              "unique_edges": 51
+            },
+            "target/B:negative": {
+              "unique_edges": 314
+            },
+            "target/C:negative": {
+              "unique_edges": 54
+            },
+            "target/D:positive": {
+              "unique_edges": 27
+            }
+          },
+          "edge_overlap": {
+            "fraction_negative_edges_also_positive": 0.0316622691292876,
+            "fraction_positive_edges_also_negative": 0.4444444444444444,
+            "intersection_count": 12,
+            "jaccard_positive_negative": 0.030456852791878174,
+            "negative_unique_edges": 379,
+            "positive_unique_edges": 27
+          },
+          "hop_specific": {
+            "1hop": {
+              "cancellation_fraction": 0.831695539787109,
+              "jaccard_positive_negative": 0.07092198581560284,
+              "median_edge_level_cancellation_fraction": 0.1413781935484124,
+              "overlap_edge_abs_net_delta": 2.7087049782276154,
+              "overlap_edge_count": 10,
+              "overlap_edge_total_abs_delta": 16.094077214598656
+            },
+            "2hop": {
+              "cancellation_fraction": 0.5454545454545454,
+              "jaccard_positive_negative": 0.007905138339920948,
+              "median_edge_level_cancellation_fraction": 0.6428571428571428,
+              "overlap_edge_abs_net_delta": 0.04999995231628418,
+              "overlap_edge_count": 2,
+              "overlap_edge_total_abs_delta": 0.1099998950958252
+            }
+          },
+          "negative_requests": {
+            "direction_requests": 188,
+            "mean_edge_updates_per_request": 68.7127659574468,
+            "median_edge_updates_per_request": 27.5,
+            "negative_zero_update_count": 8,
+            "negative_zero_update_fraction": 0.0425531914893617,
+            "requests_with_at_least_one_edge_update": 180,
+            "total_edge_updates": 12918,
+            "zero_update_count": 8,
+            "zero_update_fraction": 0.0425531914893617
+          },
+          "pairwise_context_overlap": {
+            "target/A:negative|target/B:negative": 0.04285714285714286,
+            "target/A:negative|target/C:negative": 0.05,
+            "target/A:negative|target/D:positive": 0.0684931506849315,
+            "target/B:negative|target/C:negative": 0.06358381502890173,
+            "target/B:negative|target/D:positive": 0.03333333333333333,
+            "target/C:negative|target/D:positive": 0.02531645569620253
+          },
+          "positive_requests": {
+            "direction_requests": 99,
+            "mean_edge_updates_per_request": 8.505050505050505,
+            "median_edge_updates_per_request": 8.0,
+            "positive_zero_update_count": 0,
+            "positive_zero_update_fraction": 0.0,
+            "requests_with_at_least_one_edge_update": 99,
+            "total_edge_updates": 842,
+            "zero_update_count": 0,
+            "zero_update_fraction": 0.0
+          },
+          "presynaptic_overlap": {
+            "intersection_count": 12,
+            "jaccard": 0.03296703296703297,
+            "negative_presynaptic_neurons": 349,
+            "positive_presynaptic_neurons": 27
+          },
+          "route_health": {
+            "target/A:negative": {
+              "active_plastic_candidate_edges": 2404.875,
+              "plastic_engagement_efficiency": 1.2324527437492319,
+              "plastic_structural_opportunity": 749.9903869628906,
+              "realized_plastic_capacity": 931.1553726196289,
+              "sample_count": 8,
+              "useful_frozen_edges": 19671.75,
+              "useful_plastic_edges": 1038.125
+            },
+            "target/B:negative": {
+              "active_plastic_candidate_edges": 20245.25,
+              "plastic_engagement_efficiency": 2.1702042493066847,
+              "plastic_structural_opportunity": 3123.0037231445312,
+              "realized_plastic_capacity": 6988.3958740234375,
+              "sample_count": 8,
+              "useful_frozen_edges": 108937.375,
+              "useful_plastic_edges": 5747.875
+            },
+            "target/C:negative": {
+              "active_plastic_candidate_edges": 5281.0,
+              "plastic_engagement_efficiency": 1.2028803532279992,
+              "plastic_structural_opportunity": 806.0732879638672,
+              "realized_plastic_capacity": 977.3580322265625,
+              "sample_count": 2,
+              "useful_frozen_edges": 22827.5,
+              "useful_plastic_edges": 1199.5
+            },
+            "target/D:positive": {
+              "active_plastic_candidate_edges": 2310.375,
+              "plastic_engagement_efficiency": 1.8779947485709063,
+              "plastic_structural_opportunity": 279.6674003601074,
+              "realized_plastic_capacity": 521.9479446411133,
+              "sample_count": 8,
+              "useful_frozen_edges": 8982.125,
+              "useful_plastic_edges": 464.25
+            }
+          }
+        }
+      },
+      "plastic_budget_end": 312558,
+      "plastic_budget_start": 312558,
+      "schedule_count_per_symbol": {
+        "A": 100,
+        "B": 100,
+        "C": 100,
+        "D": 100
+      },
+      "seed": 41,
+      "trials": 400
+    },
+    "43": {
+      "adaptive_reallocations": 0,
+      "budget_drift": 0,
+      "channels": {
+        "symbol/A": {
+          "cancellation": {
+            "cancellation_fraction": 0.9475262327052754,
+            "median_edge_level_cancellation_fraction": 0.44438220846230486,
+            "overlap_edge_abs_net_delta": 0.11564949154853821,
+            "overlap_edge_count": 6,
+            "overlap_edge_total_abs_delta": 2.2039487063884735
+          },
+          "contexts": {
+            "target/A:positive": {
+              "unique_edges": 28
+            },
+            "target/B:negative": {
+              "unique_edges": 112
+            }
+          },
+          "edge_overlap": {
+            "fraction_negative_edges_also_positive": 0.05357142857142857,
+            "fraction_positive_edges_also_negative": 0.21428571428571427,
+            "intersection_count": 6,
+            "jaccard_positive_negative": 0.04477611940298507,
+            "negative_unique_edges": 112,
+            "positive_unique_edges": 28
+          },
+          "hop_specific": {
+            "1hop": {
+              "cancellation_fraction": 0.952529491302637,
+              "jaccard_positive_negative": 0.09803921568627451,
+              "median_edge_level_cancellation_fraction": 0.22209775025794298,
+              "overlap_edge_abs_net_delta": 0.10059943795204163,
+              "overlap_edge_count": 5,
+              "overlap_edge_total_abs_delta": 2.119198650121689
+            },
+            "2hop": {
+              "cancellation_fraction": 0.8224183645480951,
+              "jaccard_positive_negative": 0.012048192771084338,
+              "median_edge_level_cancellation_fraction": 0.8224183645480951,
+              "overlap_edge_abs_net_delta": 0.015050053596496582,
+              "overlap_edge_count": 1,
+              "overlap_edge_total_abs_delta": 0.08475005626678467
+            }
+          },
+          "negative_requests": {
+            "direction_requests": 5,
+            "mean_edge_updates_per_request": 85.0,
+            "median_edge_updates_per_request": 80.0,
+            "negative_zero_update_count": 0,
+            "negative_zero_update_fraction": 0.0,
+            "requests_with_at_least_one_edge_update": 5,
+            "total_edge_updates": 425,
+            "zero_update_count": 0,
+            "zero_update_fraction": 0.0
+          },
+          "pairwise_context_overlap": {
+            "target/A:positive|target/B:negative": 0.04477611940298507
+          },
+          "positive_requests": {
+            "direction_requests": 97,
+            "mean_edge_updates_per_request": 5.360824742268041,
+            "median_edge_updates_per_request": 4.0,
+            "positive_zero_update_count": 1,
+            "positive_zero_update_fraction": 0.010309278350515464,
+            "requests_with_at_least_one_edge_update": 96,
+            "total_edge_updates": 520,
+            "zero_update_count": 1,
+            "zero_update_fraction": 0.010309278350515464
+          },
+          "presynaptic_overlap": {
+            "intersection_count": 6,
+            "jaccard": 0.04580152671755725,
+            "negative_presynaptic_neurons": 111,
+            "positive_presynaptic_neurons": 26
+          },
+          "route_health": {
+            "target/A:positive": {
+              "active_plastic_candidate_edges": 1674.375,
+              "plastic_engagement_efficiency": 1.3578522272872728,
+              "plastic_structural_opportunity": 227.7442102432251,
+              "realized_plastic_capacity": 285.1303696632385,
+              "sample_count": 8,
+              "useful_frozen_edges": 7274.25,
+              "useful_plastic_edges": 384.5
+            },
+            "target/B:negative": {
+              "active_plastic_candidate_edges": 23310.0,
+              "plastic_engagement_efficiency": 1.7514902616750117,
+              "plastic_structural_opportunity": 1739.4759033203125,
+              "realized_plastic_capacity": 3036.925439453125,
+              "sample_count": 5,
+              "useful_frozen_edges": 76496.0,
+              "useful_plastic_edges": 3917.6
+            }
+          }
+        },
+        "symbol/B": {
+          "cancellation": {
+            "cancellation_fraction": 0.5271820383217912,
+            "median_edge_level_cancellation_fraction": 0.4307692307692308,
+            "overlap_edge_abs_net_delta": 5.89607335627079,
+            "overlap_edge_count": 20,
+            "overlap_edge_total_abs_delta": 12.470070585608482
+          },
+          "contexts": {
+            "target/B:positive": {
+              "unique_edges": 207
+            },
+            "target/C:negative": {
+              "unique_edges": 61
+            },
+            "target/D:negative": {
+              "unique_edges": 19
+            }
+          },
+          "edge_overlap": {
+            "fraction_negative_edges_also_positive": 0.2631578947368421,
+            "fraction_positive_edges_also_negative": 0.0966183574879227,
+            "intersection_count": 20,
+            "jaccard_positive_negative": 0.07604562737642585,
+            "negative_unique_edges": 76,
+            "positive_unique_edges": 207
+          },
+          "hop_specific": {
+            "1hop": {
+              "cancellation_fraction": 0.5655544448185741,
+              "jaccard_positive_negative": 0.11494252873563218,
+              "median_edge_level_cancellation_fraction": 0.16803760282021152,
+              "overlap_edge_abs_net_delta": 4.036074176430702,
+              "overlap_edge_count": 10,
+              "overlap_edge_total_abs_delta": 9.290172562003136
+            },
+            "2hop": {
+              "cancellation_fraction": 0.415075840158159,
+              "jaccard_positive_negative": 0.056818181818181816,
+              "median_edge_level_cancellation_fraction": 0.5576923076923077,
+              "overlap_edge_abs_net_delta": 1.859999179840088,
+              "overlap_edge_count": 10,
+              "overlap_edge_total_abs_delta": 3.1798980236053467
+            }
+          },
+          "negative_requests": {
+            "direction_requests": 55,
+            "mean_edge_updates_per_request": 11.836363636363636,
+            "median_edge_updates_per_request": 9.0,
+            "negative_zero_update_count": 0,
+            "negative_zero_update_fraction": 0.0,
+            "requests_with_at_least_one_edge_update": 55,
+            "total_edge_updates": 651,
+            "zero_update_count": 0,
+            "zero_update_fraction": 0.0
+          },
+          "pairwise_context_overlap": {
+            "target/B:positive|target/C:negative": 0.07630522088353414,
+            "target/B:positive|target/D:negative": 0.02262443438914027,
+            "target/C:negative|target/D:negative": 0.05263157894736842
+          },
+          "positive_requests": {
+            "direction_requests": 99,
+            "mean_edge_updates_per_request": 86.02020202020202,
+            "median_edge_updates_per_request": 80.0,
+            "positive_zero_update_count": 0,
+            "positive_zero_update_fraction": 0.0,
+            "requests_with_at_least_one_edge_update": 99,
+            "total_edge_updates": 8516,
+            "zero_update_count": 0,
+            "zero_update_fraction": 0.0
+          },
+          "presynaptic_overlap": {
+            "intersection_count": 20,
+            "jaccard": 0.08196721311475409,
+            "negative_presynaptic_neurons": 70,
+            "positive_presynaptic_neurons": 194
+          },
+          "route_health": {
+            "target/B:positive": {
+              "active_plastic_candidate_edges": 17877.875,
+              "plastic_engagement_efficiency": 1.702474337306799,
+              "plastic_structural_opportunity": 1709.4231262207031,
+              "realized_plastic_capacity": 2963.43416595459,
+              "sample_count": 8,
+              "useful_frozen_edges": 53874.5,
+              "useful_plastic_edges": 2747.875
+            },
+            "target/C:negative": {
+              "active_plastic_candidate_edges": 3457.3333333333335,
+              "plastic_engagement_efficiency": 1.2497057429058447,
+              "plastic_structural_opportunity": 548.2809753417969,
+              "realized_plastic_capacity": 685.6231079101562,
+              "sample_count": 3,
+              "useful_frozen_edges": 16374.0,
+              "useful_plastic_edges": 839.0
+            },
+            "target/D:negative": {
+              "active_plastic_candidate_edges": 3005.875,
+              "plastic_engagement_efficiency": 1.9324613308509255,
+              "plastic_structural_opportunity": 307.4269790649414,
+              "realized_plastic_capacity": 589.7108955383301,
+              "sample_count": 8,
+              "useful_frozen_edges": 9937.25,
+              "useful_plastic_edges": 517.75
+            }
+          }
+        },
+        "symbol/C": {
+          "cancellation": {
+            "cancellation_fraction": 0.45781471432549925,
+            "median_edge_level_cancellation_fraction": 0.36363636363636365,
+            "overlap_edge_abs_net_delta": 1.4604893922805786,
+            "overlap_edge_count": 5,
+            "overlap_edge_total_abs_delta": 2.6937090158462524
+          },
+          "contexts": {
+            "target/B:negative": {
+              "unique_edges": 103
+            },
+            "target/C:positive": {
+              "unique_edges": 19
+            },
+            "target/D:negative": {
+              "unique_edges": 30
+            }
+          },
+          "edge_overlap": {
+            "fraction_negative_edges_also_positive": 0.038461538461538464,
+            "fraction_positive_edges_also_negative": 0.2631578947368421,
+            "intersection_count": 5,
+            "jaccard_positive_negative": 0.034722222222222224,
+            "negative_unique_edges": 130,
+            "positive_unique_edges": 19
+          },
+          "hop_specific": {
+            "1hop": {
+              "cancellation_fraction": 0.4618243021745734,
+              "jaccard_positive_negative": 0.06060606060606061,
+              "median_edge_level_cancellation_fraction": 0.3632742538561309,
+              "overlap_edge_abs_net_delta": 1.3904894590377808,
+              "overlap_edge_count": 4,
+              "overlap_edge_total_abs_delta": 2.5837091207504272
+            },
+            "2hop": {
+              "cancellation_fraction": 0.36363636363636365,
+              "jaccard_positive_negative": 0.01282051282051282,
+              "median_edge_level_cancellation_fraction": 0.36363636363636365,
+              "overlap_edge_abs_net_delta": 0.06999993324279785,
+              "overlap_edge_count": 1,
+              "overlap_edge_total_abs_delta": 0.1099998950958252
+            }
+          },
+          "negative_requests": {
+            "direction_requests": 82,
+            "mean_edge_updates_per_request": 23.829268292682926,
+            "median_edge_updates_per_request": 15.0,
+            "negative_zero_update_count": 0,
+            "negative_zero_update_fraction": 0.0,
+            "requests_with_at_least_one_edge_update": 82,
+            "total_edge_updates": 1954,
+            "zero_update_count": 0,
+            "zero_update_fraction": 0.0
+          },
+          "pairwise_context_overlap": {
+            "target/B:negative|target/C:positive": 0.042735042735042736,
+            "target/B:negative|target/D:negative": 0.023076923076923078,
+            "target/C:positive|target/D:negative": 0.020833333333333332
+          },
+          "positive_requests": {
+            "direction_requests": 3,
+            "mean_edge_updates_per_request": 16.0,
+            "median_edge_updates_per_request": 18.0,
+            "positive_zero_update_count": 0,
+            "positive_zero_update_fraction": 0.0,
+            "requests_with_at_least_one_edge_update": 3,
+            "total_edge_updates": 48,
+            "zero_update_count": 0,
+            "zero_update_fraction": 0.0
+          },
+          "presynaptic_overlap": {
+            "intersection_count": 5,
+            "jaccard": 0.037037037037037035,
+            "negative_presynaptic_neurons": 122,
+            "positive_presynaptic_neurons": 18
+          },
+          "route_health": {
+            "target/B:negative": {
+              "active_plastic_candidate_edges": 14486.0,
+              "plastic_engagement_efficiency": 1.4259336786789656,
+              "plastic_structural_opportunity": 1019.5416641235352,
+              "realized_plastic_capacity": 1467.609146118164,
+              "sample_count": 8,
+              "useful_frozen_edges": 40987.5,
+              "useful_plastic_edges": 2129.875
+            },
+            "target/C:positive": {
+              "active_plastic_candidate_edges": 3457.3333333333335,
+              "plastic_engagement_efficiency": 1.2782260689515843,
+              "plastic_structural_opportunity": 462.7613525390625,
+              "realized_plastic_capacity": 591.4675903320312,
+              "sample_count": 3,
+              "useful_frozen_edges": 13647.0,
+              "useful_plastic_edges": 725.3333333333334
+            },
+            "target/D:negative": {
+              "active_plastic_candidate_edges": 2731.625,
+              "plastic_engagement_efficiency": 1.908246105787514,
+              "plastic_structural_opportunity": 339.42729568481445,
+              "realized_plastic_capacity": 652.5265350341797,
+              "sample_count": 8,
+              "useful_frozen_edges": 10530.625,
+              "useful_plastic_edges": 577.875
+            }
+          }
+        },
+        "symbol/D": {
+          "cancellation": {
+            "cancellation_fraction": 0.699806420833242,
+            "median_edge_level_cancellation_fraction": 0.45985079251652883,
+            "overlap_edge_abs_net_delta": 12.207234337925911,
+            "overlap_edge_count": 13,
+            "overlap_edge_total_abs_delta": 40.66454176604748
+          },
+          "contexts": {
+            "target/A:negative": {
+              "unique_edges": 35
+            },
+            "target/B:negative": {
+              "unique_edges": 453
+            },
+            "target/D:positive": {
+              "unique_edges": 40
+            }
+          },
+          "edge_overlap": {
+            "fraction_negative_edges_also_positive": 0.02748414376321353,
+            "fraction_positive_edges_also_negative": 0.325,
+            "intersection_count": 13,
+            "jaccard_positive_negative": 0.026,
+            "negative_unique_edges": 473,
+            "positive_unique_edges": 40
+          },
+          "hop_specific": {
+            "1hop": {
+              "cancellation_fraction": 0.741983294318748,
+              "jaccard_positive_negative": 0.06547619047619048,
+              "median_edge_level_cancellation_fraction": 0.47058823529411764,
+              "overlap_edge_abs_net_delta": 9.508189275860786,
+              "overlap_edge_count": 11,
+              "overlap_edge_total_abs_delta": 36.851060673594475
+            },
+            "2hop": {
+              "cancellation_fraction": 0.2922358872037891,
+              "jaccard_positive_negative": 0.006024096385542169,
+              "median_edge_level_cancellation_fraction": 0.2972848179422275,
+              "overlap_edge_abs_net_delta": 2.6990450620651245,
+              "overlap_edge_count": 2,
+              "overlap_edge_total_abs_delta": 3.813481092453003
+            }
+          },
+          "negative_requests": {
+            "direction_requests": 185,
+            "mean_edge_updates_per_request": 99.04864864864865,
+            "median_edge_updates_per_request": 17.0,
+            "negative_zero_update_count": 4,
+            "negative_zero_update_fraction": 0.021621621621621623,
+            "requests_with_at_least_one_edge_update": 181,
+            "total_edge_updates": 18324,
+            "zero_update_count": 4,
+            "zero_update_fraction": 0.021621621621621623
+          },
+          "pairwise_context_overlap": {
+            "target/A:negative|target/B:negative": 0.03171247357293869,
+            "target/A:negative|target/D:positive": 0.08695652173913043,
+            "target/B:negative|target/D:positive": 0.02494802494802495
+          },
+          "positive_requests": {
+            "direction_requests": 100,
+            "mean_edge_updates_per_request": 19.68,
+            "median_edge_updates_per_request": 19.0,
+            "positive_zero_update_count": 0,
+            "positive_zero_update_fraction": 0.0,
+            "requests_with_at_least_one_edge_update": 100,
+            "total_edge_updates": 1968,
+            "zero_update_count": 0,
+            "zero_update_fraction": 0.0
+          },
+          "presynaptic_overlap": {
+            "intersection_count": 13,
+            "jaccard": 0.028199566160520606,
+            "negative_presynaptic_neurons": 437,
+            "positive_presynaptic_neurons": 37
+          },
+          "route_health": {
+            "target/A:negative": {
+              "active_plastic_candidate_edges": 1674.375,
+              "plastic_engagement_efficiency": 1.2734250826075955,
+              "plastic_structural_opportunity": 509.5004692077637,
+              "realized_plastic_capacity": 653.8510322570801,
+              "sample_count": 8,
+              "useful_frozen_edges": 14068.75,
+              "useful_plastic_edges": 706.125
+            },
+            "target/B:negative": {
+              "active_plastic_candidate_edges": 17877.875,
+              "plastic_engagement_efficiency": 2.1175467333910722,
+              "plastic_structural_opportunity": 2986.0964965820312,
+              "realized_plastic_capacity": 6617.372116088867,
+              "sample_count": 8,
+              "useful_frozen_edges": 97700.5,
+              "useful_plastic_edges": 5046.375
+            },
+            "target/D:positive": {
+              "active_plastic_candidate_edges": 2774.0,
+              "plastic_engagement_efficiency": 1.942041091424194,
+              "plastic_structural_opportunity": 333.81014251708984,
+              "realized_plastic_capacity": 647.3864707946777,
+              "sample_count": 8,
+              "useful_frozen_edges": 10715.75,
+              "useful_plastic_edges": 559.0
+            }
+          }
+        }
+      },
+      "plastic_budget_end": 312374,
+      "plastic_budget_start": 312374,
+      "schedule_count_per_symbol": {
+        "A": 100,
+        "B": 100,
+        "C": 100,
+        "D": 100
+      },
+      "seed": 43,
+      "trials": 400
+    },
+    "47": {
+      "adaptive_reallocations": 0,
+      "budget_drift": 0,
+      "channels": {
+        "symbol/A": {
+          "cancellation": {
+            "cancellation_fraction": 0.005724347156003784,
+            "median_edge_level_cancellation_fraction": 0.005724347156003784,
+            "overlap_edge_abs_net_delta": 3.473844885826111,
+            "overlap_edge_count": 1,
+            "overlap_edge_total_abs_delta": 3.4938448667526245
+          },
+          "contexts": {
+            "target/A:positive": {
+              "unique_edges": 37
+            },
+            "target/D:negative": {
+              "unique_edges": 15
+            }
+          },
+          "edge_overlap": {
+            "fraction_negative_edges_also_positive": 0.06666666666666667,
+            "fraction_positive_edges_also_negative": 0.02702702702702703,
+            "intersection_count": 1,
+            "jaccard_positive_negative": 0.0196078431372549,
+            "negative_unique_edges": 15,
+            "positive_unique_edges": 37
+          },
+          "hop_specific": {
+            "1hop": {
+              "cancellation_fraction": 0.005724347156003784,
+              "jaccard_positive_negative": 0.05,
+              "median_edge_level_cancellation_fraction": 0.005724347156003784,
+              "overlap_edge_abs_net_delta": 3.473844885826111,
+              "overlap_edge_count": 1,
+              "overlap_edge_total_abs_delta": 3.4938448667526245
+            },
+            "2hop": {
+              "cancellation_fraction": 0.0,
+              "jaccard_positive_negative": 0.0,
+              "median_edge_level_cancellation_fraction": 0.0,
+              "overlap_edge_abs_net_delta": 0.0,
+              "overlap_edge_count": 0,
+              "overlap_edge_total_abs_delta": 0.0
+            }
+          },
+          "negative_requests": {
+            "direction_requests": 2,
+            "mean_edge_updates_per_request": 8.0,
+            "median_edge_updates_per_request": 8.0,
+            "negative_zero_update_count": 0,
+            "negative_zero_update_fraction": 0.0,
+            "requests_with_at_least_one_edge_update": 2,
+            "total_edge_updates": 16,
+            "zero_update_count": 0,
+            "zero_update_fraction": 0.0
+          },
+          "pairwise_context_overlap": {
+            "target/A:positive|target/D:negative": 0.0196078431372549
+          },
+          "positive_requests": {
+            "direction_requests": 98,
+            "mean_edge_updates_per_request": 13.153061224489797,
+            "median_edge_updates_per_request": 10.5,
+            "positive_zero_update_count": 2,
+            "positive_zero_update_fraction": 0.02040816326530612,
+            "requests_with_at_least_one_edge_update": 96,
+            "total_edge_updates": 1289,
+            "zero_update_count": 2,
+            "zero_update_fraction": 0.02040816326530612
+          },
+          "presynaptic_overlap": {
+            "intersection_count": 1,
+            "jaccard": 0.020833333333333332,
+            "negative_presynaptic_neurons": 13,
+            "positive_presynaptic_neurons": 36
+          },
+          "route_health": {
+            "target/A:positive": {
+              "active_plastic_candidate_edges": 2652.5,
+              "plastic_engagement_efficiency": 1.1761355878938693,
+              "plastic_structural_opportunity": 390.08158111572266,
+              "realized_plastic_capacity": 454.8293037414551,
+              "sample_count": 8,
+              "useful_frozen_edges": 11994.875,
+              "useful_plastic_edges": 659.5
+            },
+            "target/D:negative": {
+              "active_plastic_candidate_edges": 1521.5,
+              "plastic_engagement_efficiency": 1.6172804774858676,
+              "plastic_structural_opportunity": 107.03029727935791,
+              "realized_plastic_capacity": 193.78499031066895,
+              "sample_count": 2,
+              "useful_frozen_edges": 5945.0,
+              "useful_plastic_edges": 316.0
+            }
+          }
+        },
+        "symbol/B": {
+          "cancellation": {
+            "cancellation_fraction": 0.8435762852979676,
+            "median_edge_level_cancellation_fraction": 0.36363636363636365,
+            "overlap_edge_abs_net_delta": 0.40052682161331177,
+            "overlap_edge_count": 3,
+            "overlap_edge_total_abs_delta": 2.560524933040142
+          },
+          "contexts": {
+            "target/B:positive": {
+              "unique_edges": 204
+            },
+            "target/D:negative": {
+              "unique_edges": 25
+            }
+          },
+          "edge_overlap": {
+            "fraction_negative_edges_also_positive": 0.12,
+            "fraction_positive_edges_also_negative": 0.014705882352941176,
+            "intersection_count": 3,
+            "jaccard_positive_negative": 0.01327433628318584,
+            "negative_unique_edges": 25,
+            "positive_unique_edges": 204
+          },
+          "hop_specific": {
+            "1hop": {
+              "cancellation_fraction": 0.8435762852979676,
+              "jaccard_positive_negative": 0.03614457831325301,
+              "median_edge_level_cancellation_fraction": 0.36363636363636365,
+              "overlap_edge_abs_net_delta": 0.40052682161331177,
+              "overlap_edge_count": 3,
+              "overlap_edge_total_abs_delta": 2.560524933040142
+            },
+            "2hop": {
+              "cancellation_fraction": 0.0,
+              "jaccard_positive_negative": 0.0,
+              "median_edge_level_cancellation_fraction": 0.0,
+              "overlap_edge_abs_net_delta": 0.0,
+              "overlap_edge_count": 0,
+              "overlap_edge_total_abs_delta": 0.0
+            }
+          },
+          "negative_requests": {
+            "direction_requests": 15,
+            "mean_edge_updates_per_request": 16.0,
+            "median_edge_updates_per_request": 16.0,
+            "negative_zero_update_count": 0,
+            "negative_zero_update_fraction": 0.0,
+            "requests_with_at_least_one_edge_update": 15,
+            "total_edge_updates": 240,
+            "zero_update_count": 0,
+            "zero_update_fraction": 0.0
+          },
+          "pairwise_context_overlap": {
+            "target/B:positive|target/D:negative": 0.01327433628318584
+          },
+          "positive_requests": {
+            "direction_requests": 98,
+            "mean_edge_updates_per_request": 77.11224489795919,
+            "median_edge_updates_per_request": 77.5,
+            "positive_zero_update_count": 1,
+            "positive_zero_update_fraction": 0.01020408163265306,
+            "requests_with_at_least_one_edge_update": 97,
+            "total_edge_updates": 7557,
+            "zero_update_count": 1,
+            "zero_update_fraction": 0.01020408163265306
+          },
+          "presynaptic_overlap": {
+            "intersection_count": 3,
+            "jaccard": 0.013888888888888888,
+            "negative_presynaptic_neurons": 25,
+            "positive_presynaptic_neurons": 194
+          },
+          "route_health": {
+            "target/B:positive": {
+              "active_plastic_candidate_edges": 17286.5,
+              "plastic_engagement_efficiency": 1.6539602870041366,
+              "plastic_structural_opportunity": 1711.0743789672852,
+              "realized_plastic_capacity": 2943.000373840332,
+              "sample_count": 8,
+              "useful_frozen_edges": 51317.0,
+              "useful_plastic_edges": 2709.0
+            },
+            "target/D:negative": {
+              "active_plastic_candidate_edges": 3113.25,
+              "plastic_engagement_efficiency": 1.9579772659370067,
+              "plastic_structural_opportunity": 269.65646743774414,
+              "realized_plastic_capacity": 524.580997467041,
+              "sample_count": 8,
+              "useful_frozen_edges": 10021.75,
+              "useful_plastic_edges": 564.375
+            }
+          }
+        },
+        "symbol/C": {
+          "cancellation": {
+            "cancellation_fraction": 0.0,
+            "median_edge_level_cancellation_fraction": 0.0,
+            "overlap_edge_abs_net_delta": 0.0,
+            "overlap_edge_count": 0,
+            "overlap_edge_total_abs_delta": 0.0
+          },
+          "contexts": {
+            "target/B:negative": {
+              "unique_edges": 128
+            },
+            "target/D:negative": {
+              "unique_edges": 28
+            }
+          },
+          "edge_overlap": {
+            "fraction_negative_edges_also_positive": 0.0,
+            "fraction_positive_edges_also_negative": 0.0,
+            "intersection_count": 0,
+            "jaccard_positive_negative": 0.0,
+            "negative_unique_edges": 149,
+            "positive_unique_edges": 0
+          },
+          "hop_specific": {
+            "1hop": {
+              "cancellation_fraction": 0.0,
+              "jaccard_positive_negative": 0.0,
+              "median_edge_level_cancellation_fraction": 0.0,
+              "overlap_edge_abs_net_delta": 0.0,
+              "overlap_edge_count": 0,
+              "overlap_edge_total_abs_delta": 0.0
+            },
+            "2hop": {
+              "cancellation_fraction": 0.0,
+              "jaccard_positive_negative": 0.0,
+              "median_edge_level_cancellation_fraction": 0.0,
+              "overlap_edge_abs_net_delta": 0.0,
+              "overlap_edge_count": 0,
+              "overlap_edge_total_abs_delta": 0.0
+            }
+          },
+          "negative_requests": {
+            "direction_requests": 105,
+            "mean_edge_updates_per_request": 14.571428571428571,
+            "median_edge_updates_per_request": 7.0,
+            "negative_zero_update_count": 0,
+            "negative_zero_update_fraction": 0.0,
+            "requests_with_at_least_one_edge_update": 105,
+            "total_edge_updates": 1530,
+            "zero_update_count": 0,
+            "zero_update_fraction": 0.0
+          },
+          "pairwise_context_overlap": {
+            "target/B:negative|target/D:negative": 0.04697986577181208
+          },
+          "positive_requests": {
+            "direction_requests": 0,
+            "mean_edge_updates_per_request": 0.0,
+            "median_edge_updates_per_request": 0.0,
+            "positive_zero_update_count": 0,
+            "positive_zero_update_fraction": 0.0,
+            "requests_with_at_least_one_edge_update": 0,
+            "total_edge_updates": 0,
+            "zero_update_count": 0,
+            "zero_update_fraction": 0.0
+          },
+          "presynaptic_overlap": {
+            "intersection_count": 0,
+            "jaccard": 0.0,
+            "negative_presynaptic_neurons": 139,
+            "positive_presynaptic_neurons": 0
+          },
+          "route_health": {
+            "target/B:negative": {
+              "active_plastic_candidate_edges": 14755.625,
+              "plastic_engagement_efficiency": 1.4874118785727528,
+              "plastic_structural_opportunity": 1425.7324676513672,
+              "realized_plastic_capacity": 2110.8404235839844,
+              "sample_count": 8,
+              "useful_frozen_edges": 42714.75,
+              "useful_plastic_edges": 2331.125
+            },
+            "target/D:negative": {
+              "active_plastic_candidate_edges": 2566.0,
+              "plastic_engagement_efficiency": 1.8712271490037031,
+              "plastic_structural_opportunity": 370.4068412780762,
+              "realized_plastic_capacity": 682.4046020507812,
+              "sample_count": 8,
+              "useful_frozen_edges": 10797.375,
+              "useful_plastic_edges": 604.5
+            }
+          }
+        },
+        "symbol/D": {
+          "cancellation": {
+            "cancellation_fraction": 0.9553269695665513,
+            "median_edge_level_cancellation_fraction": 0.10954388810158144,
+            "overlap_edge_abs_net_delta": 0.4274907670915127,
+            "overlap_edge_count": 11,
+            "overlap_edge_total_abs_delta": 9.56932545080781
+          },
+          "contexts": {
+            "target/A:negative": {
+              "unique_edges": 50
+            },
+            "target/B:negative": {
+              "unique_edges": 451
+            },
+            "target/D:positive": {
+              "unique_edges": 22
+            }
+          },
+          "edge_overlap": {
+            "fraction_negative_edges_also_positive": 0.02231237322515213,
+            "fraction_positive_edges_also_negative": 0.5,
+            "intersection_count": 11,
+            "jaccard_positive_negative": 0.021825396825396824,
+            "negative_unique_edges": 493,
+            "positive_unique_edges": 22
+          },
+          "hop_specific": {
+            "1hop": {
+              "cancellation_fraction": 0.8465184041175611,
+              "jaccard_positive_negative": 0.0684931506849315,
+              "median_edge_level_cancellation_fraction": 0.1755773131783075,
+              "overlap_edge_abs_net_delta": 1.3275094144046307,
+              "overlap_edge_count": 10,
+              "overlap_edge_total_abs_delta": 8.649306822568178
+            },
+            "2hop": {
+              "cancellation_fraction": 0.021738669536269906,
+              "jaccard_positive_negative": 0.002793296089385475,
+              "median_edge_level_cancellation_fraction": 0.021738669536269906,
+              "overlap_edge_abs_net_delta": 0.900018647313118,
+              "overlap_edge_count": 1,
+              "overlap_edge_total_abs_delta": 0.9200186282396317
+            }
+          },
+          "negative_requests": {
+            "direction_requests": 189,
+            "mean_edge_updates_per_request": 108.67195767195767,
+            "median_edge_updates_per_request": 27.0,
+            "negative_zero_update_count": 0,
+            "negative_zero_update_fraction": 0.0,
+            "requests_with_at_least_one_edge_update": 189,
+            "total_edge_updates": 20539,
+            "zero_update_count": 0,
+            "zero_update_fraction": 0.0
+          },
+          "pairwise_context_overlap": {
+            "target/A:negative|target/B:negative": 0.016227180527383367,
+            "target/A:negative|target/D:positive": 0.09090909090909091,
+            "target/B:negative|target/D:positive": 0.017204301075268817
+          },
+          "positive_requests": {
+            "direction_requests": 99,
+            "mean_edge_updates_per_request": 4.616161616161616,
+            "median_edge_updates_per_request": 4.0,
+            "positive_zero_update_count": 1,
+            "positive_zero_update_fraction": 0.010101010101010102,
+            "requests_with_at_least_one_edge_update": 98,
+            "total_edge_updates": 457,
+            "zero_update_count": 1,
+            "zero_update_fraction": 0.010101010101010102
+          },
+          "presynaptic_overlap": {
+            "intersection_count": 11,
+            "jaccard": 0.023655913978494623,
+            "negative_presynaptic_neurons": 454,
+            "positive_presynaptic_neurons": 22
+          },
+          "route_health": {
+            "target/A:negative": {
+              "active_plastic_candidate_edges": 2652.5,
+              "plastic_engagement_efficiency": 1.2550101775365845,
+              "plastic_structural_opportunity": 820.2110824584961,
+              "realized_plastic_capacity": 1028.4288940429688,
+              "sample_count": 8,
+              "useful_frozen_edges": 21313.625,
+              "useful_plastic_edges": 1142.75
+            },
+            "target/B:negative": {
+              "active_plastic_candidate_edges": 17286.5,
+              "plastic_engagement_efficiency": 1.977892584041531,
+              "plastic_structural_opportunity": 3013.573516845703,
+              "realized_plastic_capacity": 6382.246444702148,
+              "sample_count": 8,
+              "useful_frozen_edges": 91404.75,
+              "useful_plastic_edges": 4816.125
+            },
+            "target/D:positive": {
+              "active_plastic_candidate_edges": 2566.0,
+              "plastic_engagement_efficiency": 1.8033971380454883,
+              "plastic_structural_opportunity": 359.0314655303955,
+              "realized_plastic_capacity": 640.4262924194336,
+              "sample_count": 8,
+              "useful_frozen_edges": 10765.5,
+              "useful_plastic_edges": 603.375
+            }
+          }
+        }
+      },
+      "plastic_budget_end": 311918,
+      "plastic_budget_start": 311918,
+      "schedule_count_per_symbol": {
+        "A": 100,
+        "B": 100,
+        "C": 100,
+        "D": 100
+      },
+      "seed": 47,
+      "trials": 400
+    }
+  },
+  "protocol": {
+    "adaptive_plastic_budget": false,
+    "behavior_modified": false,
+    "directional_learning_rate": 0.02,
+    "duration_ms": 40.0,
+    "dynamic_candidate_count": 7507,
+    "dynamic_surface": "F.1A.3 exact deterministic reconstruction",
+    "external_decoder": false,
+    "keyboard_teacher": false,
+    "phase": "F.1B.2",
+    "reward_learning_rate": 0.02,
+    "route_health_samples_per_context_per_seed": 8,
+    "seeds": [
+      41,
+      43,
+      47
+    ],
+    "stimulus_rate_hz": 205.0,
+    "structural_reallocation": false,
+    "trials_per_seed": 400,
+    "trials_per_symbol": 100
+  },
+  "safety": {
+    "decision_surface_changed": false,
+    "final_multiplier_or_stability_changed_by_diagnostics": false,
+    "learning_algorithm_changed": false,
+    "learning_rates_changed": false,
+    "plastic_budget_changed_by_diagnostics": false,
+    "rng_or_state_mutated_by_diagnostics": false
+  },
+  "surface": {
+    "frozen_before_learning": true,
+    "matches_f1a3_artifact": true
+  }
+}

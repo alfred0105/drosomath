@@ -1,0 +1,198 @@
+{
+  "candidate_count": 7507,
+  "performance": {
+    "baseline_warm_seconds": 14.182035899997572,
+    "cold": {
+      "end_to_end_seconds": 14.090789899993979,
+      "timing": {
+        "counts": {
+          "active_edge_collection_seconds": 200,
+          "directional_credit_selection_seconds": 303,
+          "learning_telemetry_packaging_seconds": 200,
+          "multiplier_update_seconds": 303,
+          "network_simulation_seconds": 200,
+          "normalization_seconds": 200,
+          "plastic_lifecycle_seconds": 200,
+          "prospective_downstream_effect_seconds": 303,
+          "reward_credit_seconds": 200,
+          "reward_update_seconds": 200,
+          "total_seconds": 200,
+          "total_training_seconds": 1
+        },
+        "enabled": true,
+        "seconds": {
+          "active_edge_collection_seconds": 0.42190109998045955,
+          "directional_credit_selection_seconds": 5.601091500000621,
+          "learning_telemetry_packaging_seconds": 0.10204359995987033,
+          "multiplier_update_seconds": 0.012348899959761184,
+          "network_simulation_seconds": 4.158912700077053,
+          "normalization_seconds": 8.04783399997541,
+          "plastic_lifecycle_seconds": 1.027951599950029,
+          "prospective_downstream_effect_seconds": 5.555081699931179,
+          "reward_credit_seconds": 0.15101910002704244,
+          "reward_update_seconds": 0.43098200005624676,
+          "total_seconds": 9.518654799983779,
+          "total_training_seconds": 14.045221799999126
+        }
+      },
+      "training_wall_seconds": 14.04538219999813
+    },
+    "protocol": {
+      "balanced_symbols": true,
+      "brain_seed": 53,
+      "diagnostic_audit_observers": false,
+      "duration_ms": 40.0,
+      "jit_warmup_excluded_from_warm_runs": true,
+      "mode": "prospective_anatomical",
+      "stimulus_rate_hz": 205.0,
+      "training_trials": 200
+    },
+    "warm": {
+      "median_milliseconds_per_trial": 70.91079000001628,
+      "median_profile": {
+        "fraction_of_total_training": {
+          "active_edge_collection_seconds": 0.031032779994509107,
+          "directional_credit_selection_seconds": 0.39740673622350653,
+          "learning_telemetry_packaging_seconds": 0.007273856919918686,
+          "multiplier_update_seconds": 0.0008832370723594026,
+          "network_simulation_seconds": 0.2973410538376787,
+          "normalization_seconds": 0.5728795539181344,
+          "plastic_lifecycle_seconds": 0.07467927789215156,
+          "prospective_downstream_effect_seconds": 0.3940978530427085,
+          "reward_credit_seconds": 0.010877049045125965,
+          "reward_update_seconds": 0.03080619756892411,
+          "total_seconds": 0.6783691543175373,
+          "total_training_seconds": 1.0
+        },
+        "hotspots_at_least_15_percent": [
+          "directional_credit_selection_seconds",
+          "network_simulation_seconds",
+          "normalization_seconds",
+          "prospective_downstream_effect_seconds",
+          "total_seconds"
+        ],
+        "seconds": {
+          "active_edge_collection_seconds": 0.44010799995885463,
+          "directional_credit_selection_seconds": 5.636036600022635,
+          "learning_telemetry_packaging_seconds": 0.10315809996973258,
+          "multiplier_update_seconds": 0.012526099868409801,
+          "network_simulation_seconds": 4.216901500069071,
+          "normalization_seconds": 8.124598400041577,
+          "plastic_lifecycle_seconds": 1.0591042000523885,
+          "prospective_downstream_effect_seconds": 5.58910989996366,
+          "reward_credit_seconds": 0.15425870004401077,
+          "reward_update_seconds": 0.43689459986489965,
+          "total_seconds": 9.620655699982308,
+          "total_training_seconds": 14.182035899997572
+        }
+      },
+      "median_trials_per_second": 14.102226191525585,
+      "median_wall_seconds": 14.182158000003255,
+      "runs": [
+        {
+          "timing": {
+            "counts": {
+              "active_edge_collection_seconds": 200,
+              "directional_credit_selection_seconds": 303,
+              "learning_telemetry_packaging_seconds": 200,
+              "multiplier_update_seconds": 303,
+              "network_simulation_seconds": 200,
+              "normalization_seconds": 200,
+              "plastic_lifecycle_seconds": 200,
+              "prospective_downstream_effect_seconds": 303,
+              "reward_credit_seconds": 200,
+              "reward_update_seconds": 200,
+              "total_seconds": 200,
+              "total_training_seconds": 1
+            },
+            "enabled": true,
+            "seconds": {
+              "active_edge_collection_seconds": 0.43391479996353155,
+              "directional_credit_selection_seconds": 5.636036600022635,
+              "learning_telemetry_packaging_seconds": 0.10315809996973258,
+              "multiplier_update_seconds": 0.012387299910187721,
+              "network_simulation_seconds": 4.190245999969193,
+              "normalization_seconds": 8.124598400041577,
+              "plastic_lifecycle_seconds": 1.0591042000523885,
+              "prospective_downstream_effect_seconds": 5.58910989996366,
+              "reward_credit_seconds": 0.1528684999793768,
+              "reward_update_seconds": 0.4249545000202488,
+              "total_seconds": 9.620655699982308,
+              "total_training_seconds": 14.182035899997572
+            }
+          },
+          "wall_seconds": 14.182158000003255
+        },
+        {
+          "timing": {
+            "counts": {
+              "active_edge_collection_seconds": 200,
+              "directional_credit_selection_seconds": 303,
+              "learning_telemetry_packaging_seconds": 200,
+              "multiplier_update_seconds": 303,
+              "network_simulation_seconds": 200,
+              "normalization_seconds": 200,
+              "plastic_lifecycle_seconds": 200,
+              "prospective_downstream_effect_seconds": 303,
+              "reward_credit_seconds": 200,
+              "reward_update_seconds": 200,
+              "total_seconds": 200,
+              "total_training_seconds": 1
+            },
+            "enabled": true,
+            "seconds": {
+              "active_edge_collection_seconds": 0.44010799995885463,
+              "directional_credit_selection_seconds": 5.571928400073375,
+              "learning_telemetry_packaging_seconds": 0.10210780006309506,
+              "multiplier_update_seconds": 0.012526099868409801,
+              "network_simulation_seconds": 4.216901500069071,
+              "normalization_seconds": 8.056844999991881,
+              "plastic_lifecycle_seconds": 1.0571648999393801,
+              "prospective_downstream_effect_seconds": 5.525025200025993,
+              "reward_credit_seconds": 0.15425870004401077,
+              "reward_update_seconds": 0.43846929995925166,
+              "total_seconds": 9.56438049996359,
+              "total_training_seconds": 14.154699200000323
+            }
+          },
+          "wall_seconds": 14.15481390000059
+        },
+        {
+          "timing": {
+            "counts": {
+              "active_edge_collection_seconds": 200,
+              "directional_credit_selection_seconds": 303,
+              "learning_telemetry_packaging_seconds": 200,
+              "multiplier_update_seconds": 303,
+              "network_simulation_seconds": 200,
+              "normalization_seconds": 200,
+              "plastic_lifecycle_seconds": 200,
+              "prospective_downstream_effect_seconds": 303,
+              "reward_credit_seconds": 200,
+              "reward_update_seconds": 200,
+              "total_seconds": 200,
+              "total_training_seconds": 1
+            },
+            "enabled": true,
+            "seconds": {
+              "active_edge_collection_seconds": 0.4485268000571523,
+              "directional_credit_selection_seconds": 5.650988499888626,
+              "learning_telemetry_packaging_seconds": 0.10397069992177421,
+              "multiplier_update_seconds": 0.012600900037796237,
+              "network_simulation_seconds": 4.364780399970186,
+              "normalization_seconds": 8.131447400141042,
+              "plastic_lifecycle_seconds": 1.0638343000100576,
+              "prospective_downstream_effect_seconds": 5.60297509998054,
+              "reward_credit_seconds": 0.15705350004282081,
+              "reward_update_seconds": 0.43689459986489965,
+              "total_seconds": 9.644160699957865,
+              "total_training_seconds": 14.387692600001174
+            }
+          },
+          "wall_seconds": 14.387805899998057
+        }
+      ]
+    }
+  },
+  "phase": "P.1 baseline"
+}
