@@ -19,6 +19,9 @@ except ImportError:  # pragma: no cover - exercised on minimal installations
     scatter_csr_rows_with_plasticity = None
     scatter_csr_rows_with_std = None
     scatter_csr_rows_with_plasticity_and_std = None
+    scatter_csr_rows_with_hebbian = None
+    scatter_csr_rows_with_plasticity_and_hebbian = None
+    update_hebbian_bindings = None
 else:
     NUMBA_AVAILABLE = True
 
@@ -155,6 +158,90 @@ if NUMBA_AVAILABLE:
                 new_factor = min_release_factor
             release_factor[pre] = new_factor
             last_release_step[pre] = step_index
+
+
+    @njit(cache=True, nogil=True)
+    def scatter_csr_rows_with_hebbian(
+        fired, indptr, posts, signed, multiplier, target, scale,
+        binding_gain, binding_last_step, step_index, dt_ms, binding_tau_ms,
+    ):
+        for fired_offset in range(len(fired)):
+            pre = fired[fired_offset]
+            start = indptr[pre]
+            stop = indptr[pre + 1]
+            for edge in range(start, stop):
+                gain = binding_gain[edge]
+                last = binding_last_step[edge]
+                if gain > 0.0 and last >= 0:
+                    elapsed_ms = (step_index - last) * dt_ms
+                    gain = gain * np.exp(-elapsed_ms / binding_tau_ms)
+                    binding_gain[edge] = gain
+                    binding_last_step[edge] = step_index
+                target[posts[edge]] += signed[edge] * multiplier[edge] * (1.0 + gain) * scale
+
+
+    @njit(cache=True, nogil=True)
+    def scatter_csr_rows_with_plasticity_and_hebbian(
+        fired, indptr, posts, signed, multiplier, target, plastic_mask,
+        usage_ema, eligibility, scale, usage_alpha, eligibility_gain,
+        binding_gain, binding_last_step, step_index, dt_ms, binding_tau_ms,
+    ):
+        for fired_offset in range(len(fired)):
+            pre = fired[fired_offset]
+            start = indptr[pre]
+            stop = indptr[pre + 1]
+            for edge in range(start, stop):
+                gain = binding_gain[edge]
+                last = binding_last_step[edge]
+                if gain > 0.0 and last >= 0:
+                    elapsed_ms = (step_index - last) * dt_ms
+                    gain = gain * np.exp(-elapsed_ms / binding_tau_ms)
+                    binding_gain[edge] = gain
+                    binding_last_step[edge] = step_index
+                target[posts[edge]] += signed[edge] * multiplier[edge] * (1.0 + gain) * scale
+                if plastic_mask[edge]:
+                    usage_ema[edge] += usage_alpha * (1.0 - usage_ema[edge])
+                    eligibility[edge] += eligibility_gain
+
+
+    @njit(cache=True, nogil=True)
+    def update_hebbian_bindings(
+        fired_posts, incoming_indptr, incoming_edges, edge_pre,
+        pre_trace, pre_last_step, binding_gain, binding_last_step,
+        binding_active_mask, binding_active_edges, binding_active_count,
+        step_index, dt_ms, pre_trace_tau_ms, binding_tau_ms,
+        binding_increment, max_binding_gain,
+    ):
+        count = binding_active_count[0]
+        for post_offset in range(len(fired_posts)):
+            post = fired_posts[post_offset]
+            start = incoming_indptr[post]
+            stop = incoming_indptr[post + 1]
+            for cursor in range(start, stop):
+                edge = incoming_edges[cursor]
+                pre = edge_pre[cursor]
+                trace = pre_trace[pre]
+                last_pre = pre_last_step[pre]
+                if last_pre >= 0:
+                    elapsed_pre = (step_index - last_pre) * dt_ms
+                    trace = trace * np.exp(-elapsed_pre / pre_trace_tau_ms)
+                if trace <= 1.0e-6:
+                    continue
+                gain = binding_gain[edge]
+                last_binding = binding_last_step[edge]
+                if gain > 0.0 and last_binding >= 0:
+                    elapsed_binding = (step_index - last_binding) * dt_ms
+                    gain = gain * np.exp(-elapsed_binding / binding_tau_ms)
+                if not binding_active_mask[edge]:
+                    binding_active_mask[edge] = True
+                    binding_active_edges[count] = edge
+                    count += 1
+                gain += binding_increment * trace
+                if gain > max_binding_gain:
+                    gain = max_binding_gain
+                binding_gain[edge] = gain
+                binding_last_step[edge] = step_index
+        binding_active_count[0] = count
 
 
     @njit(cache=True, nogil=True)

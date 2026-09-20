@@ -14,6 +14,9 @@ from .numba_kernels import (
     scatter_csr_rows_with_plasticity,
     scatter_csr_rows_with_std,
     scatter_csr_rows_with_plasticity_and_std,
+    scatter_csr_rows_with_hebbian,
+    scatter_csr_rows_with_plasticity_and_hebbian,
+    update_hebbian_bindings,
 )
 
 
@@ -137,6 +140,44 @@ class FastSparseStateMixin:
             # to the normal P.8 path.
             self.release_factor = np.empty(0, dtype=np.float32)
             self.last_release_step = np.empty(0, dtype=np.int64)
+        self._hebb_config = getattr(self, "transient_hebbian_config", None)
+        self._hebb_enabled = bool(self._hebb_config is not None and self._hebb_config.enabled)
+        if self._hebb_enabled:
+            neuron_count = int(self.connectome.neuron_count)
+            edge_count = int(self.connectome.edge_count)
+            self.pre_trace = np.zeros(neuron_count, dtype=np.float32)
+            self.pre_trace_last_step = np.full(neuron_count, -1, dtype=np.int64)
+            self._hebb_pre_active_mask = np.zeros(neuron_count, dtype=np.bool_)
+            self._hebb_pre_active_edges = np.empty(neuron_count, dtype=np.int32)
+            self._hebb_pre_active_count = 0
+            self.binding_gain = np.zeros(edge_count, dtype=np.float32)
+            self.binding_last_step = np.full(edge_count, -1, dtype=np.int64)
+            self.binding_active_mask = np.zeros(edge_count, dtype=np.bool_)
+            self.binding_active_edges = np.empty(edge_count, dtype=np.int32)
+            self._binding_active_count = np.zeros(1, dtype=np.int32)
+            edge_pre = np.repeat(np.arange(neuron_count, dtype=np.int32), np.diff(self.connectome.indptr))
+            posts = np.asarray(self.connectome.post_indices, dtype=np.int32)
+            order = np.argsort(posts, kind="stable")
+            counts = np.bincount(posts, minlength=neuron_count).astype(np.int64, copy=False)
+            self._hebb_incoming_indptr = np.empty(neuron_count + 1, dtype=np.int64)
+            self._hebb_incoming_indptr[0] = 0
+            np.cumsum(counts, out=self._hebb_incoming_indptr[1:])
+            self._hebb_incoming_edges = order.astype(np.int32, copy=False)
+            self._hebb_incoming_pre = edge_pre[order].astype(np.int32, copy=False)
+        else:
+            self.pre_trace = np.empty(0, dtype=np.float32)
+            self.pre_trace_last_step = np.empty(0, dtype=np.int64)
+            self._hebb_pre_active_mask = np.empty(0, dtype=np.bool_)
+            self._hebb_pre_active_edges = np.empty(0, dtype=np.int32)
+            self._hebb_pre_active_count = 0
+            self.binding_gain = np.empty(0, dtype=np.float32)
+            self.binding_last_step = np.empty(0, dtype=np.int64)
+            self.binding_active_mask = np.empty(0, dtype=np.bool_)
+            self.binding_active_edges = np.empty(0, dtype=np.int32)
+            self._binding_active_count = np.zeros(1, dtype=np.int32)
+            self._hebb_incoming_indptr = np.empty(0, dtype=np.int64)
+            self._hebb_incoming_edges = np.empty(0, dtype=np.int32)
+            self._hebb_incoming_pre = np.empty(0, dtype=np.int32)
         # Optional P.3 audit hook.  It is None in all normal runs, so timing
         # cannot alter model state or consume RNG values.
         self._neural_timing_profiler = None
@@ -159,6 +200,21 @@ class FastSparseStateMixin:
         if self._std_enabled:
             self.release_factor.fill(1.0)
             self.last_release_step.fill(-1)
+        if self._hebb_enabled:
+            pre_count = int(self._hebb_pre_active_count)
+            if pre_count:
+                pre = self._hebb_pre_active_edges[:pre_count]
+                self.pre_trace[pre] = 0.0
+                self.pre_trace_last_step[pre] = -1
+                self._hebb_pre_active_mask[pre] = False
+            self._hebb_pre_active_count = 0
+            edge_count = int(self._binding_active_count[0])
+            if edge_count:
+                edges = self.binding_active_edges[:edge_count]
+                self.binding_gain[edges] = 0.0
+                self.binding_last_step[edges] = -1
+                self.binding_active_mask[edges] = False
+            self._binding_active_count[0] = 0
 
     @property
     def slow_adaptation_enabled(self) -> bool:
@@ -263,6 +319,132 @@ class FastSparseStateMixin:
         )
         return result
 
+    def _refresh_hebbian_pre_traces(self, fired):
+        if not self._hebb_enabled:
+            return
+        np = self.np
+        for raw in fired:
+            pre = int(raw)
+            if not self._hebb_pre_active_mask[pre]:
+                self._hebb_pre_active_mask[pre] = True
+                self._hebb_pre_active_edges[self._hebb_pre_active_count] = pre
+                self._hebb_pre_active_count += 1
+            self.pre_trace[pre] = np.float32(1.0)
+            self.pre_trace_last_step[pre] = int(self.step_index)
+
+    def _apply_hebbian_bindings(self, fired_posts):
+        if not self._hebb_enabled or len(fired_posts) == 0:
+            return
+        np = self.np
+        config = self._hebb_config
+        if self._numba_enabled:
+            update_hebbian_bindings(
+                np.asarray(fired_posts, dtype=np.int32),
+                self._hebb_incoming_indptr,
+                self._hebb_incoming_edges,
+                self._hebb_incoming_pre,
+                self.pre_trace,
+                self.pre_trace_last_step,
+                self.binding_gain,
+                self.binding_last_step,
+                self.binding_active_mask,
+                self.binding_active_edges,
+                self._binding_active_count,
+                self.step_index,
+                self.params.dt_ms,
+                config.pre_trace_tau_ms,
+                config.binding_tau_ms,
+                config.binding_increment,
+                config.max_binding_gain,
+            )
+            return
+        for post_raw in fired_posts:
+            post = int(post_raw)
+            start = int(self._hebb_incoming_indptr[post])
+            stop = int(self._hebb_incoming_indptr[post + 1])
+            for cursor in range(start, stop):
+                edge = int(self._hebb_incoming_edges[cursor])
+                pre = int(self._hebb_incoming_pre[cursor])
+                trace = float(self.pre_trace[pre])
+                last_pre = int(self.pre_trace_last_step[pre])
+                if last_pre >= 0:
+                    trace *= math.exp(-(int(self.step_index) - last_pre) * float(self.params.dt_ms) / float(config.pre_trace_tau_ms))
+                if trace <= 1.0e-6:
+                    continue
+                gain = float(self.binding_gain[edge])
+                last_binding = int(self.binding_last_step[edge])
+                if gain > 0.0 and last_binding >= 0:
+                    gain *= math.exp(-(int(self.step_index) - last_binding) * float(self.params.dt_ms) / float(config.binding_tau_ms))
+                if not self.binding_active_mask[edge]:
+                    self.binding_active_mask[edge] = True
+                    self.binding_active_edges[self._binding_active_count[0]] = edge
+                    self._binding_active_count[0] += 1
+                self.binding_gain[edge] = np.float32(min(float(config.max_binding_gain), gain + float(config.binding_increment) * trace))
+                self.binding_last_step[edge] = int(self.step_index)
+
+    def _hebb_gain_for_edge(self, edge: int) -> float:
+        if not self._hebb_enabled:
+            return 0.0
+        np = self.np
+        gain = float(self.binding_gain[edge])
+        last = int(self.binding_last_step[edge])
+        if gain > 0.0 and last >= 0:
+            gain *= math.exp(-(int(self.step_index) - last) * float(self.params.dt_ms) / float(self._hebb_config.binding_tau_ms))
+            self.binding_gain[edge] = np.float32(gain)
+            self.binding_last_step[edge] = int(self.step_index)
+        return gain
+
+    def _compact_hebbian_bindings(self):
+        if not self._hebb_enabled:
+            return
+        np = self.np
+        count = int(self._binding_active_count[0])
+        if not count:
+            return
+        config = self._hebb_config
+        edges = self.binding_active_edges[:count]
+        ages = (int(self.step_index) - self.binding_last_step[edges]).astype(np.float32) * np.float32(self.params.dt_ms)
+        self.binding_gain[edges] *= np.exp(-ages / np.float32(config.binding_tau_ms))
+        keep = self.binding_gain[edges] > np.float32(1.0e-6)
+        kept = edges[keep]
+        dropped = edges[~keep]
+        if len(dropped):
+            self.binding_gain[dropped] = 0.0
+            self.binding_last_step[dropped] = -1
+            self.binding_active_mask[dropped] = False
+        self.binding_active_edges[:len(kept)] = kept
+        self._binding_active_count[0] = len(kept)
+
+    def transient_hebbian_summary(self) -> dict[str, float | int | bool]:
+        if not self._hebb_enabled:
+            return {
+                "enabled": False, "recent_pre_neurons": 0, "active_binding_edges": 0,
+                "mean_binding_gain": 0.0, "max_binding_gain": 0.0,
+                "fraction_at_cap": 0.0, "mean_age_ms": 0.0,
+                "pre_trace_bytes": 0, "binding_state_bytes": 0,
+                "reverse_index_bytes": 0, "active_index_bytes": 0,
+            }
+        np = self.np
+        self._compact_hebbian_bindings()
+        count = int(self._binding_active_count[0])
+        edges = self.binding_active_edges[:count]
+        values = self.binding_gain[edges] if count else np.empty(0, dtype=np.float32)
+        ages = ((int(self.step_index) - self.binding_last_step[edges]) * float(self.params.dt_ms)) if count else np.empty(0, dtype=np.float32)
+        cap = np.float32(self._hebb_config.max_binding_gain)
+        return {
+            "enabled": True,
+            "recent_pre_neurons": int(self._hebb_pre_active_count),
+            "active_binding_edges": count,
+            "mean_binding_gain": float(values.mean()) if count else 0.0,
+            "max_binding_gain": float(values.max()) if count else 0.0,
+            "fraction_at_cap": float(np.mean(values >= cap - 1.0e-6)) if count else 0.0,
+            "mean_age_ms": float(np.mean(ages)) if count else 0.0,
+            "pre_trace_bytes": int(self.pre_trace.nbytes + self.pre_trace_last_step.nbytes),
+            "binding_state_bytes": int(self.binding_gain.nbytes + self.binding_last_step.nbytes + self.binding_active_mask.nbytes),
+            "reverse_index_bytes": int(self._hebb_incoming_indptr.nbytes + self._hebb_incoming_edges.nbytes + self._hebb_incoming_pre.nbytes),
+            "active_index_bytes": int(self.binding_active_edges.nbytes + self._hebb_pre_active_edges.nbytes),
+        }
+
     def fast_state_summary(self) -> dict[str, int | float]:
         n = int(self.connectome.neuron_count)
         active = int(len(self._fast_active))
@@ -325,7 +507,7 @@ class FastSparseStateMixin:
             # anatomical edge slices into one vectorized batch instead of
             # crossing the Python loop once per fired neuron.
             if canonical_total:
-                if self._numba_enabled:
+                if self._numba_enabled and not (self._std_enabled and self._hebb_enabled):
                     if self.plasticity_tracking_enabled:
                         if self._std_enabled:
                             config = self._std_config
@@ -340,6 +522,18 @@ class FastSparseStateMixin:
                                 self.step_index, self.params.dt_ms,
                                 config.recovery_tau_ms, config.depression_fraction,
                                 config.min_release_factor,
+                            )
+                        elif self._hebb_enabled:
+                            scatter_csr_rows_with_plasticity_and_hebbian(
+                                fired, indptr, posts, base_signed,
+                                self.plasticity.multiplier, target_slot,
+                                self.plasticity.plastic_mask,
+                                self.plasticity.usage_ema,
+                                self.plasticity.eligibility,
+                                scale, self.usage_alpha, self.eligibility_gain,
+                                self.binding_gain, self.binding_last_step,
+                                self.step_index, self.params.dt_ms,
+                                self._hebb_config.binding_tau_ms,
                             )
                         else:
                             scatter_csr_rows_with_plasticity(
@@ -361,6 +555,14 @@ class FastSparseStateMixin:
                                 config.recovery_tau_ms, config.depression_fraction,
                                 config.min_release_factor,
                             )
+                        elif self._hebb_enabled:
+                            scatter_csr_rows_with_hebbian(
+                                fired, indptr, posts, base_signed,
+                                self.plasticity.multiplier, target_slot, scale,
+                                self.binding_gain, self.binding_last_step,
+                                self.step_index, self.params.dt_ms,
+                                self._hebb_config.binding_tau_ms,
+                            )
                         else:
                             scatter_csr_rows(
                                 fired, indptr, posts, base_signed,
@@ -378,19 +580,22 @@ class FastSparseStateMixin:
                         + offsets
                         - block_offsets
                     )
-                    if self._std_enabled:
+                    if self._std_enabled or self._hebb_enabled:
                         for pre_raw, start_raw, stop_raw in zip(fired, starts, stops):
                             pre = int(pre_raw)
-                            release = self._std_release_for_pre(pre)
+                            release = self._std_release_for_pre(pre) if self._std_enabled else 1.0
                             if int(stop_raw) > int(start_raw):
                                 edges = np.arange(int(start_raw), int(stop_raw), dtype=np.int32)
+                                values = base_signed[edges] * self.plasticity.multiplier[edges]
+                                if self._hebb_enabled:
+                                    values = values * np.asarray(
+                                        [1.0 + self._hebb_gain_for_edge(int(edge)) for edge in edges],
+                                        dtype=np.float32,
+                                    )
                                 np.add.at(
                                     target_slot,
                                     posts[edges],
-                                    base_signed[edges]
-                                    * self.plasticity.multiplier[edges]
-                                    * np.float32(release)
-                                    * scale,
+                                    values * np.float32(release) * scale,
                                 )
                     else:
                         np.add.at(
@@ -439,6 +644,12 @@ class FastSparseStateMixin:
                 effective = self.plasticity.effective_signed_slice(base_signed, start, stop)
                 if self._std_enabled:
                     effective = effective * np.float32(std_release)
+                if self._hebb_enabled:
+                    gains = np.asarray(
+                        [1.0 + self._hebb_gain_for_edge(edge) for edge in range(start, stop)],
+                        dtype=np.float32,
+                    )
+                    effective = effective * gains
                 output_posts[cursor : cursor + count] = posts[start:stop]
                 output_values[cursor : cursor + count] = effective * scale
                 cursor += count
@@ -683,6 +894,14 @@ class FastSparseStateMixin:
             self.v[fired] = p.reset_mv
             self.g[fired] = 0.0
             self.refractory_until[fired] = self.step_index + self.refractory_steps
+
+        # The current firing state has already been determined and its causal
+        # transmission has already been scheduled.  Only now may local POST
+        # coactivity update transient binding, and only after that are current
+        # PRE neurons refreshed for future causal events.
+        if self._hebb_enabled and len(fired):
+            self._apply_hebbian_bindings(fired)
+            self._refresh_hebbian_pre_traces(fired)
 
         # Conservatively retain every neuron that has mattered this trial. This
         # avoids threshold approximations while still skipping untouched CNS cells.

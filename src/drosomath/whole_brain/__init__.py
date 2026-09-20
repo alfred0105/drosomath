@@ -36,6 +36,7 @@ from .directional_modulation import (
 )
 from .performance import TimingProfiler
 from .presynaptic_depression import PresynapticDepressionConfig
+from .transient_hebbian import TransientHebbianBindingConfig
 
 __all__ = [
     "AdaptiveReplayConfig",
@@ -72,4 +73,5 @@ __all__ = [
     "PlasticityController",
     "TimingProfiler",
     "PresynapticDepressionConfig",
+    "TransientHebbianBindingConfig",
 ]

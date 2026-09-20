@@ -12,6 +12,7 @@ from drosomath.whole_brain import (
     PresynapticDepressionConfig,
     SlowAdaptationConfig,
     StructuralOverlayConfig,
+    TransientHebbianBindingConfig,
     UsageRewardRule,
 )
 
@@ -34,10 +35,14 @@ class PlasticMaleCNSBrain(FastSparseStateMixin, PlasticSparseFlyBrain):
         eligibility_gain: float = 1.0,
         slow_adaptation_config: SlowAdaptationConfig | None = None,
         presynaptic_depression_config: PresynapticDepressionConfig | None = None,
+        transient_hebbian_config: TransientHebbianBindingConfig | None = None,
     ) -> None:
         self.slow_adaptation_config = slow_adaptation_config or SlowAdaptationConfig()
         self.presynaptic_depression_config = (
             presynaptic_depression_config or PresynapticDepressionConfig()
+        )
+        self.transient_hebbian_config = (
+            transient_hebbian_config or TransientHebbianBindingConfig()
         )
         super().__init__(
             connectome,
