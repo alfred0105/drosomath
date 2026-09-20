@@ -174,12 +174,19 @@ class ContextualPredictionLearningSession:
             holder = {"update": None}
 
             def apply_directional(_state):
+                # Full edge identity is a bounded diagnostic request only.
+                # Ordinary F.3D/P.8 training remains summary-only; phase
+                # credit cannot silently report zero updated IDs merely because
+                # the high-throughput telemetry mode omitted them.
+                telemetry_level = (
+                    "full" if capture_phase_credit else self.config.telemetry_level
+                )
                 holder["update"] = self.controller.apply_learning_signal(
                     self.brain,
                     signal,
                     self.output_context,
                     timing_profiler=self.timing_profiler,
-                    telemetry_level=self.config.telemetry_level,
+                    telemetry_level=telemetry_level,
                 )
 
             reward_report = self.brain.learn_from_reward(
