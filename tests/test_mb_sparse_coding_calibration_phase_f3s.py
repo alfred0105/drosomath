@@ -1,4 +1,6 @@
 import inspect
+import json
+from pathlib import Path
 import unittest
 
 from run_mb_sparse_coding_calibration_phase_f3s import (
@@ -43,6 +45,38 @@ class MBSparseCodingCalibrationF3STests(unittest.TestCase):
 
         self.assertEqual(module.SEEDS, (251, 257, 263))
         self.assertEqual(len(module.ORDERED_CONTEXTS), 16)
+
+    def test_corrected_stage_b_propagates_item_and_go_rates(self):
+        import run_mb_sparse_coding_calibration_phase_f3s as module
+
+        source = inspect.getsource(module._representation_audit)
+        first_memory_source = inspect.getsource(module._first_memory)
+        self.assertIn("item_stimulus_rate_hz=rate", source)
+        self.assertIn("go_stimulus_rate_hz=go_rate", source)
+        self.assertIn("item_stimulus_rate_hz=rate", first_memory_source)
+        self.assertIn("go_stimulus_rate_hz=go_rate", first_memory_source)
+        self.assertNotIn("calibration_grid(", inspect.getsource(module.run))
+
+    def test_corrected_artifact_records_real_rate_trace_difference(self):
+        artifact = Path(__file__).resolve().parents[1] / "results/latest_mb_sparse_coding_calibration_phase_f3s.json"
+        if not artifact.exists():
+            self.skipTest("generated F.3S artifact is unavailable")
+        data = json.loads(artifact.read_text(encoding="utf-8"))
+        if "correction" not in data:
+            self.skipTest("corrected F.3S artifact has not been generated yet")
+        self.assertTrue(data["correction"]["calibration_reused"])
+        self.assertFalse(data["correction"]["calibration_rerun"])
+        sanity = data["rate_trace_sanity"]
+        self.assertTrue(sanity["actual_trace_differs"])
+        self.assertEqual(sanity["effective_first_rate_hz"]["sparse"], 25.0)
+        self.assertEqual(sanity["effective_second_rate_hz"]["sparse"], 25.0)
+        self.assertEqual(sanity["effective_go_rate_hz"]["sparse"], 205.0)
+        for arm, item_rate in (("CURRENT_RANDOM_ENCODER", 205.0), ("MB_ROUTED_GENERIC_205HZ", 205.0), ("MB_ROUTED_SPARSE_OPERATING_POINT", 25.0)):
+            observed = data["representation_comparison"]["per_seed"][0][arm]
+            self.assertEqual(observed["requested_item_rate_hz"], item_rate)
+            self.assertEqual(observed["effective_first_rate_hz"], item_rate)
+            self.assertEqual(observed["effective_second_rate_hz"], item_rate)
+            self.assertEqual(observed["effective_go_rate_hz"], 205.0)
 
 
 if __name__ == "__main__":

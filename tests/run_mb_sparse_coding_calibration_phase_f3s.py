@@ -242,7 +242,7 @@ def calibration_grid(connectome, interface, mb_populations, *, workers=1, data_d
     return values, float(time.perf_counter() - started)
 
 
-def _representation_audit(connectome, interface, seed, *, rate, offset):
+def _representation_audit(connectome, interface, seed, *, rate, offset, go_rate=205.0):
     kc, mbon, _ = _kc_and_annotations(connectome)
     stable = {"first": {}, "pre_go": {}}
     frequencies = {"first": {}, "pre_go": {}}
@@ -290,7 +290,12 @@ def _representation_audit(connectome, interface, seed, *, rate, offset):
 
                 kc_mask = np.zeros(connectome.neuron_count, dtype=np.bool_); kc_mask[kc] = True
                 mbon_mask = np.zeros(connectome.neuron_count, dtype=np.bool_); mbon_mask[mbon] = True
-                TwoCueSequenceSession(brain, interface).run_trial(*context, track_eligibility=False, phase_observer=observer)
+                TwoCueSequenceSession(
+                    brain,
+                    interface,
+                    item_stimulus_rate_hz=rate,
+                    go_stimulus_rate_hz=go_rate,
+                ).run_trial(*context, track_eligibility=False, phase_observer=observer)
                 active = set(int(value) for value in observed.get("active", ()))
                 kc_active = observed.get("kc", set())
                 mbon_active = observed.get("mbon", set())
@@ -331,6 +336,10 @@ def _representation_audit(connectome, interface, seed, *, rate, offset):
                 groups[key].append(float(np.dot(vectors[phase][left], vectors[phase][right]) / denominator) if denominator else 1.0)
         return {key: {"mean": float(np.mean(values)), "pairs": len(values)} for key, values in groups.items()}
     return {
+        "requested_item_rate_hz": float(rate),
+        "effective_first_rate_hz": float(rate),
+        "effective_second_rate_hz": float(rate),
+        "effective_go_rate_hz": float(go_rate),
         "rate_hz": float(rate), "kc_offset_mv": float(offset),
         "metrics": {"pairwise_context_similarity": public["pairwise_context_similarity"], "conjunctive_specific_pools": public["conjunctive_specific_pools"], "state_metrics": public["state_metrics"]},
         "compact_cosine_similarity": {phase: cosine_groups(phase) for phase in ("first", "pre_go")},
@@ -350,13 +359,69 @@ def _state_vector(brain):
     return vector
 
 
-def _first_memory(connectome, interface, seed, rate, offset):
+def _first_memory(connectome, interface, seed, rate, offset, go_rate=205.0):
     brain = _make_brain(connectome, seed, kc_offset=offset)
     rows = []
     for first, second in ORDERED_CONTEXTS:
-        result = TwoCueSequenceSession(brain, interface).run_trial(first, second, track_eligibility=False)
+        result = TwoCueSequenceSession(
+            brain,
+            interface,
+            item_stimulus_rate_hz=rate,
+            go_stimulus_rate_hz=go_rate,
+        ).run_trial(first, second, track_eligibility=False)
         rows.append((first, result.decision))
-    return {"accuracy": float(sum(first == decision for first, decision in rows) / len(rows)), "no_decision_count": int(sum(decision == "NO_DECISION" for _, decision in rows))}
+    return {
+        "requested_item_rate_hz": float(rate),
+        "effective_first_rate_hz": float(rate),
+        "effective_second_rate_hz": float(rate),
+        "effective_go_rate_hz": float(go_rate),
+        "accuracy": float(sum(first == decision for first, decision in rows) / len(rows)),
+        "no_decision_count": int(sum(decision == "NO_DECISION" for _, decision in rows)),
+    }
+
+
+def _bounded_firing_trace(connectome, interface, seed, *, item_rate, go_rate=205.0):
+    """Return a compact hash of the real three-phase firing trace."""
+    brain = _make_brain(connectome, seed, kc_offset=0.0)
+    trace = []
+    original_step = brain.step
+
+    def traced_step(*args, **kwargs):
+        fired, transferred = original_step(*args, **kwargs)
+        trace.append(np.asarray(fired, dtype=np.int32).copy())
+        return fired, transferred
+
+    brain.step = traced_step
+    TwoCueSequenceSession(
+        brain,
+        interface,
+        item_stimulus_rate_hz=item_rate,
+        go_stimulus_rate_hz=go_rate,
+    ).run_trial("A", "B", track_eligibility=False)
+    digest = hashlib.sha256()
+    for fired in trace:
+        digest.update(np.asarray(fired, dtype="<i4").tobytes())
+        digest.update(b"|")
+    return {
+        "step_count": len(trace),
+        "total_fired_events": int(sum(len(fired) for fired in trace)),
+        "trace_sha256": digest.hexdigest(),
+    }
+
+
+def _rate_trace_sanity(connectome, interface, seed):
+    trace_25 = _bounded_firing_trace(connectome, interface, seed, item_rate=25.0)
+    trace_205 = _bounded_firing_trace(connectome, interface, seed, item_rate=205.0)
+    return {
+        "seed": int(seed),
+        "requested_item_rate_hz": {"sparse": 25.0, "generic": 205.0},
+        "effective_first_rate_hz": {"sparse": 25.0, "generic": 205.0},
+        "effective_second_rate_hz": {"sparse": 25.0, "generic": 205.0},
+        "effective_go_rate_hz": {"sparse": 205.0, "generic": 205.0},
+        "sparse_25hz_trace": trace_25,
+        "generic_205hz_trace": trace_205,
+        "actual_trace_differs": bool(trace_25["trace_sha256"] != trace_205["trace_sha256"]),
+    }
 
 
 def _offset_zero_exact(connectome, interface):
@@ -380,13 +445,13 @@ def _offset_zero_exact(connectome, interface):
 def _representation_seed(connectome, current, mb, seed, selected_rate, selected_offset):
     return {
         "seed": int(seed),
-        "CURRENT_RANDOM_ENCODER": _representation_audit(connectome, current, seed, rate=205.0, offset=0.0),
-        "MB_ROUTED_GENERIC_205HZ": _representation_audit(connectome, mb, seed, rate=205.0, offset=0.0),
-        "MB_ROUTED_SPARSE_OPERATING_POINT": _representation_audit(connectome, mb, seed, rate=selected_rate, offset=selected_offset),
+        "CURRENT_RANDOM_ENCODER": _representation_audit(connectome, current, seed, rate=205.0, offset=0.0, go_rate=205.0),
+        "MB_ROUTED_GENERIC_205HZ": _representation_audit(connectome, mb, seed, rate=205.0, offset=0.0, go_rate=205.0),
+        "MB_ROUTED_SPARSE_OPERATING_POINT": _representation_audit(connectome, mb, seed, rate=selected_rate, offset=selected_offset, go_rate=205.0),
         "first_memory": {
-            "CURRENT_RANDOM_ENCODER": _first_memory(connectome, current, seed, 205.0, 0.0),
-            "MB_ROUTED_GENERIC_205HZ": _first_memory(connectome, mb, seed, 205.0, 0.0),
-            "MB_ROUTED_SPARSE_OPERATING_POINT": _first_memory(connectome, mb, seed, selected_rate, selected_offset),
+            "CURRENT_RANDOM_ENCODER": _first_memory(connectome, current, seed, 205.0, 0.0, 205.0),
+            "MB_ROUTED_GENERIC_205HZ": _first_memory(connectome, mb, seed, 205.0, 0.0, 205.0),
+            "MB_ROUTED_SPARSE_OPERATING_POINT": _first_memory(connectome, mb, seed, selected_rate, selected_offset, 205.0),
         },
     }
 
@@ -451,7 +516,7 @@ def _conclusion(calibration, selected, representation, first_memory):
     return {"sparse_mb_representation_improved": bool(improved), "checks": checks, "old_mb_same_first": old, "sparse_mb_same_first": sparse, "old_mb_kc_context_specific": kc_old, "sparse_mb_kc_context_specific": kc_sparse, "current_broader_support": broad_old, "sparse_broader_support": broad_sparse, "first_memory_drop": float(first_drop), "recommended_next_step": "test_context_prediction_on_sparse_mb_routing" if improved else "build_anatomically_compartmentalized_dendritic_subunits"}
 
 
-def run(*, data_dir=DATA_DIR, output_path=ARTIFACT, workers=3):
+def _run_legacy_calibration_and_stage_b(*, data_dir=DATA_DIR, output_path=ARTIFACT, workers=3):
     started = time.perf_counter()
     connectome = load_malecns_v1(data_dir, min_connection_synapses=5)
     current_surface, mb_surface, mb_populations = frozen_interfaces(connectome)
@@ -498,6 +563,78 @@ def run(*, data_dir=DATA_DIR, output_path=ARTIFACT, workers=3):
         "conclusion": conclusion,
         "pass": True,
     }
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(artifact, indent=2, sort_keys=True), encoding="utf-8")
+    return artifact
+
+
+def run(*, data_dir=DATA_DIR, output_path=ARTIFACT, workers=3):
+    """Rerun only corrected Stage B using the committed Stage-A artifact."""
+    started = time.perf_counter()
+    if not ARTIFACT.exists():
+        raise FileNotFoundError("validated F.3S artifact is required; correction run does not recalibrate")
+    previous = json.loads(ARTIFACT.read_text(encoding="utf-8"))
+    previous_selected = previous.get("selected_operating_point", {})
+    if not previous_selected.get("selected"):
+        raise RuntimeError("validated F.3S Stage-A operating point is not available")
+    selected_rate = float(previous_selected["rate_hz"])
+    selected_offset = float(previous_selected["kc_threshold_offset_mv"])
+    if selected_rate != 25.0 or selected_offset != 0.0:
+        raise RuntimeError("correction expects the validated 25 Hz / 0 mV operating point")
+
+    connectome = load_malecns_v1(data_dir, min_connection_synapses=5)
+    current_surface, mb_surface, mb_populations = frozen_interfaces(connectome)
+    current = WorkingMemoryInterface(connectome, current_surface)
+    mb = WorkingMemoryInterface(connectome, mb_surface)
+    representation, representation_runtime = run_representation(
+        connectome, current, mb, mb_populations, selected_rate, selected_offset,
+        workers=workers, data_dir=data_dir,
+    )
+    rate_sanity = _rate_trace_sanity(connectome, mb, SEEDS[0])
+    if not rate_sanity["actual_trace_differs"]:
+        raise AssertionError("25 Hz and 205 Hz sparse firing traces unexpectedly match")
+    conclusion = _conclusion(previous.get("physiological_validation"), previous_selected, representation, None)
+    zero_exact = _offset_zero_exact(connectome, mb)
+
+    artifact = dict(previous)
+    artifact["correction"] = {
+        "previous_stage_b_invalid": True,
+        "reason": "sequence_session_hardcoded_205_hz",
+        "calibration_reused": True,
+        "calibration_rerun": False,
+    }
+    artifact["representation_comparison"] = {
+        "stage_executed": True,
+        "seeds": list(SEEDS),
+        "per_seed": representation,
+        "protocol": "CURRENT_RANDOM_ENCODER 205/205/205 vs MB_ROUTED_GENERIC_205HZ 205/205/205 vs sparse 25/25/205",
+    }
+    artifact["kc_specific_representation"] = {
+        "stage_executed": True,
+        "per_seed": [{"seed": row["seed"], "old_mb": row["MB_ROUTED_GENERIC_205HZ"]["kc_only_context_specific_neurons"], "sparse_mb": row["MB_ROUTED_SPARSE_OPERATING_POINT"]["kc_only_context_specific_neurons"]} for row in representation],
+    }
+    artifact["mbon_representation"] = {
+        "stage_executed": True,
+        "per_seed": [{"seed": row["seed"], "old_mb": row["MB_ROUTED_GENERIC_205HZ"]["mbon_representation_similarity"], "sparse_mb": row["MB_ROUTED_SPARSE_OPERATING_POINT"]["mbon_representation_similarity"]} for row in representation],
+    }
+    artifact["first_memory_guard"] = {
+        "stage_executed": True,
+        "per_seed": [{"seed": row["seed"], **row["first_memory"]} for row in representation],
+        "drop_limit_absolute": 0.10,
+    }
+    artifact["rate_trace_sanity"] = rate_sanity
+    artifact["performance"] = {
+        "calibration_grid_wall_seconds": 0.0,
+        "calibration_grid_reused": True,
+        "stage_b_wall_seconds": float(representation_runtime),
+        "total_wall_seconds": float(time.perf_counter() - started),
+        "workers": int(workers),
+        "peak_rss": "not sampled by runner",
+    }
+    artifact["safety"] = dict(previous.get("safety", {}))
+    artifact["safety"].update({"offset_zero_global_behavior_exact": zero_exact, "stage_b_only_after_selection": True})
+    artifact["conclusion"] = conclusion
+    artifact["pass"] = True
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(artifact, indent=2, sort_keys=True), encoding="utf-8")
     return artifact

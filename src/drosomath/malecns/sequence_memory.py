@@ -98,11 +98,26 @@ class SequenceTrialResult:
 class TwoCueSequenceSession:
     """Run FIRST -> SECOND -> GO episodes without applying learning."""
 
-    def __init__(self, brain, interface: WorkingMemoryInterface):
+    def __init__(
+        self,
+        brain,
+        interface: WorkingMemoryInterface,
+        *,
+        item_stimulus_rate_hz: float = 205.0,
+        go_stimulus_rate_hz: float = 205.0,
+    ):
         if brain.connectome is not interface.connectome:
             raise ValueError("brain and sequence interface must match")
+        for name, rate in (
+            ("item_stimulus_rate_hz", item_stimulus_rate_hz),
+            ("go_stimulus_rate_hz", go_stimulus_rate_hz),
+        ):
+            if not math.isfinite(float(rate)) or float(rate) < 0.0:
+                raise ValueError(f"{name} must be finite and >= 0")
         self.brain = brain
         self.interface = interface
+        self.item_stimulus_rate_hz = float(item_stimulus_rate_hz)
+        self.go_stimulus_rate_hz = float(go_stimulus_rate_hz)
         self._output_lookup = np.full(brain.connectome.neuron_count, -1, dtype=np.int8)
         for index, symbol in enumerate(SYMBOLS):
             self._output_lookup[interface.output_populations[symbol]] = index
@@ -145,19 +160,25 @@ class TwoCueSequenceSession:
         try:
             self.brain.reset()
             _, first_spikes = self._run_phase(
-                self.interface.population_for_input(first), 20.0, 205.0
+                self.interface.population_for_input(first),
+                20.0,
+                self.item_stimulus_rate_hz,
             )
             if phase_observer is not None:
                 phase_observer("first", self.brain)
             if reset_between_items:
                 self.brain.reset()
             _, second_spikes = self._run_phase(
-                self.interface.population_for_input(second), 20.0, 205.0
+                self.interface.population_for_input(second),
+                20.0,
+                self.item_stimulus_rate_hz,
             )
             if phase_observer is not None:
                 phase_observer("second", self.brain)
             rates, go_spikes = self._run_phase(
-                self.interface.population_for_input(GO_SYMBOL), 20.0, 205.0
+                self.interface.population_for_input(GO_SYMBOL),
+                20.0,
+                self.go_stimulus_rate_hz,
             )
             if phase_observer is not None:
                 phase_observer("go", self.brain)

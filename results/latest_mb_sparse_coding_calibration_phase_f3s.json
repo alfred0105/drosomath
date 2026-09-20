@@ -82246,7 +82246,7 @@
       "kc_context_specific_increased_in_2_of_3": false,
       "no_activity_pathology": true,
       "physiological_calibration": true,
-      "same_first_lower_than_old_mb_in_2_of_3": false
+      "same_first_lower_than_old_mb_in_2_of_3": true
     },
     "current_broader_support": [
       9,
@@ -82266,21 +82266,27 @@
     ],
     "recommended_next_step": "build_anatomically_compartmentalized_dendritic_subunits",
     "sparse_broader_support": [
-      12,
-      11,
+      9,
+      10,
       10
     ],
     "sparse_mb_kc_context_specific": [
-      3.4375,
-      3.3125,
-      3.75
+      1.9375,
+      2.0625,
+      1.0
     ],
     "sparse_mb_representation_improved": false,
     "sparse_mb_same_first": [
-      0.9984648726706085,
-      0.9989233976534053,
-      0.9985908875453481
+      0.9987998213226564,
+      0.9947658994411182,
+      0.9952416481278111
     ]
+  },
+  "correction": {
+    "calibration_rerun": false,
+    "calibration_reused": true,
+    "previous_stage_b_invalid": true,
+    "reason": "sequence_session_hardcoded_205_hz"
   },
   "first_memory_guard": {
     "drop_limit_absolute": 0.1,
@@ -82288,45 +82294,81 @@
       {
         "CURRENT_RANDOM_ENCODER": {
           "accuracy": 0.1875,
-          "no_decision_count": 2
+          "effective_first_rate_hz": 205.0,
+          "effective_go_rate_hz": 205.0,
+          "effective_second_rate_hz": 205.0,
+          "no_decision_count": 2,
+          "requested_item_rate_hz": 205.0
         },
         "MB_ROUTED_GENERIC_205HZ": {
           "accuracy": 0.25,
-          "no_decision_count": 0
+          "effective_first_rate_hz": 205.0,
+          "effective_go_rate_hz": 205.0,
+          "effective_second_rate_hz": 205.0,
+          "no_decision_count": 0,
+          "requested_item_rate_hz": 205.0
         },
         "MB_ROUTED_SPARSE_OPERATING_POINT": {
           "accuracy": 0.25,
-          "no_decision_count": 0
+          "effective_first_rate_hz": 25.0,
+          "effective_go_rate_hz": 205.0,
+          "effective_second_rate_hz": 25.0,
+          "no_decision_count": 0,
+          "requested_item_rate_hz": 25.0
         },
         "seed": 251
       },
       {
         "CURRENT_RANDOM_ENCODER": {
           "accuracy": 0.1875,
-          "no_decision_count": 3
+          "effective_first_rate_hz": 205.0,
+          "effective_go_rate_hz": 205.0,
+          "effective_second_rate_hz": 205.0,
+          "no_decision_count": 3,
+          "requested_item_rate_hz": 205.0
         },
         "MB_ROUTED_GENERIC_205HZ": {
           "accuracy": 0.25,
-          "no_decision_count": 0
+          "effective_first_rate_hz": 205.0,
+          "effective_go_rate_hz": 205.0,
+          "effective_second_rate_hz": 205.0,
+          "no_decision_count": 0,
+          "requested_item_rate_hz": 205.0
         },
         "MB_ROUTED_SPARSE_OPERATING_POINT": {
           "accuracy": 0.25,
-          "no_decision_count": 0
+          "effective_first_rate_hz": 25.0,
+          "effective_go_rate_hz": 205.0,
+          "effective_second_rate_hz": 25.0,
+          "no_decision_count": 0,
+          "requested_item_rate_hz": 25.0
         },
         "seed": 257
       },
       {
         "CURRENT_RANDOM_ENCODER": {
           "accuracy": 0.125,
-          "no_decision_count": 7
+          "effective_first_rate_hz": 205.0,
+          "effective_go_rate_hz": 205.0,
+          "effective_second_rate_hz": 205.0,
+          "no_decision_count": 7,
+          "requested_item_rate_hz": 205.0
         },
         "MB_ROUTED_GENERIC_205HZ": {
           "accuracy": 0.25,
-          "no_decision_count": 0
+          "effective_first_rate_hz": 205.0,
+          "effective_go_rate_hz": 205.0,
+          "effective_second_rate_hz": 205.0,
+          "no_decision_count": 0,
+          "requested_item_rate_hz": 205.0
         },
         "MB_ROUTED_SPARSE_OPERATING_POINT": {
           "accuracy": 0.25,
-          "no_decision_count": 0
+          "effective_first_rate_hz": 25.0,
+          "effective_go_rate_hz": 205.0,
+          "effective_second_rate_hz": 25.0,
+          "no_decision_count": 0,
+          "requested_item_rate_hz": 25.0
         },
         "seed": 263
       }
@@ -82404,24 +82446,24 @@
             }
           },
           "pre_go": {
-            "mean": 3.4375,
+            "mean": 1.9375,
             "per_context": {
-              "AA": 5,
-              "AB": 3,
-              "AC": 1,
+              "AA": 0,
+              "AB": 0,
+              "AC": 0,
               "AD": 2,
-              "BA": 2,
-              "BB": 10,
-              "BC": 2,
-              "BD": 1,
-              "CA": 1,
-              "CB": 4,
-              "CC": 8,
-              "CD": 4,
-              "DA": 0,
-              "DB": 1,
-              "DC": 0,
-              "DD": 11
+              "BA": 1,
+              "BB": 1,
+              "BC": 1,
+              "BD": 3,
+              "CA": 2,
+              "CB": 8,
+              "CC": 3,
+              "CD": 1,
+              "DA": 1,
+              "DB": 2,
+              "DC": 2,
+              "DD": 4
             }
           }
         }
@@ -82495,24 +82537,24 @@
             }
           },
           "pre_go": {
-            "mean": 3.3125,
+            "mean": 2.0625,
             "per_context": {
-              "AA": 9,
-              "AB": 0,
-              "AC": 3,
-              "AD": 1,
+              "AA": 0,
+              "AB": 11,
+              "AC": 1,
+              "AD": 0,
               "BA": 1,
-              "BB": 8,
-              "BC": 0,
-              "BD": 1,
-              "CA": 1,
-              "CB": 0,
-              "CC": 9,
-              "CD": 2,
-              "DA": 1,
-              "DB": 1,
-              "DC": 4,
-              "DD": 12
+              "BB": 3,
+              "BC": 3,
+              "BD": 3,
+              "CA": 2,
+              "CB": 1,
+              "CC": 2,
+              "CD": 1,
+              "DA": 4,
+              "DB": 0,
+              "DC": 1,
+              "DD": 0
             }
           }
         }
@@ -82586,24 +82628,24 @@
             }
           },
           "pre_go": {
-            "mean": 3.75,
+            "mean": 1.0,
             "per_context": {
-              "AA": 13,
-              "AB": 1,
-              "AC": 2,
+              "AA": 0,
+              "AB": 0,
+              "AC": 0,
               "AD": 0,
-              "BA": 2,
-              "BB": 11,
-              "BC": 2,
+              "BA": 3,
+              "BB": 3,
+              "BC": 1,
               "BD": 0,
               "CA": 2,
-              "CB": 1,
-              "CC": 18,
-              "CD": 0,
+              "CB": 2,
+              "CC": 1,
+              "CD": 2,
               "DA": 0,
-              "DB": 1,
-              "DC": 0,
-              "DD": 7
+              "DB": 0,
+              "DC": 1,
+              "DD": 1
             }
           }
         }
@@ -82620,8 +82662,8 @@
         },
         "seed": 251,
         "sparse_mb": {
-          "first": 0.8808519982433026,
-          "pre_go": 0.9630257247383534
+          "first": 0.56,
+          "pre_go": 0.9303539161844011
         }
       },
       {
@@ -82631,8 +82673,8 @@
         },
         "seed": 257,
         "sparse_mb": {
-          "first": 0.7757671957671958,
-          "pre_go": 0.9677284211763324
+          "first": 0.4666666666666667,
+          "pre_go": 0.9376632338660642
         }
       },
       {
@@ -82642,8 +82684,8 @@
         },
         "seed": 263,
         "sparse_mb": {
-          "first": 0.7728140739634994,
-          "pre_go": 0.9721837358246667
+          "first": 0.4,
+          "pre_go": 0.9221880211587231
         }
       }
     ],
@@ -82651,10 +82693,11 @@
   },
   "pass": true,
   "performance": {
-    "calibration_grid_wall_seconds": 29.215483899999526,
+    "calibration_grid_reused": true,
+    "calibration_grid_wall_seconds": 0.0,
     "peak_rss": "not sampled by runner",
-    "stage_b_wall_seconds": 149.21705479999946,
-    "total_wall_seconds": 201.36817849999352,
+    "stage_b_wall_seconds": 188.4739294000001,
+    "total_wall_seconds": 216.8246978999996,
     "workers": 3
   },
   "physiological_validation": {
@@ -86838,6 +86881,36 @@
     "whole_network_explosion_limit": 0.75,
     "workers": 3
   },
+  "rate_trace_sanity": {
+    "actual_trace_differs": true,
+    "effective_first_rate_hz": {
+      "generic": 205.0,
+      "sparse": 25.0
+    },
+    "effective_go_rate_hz": {
+      "generic": 205.0,
+      "sparse": 205.0
+    },
+    "effective_second_rate_hz": {
+      "generic": 205.0,
+      "sparse": 25.0
+    },
+    "generic_205hz_trace": {
+      "step_count": 300,
+      "total_fired_events": 31622,
+      "trace_sha256": "57f2897acbe5b03dfbdc8c80cb3d4cb31d695a99cfd3f696388f0790105635be"
+    },
+    "requested_item_rate_hz": {
+      "generic": 205.0,
+      "sparse": 25.0
+    },
+    "seed": 251,
+    "sparse_25hz_trace": {
+      "step_count": 300,
+      "total_fired_events": 27558,
+      "trace_sha256": "07c8d3dbe3490ab6a8ee7b2694df2246dfd9b963a1534a9ecb52f088728d01b2"
+    }
+  },
   "representation_comparison": {
     "per_seed": [
       {
@@ -86872,6 +86945,9 @@
               }
             }
           },
+          "effective_first_rate_hz": 205.0,
+          "effective_go_rate_hz": 205.0,
+          "effective_second_rate_hz": 205.0,
           "kc_offset_mv": 0.0,
           "kc_only_active_set_jaccard": {
             "first": 0.3333333333333333,
@@ -87436,7 +87512,8 @@
             }
           },
           "persistent_state_unchanged": true,
-          "rate_hz": 205.0
+          "rate_hz": 205.0,
+          "requested_item_rate_hz": 205.0
         },
         "MB_ROUTED_GENERIC_205HZ": {
           "compact_cosine_similarity": {
@@ -87469,6 +87546,9 @@
               }
             }
           },
+          "effective_first_rate_hz": 205.0,
+          "effective_go_rate_hz": 205.0,
+          "effective_second_rate_hz": 205.0,
           "kc_offset_mv": 0.0,
           "kc_only_active_set_jaccard": {
             "first": 0.7059996029409277,
@@ -88033,13 +88113,14 @@
             }
           },
           "persistent_state_unchanged": true,
-          "rate_hz": 205.0
+          "rate_hz": 205.0,
+          "requested_item_rate_hz": 205.0
         },
         "MB_ROUTED_SPARSE_OPERATING_POINT": {
           "compact_cosine_similarity": {
             "first": {
               "different_first_and_second": {
-                "mean": 0.9492957991768063,
+                "mean": 0.9909550923383811,
                 "pairs": 72
               },
               "same_first_different_second": {
@@ -88047,29 +88128,32 @@
                 "pairs": 24
               },
               "same_second_different_first": {
-                "mean": 0.9492957991768063,
+                "mean": 0.9909550923383813,
                 "pairs": 24
               }
             },
             "pre_go": {
               "different_first_and_second": {
-                "mean": 0.9985799351695649,
+                "mean": 0.9978625456228861,
                 "pairs": 72
               },
               "same_first_different_second": {
-                "mean": 0.999605640491905,
+                "mean": 0.9996483209381086,
                 "pairs": 24
               },
               "same_second_different_first": {
-                "mean": 0.998585865690882,
+                "mean": 0.9978402925067876,
                 "pairs": 24
               }
             }
           },
+          "effective_first_rate_hz": 25.0,
+          "effective_go_rate_hz": 205.0,
+          "effective_second_rate_hz": 25.0,
           "kc_offset_mv": 0.0,
           "kc_only_active_set_jaccard": {
-            "first": 0.7059996029409277,
-            "pre_go": 0.9167017660849047
+            "first": 0.422328332164652,
+            "pre_go": 0.9432368986523715
           },
           "kc_only_context_specific_neurons": {
             "first": {
@@ -88094,30 +88178,30 @@
               }
             },
             "pre_go": {
-              "mean": 3.4375,
+              "mean": 1.9375,
               "per_context": {
-                "AA": 5,
-                "AB": 3,
-                "AC": 1,
+                "AA": 0,
+                "AB": 0,
+                "AC": 0,
                 "AD": 2,
-                "BA": 2,
-                "BB": 10,
-                "BC": 2,
-                "BD": 1,
-                "CA": 1,
-                "CB": 4,
-                "CC": 8,
-                "CD": 4,
-                "DA": 0,
-                "DB": 1,
-                "DC": 0,
-                "DD": 11
+                "BA": 1,
+                "BB": 1,
+                "BC": 1,
+                "BD": 3,
+                "CA": 2,
+                "CB": 8,
+                "CC": 3,
+                "CD": 1,
+                "DA": 1,
+                "DB": 2,
+                "DC": 2,
+                "DD": 4
               }
             }
           },
           "mbon_representation_similarity": {
-            "first": 0.8808519982433026,
-            "pre_go": 0.9630257247383534
+            "first": 0.56,
+            "pre_go": 0.9303539161844011
           },
           "metrics": {
             "conjunctive_specific_pools": {
@@ -88133,97 +88217,97 @@
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 37415
+                    "stable_active_count": 20841
                   },
                   "AB": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 37415
+                    "stable_active_count": 20841
                   },
                   "AC": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 37415
+                    "stable_active_count": 20841
                   },
                   "AD": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 37415
+                    "stable_active_count": 20841
                   },
                   "BA": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32322
+                    "stable_active_count": 18892
                   },
                   "BB": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32322
+                    "stable_active_count": 18892
                   },
                   "BC": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32322
+                    "stable_active_count": 18892
                   },
                   "BD": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32322
+                    "stable_active_count": 18892
                   },
                   "CA": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 36923
+                    "stable_active_count": 19986
                   },
                   "CB": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 36923
+                    "stable_active_count": 19986
                   },
                   "CC": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 36923
+                    "stable_active_count": 19986
                   },
                   "CD": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 36923
+                    "stable_active_count": 19986
                   },
                   "DA": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32559
+                    "stable_active_count": 15833
                   },
                   "DB": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32559
+                    "stable_active_count": 15833
                   },
                   "DC": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32559
+                    "stable_active_count": 15833
                   },
                   "DD": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32559
+                    "stable_active_count": 15833
                   }
                 },
                 "strict_aggregate": {
@@ -88235,112 +88319,112 @@
               },
               "pre_go": {
                 "broader_aggregate": {
-                  "max": 5,
-                  "mean": 1.5625,
+                  "max": 82,
+                  "mean": 9.625,
                   "median": 1.0,
                   "min": 0
                 },
                 "per_context": {
                   "AA": {
-                    "broader_conjunction_count": 1,
-                    "conjunctive_specific_count": 1,
-                    "conjunctive_specific_fraction": 1.0168078334875492e-05,
-                    "stable_active_count": 98347
+                    "broader_conjunction_count": 82,
+                    "conjunctive_specific_count": 82,
+                    "conjunctive_specific_fraction": 0.0008816256316525105,
+                    "stable_active_count": 93010
                   },
                   "AB": {
-                    "broader_conjunction_count": 1,
-                    "conjunctive_specific_count": 1,
-                    "conjunctive_specific_fraction": 1.0173146961281002e-05,
-                    "stable_active_count": 98298
+                    "broader_conjunction_count": 3,
+                    "conjunctive_specific_count": 3,
+                    "conjunctive_specific_fraction": 3.228062624414914e-05,
+                    "stable_active_count": 92935
                   },
                   "AC": {
-                    "broader_conjunction_count": 2,
-                    "conjunctive_specific_count": 2,
-                    "conjunctive_specific_fraction": 2.0342155047905775e-05,
-                    "stable_active_count": 98318
+                    "broader_conjunction_count": 0,
+                    "conjunctive_specific_count": 0,
+                    "conjunctive_specific_fraction": 0.0,
+                    "stable_active_count": 92930
                   },
                   "AD": {
-                    "broader_conjunction_count": 4,
-                    "conjunctive_specific_count": 4,
-                    "conjunctive_specific_fraction": 4.0683068723873844e-05,
-                    "stable_active_count": 98321
+                    "broader_conjunction_count": 8,
+                    "conjunctive_specific_count": 8,
+                    "conjunctive_specific_fraction": 8.60298308438451e-05,
+                    "stable_active_count": 92991
                   },
                   "BA": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 97712
+                    "stable_active_count": 90083
                   },
                   "BB": {
-                    "broader_conjunction_count": 1,
-                    "conjunctive_specific_count": 1,
-                    "conjunctive_specific_fraction": 1.0235624065999304e-05,
-                    "stable_active_count": 97698
+                    "broader_conjunction_count": 32,
+                    "conjunctive_specific_count": 32,
+                    "conjunctive_specific_fraction": 0.0003550702928220321,
+                    "stable_active_count": 90123
                   },
                   "BC": {
-                    "broader_conjunction_count": 2,
-                    "conjunctive_specific_count": 2,
-                    "conjunctive_specific_fraction": 2.0469781485082646e-05,
-                    "stable_active_count": 97705
+                    "broader_conjunction_count": 15,
+                    "conjunctive_specific_count": 15,
+                    "conjunctive_specific_fraction": 0.00016649092624451968,
+                    "stable_active_count": 90095
                   },
                   "BD": {
+                    "broader_conjunction_count": 11,
+                    "conjunctive_specific_count": 11,
+                    "conjunctive_specific_fraction": 0.00012208928056116672,
+                    "stable_active_count": 90098
+                  },
+                  "CA": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 97734
-                  },
-                  "CA": {
-                    "broader_conjunction_count": 3,
-                    "conjunctive_specific_count": 3,
-                    "conjunctive_specific_fraction": 2.956480605487228e-05,
-                    "stable_active_count": 101472
+                    "stable_active_count": 92369
                   },
                   "CB": {
-                    "broader_conjunction_count": 3,
-                    "conjunctive_specific_count": 3,
-                    "conjunctive_specific_fraction": 2.956480605487228e-05,
-                    "stable_active_count": 101472
+                    "broader_conjunction_count": 0,
+                    "conjunctive_specific_count": 0,
+                    "conjunctive_specific_fraction": 0.0,
+                    "stable_active_count": 92365
                   },
                   "CC": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 101379
+                    "stable_active_count": 92353
                   },
                   "CD": {
                     "broader_conjunction_count": 1,
                     "conjunctive_specific_count": 1,
-                    "conjunctive_specific_fraction": 9.853187506158243e-06,
-                    "stable_active_count": 101490
+                    "conjunctive_specific_fraction": 1.0828370330265296e-05,
+                    "stable_active_count": 92350
                   },
                   "DA": {
-                    "broader_conjunction_count": 5,
-                    "conjunctive_specific_count": 5,
-                    "conjunctive_specific_fraction": 5.186991026505524e-05,
-                    "stable_active_count": 96395
-                  },
-                  "DB": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 96435
+                    "stable_active_count": 85363
+                  },
+                  "DB": {
+                    "broader_conjunction_count": 1,
+                    "conjunctive_specific_count": 1,
+                    "conjunctive_specific_fraction": 1.1706449082799715e-05,
+                    "stable_active_count": 85423
                   },
                   "DC": {
                     "broader_conjunction_count": 1,
                     "conjunctive_specific_count": 1,
-                    "conjunctive_specific_fraction": 1.0320023942455546e-05,
-                    "stable_active_count": 96899
+                    "conjunctive_specific_fraction": 1.173392159393591e-05,
+                    "stable_active_count": 85223
                   },
                   "DD": {
-                    "broader_conjunction_count": 1,
-                    "conjunctive_specific_count": 1,
-                    "conjunctive_specific_fraction": 1.0356791466003832e-05,
-                    "stable_active_count": 96555
+                    "broader_conjunction_count": 0,
+                    "conjunctive_specific_count": 0,
+                    "conjunctive_specific_fraction": 0.0,
+                    "stable_active_count": 85422
                   }
                 },
                 "strict_aggregate": {
-                  "max": 5,
-                  "mean": 1.5625,
+                  "max": 82,
+                  "mean": 9.625,
                   "median": 1.0,
                   "min": 0
                 }
@@ -88349,10 +88433,10 @@
             "pairwise_context_similarity": {
               "first": {
                 "different_first_and_second": {
-                  "max": 0.9477035135064322,
-                  "mean": 0.8758468573590598,
-                  "median": 0.8485160327014876,
-                  "min": 0.8407549161937442,
+                  "max": 0.925620224507122,
+                  "mean": 0.8094339503139276,
+                  "median": 0.8066634454412152,
+                  "min": 0.6937144968364661,
                   "pairs": 72
                 },
                 "same_first_different_second": {
@@ -88363,33 +88447,33 @@
                   "pairs": 24
                 },
                 "same_second_different_first": {
-                  "max": 0.9477035135064322,
-                  "mean": 0.8758468573590598,
-                  "median": 0.8485160327014876,
-                  "min": 0.8407549161937442,
+                  "max": 0.925620224507122,
+                  "mean": 0.8094339503139277,
+                  "median": 0.8066634454412152,
+                  "min": 0.6937144968364661,
                   "pairs": 24
                 }
               },
               "pre_go": {
                 "different_first_and_second": {
-                  "max": 0.975748901137944,
-                  "mean": 0.9613948321961492,
-                  "median": 0.9635324610491185,
-                  "min": 0.9447152713620192,
+                  "max": 0.9719964250755415,
+                  "mean": 0.9409435875826018,
+                  "median": 0.9447285264230625,
+                  "min": 0.9103624943728698,
                   "pairs": 72
                 },
                 "same_first_different_second": {
-                  "max": 0.9996256157635468,
-                  "mean": 0.9984648726706085,
-                  "median": 0.9993167668955962,
-                  "min": 0.9935285085685432,
+                  "max": 0.9999246793492296,
+                  "mean": 0.9987998213226564,
+                  "median": 0.9992802367890139,
+                  "min": 0.9957464212678937,
                   "pairs": 24
                 },
                 "same_second_different_first": {
-                  "max": 0.9757553606237817,
-                  "mean": 0.9614753285482243,
-                  "median": 0.9638784974500663,
-                  "min": 0.9450020151183022,
+                  "max": 0.9719435253061528,
+                  "mean": 0.9409426416480496,
+                  "median": 0.944755944208405,
+                  "min": 0.9110822668711985,
                   "pairs": 24
                 }
               }
@@ -88398,252 +88482,265 @@
               "first": {
                 "per_context": {
                   "AA": {
-                    "active_count_mean": 38213.75,
-                    "conductance_norm_mean": 2949.4010009765625,
+                    "active_count_mean": 22940.25,
+                    "conductance_norm_mean": 2452.8982543945312,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 10152.493896484375,
-                    "stable_active_count": 37415
+                    "membrane_norm_mean": 7803.8626708984375,
+                    "stable_active_count": 20841
                   },
                   "AB": {
-                    "active_count_mean": 38213.75,
-                    "conductance_norm_mean": 2949.4010009765625,
+                    "active_count_mean": 22940.25,
+                    "conductance_norm_mean": 2452.8982543945312,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 10152.493896484375,
-                    "stable_active_count": 37415
+                    "membrane_norm_mean": 7803.8626708984375,
+                    "stable_active_count": 20841
                   },
                   "AC": {
-                    "active_count_mean": 38213.75,
-                    "conductance_norm_mean": 2949.4010009765625,
+                    "active_count_mean": 22940.25,
+                    "conductance_norm_mean": 2452.8982543945312,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 10152.493896484375,
-                    "stable_active_count": 37415
+                    "membrane_norm_mean": 7803.8626708984375,
+                    "stable_active_count": 20841
                   },
                   "AD": {
-                    "active_count_mean": 38213.75,
-                    "conductance_norm_mean": 2949.4010009765625,
+                    "active_count_mean": 22940.25,
+                    "conductance_norm_mean": 2452.8982543945312,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 10152.493896484375,
-                    "stable_active_count": 37415
+                    "membrane_norm_mean": 7803.8626708984375,
+                    "stable_active_count": 20841
                   },
                   "BA": {
-                    "active_count_mean": 34886.0,
-                    "conductance_norm_mean": 2942.18408203125,
+                    "active_count_mean": 20488.0,
+                    "conductance_norm_mean": 2412.470458984375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9683.818359375,
-                    "stable_active_count": 32322
+                    "membrane_norm_mean": 7370.5223388671875,
+                    "stable_active_count": 18892
                   },
                   "BB": {
-                    "active_count_mean": 34886.0,
-                    "conductance_norm_mean": 2942.18408203125,
+                    "active_count_mean": 20488.0,
+                    "conductance_norm_mean": 2412.470458984375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9683.818359375,
-                    "stable_active_count": 32322
+                    "membrane_norm_mean": 7370.5223388671875,
+                    "stable_active_count": 18892
                   },
                   "BC": {
-                    "active_count_mean": 34886.0,
-                    "conductance_norm_mean": 2942.18408203125,
+                    "active_count_mean": 20488.0,
+                    "conductance_norm_mean": 2412.470458984375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9683.818359375,
-                    "stable_active_count": 32322
+                    "membrane_norm_mean": 7370.5223388671875,
+                    "stable_active_count": 18892
                   },
                   "BD": {
-                    "active_count_mean": 34886.0,
-                    "conductance_norm_mean": 2942.18408203125,
+                    "active_count_mean": 20488.0,
+                    "conductance_norm_mean": 2412.470458984375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9683.818359375,
-                    "stable_active_count": 32322
+                    "membrane_norm_mean": 7370.5223388671875,
+                    "stable_active_count": 18892
                   },
                   "CA": {
-                    "active_count_mean": 36457.75,
-                    "conductance_norm_mean": 2818.7262573242188,
+                    "active_count_mean": 21020.0,
+                    "conductance_norm_mean": 2439.1480712890625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9903.553466796875,
-                    "stable_active_count": 36923
+                    "membrane_norm_mean": 7468.7923583984375,
+                    "stable_active_count": 19986
                   },
                   "CB": {
-                    "active_count_mean": 36457.75,
-                    "conductance_norm_mean": 2818.7262573242188,
+                    "active_count_mean": 21020.0,
+                    "conductance_norm_mean": 2439.1480712890625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9903.553466796875,
-                    "stable_active_count": 36923
+                    "membrane_norm_mean": 7468.7923583984375,
+                    "stable_active_count": 19986
                   },
                   "CC": {
-                    "active_count_mean": 36457.75,
-                    "conductance_norm_mean": 2818.7262573242188,
+                    "active_count_mean": 21020.0,
+                    "conductance_norm_mean": 2439.1480712890625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9903.553466796875,
-                    "stable_active_count": 36923
+                    "membrane_norm_mean": 7468.7923583984375,
+                    "stable_active_count": 19986
                   },
                   "CD": {
-                    "active_count_mean": 36457.75,
-                    "conductance_norm_mean": 2818.7262573242188,
+                    "active_count_mean": 21020.0,
+                    "conductance_norm_mean": 2439.1480712890625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9903.553466796875,
-                    "stable_active_count": 36923
+                    "membrane_norm_mean": 7468.7923583984375,
+                    "stable_active_count": 19986
                   },
                   "DA": {
-                    "active_count_mean": 34558.25,
-                    "conductance_norm_mean": 2920.119384765625,
+                    "active_count_mean": 19828.25,
+                    "conductance_norm_mean": 2173.8801879882812,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9650.323974609375,
-                    "stable_active_count": 32559
+                    "membrane_norm_mean": 7233.02685546875,
+                    "stable_active_count": 15833
                   },
                   "DB": {
-                    "active_count_mean": 34558.25,
-                    "conductance_norm_mean": 2920.119384765625,
+                    "active_count_mean": 19828.25,
+                    "conductance_norm_mean": 2173.8801879882812,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9650.323974609375,
-                    "stable_active_count": 32559
+                    "membrane_norm_mean": 7233.02685546875,
+                    "stable_active_count": 15833
                   },
                   "DC": {
-                    "active_count_mean": 34558.25,
-                    "conductance_norm_mean": 2920.119384765625,
+                    "active_count_mean": 19828.25,
+                    "conductance_norm_mean": 2173.8801879882812,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9650.323974609375,
-                    "stable_active_count": 32559
+                    "membrane_norm_mean": 7233.02685546875,
+                    "stable_active_count": 15833
                   },
                   "DD": {
-                    "active_count_mean": 34558.25,
-                    "conductance_norm_mean": 2920.119384765625,
+                    "active_count_mean": 19828.25,
+                    "conductance_norm_mean": 2173.8801879882812,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9650.323974609375,
-                    "stable_active_count": 32559
+                    "membrane_norm_mean": 7233.02685546875,
+                    "stable_active_count": 15833
                   }
                 }
               },
               "pre_go": {
                 "per_context": {
                   "AA": {
-                    "active_count_mean": 98691.5,
-                    "conductance_norm_mean": 4853.913818359375,
+                    "active_count_mean": 95073.0,
+                    "conductance_norm_mean": 4754.5032958984375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16985.02392578125,
-                    "stable_active_count": 98347
+                    "membrane_norm_mean": 16509.3076171875,
+                    "stable_active_count": 93010
                   },
                   "AB": {
-                    "active_count_mean": 98616.75,
-                    "conductance_norm_mean": 4806.0902099609375,
+                    "active_count_mean": 94877.5,
+                    "conductance_norm_mean": 4706.9639892578125,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16977.166015625,
-                    "stable_active_count": 98298
+                    "membrane_norm_mean": 16493.96044921875,
+                    "stable_active_count": 92935
                   },
                   "AC": {
-                    "active_count_mean": 98640.5,
-                    "conductance_norm_mean": 4792.282470703125,
+                    "active_count_mean": 94876.5,
+                    "conductance_norm_mean": 4806.54345703125,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16977.7861328125,
-                    "stable_active_count": 98318
+                    "membrane_norm_mean": 16494.02783203125,
+                    "stable_active_count": 92930
                   },
                   "AD": {
-                    "active_count_mean": 98642.25,
-                    "conductance_norm_mean": 4816.0460205078125,
+                    "active_count_mean": 94896.5,
+                    "conductance_norm_mean": 4781.793701171875,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16979.67919921875,
-                    "stable_active_count": 98321
+                    "membrane_norm_mean": 16495.872802734375,
+                    "stable_active_count": 92991
                   },
                   "BA": {
-                    "active_count_mean": 98884.25,
-                    "conductance_norm_mean": 4700.6907958984375,
+                    "active_count_mean": 91449.0,
+                    "conductance_norm_mean": 4760.255859375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16971.80615234375,
-                    "stable_active_count": 97712
+                    "membrane_norm_mean": 16145.284912109375,
+                    "stable_active_count": 90083
                   },
                   "BB": {
-                    "active_count_mean": 98961.5,
-                    "conductance_norm_mean": 4720.4951171875,
+                    "active_count_mean": 91444.75,
+                    "conductance_norm_mean": 4756.12060546875,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16977.60986328125,
-                    "stable_active_count": 97698
+                    "membrane_norm_mean": 16145.443603515625,
+                    "stable_active_count": 90123
                   },
                   "BC": {
-                    "active_count_mean": 98877.25,
-                    "conductance_norm_mean": 4816.3350830078125,
+                    "active_count_mean": 91448.0,
+                    "conductance_norm_mean": 4737.7242431640625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16969.67138671875,
-                    "stable_active_count": 97705
+                    "membrane_norm_mean": 16145.170166015625,
+                    "stable_active_count": 90095
                   },
                   "BD": {
-                    "active_count_mean": 98932.5,
-                    "conductance_norm_mean": 4682.26318359375,
+                    "active_count_mean": 91458.5,
+                    "conductance_norm_mean": 4697.375244140625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16974.50244140625,
-                    "stable_active_count": 97734
+                    "membrane_norm_mean": 16144.913818359375,
+                    "stable_active_count": 90098
                   },
                   "CA": {
-                    "active_count_mean": 102260.75,
-                    "conductance_norm_mean": 4756.8712158203125,
+                    "active_count_mean": 93822.75,
+                    "conductance_norm_mean": 4777.96923828125,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17252.24853515625,
-                    "stable_active_count": 101472
+                    "membrane_norm_mean": 16367.4677734375,
+                    "stable_active_count": 92369
                   },
                   "CB": {
-                    "active_count_mean": 102216.0,
-                    "conductance_norm_mean": 4752.85498046875,
+                    "active_count_mean": 93808.0,
+                    "conductance_norm_mean": 4762.941650390625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17246.60986328125,
-                    "stable_active_count": 101472
+                    "membrane_norm_mean": 16364.873779296875,
+                    "stable_active_count": 92365
                   },
                   "CC": {
-                    "active_count_mean": 102186.25,
-                    "conductance_norm_mean": 4811.29638671875,
+                    "active_count_mean": 93775.25,
+                    "conductance_norm_mean": 4744.18994140625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17245.17626953125,
-                    "stable_active_count": 101379
+                    "membrane_norm_mean": 16361.56591796875,
+                    "stable_active_count": 92353
                   },
                   "CD": {
-                    "active_count_mean": 102262.0,
-                    "conductance_norm_mean": 4788.3802490234375,
+                    "active_count_mean": 93799.0,
+                    "conductance_norm_mean": 4789.4429931640625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17250.62060546875,
-                    "stable_active_count": 101490
+                    "membrane_norm_mean": 16363.7919921875,
+                    "stable_active_count": 92350
                   },
                   "DA": {
-                    "active_count_mean": 98582.25,
-                    "conductance_norm_mean": 4648.5389404296875,
+                    "active_count_mean": 89338.25,
+                    "conductance_norm_mean": 4512.271484375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16947.12646484375,
-                    "stable_active_count": 96395
+                    "membrane_norm_mean": 15937.56591796875,
+                    "stable_active_count": 85363
                   },
                   "DB": {
-                    "active_count_mean": 98615.75,
-                    "conductance_norm_mean": 4671.5491943359375,
+                    "active_count_mean": 89382.25,
+                    "conductance_norm_mean": 4456.16796875,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16949.88427734375,
-                    "stable_active_count": 96435
+                    "membrane_norm_mean": 15941.015380859375,
+                    "stable_active_count": 85423
                   },
                   "DC": {
-                    "active_count_mean": 98761.75,
-                    "conductance_norm_mean": 4703.4210205078125,
+                    "active_count_mean": 89374.75,
+                    "conductance_norm_mean": 4481.79150390625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16963.34130859375,
-                    "stable_active_count": 96899
+                    "membrane_norm_mean": 15940.3603515625,
+                    "stable_active_count": 85223
                   },
                   "DD": {
-                    "active_count_mean": 98939.25,
-                    "conductance_norm_mean": 4694.75634765625,
+                    "active_count_mean": 89421.0,
+                    "conductance_norm_mean": 4473.45654296875,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16978.10400390625,
-                    "stable_active_count": 96555
+                    "membrane_norm_mean": 15945.635009765625,
+                    "stable_active_count": 85422
                   }
                 }
               }
             }
           },
           "persistent_state_unchanged": true,
-          "rate_hz": 25.0
+          "rate_hz": 25.0,
+          "requested_item_rate_hz": 25.0
         },
         "first_memory": {
           "CURRENT_RANDOM_ENCODER": {
             "accuracy": 0.1875,
-            "no_decision_count": 2
+            "effective_first_rate_hz": 205.0,
+            "effective_go_rate_hz": 205.0,
+            "effective_second_rate_hz": 205.0,
+            "no_decision_count": 2,
+            "requested_item_rate_hz": 205.0
           },
           "MB_ROUTED_GENERIC_205HZ": {
             "accuracy": 0.25,
-            "no_decision_count": 0
+            "effective_first_rate_hz": 205.0,
+            "effective_go_rate_hz": 205.0,
+            "effective_second_rate_hz": 205.0,
+            "no_decision_count": 0,
+            "requested_item_rate_hz": 205.0
           },
           "MB_ROUTED_SPARSE_OPERATING_POINT": {
             "accuracy": 0.25,
-            "no_decision_count": 0
+            "effective_first_rate_hz": 25.0,
+            "effective_go_rate_hz": 205.0,
+            "effective_second_rate_hz": 25.0,
+            "no_decision_count": 0,
+            "requested_item_rate_hz": 25.0
           }
         },
         "seed": 251
@@ -88680,6 +88777,9 @@
               }
             }
           },
+          "effective_first_rate_hz": 205.0,
+          "effective_go_rate_hz": 205.0,
+          "effective_second_rate_hz": 205.0,
           "kc_offset_mv": 0.0,
           "kc_only_active_set_jaccard": {
             "first": 0.3333333333333333,
@@ -89244,7 +89344,8 @@
             }
           },
           "persistent_state_unchanged": true,
-          "rate_hz": 205.0
+          "rate_hz": 205.0,
+          "requested_item_rate_hz": 205.0
         },
         "MB_ROUTED_GENERIC_205HZ": {
           "compact_cosine_similarity": {
@@ -89277,6 +89378,9 @@
               }
             }
           },
+          "effective_first_rate_hz": 205.0,
+          "effective_go_rate_hz": 205.0,
+          "effective_second_rate_hz": 205.0,
           "kc_offset_mv": 0.0,
           "kc_only_active_set_jaccard": {
             "first": 0.6789979523185166,
@@ -89841,13 +89945,14 @@
             }
           },
           "persistent_state_unchanged": true,
-          "rate_hz": 205.0
+          "rate_hz": 205.0,
+          "requested_item_rate_hz": 205.0
         },
         "MB_ROUTED_SPARSE_OPERATING_POINT": {
           "compact_cosine_similarity": {
             "first": {
               "different_first_and_second": {
-                "mean": 0.9271569171946145,
+                "mean": 0.9853788678540452,
                 "pairs": 72
               },
               "same_first_different_second": {
@@ -89855,29 +89960,32 @@
                 "pairs": 24
               },
               "same_second_different_first": {
-                "mean": 0.9271569171946145,
+                "mean": 0.9853788678540453,
                 "pairs": 24
               }
             },
             "pre_go": {
               "different_first_and_second": {
-                "mean": 0.9987277587377892,
+                "mean": 0.9967944354981128,
                 "pairs": 72
               },
               "same_first_different_second": {
-                "mean": 0.9996131307142481,
+                "mean": 0.9991800517024201,
                 "pairs": 24
               },
               "same_second_different_first": {
-                "mean": 0.998736772618631,
+                "mean": 0.9968004530760881,
                 "pairs": 24
               }
             }
           },
+          "effective_first_rate_hz": 25.0,
+          "effective_go_rate_hz": 205.0,
+          "effective_second_rate_hz": 25.0,
           "kc_offset_mv": 0.0,
           "kc_only_active_set_jaccard": {
-            "first": 0.6789979523185166,
-            "pre_go": 0.9112319810153509
+            "first": 0.2634920634920635,
+            "pre_go": 0.9178476860452389
           },
           "kc_only_context_specific_neurons": {
             "first": {
@@ -89902,30 +90010,30 @@
               }
             },
             "pre_go": {
-              "mean": 3.3125,
+              "mean": 2.0625,
               "per_context": {
-                "AA": 9,
-                "AB": 0,
-                "AC": 3,
-                "AD": 1,
+                "AA": 0,
+                "AB": 11,
+                "AC": 1,
+                "AD": 0,
                 "BA": 1,
-                "BB": 8,
-                "BC": 0,
-                "BD": 1,
-                "CA": 1,
-                "CB": 0,
-                "CC": 9,
-                "CD": 2,
-                "DA": 1,
-                "DB": 1,
-                "DC": 4,
-                "DD": 12
+                "BB": 3,
+                "BC": 3,
+                "BD": 3,
+                "CA": 2,
+                "CB": 1,
+                "CC": 2,
+                "CD": 1,
+                "DA": 4,
+                "DB": 0,
+                "DC": 1,
+                "DD": 0
               }
             }
           },
           "mbon_representation_similarity": {
-            "first": 0.7757671957671958,
-            "pre_go": 0.9677284211763324
+            "first": 0.4666666666666667,
+            "pre_go": 0.9376632338660642
           },
           "metrics": {
             "conjunctive_specific_pools": {
@@ -89941,97 +90049,97 @@
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 36715
+                    "stable_active_count": 13281
                   },
                   "AB": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 36715
+                    "stable_active_count": 13281
                   },
                   "AC": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 36715
+                    "stable_active_count": 13281
                   },
                   "AD": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 36715
+                    "stable_active_count": 13281
                   },
                   "BA": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32616
+                    "stable_active_count": 15747
                   },
                   "BB": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32616
+                    "stable_active_count": 15747
                   },
                   "BC": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32616
+                    "stable_active_count": 15747
                   },
                   "BD": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32616
+                    "stable_active_count": 15747
                   },
                   "CA": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 33813
+                    "stable_active_count": 11236
                   },
                   "CB": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 33813
+                    "stable_active_count": 11236
                   },
                   "CC": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 33813
+                    "stable_active_count": 11236
                   },
                   "CD": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 33813
+                    "stable_active_count": 11236
                   },
                   "DA": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 31648
+                    "stable_active_count": 13654
                   },
                   "DB": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 31648
+                    "stable_active_count": 13654
                   },
                   "DC": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 31648
+                    "stable_active_count": 13654
                   },
                   "DD": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 31648
+                    "stable_active_count": 13654
                   }
                 },
                 "strict_aggregate": {
@@ -90043,113 +90151,113 @@
               },
               "pre_go": {
                 "broader_aggregate": {
-                  "max": 72,
-                  "mean": 7.0,
-                  "median": 1.0,
+                  "max": 533,
+                  "mean": 60.4375,
+                  "median": 1.5,
                   "min": 0
                 },
                 "per_context": {
                   "AA": {
                     "broader_conjunction_count": 1,
                     "conjunctive_specific_count": 1,
-                    "conjunctive_specific_fraction": 1.0178945868365872e-05,
-                    "stable_active_count": 98242
+                    "conjunctive_specific_fraction": 1.1955858968687606e-05,
+                    "stable_active_count": 83641
                   },
                   "AB": {
-                    "broader_conjunction_count": 1,
-                    "conjunctive_specific_count": 1,
-                    "conjunctive_specific_fraction": 1.0179360328996926e-05,
-                    "stable_active_count": 98238
+                    "broader_conjunction_count": 42,
+                    "conjunctive_specific_count": 42,
+                    "conjunctive_specific_fraction": 0.0005022541645241142,
+                    "stable_active_count": 83623
                   },
                   "AC": {
-                    "broader_conjunction_count": 0,
-                    "conjunctive_specific_count": 0,
-                    "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 98110
+                    "broader_conjunction_count": 1,
+                    "conjunctive_specific_count": 1,
+                    "conjunctive_specific_fraction": 1.1969740496026046e-05,
+                    "stable_active_count": 83544
                   },
                   "AD": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 98240
+                    "stable_active_count": 83567
                   },
                   "BA": {
-                    "broader_conjunction_count": 1,
-                    "conjunctive_specific_count": 1,
-                    "conjunctive_specific_fraction": 1.0279710934528522e-05,
-                    "stable_active_count": 97279
-                  },
-                  "BB": {
-                    "broader_conjunction_count": 1,
-                    "conjunctive_specific_count": 1,
-                    "conjunctive_specific_fraction": 1.027622492601118e-05,
-                    "stable_active_count": 97312
-                  },
-                  "BC": {
-                    "broader_conjunction_count": 0,
-                    "conjunctive_specific_count": 0,
-                    "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 97261
-                  },
-                  "BD": {
-                    "broader_conjunction_count": 0,
-                    "conjunctive_specific_count": 0,
-                    "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 97230
-                  },
-                  "CA": {
-                    "broader_conjunction_count": 5,
-                    "conjunctive_specific_count": 5,
-                    "conjunctive_specific_fraction": 4.9958035250389676e-05,
-                    "stable_active_count": 100084
-                  },
-                  "CB": {
-                    "broader_conjunction_count": 1,
-                    "conjunctive_specific_count": 1,
-                    "conjunctive_specific_fraction": 9.993104757717175e-06,
-                    "stable_active_count": 100069
-                  },
-                  "CC": {
-                    "broader_conjunction_count": 25,
-                    "conjunctive_specific_count": 25,
-                    "conjunctive_specific_fraction": 0.0002497527447826652,
-                    "stable_active_count": 100099
-                  },
-                  "CD": {
-                    "broader_conjunction_count": 72,
-                    "conjunctive_specific_count": 72,
-                    "conjunctive_specific_fraction": 0.000719208870242733,
-                    "stable_active_count": 100110
-                  },
-                  "DA": {
-                    "broader_conjunction_count": 1,
-                    "conjunctive_specific_count": 1,
-                    "conjunctive_specific_fraction": 1.02199329572398e-05,
-                    "stable_active_count": 97848
-                  },
-                  "DB": {
                     "broader_conjunction_count": 2,
                     "conjunctive_specific_count": 2,
-                    "conjunctive_specific_fraction": 2.0480052428934218e-05,
-                    "stable_active_count": 97656
+                    "conjunctive_specific_fraction": 2.3288580444579e-05,
+                    "stable_active_count": 85879
+                  },
+                  "BB": {
+                    "broader_conjunction_count": 3,
+                    "conjunctive_specific_count": 3,
+                    "conjunctive_specific_fraction": 3.5277931302108444e-05,
+                    "stable_active_count": 85039
+                  },
+                  "BC": {
+                    "broader_conjunction_count": 5,
+                    "conjunctive_specific_count": 5,
+                    "conjunctive_specific_fraction": 5.8230265762932945e-05,
+                    "stable_active_count": 85866
+                  },
+                  "BD": {
+                    "broader_conjunction_count": 6,
+                    "conjunctive_specific_count": 6,
+                    "conjunctive_specific_fraction": 6.989829797644427e-05,
+                    "stable_active_count": 85839
+                  },
+                  "CA": {
+                    "broader_conjunction_count": 0,
+                    "conjunctive_specific_count": 0,
+                    "conjunctive_specific_fraction": 0.0,
+                    "stable_active_count": 81796
+                  },
+                  "CB": {
+                    "broader_conjunction_count": 354,
+                    "conjunctive_specific_count": 354,
+                    "conjunctive_specific_fraction": 0.004304056025678436,
+                    "stable_active_count": 82248
+                  },
+                  "CC": {
+                    "broader_conjunction_count": 0,
+                    "conjunctive_specific_count": 0,
+                    "conjunctive_specific_fraction": 0.0,
+                    "stable_active_count": 81810
+                  },
+                  "CD": {
+                    "broader_conjunction_count": 533,
+                    "conjunctive_specific_count": 533,
+                    "conjunctive_specific_fraction": 0.006476463583562177,
+                    "stable_active_count": 82298
+                  },
+                  "DA": {
+                    "broader_conjunction_count": 20,
+                    "conjunctive_specific_count": 20,
+                    "conjunctive_specific_fraction": 0.00025744001647616104,
+                    "stable_active_count": 77688
+                  },
+                  "DB": {
+                    "broader_conjunction_count": 0,
+                    "conjunctive_specific_count": 0,
+                    "conjunctive_specific_fraction": 0.0,
+                    "stable_active_count": 78110
                   },
                   "DC": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 97848
+                    "stable_active_count": 78016
                   },
                   "DD": {
-                    "broader_conjunction_count": 2,
-                    "conjunctive_specific_count": 2,
-                    "conjunctive_specific_fraction": 2.0438403760666292e-05,
-                    "stable_active_count": 97855
+                    "broader_conjunction_count": 0,
+                    "conjunctive_specific_count": 0,
+                    "conjunctive_specific_fraction": 0.0,
+                    "stable_active_count": 78043
                   }
                 },
                 "strict_aggregate": {
-                  "max": 72,
-                  "mean": 7.0,
-                  "median": 1.0,
+                  "max": 533,
+                  "mean": 60.4375,
+                  "median": 1.5,
                   "min": 0
                 }
               }
@@ -90157,10 +90265,10 @@
             "pairwise_context_similarity": {
               "first": {
                 "different_first_and_second": {
-                  "max": 0.9449774522562876,
-                  "mean": 0.8909628047978243,
-                  "median": 0.8874347320661591,
-                  "min": 0.8369249785038693,
+                  "max": 0.7887084017764799,
+                  "mean": 0.6433295169825942,
+                  "median": 0.6635401727262149,
+                  "min": 0.4204188780459967,
                   "pairs": 72
                 },
                 "same_first_different_second": {
@@ -90171,33 +90279,33 @@
                   "pairs": 24
                 },
                 "same_second_different_first": {
-                  "max": 0.9449774522562876,
-                  "mean": 0.8909628047978243,
-                  "median": 0.8874347320661591,
-                  "min": 0.8369249785038693,
+                  "max": 0.7887084017764799,
+                  "mean": 0.6433295169825942,
+                  "median": 0.6635401727262149,
+                  "min": 0.4204188780459967,
                   "pairs": 24
                 }
               },
               "pre_go": {
                 "different_first_and_second": {
-                  "max": 0.9747289492349782,
-                  "mean": 0.9654952175735586,
-                  "median": 0.9664108590164373,
-                  "min": 0.9511739409816619,
+                  "max": 0.9574915387369904,
+                  "mean": 0.9233555900753441,
+                  "median": 0.9176624809845697,
+                  "min": 0.882431844121004,
                   "pairs": 72
                 },
                 "same_first_different_second": {
-                  "max": 0.9997557301632537,
-                  "mean": 0.9989233976534053,
-                  "median": 0.9990391770082669,
-                  "min": 0.9973233350019922,
+                  "max": 0.9994761045462484,
+                  "mean": 0.9947658994411182,
+                  "median": 0.9958467277654537,
+                  "min": 0.9872945325426635,
                   "pairs": 24
                 },
                 "same_second_different_first": {
-                  "max": 0.9741995585167784,
-                  "mean": 0.965504669378063,
-                  "median": 0.9664389249582928,
-                  "min": 0.9514703264975182,
+                  "max": 0.9574636755170619,
+                  "mean": 0.9233348973388446,
+                  "median": 0.9185842449155339,
+                  "min": 0.8882784750177599,
                   "pairs": 24
                 }
               }
@@ -90206,252 +90314,265 @@
               "first": {
                 "per_context": {
                   "AA": {
-                    "active_count_mean": 38770.5,
-                    "conductance_norm_mean": 3038.8311767578125,
+                    "active_count_mean": 15583.25,
+                    "conductance_norm_mean": 2052.823974609375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 10227.52783203125,
-                    "stable_active_count": 36715
+                    "membrane_norm_mean": 6331.33203125,
+                    "stable_active_count": 13281
                   },
                   "AB": {
-                    "active_count_mean": 38770.5,
-                    "conductance_norm_mean": 3038.8311767578125,
+                    "active_count_mean": 15583.25,
+                    "conductance_norm_mean": 2052.823974609375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 10227.52783203125,
-                    "stable_active_count": 36715
+                    "membrane_norm_mean": 6331.33203125,
+                    "stable_active_count": 13281
                   },
                   "AC": {
-                    "active_count_mean": 38770.5,
-                    "conductance_norm_mean": 3038.8311767578125,
+                    "active_count_mean": 15583.25,
+                    "conductance_norm_mean": 2052.823974609375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 10227.52783203125,
-                    "stable_active_count": 36715
+                    "membrane_norm_mean": 6331.33203125,
+                    "stable_active_count": 13281
                   },
                   "AD": {
-                    "active_count_mean": 38770.5,
-                    "conductance_norm_mean": 3038.8311767578125,
+                    "active_count_mean": 15583.25,
+                    "conductance_norm_mean": 2052.823974609375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 10227.52783203125,
-                    "stable_active_count": 36715
+                    "membrane_norm_mean": 6331.33203125,
+                    "stable_active_count": 13281
                   },
                   "BA": {
-                    "active_count_mean": 33770.0,
-                    "conductance_norm_mean": 2822.2337036132812,
+                    "active_count_mean": 16076.25,
+                    "conductance_norm_mean": 1964.34619140625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9543.12841796875,
-                    "stable_active_count": 32616
+                    "membrane_norm_mean": 6414.56591796875,
+                    "stable_active_count": 15747
                   },
                   "BB": {
-                    "active_count_mean": 33770.0,
-                    "conductance_norm_mean": 2822.2337036132812,
+                    "active_count_mean": 16076.25,
+                    "conductance_norm_mean": 1964.34619140625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9543.12841796875,
-                    "stable_active_count": 32616
+                    "membrane_norm_mean": 6414.56591796875,
+                    "stable_active_count": 15747
                   },
                   "BC": {
-                    "active_count_mean": 33770.0,
-                    "conductance_norm_mean": 2822.2337036132812,
+                    "active_count_mean": 16076.25,
+                    "conductance_norm_mean": 1964.34619140625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9543.12841796875,
-                    "stable_active_count": 32616
+                    "membrane_norm_mean": 6414.56591796875,
+                    "stable_active_count": 15747
                   },
                   "BD": {
-                    "active_count_mean": 33770.0,
-                    "conductance_norm_mean": 2822.2337036132812,
+                    "active_count_mean": 16076.25,
+                    "conductance_norm_mean": 1964.34619140625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9543.12841796875,
-                    "stable_active_count": 32616
+                    "membrane_norm_mean": 6414.56591796875,
+                    "stable_active_count": 15747
                   },
                   "CA": {
-                    "active_count_mean": 35561.5,
-                    "conductance_norm_mean": 2942.8068237304688,
+                    "active_count_mean": 14366.0,
+                    "conductance_norm_mean": 1988.7454528808594,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9793.671142578125,
-                    "stable_active_count": 33813
+                    "membrane_norm_mean": 5929.837341308594,
+                    "stable_active_count": 11236
                   },
                   "CB": {
-                    "active_count_mean": 35561.5,
-                    "conductance_norm_mean": 2942.8068237304688,
+                    "active_count_mean": 14366.0,
+                    "conductance_norm_mean": 1988.7454528808594,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9793.671142578125,
-                    "stable_active_count": 33813
+                    "membrane_norm_mean": 5929.837341308594,
+                    "stable_active_count": 11236
                   },
                   "CC": {
-                    "active_count_mean": 35561.5,
-                    "conductance_norm_mean": 2942.8068237304688,
+                    "active_count_mean": 14366.0,
+                    "conductance_norm_mean": 1988.7454528808594,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9793.671142578125,
-                    "stable_active_count": 33813
+                    "membrane_norm_mean": 5929.837341308594,
+                    "stable_active_count": 11236
                   },
                   "CD": {
-                    "active_count_mean": 35561.5,
-                    "conductance_norm_mean": 2942.8068237304688,
+                    "active_count_mean": 14366.0,
+                    "conductance_norm_mean": 1988.7454528808594,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9793.671142578125,
-                    "stable_active_count": 33813
+                    "membrane_norm_mean": 5929.837341308594,
+                    "stable_active_count": 11236
                   },
                   "DA": {
-                    "active_count_mean": 33150.25,
-                    "conductance_norm_mean": 2868.4347534179688,
+                    "active_count_mean": 12877.75,
+                    "conductance_norm_mean": 1892.0265655517578,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9447.092041015625,
-                    "stable_active_count": 31648
+                    "membrane_norm_mean": 5691.7708740234375,
+                    "stable_active_count": 13654
                   },
                   "DB": {
-                    "active_count_mean": 33150.25,
-                    "conductance_norm_mean": 2868.4347534179688,
+                    "active_count_mean": 12877.75,
+                    "conductance_norm_mean": 1892.0265655517578,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9447.092041015625,
-                    "stable_active_count": 31648
+                    "membrane_norm_mean": 5691.7708740234375,
+                    "stable_active_count": 13654
                   },
                   "DC": {
-                    "active_count_mean": 33150.25,
-                    "conductance_norm_mean": 2868.4347534179688,
+                    "active_count_mean": 12877.75,
+                    "conductance_norm_mean": 1892.0265655517578,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9447.092041015625,
-                    "stable_active_count": 31648
+                    "membrane_norm_mean": 5691.7708740234375,
+                    "stable_active_count": 13654
                   },
                   "DD": {
-                    "active_count_mean": 33150.25,
-                    "conductance_norm_mean": 2868.4347534179688,
+                    "active_count_mean": 12877.75,
+                    "conductance_norm_mean": 1892.0265655517578,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9447.092041015625,
-                    "stable_active_count": 31648
+                    "membrane_norm_mean": 5691.7708740234375,
+                    "stable_active_count": 13654
                   }
                 }
               },
               "pre_go": {
                 "per_context": {
                   "AA": {
-                    "active_count_mean": 99443.5,
-                    "conductance_norm_mean": 4804.79248046875,
+                    "active_count_mean": 86151.0,
+                    "conductance_norm_mean": 4372.2034912109375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17036.5732421875,
-                    "stable_active_count": 98242
+                    "membrane_norm_mean": 15573.814208984375,
+                    "stable_active_count": 83641
                   },
                   "AB": {
-                    "active_count_mean": 99460.5,
-                    "conductance_norm_mean": 4806.0748291015625,
+                    "active_count_mean": 86456.0,
+                    "conductance_norm_mean": 4393.042724609375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17037.53125,
-                    "stable_active_count": 98238
+                    "membrane_norm_mean": 15596.438232421875,
+                    "stable_active_count": 83623
                   },
                   "AC": {
-                    "active_count_mean": 99438.5,
-                    "conductance_norm_mean": 4802.8814697265625,
+                    "active_count_mean": 86084.25,
+                    "conductance_norm_mean": 4323.375732421875,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17034.326171875,
-                    "stable_active_count": 98110
+                    "membrane_norm_mean": 15564.59033203125,
+                    "stable_active_count": 83544
                   },
                   "AD": {
-                    "active_count_mean": 99481.0,
-                    "conductance_norm_mean": 4734.2232666015625,
+                    "active_count_mean": 86127.0,
+                    "conductance_norm_mean": 4343.6907958984375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17036.23095703125,
-                    "stable_active_count": 98240
+                    "membrane_norm_mean": 15569.60009765625,
+                    "stable_active_count": 83567
                   },
                   "BA": {
-                    "active_count_mean": 98981.0,
-                    "conductance_norm_mean": 4766.6043701171875,
+                    "active_count_mean": 83200.25,
+                    "conductance_norm_mean": 4436.4268798828125,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16988.27783203125,
-                    "stable_active_count": 97279
+                    "membrane_norm_mean": 15282.355712890625,
+                    "stable_active_count": 85879
                   },
                   "BB": {
-                    "active_count_mean": 98986.75,
-                    "conductance_norm_mean": 4891.8416748046875,
+                    "active_count_mean": 82865.0,
+                    "conductance_norm_mean": 4407.630554199219,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16987.3115234375,
-                    "stable_active_count": 97312
+                    "membrane_norm_mean": 15251.991455078125,
+                    "stable_active_count": 85039
                   },
                   "BC": {
-                    "active_count_mean": 98987.25,
-                    "conductance_norm_mean": 4766.00634765625,
+                    "active_count_mean": 83260.75,
+                    "conductance_norm_mean": 4450.000915527344,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16985.66259765625,
-                    "stable_active_count": 97261
+                    "membrane_norm_mean": 15289.070556640625,
+                    "stable_active_count": 85866
                   },
                   "BD": {
-                    "active_count_mean": 98927.25,
-                    "conductance_norm_mean": 4847.70654296875,
+                    "active_count_mean": 83191.25,
+                    "conductance_norm_mean": 4397.94189453125,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16982.513671875,
-                    "stable_active_count": 97230
+                    "membrane_norm_mean": 15282.99609375,
+                    "stable_active_count": 85839
                   },
                   "CA": {
-                    "active_count_mean": 101113.0,
-                    "conductance_norm_mean": 4844.3695068359375,
+                    "active_count_mean": 82627.0,
+                    "conductance_norm_mean": 4360.103210449219,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17165.01318359375,
-                    "stable_active_count": 100084
+                    "membrane_norm_mean": 15190.944580078125,
+                    "stable_active_count": 81796
                   },
                   "CB": {
-                    "active_count_mean": 101137.25,
-                    "conductance_norm_mean": 4830.378662109375,
+                    "active_count_mean": 82790.0,
+                    "conductance_norm_mean": 4372.190856933594,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17166.27587890625,
-                    "stable_active_count": 100069
+                    "membrane_norm_mean": 15206.154541015625,
+                    "stable_active_count": 82248
                   },
                   "CC": {
-                    "active_count_mean": 101105.0,
-                    "conductance_norm_mean": 4855.303955078125,
+                    "active_count_mean": 82754.5,
+                    "conductance_norm_mean": 4381.47509765625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17164.7626953125,
-                    "stable_active_count": 100099
+                    "membrane_norm_mean": 15203.812744140625,
+                    "stable_active_count": 81810
                   },
                   "CD": {
-                    "active_count_mean": 101108.0,
-                    "conductance_norm_mean": 4780.4830322265625,
+                    "active_count_mean": 82769.0,
+                    "conductance_norm_mean": 4391.550231933594,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17162.41943359375,
-                    "stable_active_count": 100110
+                    "membrane_norm_mean": 15202.15478515625,
+                    "stable_active_count": 82298
                   },
                   "DA": {
-                    "active_count_mean": 99664.0,
-                    "conductance_norm_mean": 4819.6634521484375,
+                    "active_count_mean": 73107.0,
+                    "conductance_norm_mean": 4099.071594238281,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17026.3642578125,
-                    "stable_active_count": 97848
+                    "membrane_norm_mean": 14195.193359375,
+                    "stable_active_count": 77688
                   },
                   "DB": {
-                    "active_count_mean": 99584.75,
-                    "conductance_norm_mean": 4800.4329833984375,
+                    "active_count_mean": 73276.5,
+                    "conductance_norm_mean": 4137.6343994140625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17019.859375,
-                    "stable_active_count": 97656
+                    "membrane_norm_mean": 14215.193359375,
+                    "stable_active_count": 78110
                   },
                   "DC": {
-                    "active_count_mean": 99459.5,
-                    "conductance_norm_mean": 4799.8367919921875,
+                    "active_count_mean": 72958.25,
+                    "conductance_norm_mean": 4060.17578125,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17007.58447265625,
-                    "stable_active_count": 97848
+                    "membrane_norm_mean": 14178.455078125,
+                    "stable_active_count": 78016
                   },
                   "DD": {
-                    "active_count_mean": 99683.0,
-                    "conductance_norm_mean": 4795.4287109375,
+                    "active_count_mean": 73004.75,
+                    "conductance_norm_mean": 4067.1633911132812,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17027.3935546875,
-                    "stable_active_count": 97855
+                    "membrane_norm_mean": 14183.845703125,
+                    "stable_active_count": 78043
                   }
                 }
               }
             }
           },
           "persistent_state_unchanged": true,
-          "rate_hz": 25.0
+          "rate_hz": 25.0,
+          "requested_item_rate_hz": 25.0
         },
         "first_memory": {
           "CURRENT_RANDOM_ENCODER": {
             "accuracy": 0.1875,
-            "no_decision_count": 3
+            "effective_first_rate_hz": 205.0,
+            "effective_go_rate_hz": 205.0,
+            "effective_second_rate_hz": 205.0,
+            "no_decision_count": 3,
+            "requested_item_rate_hz": 205.0
           },
           "MB_ROUTED_GENERIC_205HZ": {
             "accuracy": 0.25,
-            "no_decision_count": 0
+            "effective_first_rate_hz": 205.0,
+            "effective_go_rate_hz": 205.0,
+            "effective_second_rate_hz": 205.0,
+            "no_decision_count": 0,
+            "requested_item_rate_hz": 205.0
           },
           "MB_ROUTED_SPARSE_OPERATING_POINT": {
             "accuracy": 0.25,
-            "no_decision_count": 0
+            "effective_first_rate_hz": 25.0,
+            "effective_go_rate_hz": 205.0,
+            "effective_second_rate_hz": 25.0,
+            "no_decision_count": 0,
+            "requested_item_rate_hz": 25.0
           }
         },
         "seed": 257
@@ -90488,6 +90609,9 @@
               }
             }
           },
+          "effective_first_rate_hz": 205.0,
+          "effective_go_rate_hz": 205.0,
+          "effective_second_rate_hz": 205.0,
           "kc_offset_mv": 0.0,
           "kc_only_active_set_jaccard": {
             "first": 0.3333333333333333,
@@ -91052,7 +91176,8 @@
             }
           },
           "persistent_state_unchanged": true,
-          "rate_hz": 205.0
+          "rate_hz": 205.0,
+          "requested_item_rate_hz": 205.0
         },
         "MB_ROUTED_GENERIC_205HZ": {
           "compact_cosine_similarity": {
@@ -91085,6 +91210,9 @@
               }
             }
           },
+          "effective_first_rate_hz": 205.0,
+          "effective_go_rate_hz": 205.0,
+          "effective_second_rate_hz": 205.0,
           "kc_offset_mv": 0.0,
           "kc_only_active_set_jaccard": {
             "first": 0.6780740765417835,
@@ -91649,13 +91777,14 @@
             }
           },
           "persistent_state_unchanged": true,
-          "rate_hz": 205.0
+          "rate_hz": 205.0,
+          "requested_item_rate_hz": 205.0
         },
         "MB_ROUTED_SPARSE_OPERATING_POINT": {
           "compact_cosine_similarity": {
             "first": {
               "different_first_and_second": {
-                "mean": 0.9384803586526478,
+                "mean": 0.9880627818877282,
                 "pairs": 72
               },
               "same_first_different_second": {
@@ -91663,29 +91792,32 @@
                 "pairs": 24
               },
               "same_second_different_first": {
-                "mean": 0.9384803586526477,
+                "mean": 0.9880627818877284,
                 "pairs": 24
               }
             },
             "pre_go": {
               "different_first_and_second": {
-                "mean": 0.9986422025667222,
+                "mean": 0.9969224926887397,
                 "pairs": 72
               },
               "same_first_different_second": {
-                "mean": 0.9996509122784433,
+                "mean": 0.9993611691152458,
                 "pairs": 24
               },
               "same_second_different_first": {
-                "mean": 0.9986350306784183,
+                "mean": 0.9968917747107624,
                 "pairs": 24
               }
             }
           },
+          "effective_first_rate_hz": 25.0,
+          "effective_go_rate_hz": 205.0,
+          "effective_second_rate_hz": 25.0,
           "kc_offset_mv": 0.0,
           "kc_only_active_set_jaccard": {
-            "first": 0.6780740765417835,
-            "pre_go": 0.9199736168939429
+            "first": 0.6,
+            "pre_go": 0.9133264948836142
           },
           "kc_only_context_specific_neurons": {
             "first": {
@@ -91710,30 +91842,30 @@
               }
             },
             "pre_go": {
-              "mean": 3.75,
+              "mean": 1.0,
               "per_context": {
-                "AA": 13,
-                "AB": 1,
-                "AC": 2,
+                "AA": 0,
+                "AB": 0,
+                "AC": 0,
                 "AD": 0,
-                "BA": 2,
-                "BB": 11,
-                "BC": 2,
+                "BA": 3,
+                "BB": 3,
+                "BC": 1,
                 "BD": 0,
                 "CA": 2,
-                "CB": 1,
-                "CC": 18,
-                "CD": 0,
+                "CB": 2,
+                "CC": 1,
+                "CD": 2,
                 "DA": 0,
-                "DB": 1,
-                "DC": 0,
-                "DD": 7
+                "DB": 0,
+                "DC": 1,
+                "DD": 1
               }
             }
           },
           "mbon_representation_similarity": {
-            "first": 0.7728140739634994,
-            "pre_go": 0.9721837358246667
+            "first": 0.4,
+            "pre_go": 0.9221880211587231
           },
           "metrics": {
             "conjunctive_specific_pools": {
@@ -91749,97 +91881,97 @@
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 38872
+                    "stable_active_count": 9855
                   },
                   "AB": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 38872
+                    "stable_active_count": 9855
                   },
                   "AC": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 38872
+                    "stable_active_count": 9855
                   },
                   "AD": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 38872
+                    "stable_active_count": 9855
                   },
                   "BA": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32042
+                    "stable_active_count": 11752
                   },
                   "BB": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32042
+                    "stable_active_count": 11752
                   },
                   "BC": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32042
+                    "stable_active_count": 11752
                   },
                   "BD": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32042
+                    "stable_active_count": 11752
                   },
                   "CA": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32470
+                    "stable_active_count": 11488
                   },
                   "CB": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32470
+                    "stable_active_count": 11488
                   },
                   "CC": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32470
+                    "stable_active_count": 11488
                   },
                   "CD": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 32470
+                    "stable_active_count": 11488
                   },
                   "DA": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 31988
+                    "stable_active_count": 11973
                   },
                   "DB": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 31988
+                    "stable_active_count": 11973
                   },
                   "DC": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 31988
+                    "stable_active_count": 11973
                   },
                   "DD": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 31988
+                    "stable_active_count": 11973
                   }
                 },
                 "strict_aggregate": {
@@ -91851,113 +91983,113 @@
               },
               "pre_go": {
                 "broader_aggregate": {
-                  "max": 45,
-                  "mean": 5.9375,
-                  "median": 1.5,
+                  "max": 25,
+                  "mean": 3.0625,
+                  "median": 1.0,
                   "min": 0
                 },
                 "per_context": {
                   "AA": {
-                    "broader_conjunction_count": 4,
-                    "conjunctive_specific_count": 4,
-                    "conjunctive_specific_fraction": 4.1031532732905235e-05,
-                    "stable_active_count": 97486
+                    "broader_conjunction_count": 0,
+                    "conjunctive_specific_count": 0,
+                    "conjunctive_specific_fraction": 0.0,
+                    "stable_active_count": 78196
                   },
                   "AB": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 97511
+                    "stable_active_count": 78443
                   },
                   "AC": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 97503
+                    "stable_active_count": 78551
                   },
                   "AD": {
-                    "broader_conjunction_count": 0,
-                    "conjunctive_specific_count": 0,
-                    "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 97494
+                    "broader_conjunction_count": 1,
+                    "conjunctive_specific_count": 1,
+                    "conjunctive_specific_fraction": 1.278935925310142e-05,
+                    "stable_active_count": 78190
                   },
                   "BA": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 98183
+                    "stable_active_count": 82724
                   },
                   "BB": {
-                    "broader_conjunction_count": 4,
-                    "conjunctive_specific_count": 4,
-                    "conjunctive_specific_fraction": 4.0817576048246375e-05,
-                    "stable_active_count": 97997
+                    "broader_conjunction_count": 2,
+                    "conjunctive_specific_count": 2,
+                    "conjunctive_specific_fraction": 2.4191694991109553e-05,
+                    "stable_active_count": 82673
                   },
                   "BC": {
-                    "broader_conjunction_count": 0,
-                    "conjunctive_specific_count": 0,
-                    "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 98184
+                    "broader_conjunction_count": 8,
+                    "conjunctive_specific_count": 8,
+                    "conjunctive_specific_fraction": 9.668257900779503e-05,
+                    "stable_active_count": 82745
                   },
                   "BD": {
+                    "broader_conjunction_count": 1,
+                    "conjunctive_specific_count": 1,
+                    "conjunctive_specific_fraction": 1.2092044643828826e-05,
+                    "stable_active_count": 82699
+                  },
+                  "CA": {
+                    "broader_conjunction_count": 4,
+                    "conjunctive_specific_count": 4,
+                    "conjunctive_specific_fraction": 4.7585624382873935e-05,
+                    "stable_active_count": 84059
+                  },
+                  "CB": {
+                    "broader_conjunction_count": 2,
+                    "conjunctive_specific_count": 2,
+                    "conjunctive_specific_fraction": 2.380413953986598e-05,
+                    "stable_active_count": 84019
+                  },
+                  "CC": {
+                    "broader_conjunction_count": 25,
+                    "conjunctive_specific_count": 25,
+                    "conjunctive_specific_fraction": 0.00029730051135687955,
+                    "stable_active_count": 84090
+                  },
+                  "CD": {
                     "broader_conjunction_count": 0,
                     "conjunctive_specific_count": 0,
                     "conjunctive_specific_fraction": 0.0,
-                    "stable_active_count": 98174
-                  },
-                  "CA": {
-                    "broader_conjunction_count": 23,
-                    "conjunctive_specific_count": 23,
-                    "conjunctive_specific_fraction": 0.00023288780882948563,
-                    "stable_active_count": 98760
-                  },
-                  "CB": {
-                    "broader_conjunction_count": 3,
-                    "conjunctive_specific_count": 3,
-                    "conjunctive_specific_fraction": 3.0442018102853432e-05,
-                    "stable_active_count": 98548
-                  },
-                  "CC": {
-                    "broader_conjunction_count": 1,
-                    "conjunctive_specific_count": 1,
-                    "conjunctive_specific_fraction": 1.0146206840572652e-05,
-                    "stable_active_count": 98559
-                  },
-                  "CD": {
-                    "broader_conjunction_count": 2,
-                    "conjunctive_specific_count": 2,
-                    "conjunctive_specific_fraction": 2.0308692120227456e-05,
-                    "stable_active_count": 98480
+                    "stable_active_count": 84029
                   },
                   "DA": {
-                    "broader_conjunction_count": 10,
-                    "conjunctive_specific_count": 10,
-                    "conjunctive_specific_fraction": 0.00010111325695911991,
-                    "stable_active_count": 98899
-                  },
-                  "DB": {
-                    "broader_conjunction_count": 2,
-                    "conjunctive_specific_count": 2,
-                    "conjunctive_specific_fraction": 2.018020926877012e-05,
-                    "stable_active_count": 99107
-                  },
-                  "DC": {
                     "broader_conjunction_count": 1,
                     "conjunctive_specific_count": 1,
-                    "conjunctive_specific_fraction": 1.0089290218433134e-05,
-                    "stable_active_count": 99115
+                    "conjunctive_specific_fraction": 1.2941465750410892e-05,
+                    "stable_active_count": 77271
+                  },
+                  "DB": {
+                    "broader_conjunction_count": 0,
+                    "conjunctive_specific_count": 0,
+                    "conjunctive_specific_fraction": 0.0,
+                    "stable_active_count": 77011
+                  },
+                  "DC": {
+                    "broader_conjunction_count": 4,
+                    "conjunctive_specific_count": 4,
+                    "conjunctive_specific_fraction": 5.2033197179800714e-05,
+                    "stable_active_count": 76874
                   },
                   "DD": {
-                    "broader_conjunction_count": 45,
-                    "conjunctive_specific_count": 45,
-                    "conjunctive_specific_fraction": 0.00045374338290899926,
-                    "stable_active_count": 99175
+                    "broader_conjunction_count": 1,
+                    "conjunctive_specific_count": 1,
+                    "conjunctive_specific_fraction": 1.2969327540367032e-05,
+                    "stable_active_count": 77105
                   }
                 },
                 "strict_aggregate": {
-                  "max": 45,
-                  "mean": 5.9375,
-                  "median": 1.5,
+                  "max": 25,
+                  "mean": 3.0625,
+                  "median": 1.0,
                   "min": 0
                 }
               }
@@ -91965,10 +92097,10 @@
             "pairwise_context_similarity": {
               "first": {
                 "different_first_and_second": {
-                  "max": 0.9473844282238443,
-                  "mean": 0.8607309190533914,
-                  "median": 0.8560365827343375,
-                  "min": 0.797747107773493,
+                  "max": 0.8289131974502243,
+                  "mean": 0.7374354995007533,
+                  "median": 0.7363946757284299,
+                  "min": 0.6390328151986183,
                   "pairs": 72
                 },
                 "same_first_different_second": {
@@ -91979,33 +92111,33 @@
                   "pairs": 24
                 },
                 "same_second_different_first": {
-                  "max": 0.9473844282238443,
-                  "mean": 0.8607309190533914,
-                  "median": 0.8560365827343375,
-                  "min": 0.797747107773493,
+                  "max": 0.8289131974502243,
+                  "mean": 0.7374354995007533,
+                  "median": 0.7363946757284299,
+                  "min": 0.6390328151986183,
                   "pairs": 24
                 }
               },
               "pre_go": {
                 "different_first_and_second": {
-                  "max": 0.9841269841269841,
-                  "mean": 0.9764204297925345,
-                  "median": 0.9755623912732942,
-                  "min": 0.9707034184353122,
+                  "max": 0.967834808259587,
+                  "mean": 0.9323030429502466,
+                  "median": 0.9327852219627563,
+                  "min": 0.8969250503077303,
                   "pairs": 72
                 },
                 "same_first_different_second": {
-                  "max": 0.9998065035185808,
-                  "mean": 0.9985908875453481,
-                  "median": 0.9990747044994905,
-                  "min": 0.9964722009434342,
+                  "max": 0.9994290336394347,
+                  "mean": 0.9952416481278111,
+                  "median": 0.9977073652357344,
+                  "min": 0.9872873699697995,
                   "pairs": 24
                 },
                 "same_second_different_first": {
-                  "max": 0.9835721740526654,
-                  "mean": 0.976417704657286,
-                  "median": 0.9754562326978033,
-                  "min": 0.9725313876817776,
+                  "max": 0.9677099560968702,
+                  "mean": 0.9322176512775728,
+                  "median": 0.9321493829913079,
+                  "min": 0.8973682661171622,
                   "pairs": 24
                 }
               }
@@ -92014,258 +92146,271 @@
               "first": {
                 "per_context": {
                   "AA": {
-                    "active_count_mean": 38278.75,
-                    "conductance_norm_mean": 3062.2162475585938,
+                    "active_count_mean": 12799.25,
+                    "conductance_norm_mean": 1898.5348510742188,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 10154.8857421875,
-                    "stable_active_count": 38872
+                    "membrane_norm_mean": 5770.5087890625,
+                    "stable_active_count": 9855
                   },
                   "AB": {
-                    "active_count_mean": 38278.75,
-                    "conductance_norm_mean": 3062.2162475585938,
+                    "active_count_mean": 12799.25,
+                    "conductance_norm_mean": 1898.5348510742188,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 10154.8857421875,
-                    "stable_active_count": 38872
+                    "membrane_norm_mean": 5770.5087890625,
+                    "stable_active_count": 9855
                   },
                   "AC": {
-                    "active_count_mean": 38278.75,
-                    "conductance_norm_mean": 3062.2162475585938,
+                    "active_count_mean": 12799.25,
+                    "conductance_norm_mean": 1898.5348510742188,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 10154.8857421875,
-                    "stable_active_count": 38872
+                    "membrane_norm_mean": 5770.5087890625,
+                    "stable_active_count": 9855
                   },
                   "AD": {
-                    "active_count_mean": 38278.75,
-                    "conductance_norm_mean": 3062.2162475585938,
+                    "active_count_mean": 12799.25,
+                    "conductance_norm_mean": 1898.5348510742188,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 10154.8857421875,
-                    "stable_active_count": 38872
+                    "membrane_norm_mean": 5770.5087890625,
+                    "stable_active_count": 9855
                   },
                   "BA": {
-                    "active_count_mean": 33736.5,
-                    "conductance_norm_mean": 2845.0004272460938,
+                    "active_count_mean": 13623.75,
+                    "conductance_norm_mean": 1906.0784606933594,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9524.28955078125,
-                    "stable_active_count": 32042
+                    "membrane_norm_mean": 5938.6590576171875,
+                    "stable_active_count": 11752
                   },
                   "BB": {
-                    "active_count_mean": 33736.5,
-                    "conductance_norm_mean": 2845.0004272460938,
+                    "active_count_mean": 13623.75,
+                    "conductance_norm_mean": 1906.0784606933594,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9524.28955078125,
-                    "stable_active_count": 32042
+                    "membrane_norm_mean": 5938.6590576171875,
+                    "stable_active_count": 11752
                   },
                   "BC": {
-                    "active_count_mean": 33736.5,
-                    "conductance_norm_mean": 2845.0004272460938,
+                    "active_count_mean": 13623.75,
+                    "conductance_norm_mean": 1906.0784606933594,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9524.28955078125,
-                    "stable_active_count": 32042
+                    "membrane_norm_mean": 5938.6590576171875,
+                    "stable_active_count": 11752
                   },
                   "BD": {
-                    "active_count_mean": 33736.5,
-                    "conductance_norm_mean": 2845.0004272460938,
+                    "active_count_mean": 13623.75,
+                    "conductance_norm_mean": 1906.0784606933594,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9524.28955078125,
-                    "stable_active_count": 32042
+                    "membrane_norm_mean": 5938.6590576171875,
+                    "stable_active_count": 11752
                   },
                   "CA": {
-                    "active_count_mean": 32955.25,
-                    "conductance_norm_mean": 2865.2835083007812,
+                    "active_count_mean": 15674.25,
+                    "conductance_norm_mean": 2140.217803955078,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9417.883056640625,
-                    "stable_active_count": 32470
+                    "membrane_norm_mean": 6340.033935546875,
+                    "stable_active_count": 11488
                   },
                   "CB": {
-                    "active_count_mean": 32955.25,
-                    "conductance_norm_mean": 2865.2835083007812,
+                    "active_count_mean": 15674.25,
+                    "conductance_norm_mean": 2140.217803955078,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9417.883056640625,
-                    "stable_active_count": 32470
+                    "membrane_norm_mean": 6340.033935546875,
+                    "stable_active_count": 11488
                   },
                   "CC": {
-                    "active_count_mean": 32955.25,
-                    "conductance_norm_mean": 2865.2835083007812,
+                    "active_count_mean": 15674.25,
+                    "conductance_norm_mean": 2140.217803955078,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9417.883056640625,
-                    "stable_active_count": 32470
+                    "membrane_norm_mean": 6340.033935546875,
+                    "stable_active_count": 11488
                   },
                   "CD": {
-                    "active_count_mean": 32955.25,
-                    "conductance_norm_mean": 2865.2835083007812,
+                    "active_count_mean": 15674.25,
+                    "conductance_norm_mean": 2140.217803955078,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9417.883056640625,
-                    "stable_active_count": 32470
+                    "membrane_norm_mean": 6340.033935546875,
+                    "stable_active_count": 11488
                   },
                   "DA": {
-                    "active_count_mean": 32571.75,
-                    "conductance_norm_mean": 2864.12841796875,
+                    "active_count_mean": 14168.5,
+                    "conductance_norm_mean": 2099.568359375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9355.545654296875,
-                    "stable_active_count": 31988
+                    "membrane_norm_mean": 6071.128173828125,
+                    "stable_active_count": 11973
                   },
                   "DB": {
-                    "active_count_mean": 32571.75,
-                    "conductance_norm_mean": 2864.12841796875,
+                    "active_count_mean": 14168.5,
+                    "conductance_norm_mean": 2099.568359375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9355.545654296875,
-                    "stable_active_count": 31988
+                    "membrane_norm_mean": 6071.128173828125,
+                    "stable_active_count": 11973
                   },
                   "DC": {
-                    "active_count_mean": 32571.75,
-                    "conductance_norm_mean": 2864.12841796875,
+                    "active_count_mean": 14168.5,
+                    "conductance_norm_mean": 2099.568359375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9355.545654296875,
-                    "stable_active_count": 31988
+                    "membrane_norm_mean": 6071.128173828125,
+                    "stable_active_count": 11973
                   },
                   "DD": {
-                    "active_count_mean": 32571.75,
-                    "conductance_norm_mean": 2864.12841796875,
+                    "active_count_mean": 14168.5,
+                    "conductance_norm_mean": 2099.568359375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 9355.545654296875,
-                    "stable_active_count": 31988
+                    "membrane_norm_mean": 6071.128173828125,
+                    "stable_active_count": 11973
                   }
                 }
               },
               "pre_go": {
                 "per_context": {
                   "AA": {
-                    "active_count_mean": 98018.25,
-                    "conductance_norm_mean": 4838.1494140625,
+                    "active_count_mean": 82159.5,
+                    "conductance_norm_mean": 4220.5528564453125,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16900.87744140625,
-                    "stable_active_count": 97486
+                    "membrane_norm_mean": 15143.0732421875,
+                    "stable_active_count": 78196
                   },
                   "AB": {
-                    "active_count_mean": 98077.5,
-                    "conductance_norm_mean": 4761.383056640625,
+                    "active_count_mean": 81447.75,
+                    "conductance_norm_mean": 4230.119201660156,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16904.81103515625,
-                    "stable_active_count": 97511
+                    "membrane_norm_mean": 15081.234375,
+                    "stable_active_count": 78443
                   },
                   "AC": {
-                    "active_count_mean": 98021.75,
-                    "conductance_norm_mean": 4821.164794921875,
+                    "active_count_mean": 81520.75,
+                    "conductance_norm_mean": 4175.233642578125,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16899.62548828125,
-                    "stable_active_count": 97503
+                    "membrane_norm_mean": 15087.763671875,
+                    "stable_active_count": 78551
                   },
                   "AD": {
-                    "active_count_mean": 98034.75,
-                    "conductance_norm_mean": 4817.3958740234375,
+                    "active_count_mean": 81311.5,
+                    "conductance_norm_mean": 4165.1015625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16902.63818359375,
-                    "stable_active_count": 97494
+                    "membrane_norm_mean": 15070.340087890625,
+                    "stable_active_count": 78190
                   },
                   "BA": {
-                    "active_count_mean": 99076.0,
-                    "conductance_norm_mean": 4876.514892578125,
+                    "active_count_mean": 85421.75,
+                    "conductance_norm_mean": 4494.3709716796875,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16982.57373046875,
-                    "stable_active_count": 98183
+                    "membrane_norm_mean": 15465.559326171875,
+                    "stable_active_count": 82724
                   },
                   "BB": {
-                    "active_count_mean": 98848.25,
-                    "conductance_norm_mean": 4804.9736328125,
+                    "active_count_mean": 85269.25,
+                    "conductance_norm_mean": 4552.92724609375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16967.44482421875,
-                    "stable_active_count": 97997
+                    "membrane_norm_mean": 15453.396728515625,
+                    "stable_active_count": 82673
                   },
                   "BC": {
-                    "active_count_mean": 98820.75,
-                    "conductance_norm_mean": 4839.299072265625,
+                    "active_count_mean": 85390.75,
+                    "conductance_norm_mean": 4498.015380859375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16961.6591796875,
-                    "stable_active_count": 98184
+                    "membrane_norm_mean": 15464.59326171875,
+                    "stable_active_count": 82745
                   },
                   "BD": {
-                    "active_count_mean": 99093.25,
-                    "conductance_norm_mean": 4843.14208984375,
+                    "active_count_mean": 85397.75,
+                    "conductance_norm_mean": 4470.7042236328125,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 16986.10791015625,
-                    "stable_active_count": 98174
+                    "membrane_norm_mean": 15464.49267578125,
+                    "stable_active_count": 82699
                   },
                   "CA": {
-                    "active_count_mean": 100096.75,
-                    "conductance_norm_mean": 4794.9371337890625,
+                    "active_count_mean": 85751.75,
+                    "conductance_norm_mean": 4447.948974609375,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17053.85400390625,
-                    "stable_active_count": 98760
+                    "membrane_norm_mean": 15535.83056640625,
+                    "stable_active_count": 84059
                   },
                   "CB": {
-                    "active_count_mean": 100007.25,
-                    "conductance_norm_mean": 4787.5584716796875,
+                    "active_count_mean": 85691.25,
+                    "conductance_norm_mean": 4418.135070800781,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17046.0517578125,
-                    "stable_active_count": 98548
+                    "membrane_norm_mean": 15531.2255859375,
+                    "stable_active_count": 84019
                   },
                   "CC": {
-                    "active_count_mean": 100018.0,
-                    "conductance_norm_mean": 4801.6773681640625,
+                    "active_count_mean": 85707.0,
+                    "conductance_norm_mean": 4399.740478515625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17047.576171875,
-                    "stable_active_count": 98559
+                    "membrane_norm_mean": 15532.190673828125,
+                    "stable_active_count": 84090
                   },
                   "CD": {
-                    "active_count_mean": 100022.0,
-                    "conductance_norm_mean": 4796.9635009765625,
+                    "active_count_mean": 85721.5,
+                    "conductance_norm_mean": 4408.132995605469,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17048.11328125,
-                    "stable_active_count": 98480
+                    "membrane_norm_mean": 15532.60791015625,
+                    "stable_active_count": 84029
                   },
                   "DA": {
-                    "active_count_mean": 99420.5,
-                    "conductance_norm_mean": 4949.8272705078125,
+                    "active_count_mean": 80416.25,
+                    "conductance_norm_mean": 4200.933410644531,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17005.599609375,
-                    "stable_active_count": 98899
+                    "membrane_norm_mean": 15015.720703125,
+                    "stable_active_count": 77271
                   },
                   "DB": {
-                    "active_count_mean": 99553.0,
-                    "conductance_norm_mean": 4943.51171875,
+                    "active_count_mean": 80366.75,
+                    "conductance_norm_mean": 4216.0235595703125,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17017.91015625,
-                    "stable_active_count": 99107
+                    "membrane_norm_mean": 15010.03662109375,
+                    "stable_active_count": 77011
                   },
                   "DC": {
-                    "active_count_mean": 99585.5,
-                    "conductance_norm_mean": 4950.5577392578125,
+                    "active_count_mean": 80164.75,
+                    "conductance_norm_mean": 4202.0474853515625,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17015.8173828125,
-                    "stable_active_count": 99115
+                    "membrane_norm_mean": 14988.471435546875,
+                    "stable_active_count": 76874
                   },
                   "DD": {
-                    "active_count_mean": 99770.5,
-                    "conductance_norm_mean": 5009.7227783203125,
+                    "active_count_mean": 80458.75,
+                    "conductance_norm_mean": 4155.517578125,
                     "fingerprint_diversity": 4,
-                    "membrane_norm_mean": 17033.6484375,
-                    "stable_active_count": 99175
+                    "membrane_norm_mean": 15019.521240234375,
+                    "stable_active_count": 77105
                   }
                 }
               }
             }
           },
           "persistent_state_unchanged": true,
-          "rate_hz": 25.0
+          "rate_hz": 25.0,
+          "requested_item_rate_hz": 25.0
         },
         "first_memory": {
           "CURRENT_RANDOM_ENCODER": {
             "accuracy": 0.125,
-            "no_decision_count": 7
+            "effective_first_rate_hz": 205.0,
+            "effective_go_rate_hz": 205.0,
+            "effective_second_rate_hz": 205.0,
+            "no_decision_count": 7,
+            "requested_item_rate_hz": 205.0
           },
           "MB_ROUTED_GENERIC_205HZ": {
             "accuracy": 0.25,
-            "no_decision_count": 0
+            "effective_first_rate_hz": 205.0,
+            "effective_go_rate_hz": 205.0,
+            "effective_second_rate_hz": 205.0,
+            "no_decision_count": 0,
+            "requested_item_rate_hz": 205.0
           },
           "MB_ROUTED_SPARSE_OPERATING_POINT": {
             "accuracy": 0.25,
-            "no_decision_count": 0
+            "effective_first_rate_hz": 25.0,
+            "effective_go_rate_hz": 205.0,
+            "effective_second_rate_hz": 25.0,
+            "no_decision_count": 0,
+            "requested_item_rate_hz": 25.0
           }
         },
         "seed": 263
       }
     ],
-    "protocol": "CURRENT_RANDOM_ENCODER vs MB_ROUTED_GENERIC_205HZ vs sparse operating point",
+    "protocol": "CURRENT_RANDOM_ENCODER 205/205/205 vs MB_ROUTED_GENERIC_205HZ 205/205/205 vs sparse 25/25/205",
     "seeds": [
       251,
       257,
