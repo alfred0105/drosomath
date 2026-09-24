@@ -1,0 +1,582 @@
+{
+  "run_id": "20260913_221646_924067+0900",
+  "status": "completed",
+  "started_at": "2026-09-13T22:16:46+09:00",
+  "updated_at": "2026-09-13T22:19:31+09:00",
+  "ended_at": "2026-09-13T22:19:31+09:00",
+  "duration_seconds": 164.297,
+  "experiment": "numerosity_0_2_stage2_2a",
+  "telemetry_source": "numerosity_prototype",
+  "activity_source": "display_proxy_not_connectome_spikes",
+  "learning_model": "reward_modulated_sparse_associator",
+  "chance_accuracy": 0.3333333333333333,
+  "layout_source": "FlyWire Codex FAFB v783 coordinates",
+  "layout_count": 139255,
+  "stage21_replay_trials": 10000,
+  "stage21_state_source": "checkpoint",
+  "stage21_pretraining_snapshot": {
+    "overall": 0.8019,
+    "balanced_accuracy": 0.8015690955778192,
+    "one_vs_two_accuracy": 0.8167836344631925,
+    "recent_20": 0.85,
+    "recent_100": 0.9,
+    "recent_500": 0.938,
+    "successes": 8019,
+    "attempts": 10000,
+    "by_target_accuracy": {
+      "0": 0.7717226763548289,
+      "1": 0.789012979172955,
+      "2": 0.8439716312056738
+    },
+    "confusion_matrix": [
+      [
+        2549,
+        401,
+        353
+      ],
+      [
+        99,
+        2614,
+        600
+      ],
+      [
+        56,
+        472,
+        2856
+      ]
+    ],
+    "probe": {
+      "overall": 0.814,
+      "balanced_accuracy": 0.8119618963575457,
+      "one_vs_two_accuracy": 0.8395953757225434,
+      "recent_20": 0.95,
+      "recent_100": 0.95,
+      "recent_500": 0.912,
+      "successes": 814,
+      "attempts": 1000,
+      "by_target_accuracy": {
+        "0": 0.7564935064935064,
+        "1": 0.828080229226361,
+        "2": 0.8513119533527697
+      },
+      "confusion_matrix": [
+        [
+          233,
+          36,
+          39
+        ],
+        [
+          10,
+          289,
+          50
+        ],
+        [
+          2,
+          49,
+          292
+        ]
+      ]
+    }
+  },
+  "evaluation_profile": "factor_isolation",
+  "evaluation_profiles": [
+    "position_only",
+    "area_only",
+    "spacing_only",
+    "brightness_only",
+    "combined"
+  ],
+  "profile_trials": 1500,
+  "total_evaluation_trials": 7500,
+  "evaluation_learning_enabled": false,
+  "current_profile": "combined",
+  "current_profile_trial": 1500,
+  "profile_results": {
+    "position_only": {
+      "overall": 0.678,
+      "balanced_accuracy": 0.6655846847735843,
+      "one_vs_two_accuracy": 0.5328467153284672,
+      "recent_20": 0.7,
+      "recent_100": 0.65,
+      "recent_500": 0.69,
+      "successes": 1017,
+      "attempts": 1500,
+      "by_target_accuracy": {
+        "0": 0.9353049907578558,
+        "1": 0.9377593360995851,
+        "2": 0.12368972746331237
+      },
+      "confusion_matrix": [
+        [
+          506,
+          20,
+          15
+        ],
+        [
+          13,
+          452,
+          17
+        ],
+        [
+          68,
+          350,
+          59
+        ]
+      ],
+      "probe": {
+        "overall": 0.678,
+        "balanced_accuracy": 0.6655846847735843,
+        "one_vs_two_accuracy": 0.5328467153284672,
+        "recent_20": 0.7,
+        "recent_100": 0.65,
+        "recent_500": 0.69,
+        "successes": 1017,
+        "attempts": 1500,
+        "by_target_accuracy": {
+          "0": 0.9353049907578558,
+          "1": 0.9377593360995851,
+          "2": 0.12368972746331237
+        },
+        "confusion_matrix": [
+          [
+            506,
+            20,
+            15
+          ],
+          [
+            13,
+            452,
+            17
+          ],
+          [
+            68,
+            350,
+            59
+          ]
+        ]
+      }
+    },
+    "area_only": {
+      "overall": 0.8806666666666667,
+      "balanced_accuracy": 0.8792242993974352,
+      "one_vs_two_accuracy": 0.8494845360824742,
+      "recent_20": 1.0,
+      "recent_100": 0.87,
+      "recent_500": 0.876,
+      "successes": 1321,
+      "attempts": 1500,
+      "by_target_accuracy": {
+        "0": 0.9377358490566038,
+        "1": 0.8713080168776371,
+        "2": 0.8286290322580645
+      },
+      "confusion_matrix": [
+        [
+          497,
+          13,
+          20
+        ],
+        [
+          4,
+          413,
+          57
+        ],
+        [
+          11,
+          74,
+          411
+        ]
+      ],
+      "probe": {
+        "overall": 0.8806666666666667,
+        "balanced_accuracy": 0.8792242993974352,
+        "one_vs_two_accuracy": 0.8494845360824742,
+        "recent_20": 1.0,
+        "recent_100": 0.87,
+        "recent_500": 0.876,
+        "successes": 1321,
+        "attempts": 1500,
+        "by_target_accuracy": {
+          "0": 0.9377358490566038,
+          "1": 0.8713080168776371,
+          "2": 0.8286290322580645
+        },
+        "confusion_matrix": [
+          [
+            497,
+            13,
+            20
+          ],
+          [
+            4,
+            413,
+            57
+          ],
+          [
+            11,
+            74,
+            411
+          ]
+        ]
+      }
+    },
+    "spacing_only": {
+      "overall": 0.942,
+      "balanced_accuracy": 0.9420879974676987,
+      "one_vs_two_accuracy": 0.9357976653696498,
+      "recent_20": 0.95,
+      "recent_100": 0.93,
+      "recent_500": 0.934,
+      "successes": 1413,
+      "attempts": 1500,
+      "by_target_accuracy": {
+        "0": 0.9555084745762712,
+        "1": 0.9473684210526315,
+        "2": 0.9233870967741935
+      },
+      "confusion_matrix": [
+        [
+          451,
+          10,
+          11
+        ],
+        [
+          4,
+          504,
+          24
+        ],
+        [
+          1,
+          37,
+          458
+        ]
+      ],
+      "probe": {
+        "overall": 0.942,
+        "balanced_accuracy": 0.9420879974676987,
+        "one_vs_two_accuracy": 0.9357976653696498,
+        "recent_20": 0.95,
+        "recent_100": 0.93,
+        "recent_500": 0.934,
+        "successes": 1413,
+        "attempts": 1500,
+        "by_target_accuracy": {
+          "0": 0.9555084745762712,
+          "1": 0.9473684210526315,
+          "2": 0.9233870967741935
+        },
+        "confusion_matrix": [
+          [
+            451,
+            10,
+            11
+          ],
+          [
+            4,
+            504,
+            24
+          ],
+          [
+            1,
+            37,
+            458
+          ]
+        ]
+      }
+    },
+    "brightness_only": {
+      "overall": 0.7833333333333333,
+      "balanced_accuracy": 0.7914772582896936,
+      "one_vs_two_accuracy": 0.6892028254288597,
+      "recent_20": 0.8,
+      "recent_100": 0.77,
+      "recent_500": 0.776,
+      "successes": 1175,
+      "attempts": 1500,
+      "by_target_accuracy": {
+        "0": 0.9666011787819253,
+        "1": 0.9353448275862069,
+        "2": 0.47248576850094876
+      },
+      "confusion_matrix": [
+        [
+          492,
+          7,
+          10
+        ],
+        [
+          4,
+          434,
+          26
+        ],
+        [
+          2,
+          276,
+          249
+        ]
+      ],
+      "probe": {
+        "overall": 0.7833333333333333,
+        "balanced_accuracy": 0.7914772582896936,
+        "one_vs_two_accuracy": 0.6892028254288597,
+        "recent_20": 0.8,
+        "recent_100": 0.77,
+        "recent_500": 0.776,
+        "successes": 1175,
+        "attempts": 1500,
+        "by_target_accuracy": {
+          "0": 0.9666011787819253,
+          "1": 0.9353448275862069,
+          "2": 0.47248576850094876
+        },
+        "confusion_matrix": [
+          [
+            492,
+            7,
+            10
+          ],
+          [
+            4,
+            434,
+            26
+          ],
+          [
+            2,
+            276,
+            249
+          ]
+        ]
+      }
+    },
+    "combined": {
+      "overall": 0.6306666666666667,
+      "balanced_accuracy": 0.6293220966706702,
+      "one_vs_two_accuracy": 0.4817374136229023,
+      "recent_20": 0.85,
+      "recent_100": 0.69,
+      "recent_500": 0.642,
+      "successes": 946,
+      "attempts": 1500,
+      "by_target_accuracy": {
+        "0": 0.9404517453798767,
+        "1": 0.8992248062015504,
+        "2": 0.0482897384305835
+      },
+      "confusion_matrix": [
+        [
+          458,
+          12,
+          17
+        ],
+        [
+          11,
+          464,
+          41
+        ],
+        [
+          34,
+          439,
+          24
+        ]
+      ],
+      "probe": {
+        "overall": 0.6306666666666667,
+        "balanced_accuracy": 0.6293220966706702,
+        "one_vs_two_accuracy": 0.4817374136229023,
+        "recent_20": 0.85,
+        "recent_100": 0.69,
+        "recent_500": 0.642,
+        "successes": 946,
+        "attempts": 1500,
+        "by_target_accuracy": {
+          "0": 0.9404517453798767,
+          "1": 0.8992248062015504,
+          "2": 0.0482897384305835
+        },
+        "confusion_matrix": [
+          [
+            458,
+            12,
+            17
+          ],
+          [
+            11,
+            464,
+            41
+          ],
+          [
+            34,
+            439,
+            24
+          ]
+        ]
+      }
+    }
+  },
+  "experiment_complete": false,
+  "successes": 946,
+  "attempts": 1500,
+  "overall_accuracy": 0.6306666666666667,
+  "balanced_accuracy": 0.6293220966706702,
+  "one_vs_two_accuracy": 0.4817374136229023,
+  "recent_20": 0.85,
+  "recent_100": 0.69,
+  "recent_500": 0.642,
+  "by_target_accuracy": {
+    "0": 0.9404517453798767,
+    "1": 0.8992248062015504,
+    "2": 0.0482897384305835
+  },
+  "confusion_matrix_rows_target_cols_choice": [
+    [
+      458,
+      12,
+      17
+    ],
+    [
+      11,
+      464,
+      41
+    ],
+    [
+      34,
+      439,
+      24
+    ]
+  ],
+  "probe": {
+    "overall": 0.6306666666666667,
+    "balanced_accuracy": 0.6293220966706702,
+    "one_vs_two_accuracy": 0.4817374136229023,
+    "recent_20": 0.85,
+    "recent_100": 0.69,
+    "recent_500": 0.642,
+    "successes": 946,
+    "attempts": 1500,
+    "by_target_accuracy": {
+      "0": 0.9404517453798767,
+      "1": 0.8992248062015504,
+      "2": 0.0482897384305835
+    },
+    "confusion_matrix": [
+      [
+        458,
+        12,
+        17
+      ],
+      [
+        11,
+        464,
+        41
+      ],
+      [
+        34,
+        439,
+        24
+      ]
+    ]
+  },
+  "last_trial_kind": "factor_eval",
+  "last_target": 0,
+  "last_answer": 0,
+  "last_correct": true,
+  "last_reward": 1.0,
+  "last_policy": {
+    "p0": 0.94462,
+    "p1": 0.03119,
+    "p2": 0.02419,
+    "entropy": 0.25199
+  },
+  "last_stimulus_controls": {
+    "stimulus_profile": "combined",
+    "signal_energy": 0.0,
+    "area_factor": 0.0,
+    "requested_area_factor": 0.0,
+    "post_noise_energy": 0.5657,
+    "min_pair_distance": null,
+    "gain_ratio": null,
+    "fractional_position": true,
+    "novel_area": true,
+    "close_spacing": true,
+    "strong_brightness": true
+  },
+  "learner": {
+    "stage": 2.2,
+    "substage": "2.2A_factor_isolation",
+    "seed": 7,
+    "grid_size": 12,
+    "n_kc": 512,
+    "kc_active": 64,
+    "input_fan_in_probability": 0.08,
+    "learning_rate": 0.08,
+    "output_decay": 0.99999,
+    "policy_temperature": 1.0,
+    "training_radius_jitter_range": [
+      0.9,
+      1.1
+    ],
+    "training_total_area_factor_nonzero": 1.44,
+    "signal_energy_range_nonzero": [
+      1.85,
+      2.15
+    ],
+    "pixel_noise_sd": 0.01,
+    "visual_encoder": {
+      "kind": "fixed_sparse_receptors_with_translation_max_pooling",
+      "translation_offsets_x": [
+        -3,
+        0,
+        3
+      ],
+      "translation_offsets_y": [
+        -3,
+        0,
+        3
+      ],
+      "view_count": 9,
+      "explicit_object_counter": false,
+      "explicit_peak_counter": false
+    },
+    "stage_2_2a_profiles": {
+      "position_only": {
+        "fractional_half_grid_positions": true
+      },
+      "area_only": {
+        "small_total_area_range": [
+          0.88,
+          1.02
+        ],
+        "large_total_area_range": [
+          1.9,
+          2.05
+        ]
+      },
+      "spacing_only": {
+        "two_dot_spacing_range": [
+          2.0,
+          3.0
+        ]
+      },
+      "brightness_only": {
+        "faint_gain_range": [
+          0.52,
+          0.72
+        ],
+        "bright_gain_range": [
+          1.28,
+          1.48
+        ]
+      },
+      "combined": {
+        "all_above_transforms": true
+      },
+      "learning_enabled": false
+    },
+    "continuous_cue_controls": {
+      "equalize_signal_energy_distribution_for_1_vs_2": true,
+      "area_distribution_is_identical_for_1_vs_2_within_each_profile": true
+    }
+  },
+  "scientific_scope": "Stage-2.2A frozen OOD factor-isolation test. The exact Stage-2.1 10,000-trial state is restored, then plasticity remains disabled while position-only, area-only, spacing-only, brightness-only, and combined OOD blocks are evaluated separately. The total-signal-energy distribution stays identical for 1 and 2 within every block. This identifies which nuisance transform causes the Stage-2.2 2-to-1 collapse. The encoder does not explicitly count objects or peaks; FlyWire coordinates remain visualization-only.",
+  "note": "This run validates the reward-learning protocol. It is not yet evidence that the full FlyWire connectome learned numerosity."
+}

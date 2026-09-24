@@ -1,0 +1,55 @@
+{
+  "run_id": "20260913_210059_945082+0900",
+  "status": "completed",
+  "started_at": "2026-09-13T21:00:59+09:00",
+  "updated_at": "2026-09-13T21:11:03+09:00",
+  "ended_at": "2026-09-13T21:11:03+09:00",
+  "duration_seconds": 603.312,
+  "experiment": "numerosity_0_2_stage1",
+  "telemetry_source": "numerosity_prototype",
+  "activity_source": "display_proxy_not_connectome_spikes",
+  "learning_model": "reward_modulated_sparse_associator",
+  "chance_accuracy": 0.3333333333333333,
+  "layout_source": "FlyWire Codex FAFB v783 coordinates",
+  "layout_count": 139255,
+  "successes": 26246,
+  "attempts": 27655,
+  "overall_accuracy": 0.9490508045561381,
+  "recent_20": 1.0,
+  "recent_100": 0.99,
+  "recent_500": 0.986,
+  "by_target_accuracy": {
+    "0": 0.9591769727481668,
+    "1": 0.9252074577001832,
+    "2": 0.9629830068189198
+  },
+  "confusion_matrix_rows_target_cols_choice": [
+    [
+      8764,
+      309,
+      64
+    ],
+    [
+      141,
+      8585,
+      553
+    ],
+    [
+      6,
+      336,
+      8897
+    ]
+  ],
+  "last_target": 1,
+  "last_answer": 1,
+  "last_correct": true,
+  "last_reward": 1.0,
+  "last_policy": {
+    "p0": 0.004,
+    "p1": 0.97908,
+    "p2": 0.01692,
+    "entropy": 0.11179
+  },
+  "scientific_scope": "Stage-1 reinforcement-learning protocol validation. Anatomical coordinates are FlyWire, but neural dynamics are not yet the whole-connectome LIF simulation.",
+  "note": "This run validates the reward-learning protocol. It is not yet evidence that the full FlyWire connectome learned numerosity."
+}

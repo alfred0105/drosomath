@@ -1,0 +1,526 @@
+{
+  "run_id": "20260913_225553_889779+0900",
+  "status": "interrupted",
+  "started_at": "2026-09-13T22:55:53+09:00",
+  "updated_at": "2026-09-13T22:55:55+09:00",
+  "ended_at": "2026-09-13T22:55:55+09:00",
+  "duration_seconds": 1.603,
+  "experiment": "numerosity_0_2_stage2_2c",
+  "telemetry_source": "numerosity_prototype",
+  "activity_source": "display_proxy_not_connectome_spikes",
+  "learning_model": "reward_modulated_sparse_associator",
+  "chance_accuracy": 0.3333333333333333,
+  "layout_source": "FlyWire Codex FAFB v783 coordinates",
+  "layout_count": 139255,
+  "stage21_replay_trials": null,
+  "stage21_state_source": null,
+  "stage21_pretraining_snapshot": null,
+  "stage22b_replay_trials": null,
+  "stage22b_state_source": null,
+  "stage22b_pretraining_snapshot": null,
+  "evaluation_profile": "augmented_invariance_frozen_retest",
+  "evaluation_profiles": [
+    "position_only",
+    "brightness_only",
+    "combined"
+  ],
+  "profile_trials": 2000,
+  "total_evaluation_trials": 6000,
+  "evaluation_learning_enabled": false,
+  "current_profile": "position_only",
+  "current_profile_trial": 84,
+  "profile_results": {
+    "position_only": {
+      "overall": 0.8571428571428571,
+      "balanced_accuracy": 0.8501210060349845,
+      "one_vs_two_accuracy": 0.7924528301886793,
+      "recent_20": 0.75,
+      "recent_100": 0.8571428571428571,
+      "recent_500": 0.8571428571428571,
+      "successes": 72,
+      "attempts": 84,
+      "by_target_accuracy": {
+        "0": 0.967741935483871,
+        "1": 0.8518518518518519,
+        "2": 0.7307692307692307
+      },
+      "confusion_matrix": [
+        [
+          30,
+          1,
+          0
+        ],
+        [
+          0,
+          23,
+          4
+        ],
+        [
+          2,
+          5,
+          19
+        ]
+      ],
+      "probe": {
+        "overall": 0.8571428571428571,
+        "balanced_accuracy": 0.8501210060349845,
+        "one_vs_two_accuracy": 0.7924528301886793,
+        "recent_20": 0.75,
+        "recent_100": 0.8571428571428571,
+        "recent_500": 0.8571428571428571,
+        "successes": 72,
+        "attempts": 84,
+        "by_target_accuracy": {
+          "0": 0.967741935483871,
+          "1": 0.8518518518518519,
+          "2": 0.7307692307692307
+        },
+        "confusion_matrix": [
+          [
+            30,
+            1,
+            0
+          ],
+          [
+            0,
+            23,
+            4
+          ],
+          [
+            2,
+            5,
+            19
+          ]
+        ]
+      }
+    },
+    "brightness_only": null,
+    "combined": null
+  },
+  "experiment_complete": false,
+  "successes": 72,
+  "attempts": 84,
+  "overall_accuracy": 0.8571428571428571,
+  "balanced_accuracy": 0.8501210060349845,
+  "one_vs_two_accuracy": 0.7924528301886793,
+  "recent_20": 0.75,
+  "recent_100": 0.8571428571428571,
+  "recent_500": 0.8571428571428571,
+  "by_target_accuracy": {
+    "0": 0.967741935483871,
+    "1": 0.8518518518518519,
+    "2": 0.7307692307692307
+  },
+  "confusion_matrix_rows_target_cols_choice": [
+    [
+      30,
+      1,
+      0
+    ],
+    [
+      0,
+      23,
+      4
+    ],
+    [
+      2,
+      5,
+      19
+    ]
+  ],
+  "probe": {
+    "overall": 0.8571428571428571,
+    "balanced_accuracy": 0.8501210060349845,
+    "one_vs_two_accuracy": 0.7924528301886793,
+    "recent_20": 0.75,
+    "recent_100": 0.8571428571428571,
+    "recent_500": 0.8571428571428571,
+    "successes": 72,
+    "attempts": 84,
+    "by_target_accuracy": {
+      "0": 0.967741935483871,
+      "1": 0.8518518518518519,
+      "2": 0.7307692307692307
+    },
+    "confusion_matrix": [
+      [
+        30,
+        1,
+        0
+      ],
+      [
+        0,
+        23,
+        4
+      ],
+      [
+        2,
+        5,
+        19
+      ]
+    ]
+  },
+  "last_trial_kind": "stage22c_ood_eval",
+  "last_target": 0,
+  "last_answer": 0,
+  "last_correct": true,
+  "last_reward": 1.0,
+  "last_policy": {
+    "p0": 0.95533,
+    "p1": 0.00502,
+    "p2": 0.03965,
+    "entropy": 0.19823
+  },
+  "last_stimulus_controls": {
+    "stimulus_profile": "position_only",
+    "signal_energy": 0.0,
+    "area_factor": 0.0,
+    "requested_area_factor": 0.0,
+    "post_noise_energy": 0.74789,
+    "min_pair_distance": null,
+    "gain_ratio": null,
+    "fractional_position": true,
+    "novel_area": false,
+    "close_spacing": false,
+    "strong_brightness": false,
+    "rasterizer": "continuous_gaussian_all_positions",
+    "visual_preprocess": "antialias_divisive_contrast_phase_pool_v1",
+    "curriculum": "stage2_2c_augmented_invariance",
+    "training_position_jitter": 0.4,
+    "training_area_range": [
+      1.2,
+      1.68
+    ],
+    "training_close_spacing_probability": 0.25,
+    "moderate_brightness_training": true,
+    "extreme_brightness_ood": false,
+    "close_spacing_sampled": false
+  },
+  "learner": {
+    "stage": 2.2,
+    "substage": "2.2C_augmented_invariance_training",
+    "seed": 7,
+    "grid_size": 12,
+    "n_kc": 512,
+    "kc_active": 64,
+    "input_fan_in_probability": 0.08,
+    "learning_rate": 0.08,
+    "output_decay": 0.99999,
+    "policy_temperature": 1.0,
+    "training_radius_jitter_range": [
+      0.9,
+      1.1
+    ],
+    "training_total_area_factor_nonzero": 1.44,
+    "signal_energy_range_nonzero": [
+      1.85,
+      2.15
+    ],
+    "pixel_noise_sd": 0.01,
+    "visual_encoder": {
+      "kind": "continuous_gaussian_antialias_contrast_phasepool_sparse_receptors",
+      "rasterizer": "same_continuous_gaussian_for_integer_and_fractional_centers",
+      "antialias_kernel": "3x3_binomial",
+      "local_divisive_contrast_mix": 0.3,
+      "local_divisive_contrast_floor": 0.14,
+      "phase_offsets": [
+        -0.5,
+        0.0,
+        0.5
+      ],
+      "phase_pool": "local_max_then_global_L1_restore",
+      "translation_offsets_x": [
+        -3,
+        0,
+        3
+      ],
+      "translation_offsets_y": [
+        -3,
+        0,
+        3
+      ],
+      "translated_receptor_view_count": 9,
+      "explicit_object_counter": false,
+      "explicit_peak_counter": false,
+      "explicit_numerosity_feature": false
+    },
+    "continuous_cue_controls": {
+      "equalize_signal_energy_distribution_for_1_vs_2": true,
+      "area_distribution_is_identical_for_1_vs_2_within_each_profile": true,
+      "preprocessing_restores_global_L1_after_contrast_and_phase_pool": true,
+      "explicit_object_counter": false,
+      "explicit_peak_counter": false,
+      "explicit_numerosity_feature": false
+    },
+    "stage_2_2c_training": {
+      "profile": "train_augmented",
+      "continuous_position_jitter": 0.4,
+      "total_area_range_identical_for_1_vs_2": [
+        1.2,
+        1.68
+      ],
+      "close_spacing_probability": 0.25,
+      "close_spacing_range": [
+        2.4,
+        3.2
+      ],
+      "two_dot_moderate_gain_ranges": {
+        "faint": [
+          0.78,
+          0.96
+        ],
+        "bright": [
+          1.04,
+          1.22
+        ]
+      },
+      "single_dot_gain_range": [
+        0.78,
+        1.22
+      ]
+    },
+    "stage_2_2c_profiles": {
+      "position_only": {
+        "held_out_half_grid_phase": true,
+        "other_nuisance_factors": "training_distribution"
+      },
+      "brightness_only": {
+        "faint_gain_range": [
+          0.42,
+          0.6
+        ],
+        "bright_gain_range": [
+          1.4,
+          1.62
+        ],
+        "other_nuisance_factors": "training_distribution"
+      },
+      "combined": {
+        "held_out_half_grid_phase": true,
+        "small_total_area_range": [
+          0.88,
+          1.02
+        ],
+        "large_total_area_range": [
+          1.9,
+          2.05
+        ],
+        "two_dot_spacing_range": [
+          2.0,
+          3.0
+        ],
+        "faint_gain_range": [
+          0.42,
+          0.6
+        ],
+        "bright_gain_range": [
+          1.4,
+          1.62
+        ]
+      },
+      "learning_enabled_during_ood": false
+    },
+    "training_trials": 30000,
+    "training_milestones": [
+      10000,
+      20000,
+      30000
+    ],
+    "training_snapshots": {
+      "10000": {
+        "overall": 0.68,
+        "balanced_accuracy": 0.6792409006315446,
+        "one_vs_two_accuracy": 0.662431941923775,
+        "recent_20": 0.8,
+        "recent_100": 0.86,
+        "recent_500": 0.85,
+        "successes": 6800,
+        "attempts": 10000,
+        "by_target_accuracy": {
+          "0": 0.7142857142857143,
+          "1": 0.7689302884615384,
+          "2": 0.5545066991473813
+        },
+        "confusion_matrix": [
+          [
+            2420,
+            394,
+            574
+          ],
+          [
+            121,
+            2559,
+            648
+          ],
+          [
+            336,
+            1127,
+            1821
+          ]
+        ],
+        "probe": {
+          "overall": 0.686,
+          "balanced_accuracy": 0.6889835710252973,
+          "one_vs_two_accuracy": 0.6666666666666666,
+          "recent_20": 0.9,
+          "recent_100": 0.86,
+          "recent_500": 0.774,
+          "successes": 686,
+          "attempts": 1000,
+          "by_target_accuracy": {
+            "0": 0.7267080745341615,
+            "1": 0.7872340425531915,
+            "2": 0.5530085959885387
+          },
+          "confusion_matrix": [
+            [
+              234,
+              31,
+              57
+            ],
+            [
+              8,
+              259,
+              62
+            ],
+            [
+              32,
+              124,
+              193
+            ]
+          ]
+        }
+      },
+      "20000": {
+        "overall": 0.77435,
+        "balanced_accuracy": 0.7733071122124803,
+        "one_vs_two_accuracy": 0.7499436640877338,
+        "recent_20": 0.85,
+        "recent_100": 0.88,
+        "recent_500": 0.866,
+        "successes": 15487,
+        "attempts": 20000,
+        "by_target_accuracy": {
+          "0": 0.822940032899656,
+          "1": 0.830110701107011,
+          "2": 0.6668706026307739
+        },
+        "confusion_matrix": [
+          [
+            5503,
+            431,
+            753
+          ],
+          [
+            139,
+            5624,
+            1012
+          ],
+          [
+            462,
+            1716,
+            4360
+          ]
+        ],
+        "probe": {
+          "overall": 0.78,
+          "balanced_accuracy": 0.7817708062433558,
+          "one_vs_two_accuracy": 0.75165319617928,
+          "recent_20": 0.85,
+          "recent_100": 0.83,
+          "recent_500": 0.882,
+          "successes": 1560,
+          "attempts": 2000,
+          "by_target_accuracy": {
+            "0": 0.8403755868544601,
+            "1": 0.8533333333333334,
+            "2": 0.6516034985422741
+          },
+          "confusion_matrix": [
+            [
+              537,
+              32,
+              70
+            ],
+            [
+              12,
+              576,
+              87
+            ],
+            [
+              52,
+              187,
+              447
+            ]
+          ]
+        }
+      },
+      "30000": {
+        "overall": 0.8175,
+        "balanced_accuracy": 0.816988947029162,
+        "one_vs_two_accuracy": 0.7914230019493177,
+        "recent_20": 0.85,
+        "recent_100": 0.94,
+        "recent_500": 0.928,
+        "successes": 24525,
+        "attempts": 30000,
+        "by_target_accuracy": {
+          "0": 0.8697087961573101,
+          "1": 0.856,
+          "2": 0.7252580449301761
+        },
+        "confusion_matrix": [
+          [
+            8691,
+            445,
+            857
+          ],
+          [
+            146,
+            8667,
+            1312
+          ],
+          [
+            544,
+            2171,
+            7167
+          ]
+        ],
+        "probe": {
+          "overall": 0.824,
+          "balanced_accuracy": 0.8253800702998406,
+          "one_vs_two_accuracy": 0.7954319761668321,
+          "recent_20": 0.85,
+          "recent_100": 0.92,
+          "recent_500": 0.916,
+          "successes": 2472,
+          "attempts": 3000,
+          "by_target_accuracy": {
+            "0": 0.8823529411764706,
+            "1": 0.8786653185035389,
+            "2": 0.7151219512195122
+          },
+          "confusion_matrix": [
+            [
+              870,
+              34,
+              82
+            ],
+            [
+              12,
+              869,
+              108
+            ],
+            [
+              64,
+              228,
+              733
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "scientific_scope": "Stage-2.2C trains the Stage-2.2B visual front end for 30,000 trials on a moderate nuisance curriculum: continuous position jitter, moderate per-dot brightness asymmetry, modest total-area variation, and mixed ordinary/closer spacing. Frozen OOD tests then exceed that envelope with held-out half-grid phase, much stronger two-dot brightness asymmetry, and a combined position/area/spacing/brightness shift. Total signal-energy remains identically distributed for 1 and 2, and total-area distributions are identical for 1 and 2 within each profile. OOD blocks receive zero plastic updates. No object count, peak count, or target-derived numerosity feature is injected; FlyWire coordinates remain visualization-only.",
+  "note": "This run validates the reward-learning protocol. It is not yet evidence that the full FlyWire connectome learned numerosity."
+}

@@ -1,0 +1,186 @@
+{
+  "experiment": "numerosity_0_2_stage2_2b",
+  "telemetry_source": "numerosity_prototype",
+  "activity_source": "display_proxy_not_connectome_spikes",
+  "learning_model": "reward_modulated_sparse_associator",
+  "chance_accuracy": 0.3333333333333333,
+  "classes": [
+    0,
+    1,
+    2
+  ],
+  "layout_source": "FlyWire Codex FAFB v783 coordinates",
+  "layout_count": 139255,
+  "total_connectome_neurons": 139255,
+  "rolling_windows": [
+    20,
+    100,
+    500
+  ],
+  "trials_per_ui_frame": 12,
+  "ui_interval_seconds": 0.24,
+  "stage22b_replay_trials": 10000,
+  "stage22b_state_source": "checkpoint",
+  "stage22b_pretraining_snapshot": {
+    "overall": 0.6614,
+    "balanced_accuracy": 0.6620428656812211,
+    "one_vs_two_accuracy": 0.6599970135881739,
+    "recent_20": 0.8,
+    "recent_100": 0.83,
+    "recent_500": 0.83,
+    "successes": 6614,
+    "attempts": 10000,
+    "by_target_accuracy": {
+      "0": 0.6642446260974871,
+      "1": 0.7500754603078781,
+      "2": 0.5718085106382979
+    },
+    "confusion_matrix": [
+      [
+        2194,
+        433,
+        676
+      ],
+      [
+        149,
+        2485,
+        679
+      ],
+      [
+        372,
+        1077,
+        1935
+      ]
+    ],
+    "probe": {
+      "overall": 0.682,
+      "balanced_accuracy": 0.67984005644084,
+      "one_vs_two_accuracy": 0.7008670520231214,
+      "recent_20": 0.8,
+      "recent_100": 0.86,
+      "recent_500": 0.766,
+      "successes": 682,
+      "attempts": 1000,
+      "by_target_accuracy": {
+        "0": 0.6396103896103896,
+        "1": 0.8051575931232091,
+        "2": 0.5947521865889213
+      },
+      "confusion_matrix": [
+        [
+          197,
+          44,
+          67
+        ],
+        [
+          13,
+          281,
+          55
+        ],
+        [
+          34,
+          105,
+          204
+        ]
+      ]
+    }
+  },
+  "evaluation_profile": "robust_encoder_retest",
+  "evaluation_profiles": [
+    "position_only",
+    "brightness_only",
+    "combined"
+  ],
+  "profile_trials": 1500,
+  "total_evaluation_trials": 4500,
+  "evaluation_learning_enabled": false,
+  "learner": {
+    "stage": 2.2,
+    "substage": "2.2B_robust_visual_encoder",
+    "seed": 7,
+    "grid_size": 12,
+    "n_kc": 512,
+    "kc_active": 64,
+    "input_fan_in_probability": 0.08,
+    "learning_rate": 0.08,
+    "output_decay": 0.99999,
+    "policy_temperature": 1.0,
+    "training_radius_jitter_range": [
+      0.9,
+      1.1
+    ],
+    "training_total_area_factor_nonzero": 1.44,
+    "signal_energy_range_nonzero": [
+      1.85,
+      2.15
+    ],
+    "pixel_noise_sd": 0.01,
+    "visual_encoder": {
+      "kind": "continuous_gaussian_antialias_contrast_phasepool_sparse_receptors",
+      "rasterizer": "same_continuous_gaussian_for_integer_and_fractional_centers",
+      "antialias_kernel": "3x3_binomial",
+      "local_divisive_contrast_mix": 0.3,
+      "local_divisive_contrast_floor": 0.14,
+      "phase_offsets": [
+        -0.5,
+        0.0,
+        0.5
+      ],
+      "phase_pool": "local_max_then_global_L1_restore",
+      "translation_offsets_x": [
+        -3,
+        0,
+        3
+      ],
+      "translation_offsets_y": [
+        -3,
+        0,
+        3
+      ],
+      "translated_receptor_view_count": 9,
+      "explicit_object_counter": false,
+      "explicit_peak_counter": false,
+      "explicit_numerosity_feature": false
+    },
+    "stage_2_2b_profiles": {
+      "position_only": {
+        "fractional_half_grid_positions": true
+      },
+      "brightness_only": {
+        "faint_gain_range": [
+          0.52,
+          0.72
+        ],
+        "bright_gain_range": [
+          1.28,
+          1.48
+        ]
+      },
+      "combined": {
+        "fractional_half_grid_positions": true,
+        "small_total_area_range": [
+          0.88,
+          1.02
+        ],
+        "large_total_area_range": [
+          1.9,
+          2.05
+        ],
+        "two_dot_spacing_range": [
+          2.0,
+          3.0
+        ],
+        "strong_relative_brightness": true
+      },
+      "learning_enabled_during_ood": false
+    },
+    "continuous_cue_controls": {
+      "equalize_signal_energy_distribution_for_1_vs_2": true,
+      "area_distribution_is_identical_for_1_vs_2_within_each_profile": true,
+      "preprocessing_restores_global_L1_after_contrast_and_phase_pool": true
+    }
+  },
+  "scientific_scope": "Stage-2.2B robust-vision retest. The learner is trained for 10,000 Stage-2.1-like trials using the new continuous Gaussian rasterizer and anti-alias/divisive-contrast/sub-pixel-phase visual front end. The resulting state is then frozen. Position-only, brightness-only, and combined OOD blocks receive no plastic updates. Total signal-energy remains identically distributed for 1 and 2, and preprocessing restores global L1 energy after local contrast/phase pooling. No object count, peak count, or target feature is injected. FlyWire coordinates remain visualization-only.",
+  "run_id": "20260913_222915_095976+0900",
+  "started_at": "2026-09-13T22:29:15+09:00"
+}

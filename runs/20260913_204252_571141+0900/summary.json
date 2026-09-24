@@ -1,0 +1,23 @@
+{
+  "run_id": "20260913_204252_571141+0900",
+  "status": "completed",
+  "started_at": "2026-09-13T20:42:52+09:00",
+  "updated_at": "2026-09-13T21:00:26+09:00",
+  "ended_at": "2026-09-13T21:00:26+09:00",
+  "duration_seconds": 1053.63,
+  "experiment": "mock_2_plus_1",
+  "telemetry_source": "mock",
+  "layout_source": "FlyWire Codex FAFB v783 soma coordinates",
+  "layout_count": 139255,
+  "successes": 7733,
+  "attempts": 9666,
+  "overall_accuracy": 0.8000206910821436,
+  "recent_20": 0.8,
+  "recent_100": 0.8,
+  "recent_500": 0.8,
+  "last_problem": "2 + 1",
+  "last_answer": 3,
+  "last_correct": true,
+  "last_reward": 1.0,
+  "note": "Mock telemetry is UI/pipeline validation only; do not interpret it as learned behavior."
+}

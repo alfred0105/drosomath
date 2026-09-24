@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#090b10" />
+    <title>DrosoMath</title>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="brain"></canvas>
+      <section class="hud" aria-label="DrosoMath telemetry">
+        <div class="experiment-header">
+          <span class="label">Experiment</span>
+          <strong>Stage 3S.3 · learned NEXT/PREV operator transitions</strong>
+          <small>600k training · symbols → NEXT/PREV → guided chains → autonomous chains → +0/+1/+2 bridge → small addition → full addition</small>
+        </div>
+
+        <div class="stimulus-panel">
+          <span class="label">Current symbolic input</span>
+          <svg id="stimulus-view" viewBox="0 0 100 100" role="img" aria-label="symbolic arithmetic input"></svg>
+        </div>
+
+        <div><span class="label">Choice</span><strong id="answer">—</strong></div>
+        <div><span class="label">Target</span><strong id="target">—</strong></div>
+        <div><span class="label">Profile trial</span><strong id="trial">—</strong><small id="trial-kind">—</small></div>
+        <div><span class="label">Plastic synapses</span><strong id="plasticity">—</strong></div>
+
+        <div class="policy-panel">
+          <span class="label">Top 3 choices</span>
+          <div class="policy-row"><span id="policy-label-0">#1</span><div class="policy-track"><i id="policy-bar-0"></i></div><strong id="policy-0">—</strong></div>
+          <div class="policy-row"><span id="policy-label-1">#2</span><div class="policy-track"><i id="policy-bar-1"></i></div><strong id="policy-1">—</strong></div>
+          <div class="policy-row"><span id="policy-label-2">#3</span><div class="policy-track"><i id="policy-bar-2"></i></div><strong id="policy-2">—</strong></div>
+        </div>
+
+        <div class="success-panel">
+          <span class="label">Current frozen profile · addition chance = 5.26% · digit/operator tasks chance = 10%</span>
+          <div class="success-grid">
+            <div class="success-stat"><span>Exact</span><strong id="accuracy-overall">—</strong><small id="accuracy-count">0 / 0</small></div>
+            <div class="success-stat"><span>Last 20</span><strong id="accuracy-20">—</strong></div>
+            <div class="success-stat"><span>Last 100</span><strong id="accuracy-100">—</strong></div>
+            <div class="success-stat"><span>Last 500</span><strong id="accuracy-500">—</strong></div>
+          </div>
+        </div>
+
+        <div class="success-panel diagnostic-panel">
+          <span class="label">Numerical diagnostics</span>
+          <div class="success-grid">
+            <div class="success-stat"><span>Balanced</span><strong id="balanced-accuracy">—</strong></div>
+            <div class="success-stat"><span>Mean |error|</span><strong id="one-two-accuracy">—</strong></div>
+            <div class="success-stat"><span>Within ±1</span><strong id="probe-balanced">—</strong></div>
+            <div class="success-stat"><span>Task</span><strong id="probe-one-two">—</strong></div>
+          </div>
+        </div>
+
+        <div class="profile-panel">
+          <span class="label">Frozen Stage 3S.3 headline results · detailed operator profiles are saved in the run summary</span>
+          <div class="profile-table">
+            <div class="profile-row profile-head"><span>Profile</span><span>Exact</span><span>Bal.</span><span>MAE</span></div>
+            <div class="profile-row"><span>Identity</span><strong id="profile-identity-exact">—</strong><strong id="profile-identity-balanced">—</strong><strong id="profile-identity-mae">—</strong></div>
+            <div class="profile-row"><span>NEXT</span><strong id="profile-successor-exact">—</strong><strong id="profile-successor-balanced">—</strong><strong id="profile-successor-mae">—</strong></div>
+            <div class="profile-row"><span>Add seen</span><strong id="profile-seen-exact">—</strong><strong id="profile-seen-balanced">—</strong><strong id="profile-seen-mae">—</strong></div>
+            <div class="profile-row"><span>Reverse transfer</span><strong id="profile-comm-exact">—</strong><strong id="profile-comm-balanced">—</strong><strong id="profile-comm-mae">—</strong></div>
+            <div class="profile-row"><span>Unseen pairs</span><strong id="profile-heldout-exact">—</strong><strong id="profile-heldout-balanced">—</strong><strong id="profile-heldout-mae">—</strong></div>
+          </div>
+        </div>
+      </section>
+      <div class="status" id="status">loading layout…</div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
