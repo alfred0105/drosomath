@@ -1,0 +1,15 @@
+device: auto
+dtype: float32
+dt_ms: 1.0
+input_neurons: 8
+hidden_neurons: 256
+output_neurons: 2
+initial_synapses: 5000
+seed: 105
+benchmark:
+  warmup_steps: 5
+  duration_seconds: 2.0
+  sizes:
+    - [256, 5000]
+    - [1000, 50000]
+    - [10000, 500000]
